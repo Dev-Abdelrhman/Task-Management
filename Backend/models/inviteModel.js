@@ -46,12 +46,3 @@ inviteSchema.virtual("receiverName").get(function () {
 const Invite = mongoose.model("Invite", inviteSchema);
 
 export default Invite;
-
-// For testing purposes
-// const invite = new Invite({
-//     user: "user_id",
-//     project: "project_id",
-//     role: "role_id"
-//     // status: "pending" // Optional, default is "pending"
-//     // timestamp: new Date() // Optional, default is current date and time
-// })

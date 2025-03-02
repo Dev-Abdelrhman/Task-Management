@@ -11,6 +11,4 @@ router
   .put(UC.updateUser)
   .delete(UC.deleteUser);
 
-const UserRoutes = router;
-
-export default UserRoutes;
+export default router;

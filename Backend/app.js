@@ -11,6 +11,8 @@ import cors from "cors";
 import AppError from "./utils/appError.js";
 import GlobalErrorHandler from "./controllers/errorControllers.js";
 import UserRoutes from "./routes/userRoute.js";
+import ProjectsRoutes from "./routes/projectsRoute.js";
+import InviteRoutes from "./routes/inviteRoute.js";
 /*______________________________________________________*/
 const app = express();
 
@@ -28,7 +30,7 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again in 15 minutes.",
 });
 
-app.use("depi", limiter);
+app.use("depiV1", limiter);
 
 app.use(
   express.json({
@@ -50,6 +52,8 @@ app.use((req, res, next) => {
 /*______________________________________________________*/
 // Routes
 app.use("/depiV1/users", UserRoutes);
+app.use("/depiV1/projects", ProjectsRoutes);
+app.use("/depiV1/invite", InviteRoutes);
 /*______________________________________________________*/
 app.all("*", (rea, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

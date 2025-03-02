@@ -1,5 +1,5 @@
 import express from "express";
-import PC from "../controllers/projectsControllers.js";
+import * as PC from "../controllers/projectsControllers.js";
 
 const router = express();
 
@@ -12,5 +12,3 @@ router
   .delete(PC.deleteProject);
 
 export default router;
-
-// Import the necessary controllers and models

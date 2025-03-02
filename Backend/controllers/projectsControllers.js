@@ -16,12 +16,10 @@ const createProject = HF.createOne(Project);
 const updateProject = HF.updateOne(Project);
 const deleteProject = HF.deleteOne(Project);
 
-const PC = {
+export {
   getProjects,
   getProjectById,
   createProject,
   updateProject,
   deleteProject,
 };
-
-export default PC;

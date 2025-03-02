@@ -5,11 +5,7 @@ const router = express();
 
 router.route("/").get(IC.getAllInvites);
 
-router
-  .route("/:id")
-  .get(IC.getInviteById)
-  .put(IC.updateInvite)
-  .delete(IC.deleteInvite);
+router.route("/:id").get(IC.getOneInvite).delete(IC.deleteInvite);
 
 router.route("/sendInvite").post(IC.sendInvite);
 

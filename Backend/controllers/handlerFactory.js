@@ -190,16 +190,6 @@ const removeImage = (Model) =>
     }
   });
 
-// const HF = {
-//   deleteOne,
-//   updateOne,
-//   createOne,
-//   getOne,
-//   getAll,
-//   uploadImages,
-//   removeImage,
-// };
-
 export {
   deleteOne,
   updateOne,

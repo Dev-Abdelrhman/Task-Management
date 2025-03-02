@@ -2,15 +2,15 @@ import Invite from "../models/inviteModel.js";
 import Project from "../models/projectsModel.js";
 import User from "../models/userModel.js";
 import Role from "../models/roleModel.js";
-import HF from "./handlerFactory.js";
-import catchAsync from "../utils/catchAsync.js";
+import * as HF from "./handlerFactory.js";
+import { catchAsync } from "../utils/catchAsync.js";
 
 const sendInvite = catchAsync(async (req, res, next) => {
   try {
     const { projectId, username, roleId } = req.body;
     const senderId = req.user.id; // Logged-in user
 
-    // ✅ Find receiver by username
+    // Find receiver by username
     const receiver = await User.findOne({ username });
     if (!receiver) {
       return res.status(404).json({
@@ -21,7 +21,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
 
     const receiverId = receiver._id.toString();
 
-    // ❌ Prevent sending invite to self
+    // Prevent sending invite to self
     if (receiverId === senderId) {
       return res.status(400).json({
         status: "fail",
@@ -29,7 +29,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
       });
     }
 
-    // ✅ Check if role exists
+    // Check if role exists
     const role = await Role.findById(roleId);
     if (!role) {
       return res
@@ -37,7 +37,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
         .json({ status: "fail", message: "Role not found" });
     }
 
-    // ✅ Check if project exists and populate members
+    // Check if project exists and populate members
     const project = await Project.findById(projectId).populate("members");
     if (!project) {
       return res
@@ -45,7 +45,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
         .json({ status: "fail", message: "Project not found" });
     }
 
-    // ❌ Ensure sender is part of the project (optional security check)
+    // Ensure sender is part of the project (optional security check)
     const isSenderMember = project.members.some(
       (member) => member._id.toString() === senderId
     );
@@ -56,7 +56,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
       });
     }
 
-    // ❌ Check if user is already a project member
+    // Check if user is already a project member
     const isAlreadyMember = project.members.some(
       (member) => member._id.toString() === receiverId
     );
@@ -67,7 +67,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
       });
     }
 
-    // ❌ Prevent duplicate invitations
+    // Prevent duplicate invitations
     const existingInvite = await Invite.findOne({
       project: projectId,
       receiver: receiverId,
@@ -79,7 +79,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
       });
     }
 
-    // ✅ Create new invite
+    // Create new invite
     const newInvite = await Invite.create({
       project: projectId,
       sender: senderId,
@@ -102,7 +102,7 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
   const { inviteId, status } = req.body;
   const receiverId = req.user.id;
 
-  // ✅ Validate status early
+  // Validate status early
   if (!["accepted", "declined"].includes(status)) {
     return res.status(400).json({
       status: "fail",
@@ -110,7 +110,7 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // ✅ Fetch & delete invite in ONE query
+  // Fetch & delete invite in ONE query
   const invite = await Invite.findOneAndDelete({
     _id: inviteId,
     receiver: receiverId,
@@ -124,7 +124,7 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // ✅ If invite is declined, just return success response
+  // If invite is declined, just return success response
   if (status === "declined") {
     return res.status(200).json({
       status: "success",
@@ -132,7 +132,7 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // ✅ Check if project exists
+  // Check if project exists
   const project = await Project.findById(invite.project);
   if (!project) {
     return res.status(404).json({
@@ -141,7 +141,7 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // ✅ Add user to project members & save
+  // Add user to project members & save
   project.members.push({ user: receiverId, role: invite.role });
   await project.save();
 
@@ -166,6 +166,13 @@ const getOneInvite = HF.getOne(Invite, [
   "role",
 ]);
 
-// const IC = { sendInvite, acceptOrDeclineInvite, getAllInvites, getOneInvite };
+const deleteInvite = HF.deleteOne(Invite);
 
-export { sendInvite, acceptOrDeclineInvite, getAllInvites, getOneInvite };
+
+export {
+  sendInvite,
+  acceptOrDeclineInvite,
+  getAllInvites,
+  getOneInvite,
+  deleteInvite,
+};
