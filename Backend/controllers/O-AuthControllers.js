@@ -4,8 +4,6 @@ import passport from "passport";
 import { Strategy } from "passport-local";
 import GoogleStrategy from "passport-google-oauth2";
 import env from "dotenv";
-import jwt from "jsonwebtoken";
-
 
 const app = express();
 const saltRounds = 10;
@@ -13,12 +11,10 @@ app.use(express.static("public"));
 env.config();
 
 
-const protect =  async (req, res) => {
-  //It checks if the user session exists 
+const protect = async (req, res) => {
     if (req.isAuthenticated()) {
       try {
-        //It checks if the user exists in the database and give access to the user
-        //check if it admin or user
+        //{placeholder}
       } catch (err) {
         console.log(err);
       }
@@ -26,7 +22,8 @@ const protect =  async (req, res) => {
       res.redirect("/login");
     }
   };
-  
+
+  // Google Oauth return callback scope of the user
   app.get(
     "/auth/google",
     passport.authenticate("google", {
@@ -34,32 +31,33 @@ const protect =  async (req, res) => {
     })
   );
 
+
   app.post(
     "/login",
     passport.authenticate("local", {
-      successRedirect: "/", // redirect to the secure profile section
-      failureRedirect: "/login",
+      successRedirect: "/", 
+      failureRedirect: "/login", 
     })
   );
 
   app.post("/register", async (req, res) => {
-    const email = "";// email from req remove the dubious quotes it is just a placeholder
-    const password = ""; // password from req remove the dubious quotes it is just a placeholder
-  
+    const email = req.body.username;
+    const password = req.body.password;
+
     try {
-      const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+      const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [ 
         email,
       ]);
   
-      if (checkResult.rows.length > 0) {
-        req.redirect("/login");
+      if (checkResult.rows.length > 0) { 
+        req.redirect("/login"); 
       } else {
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
+        bcrypt.hash(password, saltRounds, async (err, hash) => { 
           if (err) {
-            console.error("Error hashing password:", err);
+            console.error("Error hashing password:", err); 
           } else {
             const result = await db.query(
-              "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
+              "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *", 
               [email, hash]
             );
             const user = result.rows[0];
