@@ -9,10 +9,6 @@ const roleSchema = new mongoose.Schema({
         values: ["read", "write", "delete"],
         message: "{VALUE} is not a valid permission.",
       },
-      default: {
-        type: String,
-        value: "read",
-      },
     },
   ],
 });

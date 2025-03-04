@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
@@ -13,8 +14,13 @@ import GlobalErrorHandler from "./controllers/errorControllers.js";
 import UserRoutes from "./routes/userRoute.js";
 import ProjectsRoutes from "./routes/projectsRoute.js";
 import InviteRoutes from "./routes/inviteRoute.js";
+
 /*______________________________________________________*/
 const app = express();
+
+dotenv.config({
+  path: "./.env",
+});
 
 app.use(cors());
 
@@ -55,7 +61,7 @@ app.use("/depiV1/users", UserRoutes);
 app.use("/depiV1/projects", ProjectsRoutes);
 app.use("/depiV1/invite", InviteRoutes);
 /*______________________________________________________*/
-app.all("*", (rea, res, next) => {
+app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
