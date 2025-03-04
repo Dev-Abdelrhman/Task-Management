@@ -2,14 +2,11 @@ import mongoose from "mongoose";
 import app from "./app.js";
 import pConfig from "./strategies/passport_Config.js";
 
-
-
 process.on("uncaughtException", (err) => {
   console.error("Uncaught exception: ", err.message);
   console.error("Shutting down...");
   process.exit(1);
 });
-
 
 const DB = process.env.DATABASE.replace(
   "<db_password>",

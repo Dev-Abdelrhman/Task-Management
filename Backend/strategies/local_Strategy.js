@@ -29,23 +29,19 @@ import User from "../models/userModel.js";
 passport.use(
   "signin",
   new Strategy(
-    { usernameField: "email", passwordField: "password" }, // Fields for email and password
+    { usernameField: "email", passwordField: "password" },
     async (email, password, done) => {
       try {
-        // Find the user by email
         const user = await User.findOne({ email }).select("+password");
 
-        // If user doesn't exist, return error
         if (!user) {
           return done(null, false, { message: "Incorrect email or password" });
         }
 
-        // Compare the plain-text password directly
         if (password !== user.password) {
           return done(null, false, { message: "Incorrect email or password" });
         }
 
-        // If passwords match, return the user
         return done(null, user);
       } catch (err) {
         return done(err);
@@ -89,42 +85,35 @@ passport.use(
     { usernameField: "email", passReqToCallback: true },
     async (req, email, password, done) => {
       try {
-        console.log("✅ Request Body:", req.body); // Debugging
+        console.log("✅ Request Body:", req.body);
 
         const { name, username, passwordConfirmation } = req.body;
 
-        // Check if email is already in use
         let user = await User.findOne({ email });
         if (user) {
           return done(null, false, { message: "Email is already registered" });
         }
 
-        // Check if username is already in use
         user = await User.findOne({ username });
         if (user) {
           return done(null, false, { message: "Username is already taken" });
         }
 
-        // Validate password confirmation
         if (password !== passwordConfirmation) {
           return done(null, false, { message: "Passwords do not match" });
         }
 
-        // Hash password before saving
-        // const hashedPassword = await bcrypt.hash(password, 12);
-
-        // Create new user
         user = await User.create({
           name,
           username,
           email,
           password,
-          passwordConfirmation, // This field exists in schema but is not saved in the DB
+          passwordConfirmation,
         });
 
         return done(null, user);
       } catch (err) {
-        console.error("❌ Signup Error:", err);
+        console.error("Signup Error:", err);
         return done(err);
       }
     }

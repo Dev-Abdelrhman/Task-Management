@@ -20,7 +20,6 @@ passport.use(
           email: profile.emails[0].value,
         });
       }
-
       return done(null, user);
     })
   )

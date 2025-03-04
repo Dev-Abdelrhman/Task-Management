@@ -3,9 +3,6 @@ import passport from "./google_Strategy.js";
 import MongoStore from "connect-mongo";
 import User from "../models/userModel.js";
 
-/*Import all Strategy*/
-// import "./local_Strategy.js";
-/*----------------------------------------*/
 const pConfig = (app, DB) => {
   app.use(
     session({
