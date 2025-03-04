@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import app from "./app.js";
+import pConfig from "./strategies/passport_Config.js";
+
+
 
 process.on("uncaughtException", (err) => {
   console.error("Uncaught exception: ", err.message);
@@ -8,14 +10,13 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-dotenv.config({
-  path: "./.env",
-});
 
 const DB = process.env.DATABASE.replace(
   "<db_password>",
   process.env.DATABASE_PASSWORD
 );
+
+pConfig(app, DB);
 
 mongoose
   .connect(DB)

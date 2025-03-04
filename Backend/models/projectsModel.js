@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const projectSchema = new mongoose.Schema(
   {
@@ -46,6 +47,17 @@ const projectSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+projectSchema.pre("save", function (next) {
+  if (!this.slug) {
+    this.slug = slugify(this.name, { lower: true, strict: true });
+  }
+  next();
+});
+
+projectSchema.virtual("memberCount").get(function () {
+  return this.members.length;
+});
 
 projectSchema.virtual("comments", {
   ref: "Comment",
