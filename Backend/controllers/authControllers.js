@@ -1,4 +1,3 @@
-// import express from "express";
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import jwt from "jsonwebtoken";
@@ -70,6 +69,37 @@ const signup = catchAsync(async (req, res, next) => {
   createSendToken(newUser, 201, res);
 });
 
+const googleAuth = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+
+const googleAuthCallback = (req, res, next) => {
+  passport.authenticate(
+    "google",
+    { failureRedirect: "/login" },
+    (err, user) => {
+      if (err || !user) {
+        return res
+          .status(401)
+          .json({ status: "error", message: "Authentication failed" });
+      }
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          return res
+            .status(500)
+            .json({ status: "error", message: "Login failed" });
+        }
+        return res.redirect("/depiV1/projects"); // Redirect user after successful login
+      });
+    }
+  )(req, res, next);
+};
+
+const logout = (req, res) => {
+  res.clearCookie("jwt", { path: "/" });
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
 const protect = catchAsync(async (req, res, next) => {
   let token;
   if (
@@ -94,7 +124,6 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-// ✅ Middleware for Session-based authentication (For web)
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -102,7 +131,15 @@ const ensureAuthenticated = (req, res, next) => {
   res.status(401).json({ message: "You are not logged in! Please log in." });
 };
 
-export { signin, signup, protect, ensureAuthenticated };
+export {
+  signin,
+  signup,
+  googleAuth,
+  googleAuthCallback,
+  protect,
+  ensureAuthenticated,
+  logout,
+};
 
 // const authorizeProjectAction = (requiredPermission) => {
 //   return async (req, res, next) => {

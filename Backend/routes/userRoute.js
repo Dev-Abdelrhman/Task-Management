@@ -4,6 +4,8 @@ import * as AC from "../controllers/authControllers.js";
 
 const router = express();
 
+router.route("/google").get(AC.googleAuth);
+router.route("/google/callback").get(AC.googleAuthCallback);
 router.route("/signup").post(AC.signup);
 router.route("/signin").post(AC.signin);
 
