@@ -1,9 +1,17 @@
 import Project from "../models/projectsModel.js";
 import * as HF from "./handlerFactory.js";
-import {catchAsync} from "../utils/catchAsync.js";
+import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 
-const getProjects = HF.getAll(Project, ["owner", "members.user"]);
+const setOwner = (req, res, next) => {
+  // Allow nested routes
+  if (!req.body.owner) {
+    req.body.owner = req.params.id;
+  }
+  next();
+};
+
+const getProjects = HF.getAll(Project, "owner", ["owner", "members.user"]);
 
 const getProjectById = HF.getOne(Project, [
   "owner",
@@ -12,11 +20,12 @@ const getProjectById = HF.getOne(Project, [
   "tasks",
 ]);
 
-const createProject = HF.createOne(Project);
+const createProject = HF.createOne(Project, "owner");
 const updateProject = HF.updateOne(Project);
 const deleteProject = HF.deleteOne(Project);
 
 export {
+  setOwner,
   getProjects,
   getProjectById,
   createProject,

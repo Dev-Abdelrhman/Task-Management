@@ -38,8 +38,11 @@ const updateOne = (Model) =>
     });
   });
 
-const createOne = (Model) =>
+const createOne = (Model, idField) =>
   catchAsync(async (req, res, next) => {
+    if (!req.body[idField]) {
+      req.body[idField] = req.params.id;
+    }
     const doc = await Model.create(req.body);
 
     res.status(201).json({
@@ -71,11 +74,12 @@ const getOne = (Model, popOptions = []) =>
     });
   });
 
-const getAll = (Model, popOptions = []) =>
+const getAll = (Model, filterField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
-    if (req.params.category) {
-      filter.category = req.params.category;
+
+    if (req.params.id) {
+      filter[filterField] = req.params.id;
     }
 
     let query = Model.find(filter);

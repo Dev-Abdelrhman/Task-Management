@@ -124,12 +124,12 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401).json({ message: "You are not logged in! Please log in." });
-};
+// const ensureAuthenticated = (req, res, next) => {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+//   res.status(401).json({ message: "You are not logged in! Please log in." });
+// };
 
 export {
   signin,
@@ -137,7 +137,7 @@ export {
   googleAuth,
   googleAuthCallback,
   protect,
-  ensureAuthenticated,
+  // ensureAuthenticated,
   logout,
 };
 

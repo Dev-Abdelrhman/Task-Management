@@ -15,17 +15,17 @@ const projectSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     dueDate: {
       type: Date,
-      required: true,
+      // required: true,
     },
     members: [
       {
