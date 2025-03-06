@@ -53,14 +53,14 @@ const signin = catchAsync(async (req, res, next) => {
   }
   const user = await User.findOne({ email }).select("+password");
 
-  // if (password !== user.password) {
-  //   return done(null, false, {
-  //     message: "Incorrect email or password",
-  //   });
-  // }
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError("Incorrect email or password", 401));
+  if (password !== user.password) {
+    return done(null, false, {
+      message: "Incorrect email or password",
+    });
   }
+  // if (!user || !(await user.correctPassword(password, user.password))) {
+  //   return next(new AppError("Incorrect email or password", 401));
+  // }
   createSendToken(user, 200, res);
 });
 
