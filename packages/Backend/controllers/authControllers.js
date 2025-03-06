@@ -53,14 +53,14 @@ const signin = catchAsync(async (req, res, next) => {
   }
   const user = await User.findOne({ email }).select("+password");
 
-  if (password !== user.password) {
-    return done(null, false, {
-      message: "Incorrect email or password",
-    });
-  }
-  // if (!user || !(await user.correctPassword(password, user.password))) {
-  //   return next(new AppError("Incorrect email or password", 401));
+  // if (password !== user.password) {
+  //   return done(null, false, {
+  //     message: "Incorrect email or password",
+  //   });
   // }
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return next(new AppError("Incorrect email or password", 401));
+  }
   createSendToken(user, 200, res);
 });
 
@@ -94,6 +94,7 @@ const googleAuthCallback = (req, res, next) => {
     }
   )(req, res, next);
 };
+
 const blacklist = new Set();
 
 const logout = (req, res) => {
@@ -103,7 +104,7 @@ const logout = (req, res) => {
     return res.status(400).json({ message: "No token provided" });
   }
 
-  blacklist.add(token); // Add token to the blacklist
+  blacklist.add(token);
 
   res.status(200).json({ message: "Logged out successfully" });
 };
@@ -121,7 +122,6 @@ const protect = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not logged in! Please log in.", 401));
   }
 
-  // 🚨 Check if token is blacklisted
   if (blacklist.has(token)) {
     return next(new AppError("Session expired. Please log in again.", 401));
   }
