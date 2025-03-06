@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 /*______________________________________________________*/
 // Routes
 app.use("/depiV1/users", UserRoutes);
-app.use("/depiV1/projects", ProjectsRoutes);
+// app.use("/depiV1/projects", ProjectsRoutes);
 app.use("/depiV1/invite", InviteRoutes);
 /*______________________________________________________*/
 app.all("*", (req, res, next) => {

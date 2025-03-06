@@ -94,9 +94,17 @@ const googleAuthCallback = (req, res, next) => {
     }
   )(req, res, next);
 };
+const blacklist = new Set();
 
 const logout = (req, res) => {
-  res.clearCookie("jwt", { path: "/" });
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(400).json({ message: "No token provided" });
+  }
+
+  blacklist.add(token); // Add token to the blacklist
+
   res.status(200).json({ message: "Logged out successfully" });
 };
 
@@ -113,6 +121,11 @@ const protect = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not logged in! Please log in.", 401));
   }
 
+  // 🚨 Check if token is blacklisted
+  if (blacklist.has(token)) {
+    return next(new AppError("Session expired. Please log in again.", 401));
+  }
+
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decoded.id);
@@ -124,22 +137,24 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-// const ensureAuthenticated = (req, res, next) => {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.status(401).json({ message: "You are not logged in! Please log in." });
-// };
+const isOwner = (Model, ownerField = "owner") =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findById(req.params.id);
 
-export {
-  signin,
-  signup,
-  googleAuth,
-  googleAuthCallback,
-  protect,
-  // ensureAuthenticated,
-  logout,
-};
+    if (!doc) {
+      return next(new AppError(`${Model.modelName} not found`, 404));
+    }
+
+    if (doc[ownerField].toString() !== req.user.id) {
+      return next(
+        new AppError("You are not authorized to modify this resource", 403)
+      );
+    }
+
+    next();
+  });
+
+export { signin, signup, googleAuth, googleAuthCallback, protect, logout };
 
 // const authorizeProjectAction = (requiredPermission) => {
 //   return async (req, res, next) => {

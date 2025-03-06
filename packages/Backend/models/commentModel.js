@@ -7,9 +7,9 @@ const commentSchema = new mongoose.Schema(
       required: [true, "Review can't be empty"],
       trim: true,
     },
-    task: {
+    project: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Task",
+      ref: "Project",
       required: [true],
     },
     user: {
@@ -24,6 +24,14 @@ const commentSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+commentSchema.pre(/^find/, function (next) {
+  this.populate([
+    { path: "user", select: "name -_id" },
+    { path: "project", select: "name -_id" },
+  ]);
+  next();
+});
 
 const Comment = mongoose.model("Comment", commentSchema);
 

@@ -3,21 +3,13 @@ import * as HF from "./handlerFactory.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 
-const setOwner = (req, res, next) => {
-  // Allow nested routes
-  if (!req.body.owner) {
-    req.body.owner = req.params.id;
-  }
-  next();
-};
+const isMine = HF.isOwner(Project, "owner");
 
-const getProjects = HF.getAll(Project, "owner", ["owner", "members.user"]);
+const getProjects = HF.getAll(Project, "owner");
 
 const getProjectById = HF.getOne(Project, [
-  "owner",
-  "members.user",
-  "members.role",
-  "tasks",
+  "comments",
+  // "tasks",
 ]);
 
 const createProject = HF.createOne(Project, "owner");
@@ -25,7 +17,7 @@ const updateProject = HF.updateOne(Project);
 const deleteProject = HF.deleteOne(Project);
 
 export {
-  setOwner,
+  isMine,
   getProjects,
   getProjectById,
   createProject,

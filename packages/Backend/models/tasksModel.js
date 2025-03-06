@@ -50,7 +50,14 @@ taskSchema.pre("save", function (next) {
   next();
 });
 
+projectSchema.pre(/^find/, function (next) {
+  this.populate([
+    { path: "Roles", select: "name -_id" },
+    { path: "project", select: "name -_id" },
+  ]);
 
+  next();
+});
 
 const Task = mongoose.model("Task", taskSchema);
 

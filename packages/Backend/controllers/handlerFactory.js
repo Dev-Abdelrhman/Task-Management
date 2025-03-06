@@ -107,6 +107,23 @@ const getAll = (Model, filterField, popOptions = []) =>
     });
   });
 
+const isOwner = (Model, ownerField) =>
+  catchAsync(async (req, res, next) => {
+    console.log("Checking ownership for user:", req.user.id);
+
+    // Find the document where the owner matches the logged-in user
+    const doc = await Model.findOne({ [ownerField]: req.user.id });
+
+    if (!doc) {
+      return next(new AppError(`${Model.modelName} not found`, 404));
+    }
+
+    console.log("Found Document:", doc);
+
+    // Continue if user owns the resource
+    next();
+  });
+  
 const uploadImages = (Model, folderPath) =>
   catchAsync(async (req, res, next) => {
     if (!req.files || req.files.length === 0) {
@@ -200,6 +217,7 @@ export {
   createOne,
   getOne,
   getAll,
+  isOwner,
   uploadImages,
   removeImage,
 };

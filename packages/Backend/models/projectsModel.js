@@ -15,7 +15,6 @@ const projectSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      // required: true,
       unique: true,
     },
     description: {
@@ -34,12 +33,7 @@ const projectSchema = new mongoose.Schema(
         joinedAt: { type: Date, default: Date.now },
       },
     ],
-    tasks: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Task",
-      },
-    ],
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
   },
   {
     toJSON: { virtuals: true },
@@ -52,6 +46,15 @@ projectSchema.pre("save", function (next) {
   if (!this.slug) {
     this.slug = slugify(this.name, { lower: true, strict: true });
   }
+  next();
+});
+
+projectSchema.pre(/^find/, function (next) {
+  this.populate([
+    { path: "owner", select: "name -_id" },
+    { path: "members.user", select: "name -_id" },
+    { path: "members.role", select: "name -_id" },
+  ]);
   next();
 });
 

@@ -6,7 +6,7 @@ import ProjectsRoutes from "./projectsRoute.js";
 
 const router = express();
 
-router.use("/:id/projects", ProjectsRoutes);
+router.use("/:userId/projects", ProjectsRoutes);
 
 router.route("/google").get(AC.googleAuth);
 router.route("/google/callback").get(AC.googleAuthCallback);
