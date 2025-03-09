@@ -22,7 +22,11 @@ dotenv.config({
   path: "./.env",
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+  })
+);
 
 app.use(helmet());
 
