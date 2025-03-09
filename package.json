@@ -11,6 +11,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev_server": "lerna run start --scope=backend"
+    "dev_server": "lerna run start --scope=backend",
+    "dev_front": "lerna run dev --scope=task-management",
+    "dev": "concurrently \"lerna run start --scope=backend\"  \"lerna run dev --scope=task-management\""
   }
 }
