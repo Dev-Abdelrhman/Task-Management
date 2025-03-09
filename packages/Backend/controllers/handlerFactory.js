@@ -41,7 +41,7 @@ const updateOne = (Model) =>
 const createOne = (Model, idField) =>
   catchAsync(async (req, res, next) => {
     if (!req.body[idField]) {
-      req.body[idField] = req.params.id;
+      req.body[idField] = req.user.id;
     }
     const doc = await Model.create(req.body);
 
@@ -77,6 +77,8 @@ const getOne = (Model, popOptions = []) =>
 const getAll = (Model, filterField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
+
+    console.log(filter);
 
     if (req.params.id) {
       filter[filterField] = req.params.id;
@@ -123,7 +125,7 @@ const isOwner = (Model, ownerField) =>
     // Continue if user owns the resource
     next();
   });
-  
+
 const uploadImages = (Model, folderPath) =>
   catchAsync(async (req, res, next) => {
     if (!req.files || req.files.length === 0) {
