@@ -22,7 +22,27 @@ dotenv.config({
   path: "./.env",
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    withCredentials: true,
+  })
+);
+
+app.options("*", cors()); // Enable preflight requests for all routes
+
+// Your routes
+app.post("/users/signin", (req, res) => {
+  // Handle sign-in logic
+});
+
+app.post("/users/signup", (req, res) => {
+  // Handle sign-up logic
+});
+
+app.listen(9999, () => {
+  console.log("Server running on http://localhost:9999");
+});
 
 app.use(helmet());
 
