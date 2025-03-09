@@ -22,11 +22,7 @@ dotenv.config({
   path: "./.env",
 });
 
-app.use(
-  cors()
-);
-
-
+app.use(cors());
 
 app.use(helmet());
 
