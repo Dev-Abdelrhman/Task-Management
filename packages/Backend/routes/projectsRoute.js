@@ -6,7 +6,7 @@ import CommentRouter from "./commentRoute.js";
 
 const router = express.Router({ mergeParams: true });
 
-router.use("/:projectId/comments", CommentRouter);
+router.use("/:id/comments", CommentRouter);
 
 router.use(AC.protect);
 

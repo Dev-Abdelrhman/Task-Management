@@ -78,8 +78,6 @@ const getAll = (Model, filterField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let filter = {};
 
-    console.log(filter);
-
     if (req.params.id) {
       filter[filterField] = req.params.id;
     }

@@ -7,6 +7,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import hpp from "hpp";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 /*______________________________________________________*/
 import AppError from "./utils/appError.js";
@@ -25,6 +26,8 @@ dotenv.config({
 app.use(cors());
 
 app.use(helmet());
+
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

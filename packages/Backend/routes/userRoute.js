@@ -6,10 +6,11 @@ import ProjectsRoutes from "./projectsRoute.js";
 
 const router = express();
 
-router.use("/:userId/projects", ProjectsRoutes);
+router.use("/:id/projects", ProjectsRoutes);
 
 router.route("/google").get(AC.googleAuth);
 router.route("/google/callback").get(AC.googleAuthCallback);
+router.route("/refresh").get(AC.refreshAccessToken);
 router.route("/signup").post(AC.signup);
 router.route("/signin").post(AC.signin);
 router.route("/logout").post(AC.logout);
