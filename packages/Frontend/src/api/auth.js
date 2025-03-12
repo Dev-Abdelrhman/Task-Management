@@ -1,11 +1,31 @@
-// api for authentication
 import axios from "axios";
 
 const API = axios.create({
-  baseURL:"http://localhost:9999/depiV1",
-  withCredentials: true,
+  baseURL: "http://localhost:9999/depiV1",
+  withCredentials: true, // Allow cookies/session authentication
 });
 
-export const signUp = (userData) => API.post("/users/signup", userData); // Sign up a user
-export const signIn = (credentials) => API.post("/users/signin", credentials); // Sign in a user
-export const logout = () => API.get("/users/logout"); // Log out a user
+// Attach token to every request if available
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("jwt"); // Consider using HttpOnly cookies for better security
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Handle API errors globally
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error("API Error:", error?.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
+export const signUp = (userData) => API.post("/users/signup", userData);
+export const signIn = (credentials) => API.post("/users/signin", credentials);
+export const logout = () => API.get("/users/logout");

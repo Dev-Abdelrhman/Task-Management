@@ -71,6 +71,11 @@ const signin = catchAsync(async (req, res, next) => {
 });
 
 const signup = catchAsync(async (req, res, next) => {
+  const {email} = req.body
+  const user = await User.findOne({email});
+  if (user) {
+    return next(new AppError("Email already exists", 400));
+  }
   const newUser = await User.create(req.body);
   createSendToken(newUser, 201, res);
 });

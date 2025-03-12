@@ -1,27 +1,23 @@
-// zutand store for user authentication
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// Create the store
 export const useAuthStore = create(
   persist(
     (set) => ({
       user: null, // Store non-sensitive user data
 
-      // Login: Update user data (token is handled via HTTP-only cookie)
-      setUser: (user) => {
-        set({ user });
-      },
+      // Set user data (no token stored here)
+      setUser: (user) => set({ user }),
 
-      // Logout: Clear user data
+      // Logout: Clear user data and storage
       logout: () => {
         set({ user: null });
+        sessionStorage.removeItem("auth-storage"); // Ensure full logout
       },
     }),
     {
-      name: "auth-storage", // Unique name for the storage
-      getStorage: () => sessionStorage, // Use sessionStorage or localStorage
+      name: "auth-storage", // Unique name for stored state
+      getStorage: () => sessionStorage, // Change to localStorage if needed
     }
   )
 );
