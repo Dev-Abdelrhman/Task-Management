@@ -1,5 +1,14 @@
+import Navbar from "../shared/Navbar";
+import Header from "../pages/Header";
+import  bg  from "../../assets/bg_img.png";
+
 function Home() {
-    return <h1 className="mx-auto container py-2 bg-dark text-white">Home</h1>;
+    return (
+        <div style={{background: `url(${bg})`,}}>
+            <Navbar/>
+            <Header/>
+        </div>
+    )
 }
 
 export default Home;
