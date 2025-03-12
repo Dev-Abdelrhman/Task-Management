@@ -38,11 +38,15 @@ const updateOne = (Model) =>
     });
   });
 
-const createOne = (Model, idField) =>
+const createOne = (Model, idField, idField2) =>
   catchAsync(async (req, res, next) => {
     if (!req.body[idField]) {
       req.body[idField] = req.user.id;
     }
+    if (idField2 && !req.body[idField2]) {
+      req.body[idField2] = req.params.id;
+    }
+
     const doc = await Model.create(req.body);
 
     res.status(201).json({

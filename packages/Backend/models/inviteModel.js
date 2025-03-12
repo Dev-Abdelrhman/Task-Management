@@ -35,12 +35,14 @@ const inviteSchema = new mongoose.Schema(
   }
 );
 
-inviteSchema.virtual("senderName").get(function () {
-  return this.sender.name;
-});
-
-inviteSchema.virtual("receiverName").get(function () {
-  return this.receiver.name;
+inviteSchema.pre(/^find/, function (next) {
+  this.populate([
+    { path: "sender", select: "name -_id" },
+    { path: "project", select: "name -_id" },
+    { path: "receiver", select: "name -_id" },
+    { path: "role", select: "name -_id" },
+  ]);
+  next();
 });
 
 const Invite = mongoose.model("Invite", inviteSchema);

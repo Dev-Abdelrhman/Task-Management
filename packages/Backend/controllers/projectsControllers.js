@@ -7,10 +7,7 @@ const isMine = HF.isOwner(Project, "owner");
 
 const getProjects = HF.getAll(Project, "owner");
 
-const getProjectById = HF.getOne(Project, [
-  "comments",
-  // "tasks",
-]);
+const getProjectById = HF.getOne(Project, ["roles", "comments"]);
 
 const createProject = HF.createOne(Project, "owner");
 const updateProject = HF.updateOne(Project);

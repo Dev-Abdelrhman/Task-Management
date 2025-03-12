@@ -3,10 +3,12 @@ import * as PC from "../controllers/projectsControllers.js";
 import * as AC from "../controllers/authControllers.js";
 
 import CommentRouter from "./commentRoute.js";
+import RoleRouter from "./roleRoute.js";
 
 const router = express.Router({ mergeParams: true });
 
 router.use("/:id/comments", CommentRouter);
+router.use("/:id/roles", RoleRouter);
 
 router.use(AC.protect);
 

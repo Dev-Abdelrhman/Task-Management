@@ -5,66 +5,91 @@ import Role from "../models/roleModel.js";
 import * as HF from "./handlerFactory.js";
 import { catchAsync } from "../utils/catchAsync.js";
 
+/**
+ * Send an invite to a user to join a project.
+ * Only users with the "invite" permission can send invites.
+ */
+const searchUsersForInvite = catchAsync(async (req, res, next) => {
+  const { username } = req.query; // Get the username from the query parameter
+
+  // Find users whose username matches (case-insensitive search)
+  const users = await User.find({
+    username: { $regex: new RegExp(username, "i") }, // Case-insensitive search
+  }).select("username name"); // Only return necessary fields
+
+  if (users.length === 0) {
+    return res.status(404).json({ status: "fail", message: "No users found" });
+  }
+
+  res.status(200).json({ status: "success", data: users });
+});
+
 const sendInvite = catchAsync(async (req, res, next) => {
   try {
     const { projectId, username, roleId } = req.body;
     const senderId = req.user.id; // Logged-in user
 
-    // Find receiver by username
+    // Find the receiver by username
     const receiver = await User.findOne({ username });
     if (!receiver) {
-      return res.status(404).json({
-        status: "fail",
-        message: "User not found with this username",
-      });
+      return res
+        .status(404)
+        .json({ status: "fail", message: "User not found" });
     }
 
     const receiverId = receiver._id.toString();
 
-    // Prevent sending invite to self
+    // Prevent self-invitation
     if (receiverId === senderId) {
-      return res.status(400).json({
+      return res
+        .status(400)
+        .json({ status: "fail", message: "You cannot invite yourself" });
+    }
+
+    // Check if the role exists and belongs to the project
+    const role = await Role.findOne({ _id: roleId, project: projectId });
+    if (!role) {
+      return res.status(404).json({
         status: "fail",
-        message: "You cannot invite yourself to a project",
+        message: "Role not found or does not belong to this project",
       });
     }
 
-    // Check if role exists
-    const role = await Role.findById(roleId);
-    if (!role) {
-      return res
-        .status(404)
-        .json({ status: "fail", message: "Role not found" });
-    }
-
-    // Check if project exists and populate members
-    const project = await Project.findById(projectId).populate("members");
+    // Check if the project exists
+    const project = await Project.findById(projectId).populate("members.role");
     if (!project) {
       return res
         .status(404)
         .json({ status: "fail", message: "Project not found" });
     }
 
-    // Ensure sender is part of the project (optional security check)
-    const isSenderMember = project.members.some(
-      (member) => member._id.toString() === senderId
+    // Check if the sender is a member and has permission to invite
+    const senderMember = project.members.find(
+      (member) => member.user.toString() === senderId
     );
-    if (!isSenderMember) {
+    if (!senderMember) {
+      return res
+        .status(403)
+        .json({ status: "fail", message: "You are not a project member" });
+    }
+
+    // Verify if the sender has the "invite" permission
+    const senderRole = await Role.findById(senderMember.role);
+    if (!senderRole || !senderRole.permissions.includes("invite")) {
       return res.status(403).json({
         status: "fail",
-        message: "You are not authorized to send invites for this project",
+        message: "You do not have permission to invite users",
       });
     }
 
-    // Check if user is already a project member
+    // Ensure the user is not already a member
     const isAlreadyMember = project.members.some(
-      (member) => member._id.toString() === receiverId
+      (member) => member.user.toString() === receiverId
     );
     if (isAlreadyMember) {
-      return res.status(400).json({
-        status: "fail",
-        message: "User is already a member of this project",
-      });
+      return res
+        .status(400)
+        .json({ status: "fail", message: "User is already a member" });
     }
 
     // Prevent duplicate invitations
@@ -73,13 +98,12 @@ const sendInvite = catchAsync(async (req, res, next) => {
       receiver: receiverId,
     });
     if (existingInvite) {
-      return res.status(400).json({
-        status: "fail",
-        message: "An invite has already been sent to this user",
-      });
+      return res
+        .status(400)
+        .json({ status: "fail", message: "Invite already sent" });
     }
 
-    // Create new invite
+    // Create and save the invite
     const newInvite = await Invite.create({
       project: projectId,
       sender: senderId,
@@ -88,21 +112,22 @@ const sendInvite = catchAsync(async (req, res, next) => {
       status: "pending",
     });
 
-    res.status(201).json({
-      status: "success",
-      message: "Invite sent successfully",
-      data: newInvite,
-    });
+    res
+      .status(201)
+      .json({ status: "success", message: "Invite sent", data: newInvite });
   } catch (error) {
-    next(error); // Forward error to global error handler
+    next(error);
   }
 });
 
+/**
+ * Accept or decline an invite.
+ */
 const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
   const { inviteId, status } = req.body;
   const receiverId = req.user.id;
 
-  // Validate status early
+  // Validate status
   if (!["accepted", "declined"].includes(status)) {
     return res.status(400).json({
       status: "fail",
@@ -110,8 +135,8 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // Fetch & delete invite in ONE query
-  const invite = await Invite.findOneAndDelete({
+  // Find the invite
+  const invite = await Invite.findOne({
     _id: inviteId,
     receiver: receiverId,
     status: "pending",
@@ -124,50 +149,83 @@ const acceptOrDeclineInvite = catchAsync(async (req, res, next) => {
     });
   }
 
-  // If invite is declined, just return success response
+  // If the invite was declined, delete it and return success
   if (status === "declined") {
-    return res.status(200).json({
-      status: "success",
-      message: "Invite declined and deleted",
-    });
+    await Invite.findByIdAndDelete(inviteId);
+    return res
+      .status(200)
+      .json({ status: "success", message: "Invite declined and deleted" });
   }
 
-  // Check if project exists
+  // Ensure the project exists
   const project = await Project.findById(invite.project);
   if (!project) {
-    return res.status(404).json({
+    return res
+      .status(404)
+      .json({ status: "fail", message: "Project not found" });
+  }
+
+  // Ensure the invite has not expired (e.g., 7 days old)
+  const inviteAge = Date.now() - new Date(invite.createdAt).getTime();
+  const sevenDays = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+  if (inviteAge > sevenDays) {
+    return res
+      .status(400)
+      .json({ status: "fail", message: "This invite has expired" });
+  }
+
+  // Validate the role before adding the user
+  const role = await Role.findById(invite.role);
+  if (!role) {
+    return res
+      .status(400)
+      .json({ status: "fail", message: "Assigned role no longer exists" });
+  }
+
+  // Check if the user is already a member
+  const isAlreadyMember = project.members.some(
+    (member) => member.user.toString() === receiverId
+  );
+  if (isAlreadyMember) {
+    return res.status(400).json({
       status: "fail",
-      message: "Project not found",
+      message: "User is already a member of this project",
     });
   }
 
-  // Add user to project members & save
+  // Add the user to the project members list with the assigned role
   project.members.push({ user: receiverId, role: invite.role });
   await project.save();
 
+  // Delete the invite since it's accepted
+  await Invite.findByIdAndDelete(inviteId);
+
+  // Return updated project data with the new member
+  const updatedProject = await Project.findById(invite.project).populate(
+    "members.role"
+  );
+
   return res.status(200).json({
     status: "success",
-    message: "Invite accepted successfully and deleted",
-    data: project,
+    message: "Invite accepted and user added to the project",
+    data: updatedProject,
   });
 });
 
-const getAllInvites = HF.getAll(Invite, [
-  "sender",
-  "receiver",
-  "project",
-  "role",
-]);
+/**
+ * Fetch all invites, populating related fields.
+ */
+const getAllInvites = HF.getAll(Invite);
 
-const getOneInvite = HF.getOne(Invite, [
-  "sender",
-  "receiver",
-  "project",
-  "role",
-]);
+/**
+ * Fetch a single invite, populating related fields.
+ */
+const getOneInvite = HF.getOne(Invite);
 
+/**
+ * Delete an invite.
+ */
 const deleteInvite = HF.deleteOne(Invite);
-
 
 export {
   sendInvite,
@@ -175,4 +233,5 @@ export {
   getAllInvites,
   getOneInvite,
   deleteInvite,
+  searchUsersForInvite,
 };

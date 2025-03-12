@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import AppError from "./utils/appError.js";
 import GlobalErrorHandler from "./controllers/errorControllers.js";
 import UserRoutes from "./routes/userRoute.js";
-import ProjectsRoutes from "./routes/projectsRoute.js";
+// import ProjectsRoutes from "./routes/projectsRoute.js";
 import InviteRoutes from "./routes/inviteRoute.js";
 
 /*______________________________________________________*/
@@ -23,7 +23,12 @@ dotenv.config({
   path: "./.env",
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(helmet());
 
@@ -39,7 +44,7 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again in 15 minutes.",
 });
 
-app.use("depiV1", limiter);
+app.use("/depiV1", limiter);
 
 app.use(
   express.json({

@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 
 const roleSchema = new mongoose.Schema({
+  theCreator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Project",
+    required: true,
+  },
   name: { type: String, required: true },
   permissions: [
     {
@@ -11,6 +21,14 @@ const roleSchema = new mongoose.Schema({
       },
     },
   ],
+});
+
+roleSchema.pre(/^find/, function (next) {
+  this.populate({ path: "theCreator", select: "name _id" }).populate({
+    path: "project",
+    select: "name _id",
+  });
+  next();
 });
 
 const Role = mongoose.model("Role", roleSchema);

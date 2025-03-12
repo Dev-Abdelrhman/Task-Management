@@ -26,10 +26,10 @@ const commentSchema = new mongoose.Schema(
 );
 
 commentSchema.pre(/^find/, function (next) {
-  this.populate([
-    { path: "user", select: "name -_id" },
-    { path: "project", select: "name -_id" },
-  ]);
+  this.populate({ path: "user", select: "name -_id" }).populate({
+    path: "project",
+    select: "name",
+  });
   next();
 });
 

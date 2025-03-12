@@ -34,6 +34,7 @@ const projectSchema = new mongoose.Schema(
       },
     ],
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
+    // roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
   },
   {
     toJSON: { virtuals: true },
@@ -50,11 +51,9 @@ projectSchema.pre("save", function (next) {
 });
 
 projectSchema.pre(/^find/, function (next) {
-  this.populate([
-    { path: "owner", select: "name -_id" },
-    { path: "members.user", select: "name -_id" },
-    { path: "members.role", select: "name -_id" },
-  ]);
+  this.populate({ path: "owner", select: "name -_id" })
+    .populate({ path: "members.user", select: "name -_id" })
+    .populate({ path: "members.role", select: "name -_id" });
   next();
 });
 
@@ -62,10 +61,15 @@ projectSchema.virtual("memberCount").get(function () {
   return this.members.length;
 });
 
+projectSchema.virtual("roles", {
+  ref: "Role",
+  localField: "_id",
+  foreignField: "project",
+});
 projectSchema.virtual("comments", {
   ref: "Comment",
-  foreignField: "project",
   localField: "_id",
+  foreignField: "project",
 });
 
 const Project = mongoose.model("Project", projectSchema);
