@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
 const AuthComponent = () => {
-  const { user, isAuthenticated, signIn, signUp, signOut, isLoading, error } = useAuth();
-
+  const { user, isAuthenticated, signIn, signUp, signOut, isLoading, signInError, signUpError } = useAuth();
+  
   const [signInData, setSignInData] = useState({ email: "", password: "" });
   const [signUpData, setSignUpData] = useState({
     name: "",
@@ -15,9 +15,11 @@ const AuthComponent = () => {
 
   const handleInputChange = (e, form) => {
     const { name, value } = e.target;
-    form === "signIn"
-      ? setSignInData((prev) => ({ ...prev, [name]: value }))
-      : setSignUpData((prev) => ({ ...prev, [name]: value }));
+    if (form === "signIn") {
+      setSignInData((prev) => ({ ...prev, [name]: value }));
+    } else {
+      setSignUpData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSignIn = async () => {
@@ -54,6 +56,7 @@ const AuthComponent = () => {
             type="email"
             name="email"
             placeholder="Email"
+            aria-label="Email"
             value={signInData.email}
             onChange={(e) => handleInputChange(e, "signIn")}
           />
@@ -61,17 +64,21 @@ const AuthComponent = () => {
             type="password"
             name="password"
             placeholder="Password"
+            aria-label="Password"
             value={signInData.password}
             onChange={(e) => handleInputChange(e, "signIn")}
           />
-          <button onClick={handleSignIn} disabled={isLoading || signInData.password.length < 6}>Sign In</button>
-          {error && <p style={{ color: "red" }}>{error.message}</p>}
+          <button onClick={handleSignIn} disabled={isLoading || !signInData.email || !signInData.password}>
+            Sign In
+          </button>
+          {signInError && <p style={{ color: "red" }}>{signInError.message}</p>}
 
           <h2>Sign Up</h2>
           <input
             type="text"
             name="name"
             placeholder="Name"
+            aria-label="Name"
             value={signUpData.name}
             onChange={(e) => handleInputChange(e, "signUp")}
           />
@@ -79,6 +86,7 @@ const AuthComponent = () => {
             type="text"
             name="username"
             placeholder="Username"
+            aria-label="Username"
             value={signUpData.username}
             onChange={(e) => handleInputChange(e, "signUp")}
           />
@@ -86,6 +94,7 @@ const AuthComponent = () => {
             type="email"
             name="email"
             placeholder="Email"
+            aria-label="Email"
             value={signUpData.email}
             onChange={(e) => handleInputChange(e, "signUp")}
           />
@@ -93,6 +102,7 @@ const AuthComponent = () => {
             type="password"
             name="password"
             placeholder="Password"
+            aria-label="Password"
             value={signUpData.password}
             onChange={(e) => handleInputChange(e, "signUp")}
           />
@@ -100,10 +110,24 @@ const AuthComponent = () => {
             type="password"
             name="passwordConfirmation"
             placeholder="Confirm Password"
+            aria-label="Confirm Password"
             value={signUpData.passwordConfirmation}
             onChange={(e) => handleInputChange(e, "signUp")}
           />
-          <button onClick={handleSignUp} disabled={isLoading || signUpData.password.length < 6}>Sign Up</button>
+          <button
+            onClick={handleSignUp}
+            disabled={
+              isLoading ||
+              !signUpData.name ||
+              !signUpData.username ||
+              !signUpData.email ||
+              !signUpData.password ||
+              !signUpData.passwordConfirmation
+            }
+          >
+            Sign Up
+          </button>
+          {signUpError && <p style={{ color: "red" }}>{signUpError.message}</p>}
         </div>
       )}
     </div>
