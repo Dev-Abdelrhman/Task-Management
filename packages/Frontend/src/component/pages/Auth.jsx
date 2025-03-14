@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
+
+// const navigate = useNavigate();
 
 const AuthComponent = () => {
   const {
@@ -59,6 +63,7 @@ const AuthComponent = () => {
             Sign Out
           </button>
         </div>
+        // navigate("/home")
       ) : (
         <div>
           {/* Sign In Form */}
