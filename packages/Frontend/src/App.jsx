@@ -7,6 +7,7 @@ import Signup from "./component/pages/Signup";
 import ProtectedRoute from "./component/ProtectedRoute";
 import Auth from "./component/pages/Auth";
 import { Routes, Route } from "react-router-dom"; 
+import Dashboard from "./component/pages/Dashboard";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/home" element={<Dashboard />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
     </>

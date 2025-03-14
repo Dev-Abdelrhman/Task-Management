@@ -22,9 +22,14 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     console.error("API Error:", error?.response?.data || error.message);
-    return Promise.reject(error);
+
+    // Ensure the error always has a `message` property
+    const errorMessage = error.response?.data?.message || "An unexpected error occurred";
+
+    return Promise.reject({ ...error, message: errorMessage });
   }
 );
+
 
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials);

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
 
 const Login = () => {
-  const [state, setState] = useState('Sign Up');
+  const [state, setState] = useState('login');
   const navigate = useNavigate();
 
   const {
@@ -28,6 +28,15 @@ const Login = () => {
     passwordConfirmation: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home", { replace: true });
+    }
+  }, [user, navigate]);
+  
+
   const handleInputChange = (e, formSetter) => {
     const { name, value } = e.target;
     formSetter((prev) => ({ ...prev, [name]: value }));
@@ -40,7 +49,7 @@ const Login = () => {
       action === "signUp" &&
       signUpData.password !== signUpData.passwordConfirmation
     ) {
-      alert("Passwords do not match!");
+      setErrorMessage("Passwords do not match!");
       return;
     }
 
@@ -50,16 +59,19 @@ const Login = () => {
           ? await signIn(signInData)
           : await signUp(signUpData);
       console.log(`${action} successful:`, response);
-      alert(`${action} successful!`);
+      setErrorMessage("");
       navigate("/home");
     } catch (error) {
       console.error(`${action} failed:`, error);
+      setErrorMessage(
+        error?.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   return (
     <div className="d-md-flex align-items-center justify-content-center flex-column" style={{ background: `url(${bg})`, height: "100vh" }}>
-      <img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} />
+      <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
       <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "400px" }}>
         <h2 className="fs-2 fw-semibold">{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
         <p>{state === 'Sign Up' ? 'Create your account' : 'Login to your account!'}</p>
@@ -68,7 +80,7 @@ const Login = () => {
             onSubmit={(e) => handleSubmit(e, state === 'Sign Up' ? 'signUp' : 'signIn')} 
             className="grid gap-4 needs-validation" 
             noValidate
-          >
+            >
             {state === 'Sign Up' ? (
               <>
                 <div className="form-floating mb-2">
@@ -169,15 +181,11 @@ const Login = () => {
               </>
             )}
 
-            <button className="btn btn-primary w-100 py-2" type="submit" disabled={isLoading}>
+             <button className="btn btn-primary w-100 py-2" type="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : state}
             </button>
 
-            {state === 'Sign Up' ? (
-              signUpError && <div className="text-danger mt-2">{signUpError.message}</div>
-            ) : (
-              signInError && <div className="text-danger mt-2">{signInError.message}</div>
-            )}
+            {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
 
             {state === 'Sign Up' ? (
               <p className="my-2 text-secondary fs-6">Already have an account? <a href="#" onClick={() => setState('Login')}>Login here</a></p>
