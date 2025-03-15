@@ -22,7 +22,7 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("jwt", data.token); // ⚠️ Consider moving JWT storage to secure cookies
+      localStorage.setItem("accessToken", data.token); // ✅ Key must be "accessToken"
     },
     onError: (error) => {
       console.error("Sign-in error:", handleError(error));
@@ -37,7 +37,7 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("jwt", data.token);
+      localStorage.setItem("accessToken", data.token); // ✅ Key must be "accessToken"
     },
     onError: (error) => {
       console.error("Sign-up error:", handleError(error));
@@ -52,8 +52,9 @@ export const useAuth = () => {
     onSuccess: () => {
       logoutFromStore();
       localStorage.removeItem("jwt");
-      queryClient.invalidateQueries(["user"]); // Instead of clearing all queries
+      queryClient.setQueryData(["user"], null); // Ensure user is set to null
     },
+    
     onError: (error) => {
       console.error("Sign-out error:", handleError(error));
     },

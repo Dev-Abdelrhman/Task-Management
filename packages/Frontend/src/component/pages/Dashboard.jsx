@@ -9,7 +9,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate("/login"); 
+      navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error.message);
     }
@@ -20,7 +20,7 @@ const Dashboard = () => {
       <h3>Welcome to Home</h3>
       <button 
         className="btn btn-danger" 
-        onClick={handleLogout} 
+        onClick={handleLogout}
         disabled={isLoading}
       >
         {isLoading ? "Logging out..." : "Logout"}

@@ -8,9 +8,9 @@ const API = axios.create({
 // Attach token to every request if available
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("jwt"); // Consider using HttpOnly cookies for better security
+    const token = localStorage.getItem("accessToken");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; // Attach token to headers
     }
     return config;
   },
@@ -20,17 +20,39 @@ API.interceptors.request.use(
 // Handle API errors globally
 API.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    if (error.response.status === 401) {
+      try {
+        const res = await API.get("/users/refresh", { withCredentials: true });
+        localStorage.setItem("accessToken", res.data.accessToken);
+        
+        error.config.headers.Authorization = `Bearer ${res.data.accessToken}`;
+        return API.request(error.config); // Retry failed request
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        return Promise.reject(refreshError); // Logout user if refresh fails
+      }
+    }
+
     console.error("API Error:", error?.response?.data || error.message);
-
-    // Ensure the error always has a `message` property
-    const errorMessage = error.response?.data?.message || "An unexpected error occurred";
-
-    return Promise.reject({ ...error, message: errorMessage });
+    return Promise.reject(error);
   }
 );
 
-
+// Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
-export const signIn = (credentials) => API.post("/users/signin", credentials);
-export const logout = () => API.get("/users/logout");
+export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
+export const logout = () => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) {
+    return Promise.reject("No token found"); // Handle missing token early
+  }
+  return API.post(
+    "/users/logout",
+    {},
+    {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` }, // Attach token
+    }
+  );
+};
