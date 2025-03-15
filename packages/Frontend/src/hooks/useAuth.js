@@ -22,7 +22,11 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("accessToken", data.token); // ✅ Key must be "accessToken"
+      localStorage.setItem("accessToken", data.accessToken); // ✅ Key must be "accessToken"
+      localStorage.setItem("user", data);
+      console.log(data.data.user.username);
+      
+      useAuthStore.getState().setAccessToken(data.accessToken); // Add this line
     },
     onError: (error) => {
       console.error("Sign-in error:", handleError(error));
@@ -37,7 +41,8 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("accessToken", data.token); // ✅ Key must be "accessToken"
+      localStorage.setItem("accessToken", data.accessToken); // ✅ Key must be "accessToken"
+      useAuthStore.getState().setAccessToken(data.accessToken); // Add this line
     },
     onError: (error) => {
       console.error("Sign-up error:", handleError(error));
@@ -51,7 +56,8 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       logoutFromStore();
-      localStorage.removeItem("jwt");
+      localStorage.removeItem("accessToken");
+      sessionStorage.clear(); 
       queryClient.setQueryData(["user"], null); // Ensure user is set to null
     },
     

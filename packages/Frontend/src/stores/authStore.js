@@ -12,8 +12,8 @@ export const useAuthStore = create(
 
       logout: () => {
         set({ user: null, accessToken: null });
-        localStorage.removeItem("accessToken");
-        sessionStorage.removeItem("auth-storage");
+        localStorage.removeItem("accessToken"); // Already present
+        sessionStorage.clear(); // Clear all session storage
       }
     }),
     {

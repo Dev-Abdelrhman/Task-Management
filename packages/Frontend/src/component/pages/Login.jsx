@@ -181,8 +181,8 @@ const Login = () => {
               </>
             )}
 
-             <button className="btn btn-primary w-100 py-2" type="submit" disabled={isLoading}>
-              {isLoading ? "Loading..." : state}
+             <button className="btn btn-primary w-100 py-2" type="submit" >
+              {state}
             </button>
 
             {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
