@@ -13,7 +13,10 @@ router.route("/google/callback").get(AC.googleAuthCallback);
 router.route("/refresh").get(AC.refreshAccessToken);
 router.route("/signup").post(AC.signup);
 router.route("/signin").post(AC.signin);
+router.post("/forgotPassword", AC.forgotPassword);
+router.patch("/resetPassword/:token", AC.resetPassword);
 router.route("/logout").post(AC.logout);
+router.patch("/updateMyPassword", AC.updatePassword);
 
 router.route("/").get(UC.getAllUsers).post(UC.createUser);
 

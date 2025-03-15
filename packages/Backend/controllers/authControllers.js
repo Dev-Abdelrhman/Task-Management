@@ -1,13 +1,15 @@
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
+import crypto from "crypto";
 import User from "../models/userModel.js";
 // import Role from "../models/roleModel";
 // import Project from "../models/projectsModel";
 // import { checkProjectPermission } from "../models/checkProjectPermission";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
+import sendEmail from "../utils/nodeMailer.js";
 
 const generateAccessToken = function (id) {
   return jwt.sign(
@@ -71,8 +73,8 @@ const signin = catchAsync(async (req, res, next) => {
 });
 
 const signup = catchAsync(async (req, res, next) => {
-  const {email} = req.body
-  const user = await User.findOne({email});
+  const { email } = req.body;
+  const user = await User.findOne({ email });
   if (user) {
     return next(new AppError("Email already exists", 400));
   }
@@ -105,6 +107,76 @@ const googleAuthCallback = (req, res, next) => {
     }
   )(req, res, next);
 };
+
+const forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on POSTed email
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("There is no user with that email address", 404));
+  }
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/depiV1/users/resetPassword/${resetToken}`;
+  const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
+  console.log(message);
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: "Your password reset token is valid for 15 minutes.",
+      text: message,
+    });
+    res.status(200).json({
+      status: "success",
+      message: "Token sent to email",
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError("There was an error sending the email. Try again later!"),
+      500
+    );
+  }
+});
+
+const resetPassword = catchAsync(async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: new Date() },
+  });
+
+  if (!user) {
+    return next(new AppError("Token is invalid or has expired", 400));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirmation = req.body.passwordConfirmation;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
+  createSendToken(user, 200, res);
+});
+
+const updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  createSendToken(user, 200, res);
+});
 
 const blacklist = new Set();
 
@@ -203,4 +275,7 @@ export {
   protect,
   refreshAccessToken,
   logout,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
 };
