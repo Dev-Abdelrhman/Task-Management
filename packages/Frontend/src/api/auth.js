@@ -5,61 +5,88 @@ const API = axios.create({
   withCredentials: true, // Allow cookies/session authentication
 });
 
-// Attach token to every request if available
-API.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Attach token to headers
+let refreshPromise = null; // Store refresh request promise
+
+// Attach token and refresh if expired
+API.interceptors.request.use(async (config) => {
+  let token = localStorage.getItem("accessToken");
+
+  if (token) {
+    // Check if token is expired
+    const isExpired = (() => {
+      try {
+        const decoded = JSON.parse(atob(token.split(".")[1])); // Decode JWT
+        return decoded.exp * 1000 < Date.now(); // Compare expiration time
+      } catch {
+        return true; // Assume expired if decoding fails
+      }
+    })();
+
+    if (isExpired) {
+      if (!refreshPromise) {
+        refreshPromise = API.get("/users/refresh", { withCredentials: true })
+          .then((res) => {
+            localStorage.setItem("accessToken", res.data.accessToken);
+            return res.data.accessToken;
+          })
+          .catch((error) => {
+            console.error("Token refresh failed:", error);
+            localStorage.removeItem("accessToken");
+            window.location.href = "/login"; // Redirect to login
+            return Promise.reject(error);
+          })
+          .finally(() => {
+            refreshPromise = null; // Reset promise after completion
+          });
+      }
+
+      try {
+        token = await refreshPromise;
+      } catch {
+        return Promise.reject("Session expired, please log in again.");
+      }
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+}, (error) => Promise.reject(error));
 
 // Handle API errors globally
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
-      try {
-        const res = await API.get("/users/refresh", { withCredentials: true });
-        localStorage.setItem("accessToken", res.data.accessToken);
-        
-        error.config.headers.Authorization = `Bearer ${res.data.accessToken}`;
-        return API.request(error.config); // Retry failed request
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        return Promise.reject(refreshError); // Logout user if refresh fails
-      }
+    if (error.response?.status === 401) {
+      console.error("Unauthorized error:", error?.response?.data || error.message);
+      localStorage.removeItem("accessToken");
+      window.location.href = "/login"; // Redirect user to login
     }
-
-    console.error("API Error:", error?.response?.data || error.message);
     return Promise.reject(error);
   }
 );
 
-// Add these to auth.js exports
+// Google Authentication
 export const googleAuth = () => {
   window.location.href = "http://localhost:9999/depiV1/users/google";
 };
-
 
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
 export const handleGoogleCallback = () => API.get("/users/google/callback");
+
+// Logout
 export const logout = () => {
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    return Promise.reject("No token found"); // Handle missing token early
-  }
-  return API.post(
-    "/users/logout",
-    {},
-    {
-      withCredentials: true,
-      headers: { Authorization: `Bearer ${token}` }, // Attach token
-    }
-  );
+  return API.post("/users/logout", {}, { withCredentials: true })
+    .then(() => {
+      localStorage.removeItem("accessToken"); // Clear token on logout
+      window.location.href = "/login"; // Redirect user to login
+    })
+    .catch((error) => {
+      console.error("Logout failed:", error);
+      return Promise.reject(error);
+    });
 };
+
+export default API;

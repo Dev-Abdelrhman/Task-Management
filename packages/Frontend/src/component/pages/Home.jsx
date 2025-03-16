@@ -5,6 +5,8 @@ import { assets } from "../../assets/assets";
 
 
 function Home() {
+  
+
     return (
         <div style={{background: `url(${bg})`, height: "100vh"}}>
             <Navbar/>

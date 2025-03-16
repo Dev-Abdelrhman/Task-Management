@@ -21,12 +21,9 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.user);
-      localStorage.setItem("accessToken", data.accessToken); // ✅ Key must be "accessToken"
-      localStorage.setItem("user", data);
-      console.log(data.data.user.username);
-      
-      useAuthStore.getState().setAccessToken(data.accessToken); // Add this line
+      setUser(data.data.user); // Corrected from data.user ➔ data.data.user
+      localStorage.setItem("accessToken", data.accessToken);
+      useAuthStore.getState().setAccessToken(data.accessToken);
     },
     onError: (error) => {
       console.error("Sign-in error:", handleError(error));
@@ -40,9 +37,9 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.user);
-      localStorage.setItem("accessToken", data.accessToken); // ✅ Key must be "accessToken"
-      useAuthStore.getState().setAccessToken(data.accessToken); // Add this line
+      setUser(data.data.user); // Corrected from data.user ➔ data.data.user
+      localStorage.setItem("accessToken", data.accessToken);
+      useAuthStore.getState().setAccessToken(data.accessToken);
     },
     onError: (error) => {
       console.error("Sign-up error:", handleError(error));
