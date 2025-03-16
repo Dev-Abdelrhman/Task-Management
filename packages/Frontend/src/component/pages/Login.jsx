@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   //states
@@ -24,21 +24,19 @@ const Login = () => {
     position: 'absolute',
     right: '13px',
     width: '22px',
-    top: '28%',
+    top: '50%',
     transform: 'translateY(-50%)',
     cursor: 'pointer',
     zIndex: 2
   };
+  const cursors = {
+    cursor: 'pointer',
+  }
 //useAuth hook
   const {
     user,
-    isAuthenticated,
     signIn,
     signUp,
-    signOut,
-    isLoading,
-    signInError,
-    signUpError,
   } = useAuth();
 
 //useEffect
@@ -64,7 +62,8 @@ const Login = () => {
       action === "signUp" &&
       signUpData.password !== signUpData.passwordConfirmation
     ) {
-      setErrorMessage("Passwords do not match!");
+      // setErrorMessage("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
 
@@ -74,18 +73,19 @@ const Login = () => {
           ? await signIn(signInData)
           : await signUp(signUpData);
       console.log(`${action} successful:`, response);
+      toast.success(`welcome ${response.data.user.name}!`);
       setErrorMessage("");
       navigate("/home");
     } catch (error) {
       console.error(`${action} failed:`, error);
-      setErrorMessage(
+      toast.error(
         error?.response?.data?.message || "An unexpected error occurred."
       );
     }
   };
 
   return (
-    <div className="d-md-flex align-items-center justify-content-center flex-column" style={{ background: `url(${bg})`, height: "100vh" }}>
+    <div className="d-md-flex align-items-center justify-content-center flex-column"  style={{ background: `url(${bg})`, height: "100vh" }}>
       <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
       <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "400px" }}>
         <h2 className="fs-2 fw-semibold">{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
@@ -197,16 +197,13 @@ const Login = () => {
                   onClick={() => setShowSignInPassword(!showSignInPassword)}
                   alt="Toggle password visibility"
                 />
-                  <a className="text-left p-2 border-0 btn">Forgot password?</a>
                 </div>
               </>
             )}
-
-             <button className="btn btn-primary w-100 py-2" type="submit" >
+              <a onClick={() => navigate('/reset-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
+             <button className="btn btn-primary w-100 py-2 mt-2" type="submit" >
               {state}
             </button>
-
-            {errorMessage && <div className="text-danger mt-2"><i className="bi bi-exclamation-circle"></i> {errorMessage}</div>}
 
             {state === 'Sign Up' ? (
               <p className="my-2 text-secondary fs-6">Already have an account? <a href="#" onClick={() => setState('Login')}>Login here</a></p>

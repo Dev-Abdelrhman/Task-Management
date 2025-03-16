@@ -3,11 +3,15 @@ import { Routes, Route , Navigate } from "react-router-dom";
 import Home from "./component/pages/Home";
 import Login from "./component/pages/Login";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import ResetPassword from "./component/pages/resetPassword";
 import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
+    <>
+    <ToastContainer />
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route path="/home" element={<Dashboard />} />
@@ -17,8 +21,10 @@ function App() {
       <Route path="/" element={<HomeOrRedirect />} />
       
       <Route path="/login" element={<Login />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    </>
   );
 }
 

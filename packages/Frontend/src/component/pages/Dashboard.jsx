@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const { signOut, isLoading } = useAuth();
@@ -11,7 +12,7 @@ const Dashboard = () => {
       await signOut();
       navigate("/home");
     } catch (error) {
-      console.error("Logout failed:", error.message);
+      toast.error("Logout failed:", error.message);
     }
   };
 
