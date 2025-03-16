@@ -173,7 +173,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
     return next(new AppError("Your current password is wrong.", 401));
   }
   user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordConfirmation = req.body.passwordConfirmation;
   await user.save();
   createSendToken(user, 200, res);
 });
