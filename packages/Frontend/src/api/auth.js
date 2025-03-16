@@ -57,15 +57,21 @@ API.interceptors.request.use(async (config) => {
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      console.error("Unauthorized error:", error?.response?.data || error.message);
+    const originalRequest = error.config;
+    
+    // Avoid redirecting for login/signup errors
+    if (
+      error.response?.status === 401 &&
+      !originalRequest.url.includes("/users/signin") &&
+      !originalRequest.url.includes("/users/signup")
+    ) {
       localStorage.removeItem("accessToken");
-      window.location.href = "/login"; // Redirect user to login
+      window.location.href = "/login"; 
     }
+    
     return Promise.reject(error);
   }
 );
-
 // Google Authentication
 export const googleAuth = () => {
   window.location.href = "http://localhost:9999/depiV1/users/google";

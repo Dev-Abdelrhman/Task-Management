@@ -5,9 +5,31 @@ import { assets } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
 
 const Login = () => {
-  const [state, setState] = useState('login');
   const navigate = useNavigate();
+  //states
+  const [state, setState] = useState('login');
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+  const [signInData, setSignInData] = useState({ email: "", password: "" });
+  const [signUpData, setSignUpData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
+//styles
+  const eyeIconStyleLog = {
+    position: 'absolute',
+    right: '13px',
+    width: '22px',
+    top: '28%',
+    transform: 'translateY(-50%)',
+    cursor: 'pointer',
+    zIndex: 2
+  };
+//useAuth hook
   const {
     user,
     isAuthenticated,
@@ -19,24 +41,17 @@ const Login = () => {
     signUpError,
   } = useAuth();
 
-  const [signInData, setSignInData] = useState({ email: "", password: "" });
-  const [signUpData, setSignUpData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-
-  const [errorMessage, setErrorMessage] = useState("");
-
+//useEffect
+  useEffect(() => {
+    setErrorMessage(""); // Clear errors when form state changes
+  }, [state]);
   useEffect(() => {
     if (user) {
       navigate("/home", { replace: true });
     }
   }, [user, navigate]);
   
-
+//handles functions
   const handleInputChange = (e, formSetter) => {
     const { name, value } = e.target;
     formSetter((prev) => ({ ...prev, [name]: value }));
@@ -166,7 +181,7 @@ const Login = () => {
                 </div>
                 <div className="form-floating mb-3">
                   <input
-                    type="password"
+                    type={showSignInPassword ? 'text' : 'password'}
                     className="form-control"
                     id="floatingPassword"
                     name="password"
@@ -176,6 +191,12 @@ const Login = () => {
                     required
                   />
                   <label htmlFor="floatingPassword"><img src={assets.lock_icon} className="mb-1" /> Password</label>
+                  <img
+                  src={showSignInPassword ? assets.eye_open_icon : assets.eye_closed_icon}
+                  style={eyeIconStyleLog}
+                  onClick={() => setShowSignInPassword(!showSignInPassword)}
+                  alt="Toggle password visibility"
+                />
                   <a className="text-left p-2 border-0 btn">Forgot password?</a>
                 </div>
               </>
@@ -185,7 +206,7 @@ const Login = () => {
               {state}
             </button>
 
-            {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
+            {errorMessage && <div className="text-danger mt-2"><i className="bi bi-exclamation-circle"></i> {errorMessage}</div>}
 
             {state === 'Sign Up' ? (
               <p className="my-2 text-secondary fs-6">Already have an account? <a href="#" onClick={() => setState('Login')}>Login here</a></p>
