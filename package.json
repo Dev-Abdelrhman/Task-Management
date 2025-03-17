@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "concurrently": "^9.0.1",
+    "lucide-react": "^0.482.0",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {

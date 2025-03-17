@@ -7,6 +7,8 @@ import hand_wave from './hand_wave.png'
 import header_img from './header_img.png'
 import eye_open_icon from './eye.png'
 import eye_closed_icon from './open-eye.png'
+import x from './x.png'
+import check_icon from './check.png'
 
 export const assets = {
     arrow_icon,
@@ -17,5 +19,7 @@ export const assets = {
     hand_wave,
     header_img,
     eye_open_icon,
-    eye_closed_icon
+    eye_closed_icon,
+    x,
+    check_icon
 }

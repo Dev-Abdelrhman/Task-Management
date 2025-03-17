@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
 import { toast } from "react-toastify";
+import PasswordStrengthMeter from "./PasswordMeter";
 const Login = () => {
   const navigate = useNavigate();
   //states
@@ -87,7 +88,7 @@ const Login = () => {
   return (
     <div className="d-md-flex align-items-center justify-content-center flex-column"  style={{ background: `url(${bg})`, height: "100vh" }}>
       <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
-      <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "400px" }}>
+      <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "500px" }}>
         <h2 className="fs-2 fw-semibold">{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
         <p>{state === 'Sign Up' ? 'Create your account' : 'Login to your account!'}</p>
         <section className="form-signin w-100 m-auto">
@@ -163,6 +164,7 @@ const Login = () => {
                   />
                   <label htmlFor="floatingPasswordConfirm"><img src={assets.lock_icon} className="mb-1" /> Password confirmation</label>
                 </div>
+                <PasswordStrengthMeter password={signUpData.password} />
               </>
             ) : (
               <>
