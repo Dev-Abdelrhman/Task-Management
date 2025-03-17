@@ -13,11 +13,12 @@ const PasswordCriteria = ({ password }) => {
     return (
         <div>
             {criteria.map((item) => (
-                <div key={item.label} className='d-flex align-items-center gap-1 fs-6 my-1'>
+                <div key={item.label} className='d-flex align-items-center gap-1 fs-6 fw-normal my-1'>
                     <img 
                         src={item.met ? assets.check_icon : assets.x} 
                         alt={item.met ? "Met" : "Not met"} 
-                        style={{ width: '18px' }}
+                        style={{ width: '10px' }}
+                        className='mt-1'
                     />
                     <span className={item.met ? 'text-success' : 'text-danger'}>
                         {item.label}

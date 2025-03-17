@@ -3,7 +3,7 @@ import { Routes, Route , Navigate } from "react-router-dom";
 import Home from "./component/pages/Home";
 import Login from "./component/pages/Login";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import ResetPassword from "./component/pages/resetPassword";
+import ResetPassword from "./component/pages/ResetPassword";
 import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";

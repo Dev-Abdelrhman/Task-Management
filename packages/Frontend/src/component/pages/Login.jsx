@@ -200,9 +200,10 @@ const Login = () => {
                   alt="Toggle password visibility"
                 />
                 </div>
+                 <a onClick={() => navigate('/reset-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
               </>
             )}
-              <a onClick={() => navigate('/reset-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
+
              <button className="btn btn-primary w-100 py-2 mt-2" type="submit" >
               {state}
             </button>

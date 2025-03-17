@@ -142,3 +142,4 @@ pnpm-lock.yaml
 package-lock.json
 authbackup.js
 .gitignore
+.qodo
