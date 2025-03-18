@@ -76,7 +76,7 @@ const Login = () => {
       console.log(`${action} successful:`, response);
       toast.success(`welcome ${response.data.user.name}!`);
       setErrorMessage("");
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.error(`${action} failed:`, error);
       toast.error(
