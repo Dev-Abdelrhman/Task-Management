@@ -17,15 +17,15 @@ const Dashboard = () => {
   };
 
   return (
-    <nav className="navbar bg-dark text-white p-3">
-      <h3>Welcome to Home</h3>
-      <button
+    <nav className="text-center navbar bg-dark text-white p-3">
+      <h3 className="">Welcome to Home</h3>
+      {/* <button
         className="btn btn-danger"
         onClick={handleLogout}
         disabled={isLoading}
       >
         {isLoading ? "Logging out..." : "Logout"}
-      </button>
+      </button> */}
     </nav>
   );
 };
