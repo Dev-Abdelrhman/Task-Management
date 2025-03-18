@@ -7,12 +7,15 @@ import { assets } from "../../assets/assets";
 function Home() {
   
 
-    return (
-        <div style={{background: `url(${bg})`, height: "100vh"}}>
-            <Navbar/>
-            <Header/>
-        </div>
-    )
+    return <>
+    
+    <h1>Home</h1>
+    </> 
+        // <div style={{background: `url(${bg})`, height: "100vh"}}>
+        //     <Navbar/>
+        //     <Header/>
+        // </div>
+    
 }
 
 export default Home;
