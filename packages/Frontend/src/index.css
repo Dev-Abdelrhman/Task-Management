@@ -4,3 +4,8 @@
 * {
     font-family: "Outfit", sans-serif !important;
 }
+.gradient-text {
+    background: linear-gradient(to right, #34d399, #10b981); /* Green-400 to Emerald-500 */
+    /* -webkit-background-clip: text; */
+    -webkit-text-fill-color: transparent;
+}

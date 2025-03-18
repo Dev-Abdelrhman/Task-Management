@@ -63,14 +63,26 @@ export const useAuth = () => {
     },
   });
 
+  // Forgot password mutation
+  const forgotPasswordMutation = useMutation({
+    mutationFn: async (email) => {
+      const response = await forgotPassword(email);
+      return response.data;
+    },
+    onError: (error) => {
+      console.error("Forgot password error:", handleError(error) || "ُError sending reset password email.");
+    },
+  });
+
   return {
     user,
     isAuthenticated: !!user,
     signIn: signInMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
+    forgotPassword: forgotPasswordMutation.mutateAsync,
     isLoading:
-      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending,
+      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending,
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,
     signOutError: signOutMutation.error,
