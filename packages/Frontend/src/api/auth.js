@@ -80,7 +80,9 @@ export const googleAuth = () => {
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
+export const forgotPassword = (email) => API.post("/users/forgot-password", email);
 export const handleGoogleCallback = () => API.get("/users/google/callback");
+
 
 // Logout
 export const logout = () => {

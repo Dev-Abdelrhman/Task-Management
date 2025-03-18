@@ -9,6 +9,7 @@ import eye_open_icon from './eye.png'
 import eye_closed_icon from './open-eye.png'
 import x from './x.png'
 import check_icon from './check.png'
+import left_Arrow from './left-arrow.png'
 
 export const assets = {
     arrow_icon,
@@ -21,5 +22,6 @@ export const assets = {
     eye_open_icon,
     eye_closed_icon,
     x,
-    check_icon
+    check_icon,
+    left_Arrow
 }
