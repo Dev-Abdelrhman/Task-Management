@@ -47,7 +47,7 @@ const ResetPassword = () => {
                   // onChange={(e) => handleInputChange(e, setSignInData)}
                   required
                 />
-                <label htmlFor="floatingInput"><img src={assets.mail_icon} className="mb-1" /> Email address</label>
+                <label htmlFor="floatingInput"><img src={assets.mail_icon} className="mb-1 fs-4" /> Email address</label>
               </div>
             </>
            <button className="btn btn-primary w-100 py-2 my-2" type="submit" >
