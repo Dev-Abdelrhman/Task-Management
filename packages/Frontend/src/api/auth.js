@@ -12,13 +12,12 @@ API.interceptors.request.use(async (config) => {
   let token = localStorage.getItem("accessToken");
 
   if (token) {
-    // Check if token is expired
     const isExpired = (() => {
       try {
-        const decoded = JSON.parse(atob(token.split(".")[1])); // Decode JWT
-        return decoded.exp * 1000 < Date.now(); // Compare expiration time
+        const decoded = JSON.parse(atob(token.split(".")[1]));
+        return decoded.exp * 1000 < Date.now();
       } catch {
-        return true; // Assume expired if decoding fails
+        return true;
       }
     })();
 
@@ -32,17 +31,20 @@ API.interceptors.request.use(async (config) => {
           .catch((error) => {
             console.error("Token refresh failed:", error);
             localStorage.removeItem("accessToken");
-            window.location.href = "/login"; // Redirect to login
+            window.location.href = "/login";
             return Promise.reject(error);
           })
           .finally(() => {
-            refreshPromise = null; // Reset promise after completion
+            refreshPromise = null;
           });
       }
 
       try {
         token = await refreshPromise;
-      } catch {
+      } catch (error) {
+        // Ensure localStorage is cleared if refresh fails
+        localStorage.removeItem("accessToken");
+        window.location.href = "/login";
         return Promise.reject("Session expired, please log in again.");
       }
     }
@@ -72,6 +74,18 @@ API.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const debugLocalStorage = () => {
+  console.log("Current localStorage state:", {
+    accessToken: localStorage.getItem("accessToken")
+  });
+};
+
+export const clearAuthState = () => {
+  localStorage.removeItem("accessToken");
+  window.location.href = "/login";
+};
+
 // Google Authentication
 export const googleAuth = () => {
   window.location.href = "http://localhost:9999/depiV1/users/google";
@@ -82,8 +96,6 @@ export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
 export const forgotPassword = (email) => API.post("/users/forgot-password", email);
 export const handleGoogleCallback = () => API.get("/users/google/callback");
-
-
 // Logout
 export const logout = () => {
   return API.post("/users/logout", {}, { withCredentials: true })

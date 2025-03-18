@@ -53,7 +53,8 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       logoutFromStore();
-      localStorage.removeItem("accessToken");
+      // localStorage.removeItem("accessToken");
+      localStorage.clear
       sessionStorage.clear(); 
       queryClient.setQueryData(["user"], null); // Ensure user is set to null
     },

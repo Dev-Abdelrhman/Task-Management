@@ -75,6 +75,7 @@ const Login = () => {
           : await signUp(signUpData);
       console.log(`${action} successful:`, response);
       toast.success(`welcome ${response.data.user.name}!`);
+      localStorage.clear();
       setErrorMessage("");
       navigate("/");
     } catch (error) {
