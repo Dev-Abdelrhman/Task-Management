@@ -53,12 +53,13 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       logoutFromStore();
-      // localStorage.removeItem("accessToken");
-      localStorage.clear
-      sessionStorage.clear(); 
-      queryClient.setQueryData(["user"], null); // Ensure user is set to null
+      // Clear localStorage properly
+      localStorage.clear();
+      // Clear sessionStorage
+      sessionStorage.clear();
+      // Invalidate queries
+      queryClient.setQueryData(["user"], null);
     },
-    
     onError: (error) => {
       console.error("Sign-out error:", handleError(error));
     },
