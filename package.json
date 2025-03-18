@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "concurrently": "^9.0.1",
     "lucide-react": "^0.482.0",
     "react-toastify": "^11.0.5"

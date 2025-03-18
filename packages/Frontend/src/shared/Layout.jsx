@@ -1,18 +1,31 @@
 import React from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import Navbar from "./Navbar";
 
 function Layout() {
-  return (
-    <>
-      <Navbar />
+    return (
+        <>
+        
+            <div className="container-fluid ps-0">
 
-      <Outlet />
+                <div className="row">
+                    <div className="col-lg-3">
+                        <div className="sidebar text-center position-fixed top-0 start-0 bottom-0 w-25">
+                            <Sidebar />
+                        </div>
+                    </div>
+                    <div className="col-lg-9">
+                        <Navbar />
+                        <Outlet />
 
-      <Footer />
-    </>
-  );
+                    </div>
+                </div>
+            </div>
+
+
+        </>
+    );
 }
 
 export default Layout;
