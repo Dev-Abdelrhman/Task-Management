@@ -1,0 +1,27 @@
+Users API(Still in development):-
+Sign in(post):-http://localhost:9999/depiV1/users/signin
+Sign up(post):-http://localhost:9999/depiV1/users/signup
+Log out(post):-http://localhost:9999/depiV1/users/logout
+Refresh Token(get):-http://localhost:9999/depiV1/users/refresh
+Forget Password(post):-http://localhost:9999/depiV1/users/forgetPassword
+Reset Password(patch):-http://localhost:9999/depiV1/users/resetPass/:resetToken
+_____________________________________________________________________________________________________
+Projects API(Completed):-
+Get all projects(get):-http://localhost:9999/depiV1/users/:userID/projects
+Create projects(post):-http://localhost:9999/depiV1/users/:userID/projects
+Get one project(get):-http://localhost:9999/depiV1/users/:userID/projects
+Update it(put):-http://localhost:9999/depiV1/users/:userID/projects
+Delete it(delete):-http://localhost:9999/depiV1/users/:userID/projects
+_____________________________________________________________________________________________________
+Roles API(Still in development):-
+Get roles for the current project(get):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles
+Create Roles for the current project(post):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles
+_____________________________________________________________________________________________________
+Comments API(Completed):-
+Get all comments(get):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments
+Create comment(post):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments
+Get one comment(get):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID
+Update it(put):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID
+Delete it(delete):-http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID
+_____________________________________________________________________________________________________
+ON VOID
