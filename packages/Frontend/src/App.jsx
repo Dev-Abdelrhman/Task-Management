@@ -8,6 +8,7 @@ import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
+import Projects from "./component/pages/Projects/Projects";
 function App() {
   return (
     <>
@@ -16,6 +17,7 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
+            <Route path="/projects" element={<Projects />} />
 
 
             <Route path="*" element={<PageNotFound />} />
