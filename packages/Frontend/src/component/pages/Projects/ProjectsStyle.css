@@ -1,0 +1,13 @@
+.overlay {
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+  }
+  .card {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card img {
+    height: 250px;
+    object-fit: cover;
+  }
+  
