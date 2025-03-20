@@ -8,6 +8,7 @@ import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
+import GoogleCallback from "./component/pages/GoogleCallback";
 function App() {
   return (
     <>
@@ -28,6 +29,7 @@ function App() {
         <Route element={<ProtectedRoutes isProtected={false} />}>
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/google/callback" element={<GoogleCallback />} /> 
         </Route>
         
         <Route path="*" element={<PageNotFound />} />

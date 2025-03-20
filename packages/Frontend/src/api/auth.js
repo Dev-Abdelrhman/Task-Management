@@ -94,9 +94,33 @@ export const googleAuth = () => {
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
-export const forgotPassword = (email) => API.post("/users/forgot-password", email);
-export const handleGoogleCallback = () => API.get("/users/google/callback");
-// Logout
+export const handleGoogleCallback = (code) => {
+  return API.get("/users/google/callback", { params: { code } }) // ✅ Correct path
+    .then((response) => {
+      const { accessToken , user } = response.data;
+      localStorage.setItem("accessToken", accessToken);
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Google callback error:", error);
+      throw error;
+    });
+};
+export const forgotPassword = async (email) => {
+  try {
+    // Change path from "/users/forgot-password" to "/forgotPassword"
+    const response = await API.post("/users/forgotPassword", { email });
+    return response.data;
+  } catch (error) {
+    console.error("Forgot password API error:", error);
+    if (error.response?.status === 404) {
+      throw new Error("No user found with this email address.");
+    }
+    throw new Error(
+      error.response?.data?.message || "Error sending reset password email."
+    );
+  }
+};// Logout
 export const logout = () => {
   return API.post("/users/logout", {}, { withCredentials: true })
     .then(() => {

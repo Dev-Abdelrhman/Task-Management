@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { assets } from "../../assets/assets";
+import { assets , cursors } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
 import { toast } from "react-toastify";
 import PasswordStrengthMeter from "./PasswordMeter";
@@ -30,14 +30,14 @@ const Login = () => {
     cursor: 'pointer',
     zIndex: 2
   };
-  const cursors = {
-    cursor: 'pointer',
-  }
+
 //useAuth hook
   const {
     user,
     signIn,
     signUp,
+    googleSignIn,
+    isLoading,
   } = useAuth();
 
 //useEffect
@@ -82,6 +82,15 @@ const Login = () => {
       toast.error(
         error?.response?.data?.message || "An unexpected error occurred."
       );
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await googleSignIn();
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google sign-in failed:", error);
     }
   };
 
@@ -213,6 +222,17 @@ const Login = () => {
             ) : (
               <p className="my-2 text-secondary fs-6">Don't have an account? <a href="#" onClick={() => setState('Sign Up')}> Sign up</a></p>
             )}
+            {/* google */}
+            <div className="container mt-4">
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                className="w-100 bg-danger text-white py-2 px-4 border-0"
+                disabled={isLoading}
+              >
+                Sign In with Google
+              </button>
+            </div>
           </form>
         </section>
       </div>

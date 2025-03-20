@@ -15,6 +15,7 @@ export const useAuthStore = create(
         localStorage.removeItem("accessToken"); // Already present
         sessionStorage.clear(); // Clear all session storage
       }
+      
     }),
     {
       name: "auth-storage",

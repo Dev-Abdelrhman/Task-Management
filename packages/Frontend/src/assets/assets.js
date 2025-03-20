@@ -11,6 +11,10 @@ import x from './x.png'
 import check_icon from './check.png'
 import left_Arrow from './left-arrow.png'
 
+export const cursors = {
+    cursor: 'pointer',
+  }
+
 export const assets = {
     arrow_icon,
     lock_icon,

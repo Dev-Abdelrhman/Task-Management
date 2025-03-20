@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signIn, signUp, logout } from "../api/auth"; // API functions
+import { signIn, signUp, logout, forgotPassword , googleAuth } from "../api/auth"; // API functions
 import { useAuthStore } from "../stores/authStore"; // Zustand store
+import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const { user, setUser, logout: logoutFromStore } = useAuthStore();
@@ -71,11 +72,32 @@ export const useAuth = () => {
       const response = await forgotPassword(email);
       return response.data;
     },
+    onSuccess: (data) => {
+      console.log("Forgot password success:", data);
+      toast.success("Password reset instructions have been sent to your email.");
+    },
     onError: (error) => {
-      console.error("Forgot password error:", handleError(error) || "ُError sending reset password email.");
+      console.error("Forgot password error:", handleError(error));
+      toast.error(
+        handleError(error) || "Error sending reset password email. Please try again."
+      );
     },
   });
 
+  // In useAuth.js, add the mutation
+const googleSignInMutation = useMutation({
+  mutationFn: async () => {
+    await googleAuth();
+  },
+  onSuccess: () => {
+    toast.success("Signed in with Google successfully");
+  },
+  onError: (error) => {
+    console.error("Google sign-in error:", handleError(error));
+    toast.error("Google sign-in failed. Please try again.");
+  },
+});
+  
   return {
     user,
     isAuthenticated: !!user,
@@ -83,6 +105,7 @@ export const useAuth = () => {
     signUp: signUpMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
     forgotPassword: forgotPasswordMutation.mutateAsync,
+    googleSignIn: googleSignInMutation.mutateAsync,
     isLoading:
       signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending,
     signInError: signInMutation.error,
