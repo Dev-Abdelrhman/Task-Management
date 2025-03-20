@@ -17,7 +17,7 @@ function Sidebar() {
                 <div>
                     <ul className='text-left ms-5'>
                         <li className='fs-3 fw-normal mb-4'>
-                            <Link to="/">
+                            <Link to={"/"}>
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
                                         <i className="fa-solid fa-house"></i>
@@ -28,14 +28,14 @@ function Sidebar() {
                         </li>
                        
                         <li className='fs-3 fw-normal mb-4'>
-                            <a href="">
+                            <Link to={`/projects`}>
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
                                         <i className="fa-solid fa-house"></i>
                                     </div>
                                     <span className='fw-semibold'>Projects</span>
                                 </div>
-                            </a>
+                            </Link>
                         </li>
                        
                         <li className='fs-3 fw-normal mb-4'>
