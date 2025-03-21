@@ -8,11 +8,16 @@ import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
+<<<<<<< HEAD
 // <<<<<<< HEAD
 import GoogleCallback from "./component/pages/GoogleCallback";
 // =======
 import Projects from "./component/pages/Projects/Projects";
 // >>>>>>> 8d46536f83b6da783846b4238d4ff1ec97e43b0d
+=======
+import GoogleCallback from "./component/pages/GoogleCallback";
+import Projects from "./component/pages/Projects/Projects";
+>>>>>>> f965f8816c97388d705a2447c7a7599a608573b5
 function App() {
   return (
     <>
@@ -22,7 +27,6 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
-
 
             <Route path="*" element={<PageNotFound />} />
           </Route>
@@ -34,9 +38,9 @@ function App() {
         <Route element={<ProtectedRoutes isProtected={false} />}>
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/auth/google/callback" element={<GoogleCallback />} /> 
+          <Route path="/auth/google/callback" element={<GoogleCallback />} />
         </Route>
-        
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>

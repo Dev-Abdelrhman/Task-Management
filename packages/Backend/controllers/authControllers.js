@@ -1,5 +1,5 @@
 // import bcrypt from "bcryptjs";
-import passport from "passport";
+import passport from "../strategies/google_Strategy.js";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
 import crypto from "crypto";
@@ -10,6 +10,7 @@ import User from "../models/userModel.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import sendEmail from "../utils/nodeMailer.js";
+import mongoose from "mongoose";
 
 const generateAccessToken = function (id) {
   return jwt.sign(
@@ -47,14 +48,14 @@ const createSendToken = (user, statusCode, res) => {
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("refreshToken", refreshToken, cookieOptions); // Store refresh token in HTTP-only cookie
+  res.cookie("refreshToken", refreshToken, cookieOptions);
 
-  user.password = undefined; // Hide password in response
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
-    accessToken, // Send access token to client
-    data: { user },
+    accessToken,
+    user,
   });
 };
 
@@ -73,12 +74,21 @@ const signin = catchAsync(async (req, res, next) => {
 });
 
 const signup = catchAsync(async (req, res, next) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (user) {
+  const { name, username, email, password, passwordConfirmation } = req.body;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
     return next(new AppError("Email already exists", 400));
   }
-  const newUser = await User.create(req.body);
+
+  const newUser = await User.create({
+    name,
+    username,
+    email,
+    password,
+    passwordConfirmation,
+  });
+
   createSendToken(newUser, 201, res);
 });
 
@@ -87,26 +97,81 @@ const googleAuth = passport.authenticate("google", {
 });
 
 const googleAuthCallback = (req, res, next) => {
+  console.log("🔍 Google Authentication Callback Triggered");
+
   passport.authenticate(
     "google",
     { failureRedirect: "/login" },
-    (err, user) => {
+    async (err, user) => {
       if (err || !user) {
+        console.error("❌ Authentication error:", err);
         return res
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
-      req.logIn(user, (loginErr) => {
-        if (loginErr) {
-          return res
-            .status(500)
-            .json({ status: "error", message: "Login failed" });
-        }
-        return res.redirect("/depiV1/projects"); // Redirect user after successful login
-      });
+
+      const frontendUrl =
+        "http://localhost:5173" ||
+        "http://localhost:5174" ||
+        "http://localhost:5175";
+      console.log("🌍 Retrieved frontendUrl from session:", frontendUrl);
+
+      if (!frontendUrl) {
+        console.error("🚨 Frontend URL is missing!");
+        return res
+          .status(400)
+          .json({ status: "error", message: "Frontend URL missing" });
+      }
+
+      if (user.tempToken) {
+        console.log("🛑 New user, redirecting to complete signup...");
+        return res.redirect(`${frontendUrl}/login?token=${user.tempToken}`);
+      }
+
+      console.log("✅ Existing user, logging in...");
+      return createSendToken(user, 200, res);
     }
   )(req, res, next);
 };
+
+const completeGoogleSignup = catchAsync(async (req, res, next) => {
+  const { token, username, password, passwordConfirmation } = req.body;
+
+  if (!token) {
+    return next(new AppError("Token is required", 400));
+  }
+
+  if (!username || !password || !passwordConfirmation) {
+    return next(new AppError("All fields are required", 400));
+  }
+
+  if (password !== passwordConfirmation) {
+    return next(new AppError("Passwords do not match", 400));
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
+  console.log("Decoded Token:", decoded);
+
+  if (!mongoose.Types.ObjectId.isValid(decoded.googleID)) {
+    console.log("invalid googleID", decoded.googleID);
+  }
+
+  const existingUser = await User.findOne({ email: decoded.email });
+  if (existingUser) {
+    return next(new AppError("User already exists. Please log in.", 400));
+  }
+
+  const newUser = await User.create({
+    googleID: decoded.googleID,
+    email: decoded.email,
+    name: decoded.name,
+    username,
+    password,
+    active: true,
+  });
+
+  createSendToken(newUser, 201, res);
+});
 
 const forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
@@ -272,6 +337,7 @@ export {
   signup,
   googleAuth,
   googleAuthCallback,
+  completeGoogleSignup,
   protect,
   refreshAccessToken,
   logout,

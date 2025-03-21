@@ -6,15 +6,14 @@ import ProjectsRoutes from "./projectsRoute.js";
 
 const router = express();
 
-router.use("/:id/projects", ProjectsRoutes);
-
 router.route("/google").get(AC.googleAuth);
 router.route("/google/callback").get(AC.googleAuthCallback);
+router.route("/complete-signup").post(AC.completeGoogleSignup);
 router.route("/refresh").get(AC.refreshAccessToken);
 router.route("/signup").post(AC.signup);
 router.route("/signin").post(AC.signin);
-router.post("/forgotPassword", AC.forgotPassword);
-router.patch("/resetPassword/:token", AC.resetPassword);
+router.route("/forgotPassword").post(AC.forgotPassword);
+router.route("/resetPassword/:token").patch(AC.resetPassword);
 router.route("/logout").post(AC.logout);
 router.patch("/updateMyPassword", AC.updatePassword);
 
@@ -25,5 +24,7 @@ router
   .get(UC.getUserById)
   .put(UC.updateUser)
   .delete(UC.deleteUser);
+
+router.use("/:id/projects", ProjectsRoutes);
 
 export default router;
