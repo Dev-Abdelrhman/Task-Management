@@ -74,9 +74,9 @@ const Login = () => {
           ? await signIn(signInData)
           : await signUp(signUpData);
       console.log(`${action} successful:`, response);
-      toast.success(`welcome ${response.data.user.name}!`);
+      toast.success(`welcome ${response.user.name}!`);
       setErrorMessage("");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       console.error(`${action} failed:`, error);
       toast.error(
@@ -88,7 +88,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn();
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       console.error("Google sign-in failed:", error);
     }

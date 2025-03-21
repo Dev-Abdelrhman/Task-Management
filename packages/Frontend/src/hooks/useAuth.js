@@ -22,7 +22,7 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.data.user); // Corrected from data.user ➔ data.data.user
+      setUser(data.user); // Corrected from data.user ➔ data.user
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
     },
@@ -38,7 +38,7 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.data.user); // Corrected from data.user ➔ data.data.user
+      setUser(data.user); // Corrected from data.user ➔ data.user
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
     },

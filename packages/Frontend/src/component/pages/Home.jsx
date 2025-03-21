@@ -8,13 +8,11 @@ function Home() {
   
 
     return <>
-    
-    <h1>Home</h1>
+        <div style={{background: `url(${bg})`, height: "100vh"}}>
+            <Navbar/>
+            <Header/>
+        </div>
     </> 
-        // <div style={{background: `url(${bg})`, height: "100vh"}}>
-        //     <Navbar/>
-        //     <Header/>
-        // </div>
     
 }
 

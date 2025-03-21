@@ -12,7 +12,6 @@ const ProtectedRoutes = ({ isProtected = true }) => {
       <Navigate to="/login" state={{ from: location }} replace />
     );
   } else {
-    // Restrict access if already authenticated
     return isAuthenticated ? (
       <Navigate to="/home" replace />
     ) : (
