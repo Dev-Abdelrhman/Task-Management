@@ -8,11 +8,11 @@ import Dashboard from "./component/pages/Dashboard";
 import { useAuth } from "./hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import GoogleCallback from "./component/pages/GoogleCallback";
-=======
+// =======
 import Projects from "./component/pages/Projects/Projects";
->>>>>>> 8d46536f83b6da783846b4238d4ff1ec97e43b0d
+// >>>>>>> 8d46536f83b6da783846b4238d4ff1ec97e43b0d
 function App() {
   return (
     <>
