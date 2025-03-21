@@ -13,7 +13,7 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
-pConfig(app, DB);
+pConfig(app);
 
 mongoose
   .connect(DB)
