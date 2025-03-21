@@ -2,6 +2,7 @@ import PageNotFound from "./component/error404/PageNotFound";
 import { Routes, Route } from "react-router-dom";
 import Home from "./component/pages/Home";
 import Login from "./component/pages/Login";
+import SignUp from "./component/pages/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import ResetPassword from "./component/pages/ResetPassword";
 import Dashboard from "./component/pages/Dashboard";
@@ -19,6 +20,7 @@ function App() {
         <Route element={<ProtectedRoutes isProtected={false} />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/auth/google/callback" element={<GoogleCallback />} />
         </Route>

@@ -14,7 +14,7 @@ const Header = () => {
         <h1 className="display-5 fw-bold text-body-emphasis lh-1 mb-3">Responsive left-aligned hero with image</h1>
         <p className="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
         <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-          <button type="button" className="btn btn-outline-dark me-2 px-5 py-2 align-items-center " onClick={()=>{navigate('/login')}}>Primary</button>
+          <button type="button" className="btn btn-outline-dark me-2 px-5 py-2 align-items-center " onClick={()=>{navigate('/login')}}>Get Started</button>
           {/* <button type="button" className="btn btn-outline-secondary btn-lg px-4">Default</button> */}
         </div>
         </div>

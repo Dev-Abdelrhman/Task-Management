@@ -19,10 +19,10 @@ function Navbar() {
                     <div className="text-end ">
                     <button type="button" className="btn btn-outline-dark me-2 rounded-pill px-4 py-2 align-items-center"
                     onClick={()=> navigate("/login")}
-                    >Get Started<img src={assets.arrow_icon} className='px-1 mb-1'/></button>
-                    {/* <button type="button" className="btn btn-warning me-2 rounded-pill px-4 py-2 align-items-center"
-                    onClick={()=> navigate("/signup")}
-                    >Sign-up <img src={assets.arrow_icon} className='px-1 mb-1'/></button> */}
+                    >Login<img src={assets.arrow_icon} className='px-1 mb-1'/></button>
+                    <button type="button" className="btn btn-warning me-2 rounded-pill px-4 py-2 align-items-center"
+                    onClick={()=> navigate("/sign-up")}
+                    >Sign-up<img src={assets.arrow_icon} className='px-1 mb-1'/></button>
                     </div>
                 </div>
             </div>

@@ -7,20 +7,10 @@ import { toast } from "react-toastify";
 import PasswordStrengthMeter from "./PasswordMeter";
 const Login = () => {
   const navigate = useNavigate();
-  //states
-  const [state, setState] = useState('login');
   const [showSignInPassword, setShowSignInPassword] = useState(false);
   const [signInData, setSignInData] = useState({ email: "", password: "" });
-  const [signUpData, setSignUpData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-  });
-  const [errorMessage, setErrorMessage] = useState("");
 
-//styles
+  //styles
   const eyeIconStyleLog = {
     position: 'absolute',
     right: '13px',
@@ -35,15 +25,11 @@ const Login = () => {
   const {
     user,
     signIn,
-    signUp,
     googleSignIn,
     isLoading,
   } = useAuth();
 
 //useEffect
-  useEffect(() => {
-    setErrorMessage(""); // Clear errors when form state changes
-  }, [state]);
   useEffect(() => {
     if (user) {
       navigate("/home", { replace: true });
@@ -59,23 +45,10 @@ const Login = () => {
   const handleSubmit = async (e, action) => {
     e.preventDefault();
 
-    if (
-      action === "signUp" &&
-      signUpData.password !== signUpData.passwordConfirmation
-    ) {
-      // setErrorMessage("Passwords do not match!");
-      toast.error("Passwords do not match!");
-      return;
-    }
-
     try {
-      const response =
-        action === "signIn"
-          ? await signIn(signInData)
-          : await signUp(signUpData);
+      const response = await signIn(signInData);
       console.log(`${action} successful:`, response);
       toast.success(`welcome ${response.user.name}!`);
-      setErrorMessage("");
       navigate("/home");
     } catch (error) {
       console.error(`${action} failed:`, error);
@@ -98,84 +71,14 @@ const Login = () => {
     <div className="d-md-flex align-items-center justify-content-center flex-column"  style={{ background: `url(${bg})`, height: "100vh" }}>
       <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
       <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "500px" }}>
-        <h2 className="fs-2 fw-semibold">{state === 'Sign Up' ? 'Create Account' : 'Login'}</h2>
-        <p>{state === 'Sign Up' ? 'Create your account' : 'Login to your account!'}</p>
+        <h2 className="fs-2 fw-semibold">Login</h2>
+        <p>Login to your account!</p>
         <section className="form-signin w-100 m-auto">
           <form 
-            onSubmit={(e) => handleSubmit(e, state === 'Sign Up' ? 'signUp' : 'signIn')} 
+            onSubmit={handleSubmit} 
             className="grid gap-4 needs-validation" 
             noValidate
             >
-            {state === 'Sign Up' ? (
-              <>
-                <div className="form-floating mb-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingName"
-                    name="name"
-                    placeholder="Name"
-                    value={signUpData.name}
-                    onChange={(e) => handleInputChange(e, setSignUpData)}
-                    required
-                  />
-                  <label htmlFor="floatingName"><img src={assets.person_icon} className="mb-1" /> Your Name</label>
-                </div>
-                <div className="form-floating mb-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingUsername"
-                    name="username"
-                    placeholder="Username"
-                    value={signUpData.username}
-                    onChange={(e) => handleInputChange(e, setSignUpData)}
-                    required
-                  />
-                  <label htmlFor="floatingUsername"><img src={assets.person_icon} className="mb-1" /> Username</label>
-                </div>
-                <div className="form-floating mb-2">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="floatingEmail"
-                    name="email"
-                    placeholder="name@example.com"
-                    value={signUpData.email}
-                    onChange={(e) => handleInputChange(e, setSignUpData)}
-                    required
-                  />
-                  <label htmlFor="floatingEmail"><img src={assets.mail_icon} className="mb-1" /> Email address</label>
-                </div>
-                <div className="form-floating mb-2">
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="floatingPassword"
-                    name="password"
-                    placeholder="Password"
-                    value={signUpData.password}
-                    onChange={(e) => handleInputChange(e, setSignUpData)}
-                    required
-                  />
-                  <label htmlFor="floatingPassword"><img src={assets.lock_icon} className="mb-1" /> Password</label>
-                </div>
-                <div className="form-floating mb-2">
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="floatingPasswordConfirm"
-                    name="passwordConfirmation"
-                    placeholder="Password confirmation"
-                    value={signUpData.passwordConfirmation}
-                    onChange={(e) => handleInputChange(e, setSignUpData)}
-                    required
-                  />
-                  <label htmlFor="floatingPasswordConfirm"><img src={assets.lock_icon} className="mb-1" /> Password confirmation</label>
-                </div>
-                <PasswordStrengthMeter password={signUpData.password} />
-              </>
-            ) : (
               <>
                 <div className="form-floating mb-2">
                   <input
@@ -211,17 +114,13 @@ const Login = () => {
                 </div>
                  <a onClick={() => navigate('/reset-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
               </>
-            )}
 
              <button className="btn btn-primary w-100 py-2 mt-2" type="submit" >
-              {state}
+              Login
             </button>
 
-            {state === 'Sign Up' ? (
-              <p className="my-2 text-secondary fs-6">Already have an account? <a href="#" onClick={() => setState('Login')}>Login here</a></p>
-            ) : (
-              <p className="my-2 text-secondary fs-6">Don't have an account? <a href="#" onClick={() => setState('Sign Up')}> Sign up</a></p>
-            )}
+            <p className="my-2 text-secondary fs-6">Don't have an account? <a href="#" onClick={() => navigate('/sign-up')}> Sign up</a></p>
+
             {/* google */}
             <div className="container mt-4">
               <button
