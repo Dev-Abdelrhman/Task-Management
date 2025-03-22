@@ -7,7 +7,7 @@ function Sidebar() {
         <div>
             <div className="container">
                 {/* LOGO */}
-                <div className='d-flex justify-content-center align-items-center gap-2 pt-5 mb-5'>
+                <div className='d-flex  align-items-center gap-2 pt-5 mb-5'>
                     <img src={logo} alt="" />
                     <h1 className='fs-1'>Sidebar</h1>
                 </div>
@@ -15,8 +15,8 @@ function Sidebar() {
 
                 {/* Content */}
                 <div>
-                    <ul className='text-left ms-5'>
-                        <li className='fs-3 fw-normal mb-4'>
+                    <ul className='text-left '>
+                        <li className='fs-4 fw-normal mb-4'>
                             <Link to={"/"}>
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
@@ -27,7 +27,7 @@ function Sidebar() {
                             </Link>
                         </li>
                        
-                        <li className='fs-3 fw-normal mb-4'>
+                        <li className='fs-4 fw-normal mb-4'>
                             <Link to={`/projects`}>
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
@@ -38,7 +38,7 @@ function Sidebar() {
                             </Link>
                         </li>
                        
-                        <li className='fs-3 fw-normal mb-4'>
+                        <li className='fs-4 fw-normal mb-4'>
                             <a href="">
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
@@ -49,7 +49,7 @@ function Sidebar() {
                             </a>
                         </li>
                        
-                        <li className='fs-3 fw-normal mb-4'>
+                        <li className='fs-4 fw-normal mb-4'>
                             <a href="">
                                 <div className='d-flex  align-items-center '>
                                     <div className='me-3'>
