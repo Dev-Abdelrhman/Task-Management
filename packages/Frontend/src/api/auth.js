@@ -90,7 +90,6 @@ export const clearAuthState = () => {
 export const googleAuth = () => {
   window.location.href = "http://localhost:9999/depiV1/users/google";
 };
-
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
