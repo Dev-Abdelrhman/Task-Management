@@ -38,9 +38,6 @@ function App() {
         {/* 404 catch-all */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-
-
-      {/* commit test */}
     </>
   );
 }
