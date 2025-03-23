@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'react-toastify';
-import { assets, cursors } from '../../assets/assets';
-import bg from '../../assets/bg_img.png';
+import { assets, cursors } from '../../../assets/assets';
+import bg from '../../../assets/bg_img.png';
 import PasswordStrengthMeter from './PasswordMeter';
 
 const ResetPassword = () => {

@@ -1,8 +1,8 @@
 import React , {useEffect , useState} from 'react'
-import { useAuth } from '../../hooks/useAuth';
-import bg from '../../assets/bg_img.png'
+import { useAuth } from '../../../hooks/useAuth';
+import bg from '../../../assets/bg_img.png'
 import {toast} from 'react-toastify'
-import { assets ,cursors } from '../../assets/assets';
+import { assets ,cursors } from '../../../assets/assets';
 import { useNavigate } from "react-router-dom";
 
 

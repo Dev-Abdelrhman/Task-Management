@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { assets , cursors } from "../../assets/assets";
-import bg from "../../assets/bg_img.png";
+import { assets , cursors } from "../../../assets/assets";
+import bg from "../../../assets/bg_img.png";
 import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();

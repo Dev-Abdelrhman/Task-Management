@@ -1,15 +1,15 @@
 import PageNotFound from "./component/error404/PageNotFound";
 import { Routes, Route } from "react-router-dom";
 import Home from "./component/pages/Home";
-import Login from "./component/pages/Login";
-import SignUp from "./component/pages/SignUp";
+import Login from "./component/pages/auth/Login";
+import SignUp from "./component/pages/auth/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import Forgetpassword from "./component/pages/ForgetPassword";
-import ResetPassword from "./component/pages/ResetPassword";
+import Forgetpassword from "./component/pages/auth/ForgetPassword";
+import ResetPassword from "./component/pages/auth/ResetPassword";
 import Dashboard from "./component/pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
-import GoogleCallback from "./component/pages/GoogleCallback";
+import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import Projects from "./component/pages/Projects/Projects";
 
 function App() {
