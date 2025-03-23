@@ -288,7 +288,6 @@ const protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
-
 const refreshAccessToken = catchAsync(async (req, res, next) => {
   const { refreshToken } = req.cookies;
 
