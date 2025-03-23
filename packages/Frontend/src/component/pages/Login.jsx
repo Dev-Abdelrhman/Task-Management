@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { assets , cursors } from "../../assets/assets";
 import bg from "../../assets/bg_img.png";
 import { toast } from "react-toastify";
-import PasswordStrengthMeter from "./PasswordMeter";
 const Login = () => {
   const navigate = useNavigate();
   const [showSignInPassword, setShowSignInPassword] = useState(false);
@@ -112,7 +111,7 @@ const Login = () => {
                   alt="Toggle password visibility"
                 />
                 </div>
-                 <a onClick={() => navigate('/reset-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
+                 <a onClick={() => navigate('/forget-password')} className="text-left border-0 text-black text-decoration-none" style={cursors}>Forgot password?</a>
               </>
 
              <button className="btn btn-primary w-100 py-2 mt-2" type="submit" >

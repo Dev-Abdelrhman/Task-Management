@@ -108,7 +108,6 @@ export const handleGoogleCallback = (code) => {
 };
 export const forgotPassword = async (email) => {
   try {
-    // Change path from "/users/forgot-password" to "/forgotPassword"
     const response = await API.post("/users/forgotPassword", { email });
     return response.data;
   } catch (error) {
@@ -120,7 +119,22 @@ export const forgotPassword = async (email) => {
       error.response?.data?.message || "Error sending reset password email."
     );
   }
-};// Logout
+};
+export const resetPassword = async (token, password , passwordConfirmation) => {
+  try {
+    const response = await API.patch(`/users/resetPassword/${token}`, { password , passwordConfirmation })
+    return response.data;
+  } catch (error) {
+    console.error("Reset password API error:", error);
+    if (error.response?.status === 404) {
+      throw new Error("Invalid token or password.");
+      }
+      throw new Error(
+        error.response?.data?.message || "Error resetting password."
+      );
+  }
+}
+// Logout
 export const logout = () => {
   return API.post("/users/logout", {}, { withCredentials: true })
     .then(() => {

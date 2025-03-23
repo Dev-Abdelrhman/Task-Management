@@ -181,9 +181,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/depiV1/users/resetPassword/${resetToken}`;
+  const resetURL = `${req.protocol}://localhost:5173/resetPassword/${resetToken}`;
   const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
   console.log(message);
   try {

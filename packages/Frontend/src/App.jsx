@@ -4,6 +4,7 @@ import Home from "./component/pages/Home";
 import Login from "./component/pages/Login";
 import SignUp from "./component/pages/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
+import Forgetpassword from "./component/pages/ForgetPassword";
 import ResetPassword from "./component/pages/ResetPassword";
 import Dashboard from "./component/pages/Dashboard";
 import { ToastContainer } from "react-toastify";
@@ -21,7 +22,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forget-password" element={<Forgetpassword />} />
+          <Route path="/resetPassword/:token" element ={<ResetPassword />} />
           <Route path="/auth/google/callback" element={<GoogleCallback />} />
         </Route>
 
