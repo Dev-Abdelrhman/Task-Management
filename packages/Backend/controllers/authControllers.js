@@ -23,6 +23,7 @@ const generateAccessToken = function (id) {
     }
   );
 };
+
 const generateRefreshToken = function (id) {
   return jwt.sign(
     {
