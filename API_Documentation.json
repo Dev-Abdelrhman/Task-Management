@@ -1,0 +1,229 @@
+{
+  "UsersAPI": {
+    "STATUS": "Still in development",
+    "SignIn": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/signin",
+      "body": {
+        "email": "user@example.com",
+        "password": "password"
+      }
+    },
+    "SignUp": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/signup",
+      "body": {
+        "name": "Example",
+        "username": "Example_20",
+        "email": "user@example.com",
+        "password": "password",
+        "passwordConfirmation": "password"
+      }
+    },
+    "LogOut": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/logout"
+    },
+    "RefreshToken": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/refresh"
+    },
+    "ForgetPassword": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/forgetPassword",
+      "body": {
+        "email": "user@example.com"
+      }
+    },
+    "ResetPassword": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/resetPass/:resetToken",
+      "body": {
+        "password": "password",
+        "passwordConfirmation": "password"
+      }
+    },
+    "Google": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/google"
+    },
+    "GoogleCallback": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/google/callback"
+    },
+    "ContinueSignUpWithGoogle": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/continueSignUpWithGoogle",
+      "body": {
+        "token": "token",
+        "username": "Example_20",
+        "password": "password",
+        "passwordConfirmation": "password"
+      }
+    }
+  },
+  "ProjectsAPI": {
+    "STATUS": "Completed",
+    "GetAllProjects": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects"
+    },
+    "GetOneProject": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
+    },
+    "CreateProject": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects",
+      "body": {
+        "name": "Example",
+        "description": "Example",
+        "dueDate": "Date"
+      }
+    },
+    "UpdateProject": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID",
+      "body": {
+        "name": "Example",
+        "description": "Example",
+        "dueDate": "Date"
+      }
+    },
+    "DeleteProject": {
+      "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
+    }
+  },
+  "RolesAPI": {
+    "STATUS": "Completed",
+    "GetRoles": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles"
+    },
+    "GetRole": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
+    },
+    "CreateRole": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles",
+      "body": {
+        "name": "Example",
+        "permissions": ["read", "write", "delete"]
+      }
+    },
+    "UpdateRole": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID",
+      "body": {
+        "name": "Example",
+        "permissions": ["read", "write", "delete"]
+      }
+    },
+    "DeleteRole": {
+      "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
+    }
+  },
+  "CommentsAPI": {
+    "STATUS": "Completed",
+    "GetAllComments": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments"
+    },
+    "GetOneComment": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
+    },
+    "CreateComment": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments",
+      "body": {
+        "comment": "text"
+      }
+    },
+    "UpdateComment": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID",
+      "body": {
+        "comment": "text"
+      }
+    },
+    "DeleteComment": {
+      "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
+    }
+  },
+  "TasksAPI": {
+    "STATUS": "Still in development",
+    "UserTasks": {
+      "GetUserTasks": {
+        "method": "GET",
+        "url": "http://localhost:9999/depiV1/tasks/userTasks"
+      },
+      "GetUserTask": {
+        "method": "GET",
+        "url": "http://localhost:9999/depiV1/tasks/:taskID"
+      },
+      "CreateUserTask": {
+        "method": "POST",
+        "url": "http://localhost:9999/depiV1/tasks",
+        "body": {
+          "title": "Example",
+          "description": "Example",
+          "dueDate": "Date",
+          "status": ["Todo", "In Progress", "Completed"]
+        }
+      },
+      "UpdateUserTask": {
+        "method": "PATCH",
+        "url": "http://localhost:9999/depiV1/tasks/:taskID",
+        "body": {
+          "title": "Example",
+          "description": "Example",
+          "dueDate": "Date",
+          "status": ["Todo", "In Progress", "Completed"]
+        }
+      },
+      "DeleteUserTask": {
+        "method": "DELETE",
+        "url": "http://localhost:9999/depiV1/tasks/:taskID"
+      }
+    },
+    "ProjectTasks": {
+      "GetProjectTasks": {
+        "method": "GET",
+        "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks"
+      },
+      "GetProjectTask": {
+        "method": "GET",
+        "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
+      },
+      "CreateProjectTask": {
+        "method": "POST",
+        "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks",
+        "body": {
+          "title": "Example",
+          "description": "Example",
+          "dueDate": "Date",
+          "status": ["Todo", "In Progress", "Completed"]
+        }
+      },
+      "UpdateProjectTask": {
+        "method": "PATCH",
+        "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID",
+        "body": {
+          "title": "Example",
+          "description": "Example",
+          "dueDate": "Date",
+          "status": ["Todo", "In Progress", "Completed"]
+        }
+      },
+      "DeleteProjectTask": {
+        "method": "DELETE",
+        "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
+      }
+    }
+  }
+}

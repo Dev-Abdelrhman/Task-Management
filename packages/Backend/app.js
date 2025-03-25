@@ -15,6 +15,7 @@ import AppError from "./utils/appError.js";
 import GlobalErrorHandler from "./controllers/errorControllers.js";
 import UserRoutes from "./routes/userRoute.js";
 import InviteRoutes from "./routes/inviteRoute.js";
+import TaskRoutes from "./routes/tasksRoute.js";
 
 /*______________________________________________________*/
 const app = express();
@@ -104,6 +105,7 @@ app.use((req, res, next) => {
 /* ______________ Routes ______________ */
 app.use("/depiV1/users", UserRoutes);
 app.use("/depiV1/invite", InviteRoutes);
+app.use("/depiV1/tasks", TaskRoutes);
 
 /* ______________ Handle Undefined Routes ______________ */
 app.all("*", (req, res, next) => {

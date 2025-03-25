@@ -13,7 +13,7 @@ router.use(CC.isMine);
 router
   .route("/:id")
   .get(CC.getCommentById)
-  .put(CC.updateComment)
+  .patch(CC.updateComment)
   .delete(CC.deleteComment);
 
 export default router;

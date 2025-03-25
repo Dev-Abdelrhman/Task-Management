@@ -2,22 +2,27 @@ import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema(
   {
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     title: {
       type: String,
       required: true,
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
     },
     dueDate: {
       type: Date,
-      required: true,
+      // required: true,
     },
     status: {
       type: String,
-      enum: ["todo", "In Progress", "Completed"],
-      default: "todo",
+      enum: ["Todo", "In Progress", "Completed"],
+      default: "Todo",
     },
     completedAt: {
       type: Date,
@@ -41,16 +46,21 @@ const taskSchema = new mongoose.Schema(
 );
 
 taskSchema.pre("save", function (next) {
-  if (this.isModified("name")) return next();
+  if (this.isModified("title")) return next();
   this.slug = this.name.toLowerCase().replace(/\s+/g, "-");
   next();
 });
 
-projectSchema.pre(/^find/, function (next) {
-  this.populate([
-    { path: "Roles", select: "name -_id" },
-    { path: "project", select: "name -_id" },
-  ]);
+taskSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "project",
+    select: "name -_id",
+    options: { strictPopulate: false },
+  }).populate({
+    path: "owner",
+    select: "name -_id",
+  });
+  // .populate({ path: "attachments", options: { strictPopulate: false } });
 
   next();
 });
