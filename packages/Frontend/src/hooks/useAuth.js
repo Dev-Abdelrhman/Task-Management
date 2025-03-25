@@ -24,6 +24,7 @@ export const useAuth = () => {
     onSuccess: (data) => {
       setUser(data.user); // Corrected from data.user ➔ data.user
       localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userID", data.user._id);
       useAuthStore.getState().setAccessToken(data.accessToken);
     },
     onError: (error) => {

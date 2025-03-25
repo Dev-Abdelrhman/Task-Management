@@ -6,6 +6,7 @@ function AddProjectBtn() {
 
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const userID = localStorage.getItem("userID");
 
     const handleSave = async () => {
         const projectData = {
@@ -20,7 +21,7 @@ function AddProjectBtn() {
         }
         try {
             const response = await axios.post(
-                "http://localhost:9999/depiV1/users/67cd552eeb136fc473543ae1/projects",
+                `http://localhost:9999/depiV1/users/${userID}/projects`,
                 projectData,
                 {
                     headers: {

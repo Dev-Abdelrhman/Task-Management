@@ -9,10 +9,11 @@ function Projects() {
 
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const userID = localStorage.getItem("userID");
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
-        axios.get("http://localhost:9999/depiV1/users/67cd552eeb136fc473543ae1/projects", {
+        axios.get(`http://localhost:9999/depiV1/users/${userID}/projects`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -31,7 +32,7 @@ function Projects() {
 
     const handleDelete = (projectId) => {
         const token = localStorage.getItem("accessToken");
-        axios.delete(`http://localhost:9999/depiV1/users/67cd552eeb136fc473543ae1/projects/${projectId}`, {
+        axios.delete(`http://localhost:9999/depiV1/users/${userID}/projects/${projectId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(() => {
