@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import Projects from "./component/pages/Projects/Projects";
+import ProjectDetails from "./component/pages/Projects/ProjectDetails";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/home" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/project/:id" element={<ProjectDetails/>}/>
           </Route>
         </Route>
 
