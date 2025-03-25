@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword } from "../api/auth"; 
+import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle } from "../api/auth"; 
 import { useAuthStore } from "../stores/authStore"; 
 import { toast } from "react-toastify";
 
@@ -84,6 +84,7 @@ export const useAuth = () => {
     },
   });
 
+  // Reset password mutation
   const resetPasswordMutation = useMutation({
     mutationFn: async ({token , password , passwordConfirmation}) => {
       const response = await resetPassword(token, password , passwordConfirmation);
@@ -98,19 +99,36 @@ export const useAuth = () => {
     }
   })
 
-  // In useAuth.js, add the mutation
-const googleSignInMutation = useMutation({
-  mutationFn: async () => {
-    await googleAuth();
-  },
-  onSuccess: () => {
-    toast.success("Signed in with Google successfully");
-  },
-  onError: (error) => {
-    console.error("Google sign-in error:", handleError(error));
-    toast.error("Google sign-in failed. Please try again.");
-  },
-});
+  // Google SignIn Mutatuin
+  const googleSignInMutation = useMutation({
+    mutationFn: async () => {
+      await googleAuth();
+    },
+    onSuccess: () => {
+      toast.success("Signed in with Google successfully");
+    },
+    onError: (error) => {
+      console.error("Google sign-in error:", handleError(error));
+      toast.error("Google sign-in failed. Please try again.");
+    },
+  });
+
+  // After
+  const continueWithGoogleMutation = useMutation({
+    mutationFn: async ({ token, username, password, passwordConfirmation }) => {
+      const response = await ContinueSignUpWithGoogle(token, username, password, passwordConfirmation);
+      return response;
+    },
+    onSuccess: () => {
+      toast.success("Continue with Google successfully");
+    }, 
+    onError: () => {
+      console.error("Continue with Google error", handleError(error));
+      toast.error("Continue with Google failed. Please try again.");
+    }
+  });
+
+
   
   return {
     user,
@@ -121,11 +139,14 @@ const googleSignInMutation = useMutation({
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
     googleSignIn: googleSignInMutation.mutateAsync,
+    continueWithGoogle: continueWithGoogleMutation.mutateAsync,
     isLoading:
       signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending,
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,
     signOutError: signOutMutation.error,
+    forgotPasswordError: forgotPasswordMutation.error,
     resetPasswordError: resetPasswordMutation.error,
+    googleSignInError: googleSignInMutation.error,
   };
 };

@@ -133,6 +133,33 @@ export const resetPassword = async (token, password , passwordConfirmation) => {
       );
   }
 }
+export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
+  try {
+    const response = await API.post(
+      "/users/continueSignUpWithGoogle", // Match backend URL exactly
+      { 
+        token,
+        username,
+        password,
+        passwordConfirmation 
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 
+                        error.response?.data?.error ||
+                        "Error completing Google signup";
+    
+    if (error.response?.status === 400) {
+      throw new Error(errorMessage);
+    }
+    if (error.response?.status === 401) {
+      throw new Error("Session expired - please restart the signup process");
+    }
+    throw new Error(errorMessage);
+  }
+}
+
 // Logout
 export const logout = () => {
   return API.post("/users/logout", {}, { withCredentials: true })
