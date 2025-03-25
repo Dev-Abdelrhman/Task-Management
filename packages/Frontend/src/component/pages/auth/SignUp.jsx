@@ -307,7 +307,7 @@ const navigate = useNavigate();
                   />
                   <path d="M1 1h22v22H1z" fill="none" />
                 </svg>
-                Sign In with Google
+                Sign Up with Google
               </Button>
             </CardContent>
             </form>
