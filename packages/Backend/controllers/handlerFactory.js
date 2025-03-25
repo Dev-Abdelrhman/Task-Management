@@ -80,11 +80,11 @@ const getOne = (Model, popOptions = []) =>
 
 const getAll = (Model, filterField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
-    let filter = {};
+    let filter = { [filterField]: req.params.id || req.user?.id };
 
-    if (req.params.id) {
-      filter[filterField] = req.params.id;
-    }
+    // if (req.params.id) {
+    //   filter[filterField] = req.params.id;
+    // }
 
     let query = Model.find(filter);
 

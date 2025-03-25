@@ -90,7 +90,7 @@
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "PUT",
+				"method": "PATCH",
 				"header": [],
 				"url": {
 					"raw": "{{URL}}users/:userId/projects/:projectId",
