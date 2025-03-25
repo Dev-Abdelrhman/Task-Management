@@ -126,7 +126,9 @@ const googleAuthCallback = (req, res, next) => {
 
       if (user.tempToken) {
         console.log("🛑 New user, redirecting to complete signup...");
-        return res.redirect(`${frontendUrl}/login?token=${user.tempToken}`);
+        return res.redirect(
+          `${frontendUrl}/google-signup?token=${user.tempToken}`
+        );
       }
 
       console.log("✅ Existing user, logging in...");
