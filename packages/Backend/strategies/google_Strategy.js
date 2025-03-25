@@ -28,6 +28,7 @@ passport.use(
             googleID: profile.id,
             email: profile.emails?.[0]?.value,
             name: profile.displayName,
+            image: profile.photos?.[0]?.value,
           },
           process.env.JWT_TEMP_SECRET,
           { expiresIn: "10m" }
