@@ -48,7 +48,7 @@ function Projects() {
             console.error("Error deleting project:", error);
         });
     };
-
+    // add some changes
     const handleJoin = (projectId) =>{
         navigate(`/project/${projectId}`)
     }
