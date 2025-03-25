@@ -168,8 +168,10 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
     googleID: decoded.googleID,
     email: decoded.email,
     name: decoded.name,
+    image: decoded.image,
     username,
     password,
+    passwordConfirmation,
     active: true,
   });
 
