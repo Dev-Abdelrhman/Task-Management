@@ -4,9 +4,10 @@ import cardImg from '../../../assets/cardImg.png'
 import axios from 'axios';
 import AddProjectBtn from '../AddProjectBtn';
 import { toast } from 'react-toastify';
+import {useNavigate} from 'react-router-dom'
 function Projects() {
 
-
+    const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -48,6 +49,10 @@ function Projects() {
         });
     };
 
+    const handleJoin = (projectId) =>{
+        navigate(`/project/${projectId}`)
+    }
+
    return <>
         <div className="bg-light  d-flex align-items-center">
             <div className="container py-3">
@@ -75,7 +80,7 @@ function Projects() {
                                     </div>
                                     <div className="card-body text-center">
                                         <div className='d-flex justify-content-between align-items-center gap-4'>
-                                            <button className="btn btn-primary w-100">Join</button>
+                                            <button className="btn btn-primary w-100" onClick={()=> handleJoin(project._id)}>Join</button>
                                             <div  onClick={() => handleDelete(project._id)} role='button' className='icon-container p-2 rounded-circle border border-black '>
                                                 <i className="fa-regular fa-trash-can"></i>
                                             </div>

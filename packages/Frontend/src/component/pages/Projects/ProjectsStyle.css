@@ -22,3 +22,8 @@
     color: red;
     border-color: red !important;
   }
+
+
+.details .imageDet{
+  height: 400px;
+}
