@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
+    "@heroui/input": "^2.4.16",
     "concurrently": "^9.0.1"
   },
   "devDependencies": {

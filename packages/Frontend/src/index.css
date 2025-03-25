@@ -1,24 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 *{
-    text-transform: capitalize;
-  }
-.gradient-text {
-    background: linear-gradient(to right, #34d399, #10b981);
-    /* Green-400 to Emerald-500 */
-    /* -webkit-background-clip: text; */
-    -webkit-text-fill-color: transparent;
+    font-family: "Outfit", sans-serif !important;
 }
-
-li {
-    list-style-type: none;
-}
-
-a {
-    text-decoration: none !important;
-    color: #8E92BC !important;
-    transition: all 0.3s ease-in-out;
+/* .gradient-background {
+    background-color: linear-gradient(to right, #10197A, #9F84FD);
 }
 
 a:hover {
     color: #4B5563 !important;
 }
+
+.form-floating>.form-control-plaintext~label::after, .form-floating>.form-control:focus~label::after, .form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after {
+    position: absolute;
+    inset: 1rem 0.375rem;
+    z-index: -1;
+    height: 1.5em;
+    content: "";
+    background-color: transparent;
+    border-radius: var(--bs-border-radius);
+} */
