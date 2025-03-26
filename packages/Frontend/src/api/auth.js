@@ -97,18 +97,40 @@ export const googleAuth = () => {
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) =>
   API.post("/users/signin", credentials, { withCredentials: true });
-export const handleGoogleCallback = (code) => {
-  return API.get("/users/google/callback", { params: { code } }) // ✅ Correct path
+export const handleGoogleCallback = async (code) => {
+  return API.get("/users/google/callback", { params: { code } })
     .then((response) => {
       const { accessToken, user } = response.data;
       localStorage.setItem("accessToken", accessToken);
-      return response.data;
+      return { accessToken, user }; // Return both values
     })
     .catch((error) => {
       console.error("Google callback error:", error);
       throw error;
     });
 };
+export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
+  try {
+    const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });
+    const { accessToken, user } = response.data;
+    localStorage.setItem("accessToken", accessToken);
+
+    return { user, accessToken };
+  } catch (error) {
+
+    const errorMessage =
+      error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
+
+    if (error.response?.status === 400) {
+      throw new Error(errorMessage);
+    }
+    if (error.response?.status === 401) {
+      throw new Error("Session expired - please restart the signup process");
+    }
+    throw new Error(errorMessage);
+  }
+};
+
 export const forgotPassword = async (email) => {
   try {
     const response = await API.post("/users/forgotPassword", { email });
@@ -138,46 +160,6 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
     throw new Error(
       error.response?.data?.message || "Error resetting password."
     );
-  }
-};
-export const ContinueSignUpWithGoogle = async (
-  token,
-  username,
-  password,
-  passwordConfirmation
-) => {
-  try {
-    console.log("📤 Sending Request:", {
-      token,
-      username,
-      password,
-      passwordConfirmation,
-    });
-
-    const response = await API.post("/users/continueSignUpWithGoogle", {
-      token,
-      username,
-      password,
-      passwordConfirmation,
-    });
-
-    console.log("✅ Response:", response.data.user);
-    return response.data.user;
-  } catch (error) {
-    console.error("❌ Signup error:", error.response?.data || error.message);
-
-    const errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Error completing Google signup";
-
-    if (error.response?.status === 400) {
-      throw new Error(errorMessage);
-    }
-    if (error.response?.status === 401) {
-      throw new Error("Session expired - please restart the signup process");
-    }
-    throw new Error(errorMessage);
   }
 };
 
