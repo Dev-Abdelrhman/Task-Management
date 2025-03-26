@@ -110,6 +110,7 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       toast.success("Signed in with Google successfully");
+      navigate("/home")
     },
     onError: (error) => {
       console.error("Google sign-in error:", handleError(error));
@@ -128,7 +129,7 @@ export const useAuth = () => {
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
       toast.success("Account setup complete!");
-      navigate("/login")
+      navigate("/home")
     }, 
     onError: (error) => {
       console.error("Continue with Google error", handleError(error));

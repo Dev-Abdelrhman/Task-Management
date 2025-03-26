@@ -1,27 +1,43 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { useAuthStore } from "../../../stores/authStore";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../../../stores/authStore";
 
 const GoogleCallback = () => {
   const { handleGoogleCallback } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
-  const setUser = useAuthStore((state) => state.setUser);
+  const { setUser, setAccessToken } = useAuthStore();
 
   const handleCallback = async () => {
     try {
       const response = await handleGoogleCallback(code);
-      setUser(response.user); // Add this line
-      navigate("/home"); // Change navigate target to "/home"
+      
+      // Check if the response is valid
+      if (!response) {
+        throw new Error("Invalid authentication response");
+      }
+
+      // Ensure response contains both token and user data
+      if (response?.accessToken && response?.user) {
+        setUser(response.user);
+        setAccessToken(response.accessToken);
+        localStorage.setItem("accessToken", response.accessToken);
+        // Force redirect to home page
+        navigate("/home", { replace: true });
+      } else {
+        throw new Error("Incomplete authentication data");
+      }
     } catch (error) {
       console.error("Google callback failed:", error);
       toast.error("Google sign-in failed. Please try again.");
+      // Redirect to login if authentication fails
+      navigate("/login");
     }
   };
-  
+
   useEffect(() => {
     handleCallback();
   }, []);

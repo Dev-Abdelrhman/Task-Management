@@ -77,7 +77,6 @@ const CompleteSigninGoogle = () => {
         password: formData.password,
         passwordConfirmation: formData.passwordConfirmation,
       });
-
     } catch (error) {
       console.error("Signup error:", error.response?.data || error.message);
       toast.error(error.response?.data?.message || "Failed to complete signup");
