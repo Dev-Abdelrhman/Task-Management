@@ -31,7 +31,7 @@ passport.use(
             image: profile.photos?.[0]?.value,
           },
           process.env.JWT_TEMP_SECRET,
-          { expiresIn: "10m" }
+          { expiresIn: process.env.JWT_TEMP_TOKEN_EXPIRES_IN }
         );
 
         return cb(null, { tempToken });
