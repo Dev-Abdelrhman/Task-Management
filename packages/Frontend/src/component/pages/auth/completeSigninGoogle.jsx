@@ -6,6 +6,7 @@ import { User, Lock } from "lucide-react";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 
+
 const CompleteSigninGoogle = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -70,8 +71,6 @@ const CompleteSigninGoogle = () => {
     }
 
     try {
-      console.log("Sending signup request...");
-
       const response = await continueWithGoogle({
         token,
         username: formData.username,
@@ -79,16 +78,6 @@ const CompleteSigninGoogle = () => {
         passwordConfirmation: formData.passwordConfirmation,
       });
 
-      console.log("Signup Response:", response);
-
-      if (response) {
-        toast.success("Account setup complete! Redirecting...");
-        setTimeout(() => navigate("/home"), 1000); // ✅ Ensure navigation works
-      } else {
-        throw new Error(
-          response?.message || "Signup failed. Please try again."
-        );
-      }
     } catch (error) {
       console.error("Signup error:", error.response?.data || error.message);
       toast.error(error.response?.data?.message || "Failed to complete signup");

@@ -140,36 +140,17 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
     );
   }
 };
-export const ContinueSignUpWithGoogle = async (
-  token,
-  username,
-  password,
-  passwordConfirmation
-) => {
+export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
   try {
-    console.log("📤 Sending Request:", {
-      token,
-      username,
-      password,
-      passwordConfirmation,
-    });
+    const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });
+    const { accessToken, user } = response.data;
+    localStorage.setItem("accessToken", accessToken);
 
-    const response = await API.post("/users/continueSignUpWithGoogle", {
-      token,
-      username,
-      password,
-      passwordConfirmation,
-    });
-
-    console.log("✅ Response:", response.data.user);
-    return response.data.user;
+    return { user, accessToken };
   } catch (error) {
-    console.error("❌ Signup error:", error.response?.data || error.message);
 
     const errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Error completing Google signup";
+      error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
 
     if (error.response?.status === 400) {
       throw new Error(errorMessage);

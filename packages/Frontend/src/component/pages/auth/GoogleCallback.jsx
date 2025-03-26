@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../stores/authStore";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -7,12 +8,14 @@ const GoogleCallback = () => {
   const { handleGoogleCallback } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const code = searchParams.get("code"); // Get the code from URL
+  const code = searchParams.get("code");
+  const setUser = useAuthStore((state) => state.setUser);
 
   const handleCallback = async () => {
     try {
-      await handleGoogleCallback(code); // Pass code to the callback function
-      navigate("/");
+      const response = await handleGoogleCallback(code);
+      setUser(response.user); // Add this line
+      navigate("/home"); // Change navigate target to "/home"
     } catch (error) {
       console.error("Google callback failed:", error);
       toast.error("Google sign-in failed. Please try again.");

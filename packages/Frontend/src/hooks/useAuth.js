@@ -2,10 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle } from "../api/auth"; 
 import { useAuthStore } from "../stores/authStore"; 
 import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
   const { user, setUser, logout: logoutFromStore } = useAuthStore();
   const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   // Common error handler
   const handleError = (error) => {
@@ -119,10 +123,14 @@ export const useAuth = () => {
       const response = await ContinueSignUpWithGoogle(token, username, password, passwordConfirmation);
       return response;
     },
-    onSuccess: () => {
-      toast.success("Continue with Google successfully");
+    onSuccess: (data) => {
+      setUser(data.user);
+      localStorage.setItem("accessToken", data.accessToken);
+      useAuthStore.getState().setAccessToken(data.accessToken);
+      toast.success("Account setup complete!");
+      navigate("/login")
     }, 
-    onError: () => {
+    onError: (error) => {
       console.error("Continue with Google error", handleError(error));
       toast.error("Continue with Google failed. Please try again.");
     }
@@ -141,7 +149,8 @@ export const useAuth = () => {
     googleSignIn: googleSignInMutation.mutateAsync,
     continueWithGoogle: continueWithGoogleMutation.mutateAsync,
     isLoading:
-      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending,
+      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending || continueWithGoogleMutation.isPending,
+
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,
     signOutError: signOutMutation.error,
