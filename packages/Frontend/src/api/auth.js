@@ -89,15 +89,14 @@ export const clearAuthState = () => {
   window.location.href = "/login";
 };
 
-
+// Google Authentication
+export const googleAuth = () => {
+  window.location.href = "http://localhost:9999/depiV1/users/google";
+};
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
-export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
-// Google Authentication
-export const googleAuth = async () => {
-  const frontendUrl = encodeURIComponent(window.location.origin);
-  window.location.href = `http://localhost:9999/depiV1/users/google?state=${frontendUrl}`;
-};
+export const signIn = (credentials) =>
+  API.post("/users/signin", credentials, { withCredentials: true });
 export const handleGoogleCallback = async (code) => {
   return API.get("/users/google/callback", { params: { code } })
     .then((response) => {
@@ -119,9 +118,6 @@ export const ContinueSignUpWithGoogle = async (token, username, password, passwo
     return { user, accessToken };
   } catch (error) {
 
-    if (error.response?.status === 401) {
-      throw new Error("Session expired. Please restart the signup process.");
-    }
     const errorMessage =
       error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
 

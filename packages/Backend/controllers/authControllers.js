@@ -124,11 +124,6 @@ const googleAuthCallback = (req, res, next) => {
           .json({ status: "error", message: "Frontend URL missing" });
       }
 
-      if (!user.tempToken) {
-        const accessToken = generateAccessToken(user._id);
-        return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
-    }    
-    
       if (user.tempToken) {
         console.log("🛑 New user, redirecting to complete signup...");
         return res.redirect(
@@ -330,7 +325,6 @@ const refreshAccessToken = catchAsync(async (req, res, next) => {
           Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
         ),
         httpOnly: true,
-        sameSite: "None",
         sameSite: "Strict",
       };
       if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
