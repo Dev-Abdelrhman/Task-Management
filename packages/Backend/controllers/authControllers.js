@@ -140,14 +140,19 @@ const googleAuthCallback = (req, res, next) => {
 const completeGoogleSignup = catchAsync(async (req, res, next) => {
   const { token, username, password, passwordConfirmation } = req.body;
 
+  console.log("Received Data:", {
+    token,
+    username,
+    password,
+    passwordConfirmation,
+  });
+
   if (!token) {
     return next(new AppError("Token is required", 400));
   }
-
   if (!username || !password || !passwordConfirmation) {
     return next(new AppError("All fields are required", 400));
   }
-
   if (password !== passwordConfirmation) {
     return next(new AppError("Passwords do not match", 400));
   }
@@ -168,8 +173,10 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
     googleID: decoded.googleID,
     email: decoded.email,
     name: decoded.name,
+    image: decoded.image,
     username,
     password,
+    passwordConfirmation,
     active: true,
   });
 

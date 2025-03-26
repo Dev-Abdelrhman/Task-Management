@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
-import { User, Mail, Lock } from "lucide-react";
-import { Button, TextField, Card, CardContent } from '@mui/material';
-import {jwtDecode} from "jwt-decode";
+import { User, Lock } from "lucide-react";
+import { Button, TextField, Card, CardContent } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 
 const CompleteSigninGoogle = () => {
   const location = useLocation();
@@ -13,63 +13,85 @@ const CompleteSigninGoogle = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    passwordConfirmation: ""
+    passwordConfirmation: "",
   });
   const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState("");
 
-  // Extract token from URL query parameters
-  const queryParams = new URLSearchParams(location.search);
-  const token = queryParams.get('token');
-
+  // Extract token from URL and decode user data
   useEffect(() => {
-    if (!token) {
+    const queryParams = new URLSearchParams(location.search);
+    const tokenFromURL = queryParams.get("token");
+
+    if (!tokenFromURL) {
       toast.error("Missing authentication token");
-      navigate("/login");
       return;
     }
 
     try {
-      const decoded = jwtDecode(token);
+      const decoded = jwtDecode(tokenFromURL);
       setUserData({
         name: decoded.name,
         email: decoded.email,
-        image: decoded.image || decoded.picture ,
+        image: decoded.image || decoded.picture,
       });
+      setToken(tokenFromURL);
     } catch (error) {
-      toast.error("Invalid or expired token");
-      navigate("/login");
+      toast.error("Invalid or expired token. Please restart the process.");
     }
-  }, [token, navigate]);
+  }, [location.search]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.passwordConfirmation) {
-      toast.error("Passwords don't match");
-      return;
-    }
 
     if (!formData.username || !formData.password) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (formData.password !== formData.passwordConfirmation) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
+    if (!token) {
+      toast.error("Invalid authentication session. Please try again.");
+      return;
+    }
+
     try {
-      await continueWithGoogle({
+      console.log("Sending signup request...");
+
+      const response = await continueWithGoogle({
         token,
         username: formData.username,
         password: formData.password,
-        passwordConfirmation: formData.passwordConfirmation
+        passwordConfirmation: formData.passwordConfirmation,
       });
-      toast.success("Account setup complete! Redirecting...");
-      navigate("/home");
+
+      console.log("Signup Response:", response);
+
+      if (response) {
+        toast.success("Account setup complete! Redirecting...");
+        setTimeout(() => navigate("/home"), 1000); // ✅ Ensure navigation works
+      } else {
+        throw new Error(
+          response?.message || "Signup failed. Please try again."
+        );
+      }
     } catch (error) {
-      toast.error(error.message || "Failed to complete signup");
+      console.error("Signup error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to complete signup");
     }
   };
 
@@ -96,7 +118,10 @@ const CompleteSigninGoogle = () => {
         <div className="absolute bottom-[25%] left-[15%] w-16 h-16 border-4 border-blue-300/40 rounded-full"></div>
         <div className="absolute top-[70%] right-[25%] w-24 h-24 border-4 border-blue-200/20 transform rotate-45"></div>
 
-        <svg className="absolute bottom-0 left-0 w-full opacity-20" viewBox="0 0 1440 320">
+        <svg
+          className="absolute bottom-0 left-0 w-full opacity-20"
+          viewBox="0 0 1440 320"
+        >
           <path
             fill="#ffffff"
             fillOpacity="1"
@@ -116,7 +141,8 @@ const CompleteSigninGoogle = () => {
             </h1>
 
             <p className="text-xl text-blue-100 opacity-90 mb-8">
-              Sign in to access your personalized projects and continue where you left off.
+              Sign in to access your personalized projects and continue where
+              you left off.
             </p>
 
             <div className="space-y-4 mt-8">
@@ -135,7 +161,9 @@ const CompleteSigninGoogle = () => {
                     />
                   </svg>
                 </div>
-                <p className="text-blue-100">Seamless task management across all devices</p>
+                <p className="text-blue-100">
+                  Seamless task management across all devices
+                </p>
               </div>
               <div className="flex items-center">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/30 mr-4">
@@ -162,22 +190,30 @@ const CompleteSigninGoogle = () => {
       {/* Form Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-gray-50">
         <Card className="w-full max-w-md border-0 !shadow-xl">
-          <h2 className="text-3xl font-bold text-center text-blue-700 pt-6">Complete Sign Up</h2>
-          <p className="text-center text-gray-500">Finish setting up your account</p>
-          
+          <h2 className="text-3xl font-bold text-center text-blue-700 pt-6">
+            Complete Sign Up
+          </h2>
+          <p className="text-center text-gray-500">
+            Finish setting up your account
+          </p>
+
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               {userData.image && (
                 <div className="flex justify-center mb-4">
-                  <img 
-                    src={userData.image.replace('=s96-c', '=s200-c')} 
-                    alt="Profile" 
+                  <img
+                    src={userData.image.replace("=s96-c", "=s200-c")}
+                    alt="Profile"
                     className="w-32 h-32 rounded-full border-4 border-blue-100"
                   />
                 </div>
               )}
-              <h2 className="!text-2xl text-center mb-0 capitalize">{userData.name}</h2>
-              <h2 className="!text-xl text-center text-gray-500 !mb-2">{userData.email}</h2>
+              <h2 className="!text-2xl text-center mb-0 capitalize">
+                {userData.name}
+              </h2>
+              <h2 className="!text-xl text-center text-gray-500 !mb-2">
+                {userData.email}
+              </h2>
 
               {/* Editable Fields */}
               <TextField
@@ -239,7 +275,7 @@ const CompleteSigninGoogle = () => {
 
               <div className="text-center pt-4">
                 <Button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate("/login")}
                   className="!text-blue-600 hover:!underline !normal-case"
                 >
                   Back to Login

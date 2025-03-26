@@ -8,59 +8,62 @@ const API = axios.create({
 let refreshPromise = null; // Store refresh request promise
 
 // Attach token and refresh if expired
-API.interceptors.request.use(async (config) => {
-  let token = localStorage.getItem("accessToken");
+API.interceptors.request.use(
+  async (config) => {
+    let token = localStorage.getItem("accessToken");
 
-  if (token) {
-    const isExpired = (() => {
-      try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        return decoded.exp * 1000 < Date.now();
-      } catch {
-        return true;
-      }
-    })();
+    if (token) {
+      const isExpired = (() => {
+        try {
+          const decoded = JSON.parse(atob(token.split(".")[1]));
+          return decoded.exp * 1000 < Date.now();
+        } catch {
+          return true;
+        }
+      })();
 
-    if (isExpired) {
-      if (!refreshPromise) {
-        refreshPromise = API.get("/users/refresh", { withCredentials: true })
-          .then((res) => {
-            localStorage.setItem("accessToken", res.data.accessToken);
-            return res.data.accessToken;
-          })
-          .catch((error) => {
-            console.error("Token refresh failed:", error);
-            localStorage.removeItem("accessToken");
-            window.location.href = "/login";
-            return Promise.reject(error);
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
+      if (isExpired) {
+        if (!refreshPromise) {
+          refreshPromise = API.get("/users/refresh", { withCredentials: true })
+            .then((res) => {
+              localStorage.setItem("accessToken", res.data.accessToken);
+              return res.data.accessToken;
+            })
+            .catch((error) => {
+              console.error("Token refresh failed:", error);
+              localStorage.removeItem("accessToken");
+              window.location.href = "/login";
+              return Promise.reject(error);
+            })
+            .finally(() => {
+              refreshPromise = null;
+            });
+        }
+
+        try {
+          token = await refreshPromise;
+        } catch (error) {
+          // Ensure localStorage is cleared if refresh fails
+          localStorage.removeItem("accessToken");
+          window.location.href = "/login";
+          return Promise.reject("Session expired, please log in again.");
+        }
       }
 
-      try {
-        token = await refreshPromise;
-      } catch (error) {
-        // Ensure localStorage is cleared if refresh fails
-        localStorage.removeItem("accessToken");
-        window.location.href = "/login";
-        return Promise.reject("Session expired, please log in again.");
-      }
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-}, (error) => Promise.reject(error));
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Handle API errors globally
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
+
     // Avoid redirecting for login/signup errors
     if (
       error.response?.status === 401 &&
@@ -68,16 +71,16 @@ API.interceptors.response.use(
       !originalRequest.url.includes("/users/signup")
     ) {
       localStorage.removeItem("accessToken");
-      window.location.href = "/login"; 
+      window.location.href = "/login";
     }
-    
+
     return Promise.reject(error);
   }
 );
 
 export const debugLocalStorage = () => {
   console.log("Current localStorage state:", {
-    accessToken: localStorage.getItem("accessToken")
+    accessToken: localStorage.getItem("accessToken"),
   });
 };
 
@@ -92,11 +95,12 @@ export const googleAuth = () => {
 };
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
-export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
+export const signIn = (credentials) =>
+  API.post("/users/signin", credentials, { withCredentials: true });
 export const handleGoogleCallback = (code) => {
   return API.get("/users/google/callback", { params: { code } }) // ✅ Correct path
     .then((response) => {
-      const { accessToken , user } = response.data;
+      const { accessToken, user } = response.data;
       localStorage.setItem("accessToken", accessToken);
       return response.data;
     })
@@ -119,37 +123,54 @@ export const forgotPassword = async (email) => {
     );
   }
 };
-export const resetPassword = async (token, password , passwordConfirmation) => {
+export const resetPassword = async (token, password, passwordConfirmation) => {
   try {
-    const response = await API.patch(`/users/resetPassword/${token}`, { password , passwordConfirmation })
+    const response = await API.patch(`/users/resetPassword/${token}`, {
+      password,
+      passwordConfirmation,
+    });
     return response.data;
   } catch (error) {
     console.error("Reset password API error:", error);
     if (error.response?.status === 404) {
       throw new Error("Invalid token or password.");
-      }
-      throw new Error(
-        error.response?.data?.message || "Error resetting password."
-      );
-  }
-}
-export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
-  try {
-    const response = await API.post(
-      "/users/continueSignUpWithGoogle", // Match backend URL exactly
-      { 
-        token,
-        username,
-        password,
-        passwordConfirmation 
-      }
+    }
+    throw new Error(
+      error.response?.data?.message || "Error resetting password."
     );
-    return response.data;
+  }
+};
+export const ContinueSignUpWithGoogle = async (
+  token,
+  username,
+  password,
+  passwordConfirmation
+) => {
+  try {
+    console.log("📤 Sending Request:", {
+      token,
+      username,
+      password,
+      passwordConfirmation,
+    });
+
+    const response = await API.post("/users/continueSignUpWithGoogle", {
+      token,
+      username,
+      password,
+      passwordConfirmation,
+    });
+
+    console.log("✅ Response:", response.data.user);
+    return response.data.user;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || 
-                        error.response?.data?.error ||
-                        "Error completing Google signup";
-    
+    console.error("❌ Signup error:", error.response?.data || error.message);
+
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Error completing Google signup";
+
     if (error.response?.status === 400) {
       throw new Error(errorMessage);
     }
@@ -158,7 +179,7 @@ export const ContinueSignUpWithGoogle = async (token, username, password, passwo
     }
     throw new Error(errorMessage);
   }
-}
+};
 
 // Logout
 export const logout = () => {
