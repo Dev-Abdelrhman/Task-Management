@@ -11,7 +11,7 @@ const ProtectedRoutes = ({ isProtected = true }) => {
   const hasToken = !!localStorage.getItem("accessToken");
 
   if (isProtected) {
-    return isAuthenticated || hasToken ? (
+    return isAuthenticated || localStorage.getItem("accessToken") ? (
       <Outlet />
     ) : (
       <Navigate to="/login" state={{ from: location }} replace />
