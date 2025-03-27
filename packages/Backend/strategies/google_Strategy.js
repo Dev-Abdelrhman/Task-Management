@@ -21,20 +21,25 @@ passport.use(
           return cb(null, user);
         }
 
-        console.log("🚀 New user, generating tempToken...");
+        console.log("🚀 New user, generating...");
+        const newuser = await User.create({
+          googleID: profile.id,
+          email: profile.emails?.[0]?.value,
+          name: profile.displayName,
+          image: profile.photos?.[0]?.value,
+        });
+        // const tempToken = jwt.sign(
+        //   {
+        //     googleID: profile.id,
+        //     email: profile.emails?.[0]?.value,
+        //     name: profile.displayName,
+        //     image: profile.photos?.[0]?.value,
+        //   },
+        //   process.env.JWT_TEMP_SECRET,
+        //   { expiresIn: process.env.JWT_TEMP_TOKEN_EXPIRES_IN }
+        // );
 
-        const tempToken = jwt.sign(
-          {
-            googleID: profile.id,
-            email: profile.emails?.[0]?.value,
-            name: profile.displayName,
-            image: profile.photos?.[0]?.value,
-          },
-          process.env.JWT_TEMP_SECRET,
-          { expiresIn: process.env.JWT_TEMP_TOKEN_EXPIRES_IN }
-        );
-
-        return cb(null, { tempToken });
+        return cb(null, newuser);
       } catch (error) {
         console.error("❌ Google OAuth Error:", error);
         return cb(error, null);

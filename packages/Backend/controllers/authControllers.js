@@ -110,85 +110,81 @@ const googleAuthCallback = (req, res, next) => {
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
+      return createSendToken(user, 200, res);
+      // return res.redirect("http://localhost:5173/home");
+      // const frontendUrl =
+      //   "http://localhost:5173" ||
+      //   "http://localhost:5174" ||
+      //   "http://localhost:5175";
+      // console.log("🌍 Retrieved frontendUrl from session:", frontendUrl);
 
-      const frontendUrl =
-        "http://localhost:5173" ||
-        "http://localhost:5174" ||
-        "http://localhost:5175";
-      console.log("🌍 Retrieved frontendUrl from session:", frontendUrl);
+      // if (!frontendUrl) {
+      //   console.error("🚨 Frontend URL is missing!");
+      //   return res
+      //     .status(400)
+      //     .json({ status: "error", message: "Frontend URL missing" });
+      // }
 
-      if (!frontendUrl) {
-        console.error("🚨 Frontend URL is missing!");
-        return res
-          .status(400)
-          .json({ status: "error", message: "Frontend URL missing" });
-      }
+      //   if (!user.tempToken) {
+      //     const accessToken = generateAccessToken(user._id);
+      //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
+      // }
 
-    //   if (!user.tempToken) {
-    //     const accessToken = generateAccessToken(user._id);
-    //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
-    // }    
-    
-      if (user.tempToken) {
-        console.log("🛑 New user, redirecting to complete signup...");
-        return res.redirect(
-          `${frontendUrl}/google-signup?token=${user.tempToken}`
-        );
-      }
-
-      else{
-        console.log("👍 Existing user, logging in...");
-        return createSendToken(user, 200, res);
-      }
+      // if (user.tempToken) {
+      //   console.log("🛑 New user, redirecting to complete signup...");
+      //   return res.redirect(
+      //     `${frontendUrl}/google-signup?token=${user.tempToken}`
+      //   );
+      // }
     }
   )(req, res, next);
 };
 
-const completeGoogleSignup = catchAsync(async (req, res, next) => {
-  const { token, username, password, passwordConfirmation } = req.body;
+// const completeGoogleSignup = catchAsync(async (req, res, next) => {
+//   const { token, username, password, passwordConfirmation } = req.body;
 
-  console.log("Received Data:", {
-    token,
-    username,
-    password,
-    passwordConfirmation,
-  });
+//   console.log("Received Data:", {
+//     token,
+//     username,
+//     password,
+//     passwordConfirmation,
+//   });
 
-  if (!token) {
-    return next(new AppError("Token is required", 400));
-  }
-  if (!username || !password || !passwordConfirmation) {
-    return next(new AppError("All fields are required", 400));
-  }
-  if (password !== passwordConfirmation) {
-    return next(new AppError("Passwords do not match", 400));
-  }
+//   if (!token) {
+//     return next(new AppError("Token is required", 400));
+//   }
+//   if (!username || !password || !passwordConfirmation) {
+//     return next(new AppError("All fields are required", 400));
+//   }
+//   if (password !== passwordConfirmation) {
+//     return next(new AppError("Passwords do not match", 400));
+//   }
 
-  const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
-  console.log("Decoded Token:", decoded);
+//   const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
+//   console.log("Decoded Token:", decoded);
 
-  if (!mongoose.Types.ObjectId.isValid(decoded.googleID)) {
-    console.log("invalid googleID", decoded.googleID);
-  }
+//   if (!mongoose.Types.ObjectId.isValid(decoded.googleID)) {
+//     console.log("invalid googleID", decoded.googleID);
+//   }
 
-  const existingUser = await User.findOne({ email: decoded.email });
-  if (existingUser) {
-    return next(new AppError("User already exists. Please log in.", 400));
-  }
+//   const existingUser = await User.findOne({ email: decoded.email });
+//   if (existingUser) {
+//     return next(new AppError("User already exists. Please log in.", 400));
+//   }
 
-  const newUser = await User.create({
-    googleID: decoded.googleID,
-    email: decoded.email,
-    name: decoded.name,
-    image: decoded.image,
-    username,
-    password,
-    passwordConfirmation,
-    active: true,
-  });
+//   const newUser = await User.create({
+//     googleID: decoded.googleID,
+//     email: decoded.email,
+//     name: decoded.name,
+//     image: decoded.image,
+//     username,
+//     password,
+//     passwordConfirmation,
+//     active: true,
+//   });
 
-  createSendToken(newUser, 201, res);
-});
+//   createSendToken(newUser, 201, res);
+// });
 
 const forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
@@ -332,7 +328,6 @@ const refreshAccessToken = catchAsync(async (req, res, next) => {
           Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
         ),
         httpOnly: true,
-        sameSite: "None",
         sameSite: "Strict",
       };
       if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
@@ -352,7 +347,7 @@ export {
   signup,
   googleAuth,
   googleAuthCallback,
-  completeGoogleSignup,
+  // completeGoogleSignup,
   protect,
   refreshAccessToken,
   logout,
