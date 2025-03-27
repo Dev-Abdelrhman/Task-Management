@@ -96,10 +96,6 @@ export const googleAuth = () => {
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
-// Google Authentication
-export const googleAuth = async () => {
-  window.location.href = `http://localhost:5173/google`;
-};
 export const handleGoogleCallback = async () => API.get("/users/google/callback") 
 export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
   try {
