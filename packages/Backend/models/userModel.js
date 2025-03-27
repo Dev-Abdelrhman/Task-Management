@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   googleID: { type: String, unique: true, sparse: true },
   username: {
     type: String,
-    // required: true,
+    required: true,
     unique: true,
   },
   email: {
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: true,
+    required: true,
     minlength: 8,
     select: false,
     match:
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   },
   passwordConfirmation: {
     type: String,
-    // required: true,
+    required: true,
     validate: {
       validator: function (value) {
         return this.password === value;
