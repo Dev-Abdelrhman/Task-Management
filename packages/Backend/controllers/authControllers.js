@@ -124,6 +124,11 @@ const googleAuthCallback = (req, res, next) => {
           .json({ status: "error", message: "Frontend URL missing" });
       }
 
+    //   if (!user.tempToken) {
+    //     const accessToken = generateAccessToken(user._id);
+    //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
+    // }    
+    
       if (user.tempToken) {
         console.log("🛑 New user, redirecting to complete signup...");
         return res.redirect(
@@ -131,8 +136,10 @@ const googleAuthCallback = (req, res, next) => {
         );
       }
 
-      console.log("✅ Existing user, logging in...");
-      return createSendToken(user, 200, res);
+      else{
+        console.log("👍 Existing user, logging in...");
+        return createSendToken(user, 200, res);
+      }
     }
   )(req, res, next);
 };

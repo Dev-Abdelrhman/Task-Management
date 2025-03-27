@@ -1,15 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle } from "../api/auth"; 
+import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle , handleGoogleCallback } from "../api/auth"; 
 import { useAuthStore } from "../stores/authStore"; 
 import { toast } from "react-toastify";
-import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+
 
 export const useAuth = () => {
-  const { user, setUser, logout: logoutFromStore } = useAuthStore();
+  const { user, setUser, logout: logoutFromStore  } = useAuthStore();
   const queryClient = useQueryClient();
 
-  const navigate = useNavigate();
 
   // Common error handler
   const handleError = (error) => {
@@ -26,7 +24,7 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.user); // Corrected from data.user ➔ data.user
+      setUser(data.user);
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
     },
@@ -107,16 +105,53 @@ export const useAuth = () => {
   const googleSignInMutation = useMutation({
     mutationFn: async () => {
       await googleAuth();
+      return { accessToken, user };
     },
-    onSuccess: () => {
-      toast.success("Signed in with Google successfully");
-      navigate("/home")
+    onSuccess: async () => {
+      try {
+        const { accessToken, user } = await handleGoogleCallback();
+
+        setUser(data.user);
+        localStorage.setItem("accessToken", data.accessToken);
+        useAuthStore.getState().setAccessToken(data.accessToken);
+        console.log(data.user);
+        
+
+        if (accessToken) {
+          toast.success(`Welcome, ${user?.name || "User"}!`);
+          navigate("/home");
+        }
+        return { accessToken, user };
+      } catch (error) {
+        console.error("Google callback error:", error);
+        toast.error("Google sign-in failed. Please try again.");
+      }
     },
     onError: (error) => {
       console.error("Google sign-in error:", handleError(error));
       toast.error("Google sign-in failed. Please try again.");
     },
   });
+
+  // const handleGoogleCallbackMutation = useMutation({
+  //   mutationFn: async (code) => {
+  //     return await handleGoogleCallback(code);
+  //   },
+  //   onSuccess: (data) => {
+  //     setUser(data.user);
+  //     setAccessToken(data.accessToken);
+  //     console.log(data);
+      
+  //     localStorage.setItem("accessToken", data.accessToken);
+  //     navigate("/home", { replace: true });
+  //   },
+  //   onError: (error) => {
+  //     console.error("Google callback failed:", error);
+  //     toast.error("Google sign-in failed. Please try again.");
+  //     navigate("/login");
+  //   },
+  // });
+  
 
   // After
   const continueWithGoogleMutation = useMutation({
@@ -148,9 +183,11 @@ export const useAuth = () => {
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
     googleSignIn: googleSignInMutation.mutateAsync,
+    // handleGoogleCallback: handleGoogleCallbackMutation.mutateAsync,
     continueWithGoogle: continueWithGoogleMutation.mutateAsync,
     isLoading:
-      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending || continueWithGoogleMutation.isPending,
+      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending ||
+       forgotPasswordMutation.isPending || continueWithGoogleMutation.isPending ,
 
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,

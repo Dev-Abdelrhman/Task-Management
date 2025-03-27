@@ -1,51 +1,59 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuthStore } from "../../../stores/authStore";
+import { useAuth } from "../../../hooks/useAuth";
 
 const GoogleCallback = () => {
-  const { handleGoogleCallback } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code");
-  const { setUser, setAccessToken } = useAuthStore();
-
-  const handleCallback = async () => {
-    try {
-      const response = await handleGoogleCallback(code);
-      
-      // Check if the response is valid
-      if (!response) {
-        throw new Error("Invalid authentication response");
-      }
-
-      // Ensure response contains both token and user data
-      if (response?.accessToken && response?.user) {
-        setUser(response.user);
-        setAccessToken(response.accessToken);
-        localStorage.setItem("accessToken", response.accessToken);
-        // Force redirect to home page
-        navigate("/home", { replace: true });
-      } else {
-        throw new Error("Incomplete authentication data");
-      }
-    } catch (error) {
-      console.error("Google callback failed:", error);
-      toast.error("Google sign-in failed. Please try again.");
-      // Redirect to login if authentication fails
-      navigate("/login");
-    }
-  };
+  // Assuming useAuth provides a way to set auth data (e.g., token and user)
+  const { setAuthData } = useAuth();
 
   useEffect(() => {
-    handleCallback();
-  }, []);
+    const queryParams = new URLSearchParams(location.search);
+    const code = queryParams.get("code");
+
+    if (!code) {
+      toast.error("Authorization code not found.");
+      navigate("/login");
+      return;
+    }
+
+    const exchangeCodeForToken = async () => {
+      try {
+        // Call your backend endpoint to exchange the code for an access token.
+        const response = await fetch(`http://localhost:5173/depiV1/users/google/callback?code=${code}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to exchange code for token");
+        }
+
+        const data = await response.json();
+        // data should include a "status", "accessToken", and "user"
+        if (data.status === "success" && data.accessToken && data.user) {
+          // Update the auth context / state with the provided token and user data.
+          setAuthData(data);
+          toast.success(`Welcome ${data.user.name}!`);
+          navigate("/home");
+        } else {
+          toast.error("Authentication failed, please try again.");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error during Google sign in:", error);
+        toast.error("Google sign in error: " + error.message);
+        navigate("/login");
+      }
+    };
+
+    exchangeCodeForToken();
+  }, [location.search, navigate, setAuthData]);
 
   return (
-    <div className="text-center">
-      <h2 className="text-2xl font-bold mb-4">Processing Google Sign-In</h2>
-      <p className="text-gray-600">Please wait...</p>
+    <div className="flex justify-center items-center h-screen">
+      <p>Completing Google Sign-In...</p>
     </div>
   );
 };
