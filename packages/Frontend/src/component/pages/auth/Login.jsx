@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-// import { assets, cursors } from "../../../assets/assets";
 import { toast } from "react-toastify";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import Button from '@mui/material/Button';
@@ -46,10 +45,18 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await googleSignIn();
-      navigate("/home");
+      const response = await googleSignIn();
+      if (response && response.user) {
+        console.log("Google sign in successful:", response);
+        toast.success(`Welcome ${response.user.name}!`);
+        navigate("/home");
+      } else {
+        // Optional: Handle case where response is not as expected
+        toast.error("Google sign in did not return a valid user.");
+      }
     } catch (error) {
       console.error("Google sign-in failed:", error);
+      toast.error("Google sign in failed, please try again.");
     }
   };
 
