@@ -95,21 +95,9 @@ export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
 // Google Authentication
 export const googleAuth = async () => {
-  const frontendUrl = encodeURIComponent(window.location.origin);
-  window.location.href = `http://localhost:9999/depiV1/users/google?state=${frontendUrl}`;
+  window.location.href = `http://localhost:5173/google`;
 };
-export const handleGoogleCallback = async (code) => {
-  return API.get("/users/google/callback", { params: { code } })
-    .then((response) => {
-      const { accessToken, user } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      return { accessToken, user }; // Return both values
-    })
-    .catch((error) => {
-      console.error("Google callback error:", error);
-      throw error;
-    });
-};
+export const handleGoogleCallback = async () => API.get("/users/google/callback") 
 export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
   try {
     const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });

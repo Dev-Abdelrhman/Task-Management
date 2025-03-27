@@ -9,9 +9,9 @@ import ResetPassword from "./component/pages/auth/ResetPassword";
 import Dashboard from "./component/pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
-import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import Projects from "./component/pages/Projects/Projects";
 import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
+import GoogleCallback from "./component/pages/auth/GoogleCallback"; 
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
           <Route path="/google-signup" element={<CompleteSigninGoogle />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/resetPassword/:token" element ={<ResetPassword />} />
-          <Route path="/auth/google/callback" element={<GoogleCallback />} />
+          <Route path="/google-callback" element={<GoogleCallback />} />
         </Route>
 
         {/* Protected routes - only accessible when authenticated */}
