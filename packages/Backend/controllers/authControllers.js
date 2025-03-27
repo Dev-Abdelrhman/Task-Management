@@ -12,6 +12,8 @@ import AppError from "../utils/appError.js";
 import sendEmail from "../utils/nodeMailer.js";
 import mongoose from "mongoose";
 
+const frontendUrl =
+  "http://localhost:5173" || "http://localhost:5174" || "http://localhost:5175";
 const generateAccessToken = function (id) {
   return jwt.sign(
     {
@@ -50,12 +52,12 @@ const createSendToken = (user, statusCode, res) => {
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
   res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("accessToken", accessToken, cookieOptions);
 
   user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
-    accessToken,
     user,
   });
 };
@@ -96,7 +98,26 @@ const signup = catchAsync(async (req, res, next) => {
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
+const createSendToken_V2 = (user, statusCode, res) => {
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    sameSite: "Strict",
+  };
 
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+  res.cookie("accessToken", accessToken, cookieOptions);
+  user.password = undefined;
+  console.log(user);
+
+  res.redirect(`${frontendUrl}/google-signin`);
+};
 const googleAuthCallback = (req, res, next) => {
   console.log("🔍 Google Authentication Callback Triggered");
 
@@ -110,11 +131,6 @@ const googleAuthCallback = (req, res, next) => {
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
-
-      const frontendUrl =
-        "http://localhost:5173" ||
-        "http://localhost:5174" ||
-        "http://localhost:5175";
       console.log("🌍 Retrieved frontendUrl from session:", frontendUrl);
 
       if (!frontendUrl) {
@@ -124,11 +140,11 @@ const googleAuthCallback = (req, res, next) => {
           .json({ status: "error", message: "Frontend URL missing" });
       }
 
-    //   if (!user.tempToken) {
-    //     const accessToken = generateAccessToken(user._id);
-    //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
-    // }    
-    
+      //   if (!user.tempToken) {
+      //     const accessToken = generateAccessToken(user._id);
+      //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
+      // }
+
       if (user.tempToken) {
         console.log("🛑 New user, redirecting to complete signup...");
         return res.redirect(
@@ -136,10 +152,7 @@ const googleAuthCallback = (req, res, next) => {
         );
       }
 
-      else{
-        console.log("👍 Existing user, logging in...");
-        return createSendToken(user, 200, res);
-      }
+      createSendToken_V2(user, 201, res);
     }
   )(req, res, next);
 };
@@ -261,50 +274,83 @@ const updatePassword = catchAsync(async (req, res, next) => {
 const blacklist = new Set();
 
 const logout = (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.accessToken;
   const rToken = req.cookies.refreshToken;
-  if (!token) {
-    return res.status(400).json({ message: "You are not logged in" });
-  }
-  if (!rToken) {
+
+  if (!token || !rToken) {
     return res.status(400).json({ message: "You are not logged in" });
   }
 
-  blacklist.add(token, rToken);
+  // Add tokens to the blacklist
+  blacklist.add(token);
+  blacklist.add(rToken);
+
+  // Clear cookies
+  res.cookie("accessToken", "", {
+    expires: new Date(0),
+    httpOnly: true,
+    sameSite: "Strict",
+  });
+  res.cookie("refreshToken", "", {
+    expires: new Date(0),
+    httpOnly: true,
+    sameSite: "Strict",
+  });
 
   res.status(200).json({ message: "Logged out successfully" });
 };
 
 const protect = catchAsync(async (req, res, next) => {
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
+  try {
+    let token;
+
+    // 1️⃣ Get token from cookies or Authorization header
+    if (req.cookies?.accessToken) {
+      token = req.cookies.accessToken;
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    // 2️⃣ If no token, block access
+    if (!token) {
+      return next(new AppError("You are not logged in! Please log in.", 401));
+    }
+
+    console.log("Token found:", token); // Debugging
+
+    // 3️⃣ Check if token is blacklisted
+    if (blacklist.has(token)) {
+      return next(new AppError("Session expired. Please log in again.", 401));
+    }
+
+    // 4️⃣ Verify token
+    const decoded = await promisify(jwt.verify)(
+      token,
+      process.env.JWT_SECRET_ACCESS_TOKEN
+    );
+
+    console.log("Token verified, decoded:", decoded); // Debugging
+
+    // 5️⃣ Check if user still exists
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next(new AppError("User no longer exists.", 401));
+    }
+
+    // 6️⃣ Grant access to protected route
+    req.user = currentUser;
+    next();
+  } catch (error) {
+    console.error("Error in protect middleware:", error);
+    return next(
+      new AppError("Invalid or expired token. Please log in again.", 401)
+    );
   }
-
-  if (!token) {
-    return next(new AppError("You are not logged in! Please log in.", 401));
-  }
-
-  if (blacklist.has(token)) {
-    return next(new AppError("Session expired. Please log in again.", 401));
-  }
-
-  const decoded = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET_ACCESS_TOKEN
-  );
-
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(new AppError("User no longer exists.", 401));
-  }
-
-  req.user = currentUser;
-  next();
 });
+
 const refreshAccessToken = catchAsync(async (req, res, next) => {
   const { refreshToken } = req.cookies;
 
@@ -332,16 +378,14 @@ const refreshAccessToken = catchAsync(async (req, res, next) => {
           Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
         ),
         httpOnly: true,
-        sameSite: "None",
         sameSite: "Strict",
       };
       if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
       res.cookie("refreshToken", newRefreshToken, cookieOptions);
-
+      res.cookie("accessToken", newAccessToken, cookieOptions);
       res.status(200).json({
         status: "success",
-        accessToken: newAccessToken,
       });
     }
   );
