@@ -5,7 +5,7 @@ const API = axios.create({
   withCredentials: true, // Allow cookies/session authentication
 });
 
-let refreshPromise = null; // Store refresh request promise
+let refreshPromise = null; 
 
 // Attach token and refresh if expired
 API.interceptors.request.use(
@@ -78,51 +78,10 @@ API.interceptors.response.use(
   }
 );
 
-export const debugLocalStorage = () => {
-  console.log("Current localStorage state:", {
-    accessToken: localStorage.getItem("accessToken"),
-  });
-};
-
-export const clearAuthState = () => {
-  localStorage.removeItem("accessToken");
-  window.location.href = "/login";
-};
-
-
 // Auth API Calls
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
-// Google Authentication
-export const googleAuth = async () => {
-  window.location.href = `http://localhost:5173/google`;
-};
-export const handleGoogleCallback = async () => API.get("/users/google/callback") 
-export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
-  try {
-    const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });
-    const { accessToken, user } = response.data;
-    localStorage.setItem("accessToken", accessToken);
-
-    return { user, accessToken };
-  } catch (error) {
-
-    if (error.response?.status === 401) {
-      throw new Error("Session expired. Please restart the signup process.");
-    }
-    const errorMessage =
-      error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
-
-    if (error.response?.status === 400) {
-      throw new Error(errorMessage);
-    }
-    if (error.response?.status === 401) {
-      throw new Error("Session expired - please restart the signup process");
-    }
-    throw new Error(errorMessage);
-  }
-};
-
+export const logout = () => {API.post("/users/logout", {}, { withCredentials: true })};
 export const forgotPassword = async (email) => {
   try {
     const response = await API.post("/users/forgotPassword", { email });
@@ -154,18 +113,39 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
     );
   }
 };
-
-// Logout
-export const logout = () => {
-  return API.post("/users/logout", {}, { withCredentials: true })
-    .then(() => {
-      localStorage.removeItem("accessToken"); // Clear token on logout
-      window.location.href = "/login"; // Redirect user to login
-    })
-    .catch((error) => {
-      console.error("Logout failed:", error);
-      return Promise.reject(error);
-    });
+// Google Authentication
+export const googleAuth = async () => {
+  window.location.href = `http://localhost:9999/depiV1/users/google`;
 };
+
+///////////////////////
+export const handleGoogleCallback = async () => API.get("/users/google/callback", {withCredentials: true}) 
+
+///////////
+export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
+  try {
+    const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });
+    const { accessToken, user } = response.data;
+    localStorage.setItem("accessToken", accessToken);
+
+    return { user, accessToken };
+  } catch (error) {
+
+    if (error.response?.status === 401) {
+      throw new Error("Session expired. Please restart the signup process.");
+    }
+    const errorMessage =
+      error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
+
+    if (error.response?.status === 400) {
+      throw new Error(errorMessage);
+    }
+    if (error.response?.status === 401) {
+      throw new Error("Session expired - please restart the signup process");
+    }
+    throw new Error(errorMessage);
+  }
+};
+
 
 export default API;
