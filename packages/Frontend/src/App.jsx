@@ -26,7 +26,7 @@ function App() {
           <Route path="/google-signup" element={<CompleteSigninGoogle />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/resetPassword/:token" element ={<ResetPassword />} />
-          <Route path="/google-callback" element={<GoogleCallback />} />
+          <Route path="/google-signin" element={<GoogleCallback />} />
         </Route>
 
         {/* Protected routes - only accessible when authenticated */}

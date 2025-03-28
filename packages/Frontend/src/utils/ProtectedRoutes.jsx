@@ -7,11 +7,9 @@ const ProtectedRoutes = ({ isProtected = true }) => {
 
   if (isLoading) return <div>Loading...</div>;
   
-  // Add token check as fallback
-  const hasToken = !!localStorage.getItem("accessToken");
-
+  const hasValidCookie = document.cookie.includes("accessToken");
   if (isProtected) {
-    return isAuthenticated || localStorage.getItem("accessToken") ? (
+    return isAuthenticated || hasValidCookie ? (
       <Outlet />
     ) : (
       <Navigate to="/login" state={{ from: location }} replace />

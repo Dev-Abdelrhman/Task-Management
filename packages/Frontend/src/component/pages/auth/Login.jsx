@@ -45,15 +45,7 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const response = await googleSignIn();
-      if (response && response.user) {
-        console.log("Google sign in successful:", response);
-        toast.success(`Welcome ${response.user.name}!`);
-        navigate("/home");
-      } else {
-        // Optional: Handle case where response is not as expected
-        toast.error("Google sign in did not return a valid user.");
-      }
+      await googleSignIn();
     } catch (error) {
       console.error("Google sign-in failed:", error);
       toast.error("Google sign in failed, please try again.");

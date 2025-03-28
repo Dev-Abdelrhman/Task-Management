@@ -26,7 +26,6 @@ const navigate = useNavigate();
         user,
         signUp,
         googleSignIn,
-        isLoading,
     } = useAuth();
 
     //useEffect

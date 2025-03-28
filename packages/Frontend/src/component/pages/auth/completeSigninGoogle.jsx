@@ -6,7 +6,6 @@ import { User, Lock } from "lucide-react";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 
-
 const CompleteSigninGoogle = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,7 +70,7 @@ const CompleteSigninGoogle = () => {
     }
 
     try {
-      const response = await continueWithGoogle({
+      await continueWithGoogle({
         token,
         username: formData.username,
         password: formData.password,

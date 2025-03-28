@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle , handleGoogleCallback } from "../api/auth"; 
 import { useAuthStore } from "../stores/authStore"; 
 import { toast } from "react-toastify";
@@ -6,8 +6,6 @@ import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const { user, setUser, logout: logoutFromStore  } = useAuthStore();
-  const queryClient = useQueryClient();
-
 
   // Common error handler
   const handleError = (error) => {
@@ -40,7 +38,7 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.user); // Corrected from data.user ➔ data.user
+      setUser(data.user); 
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
     },
@@ -56,18 +54,11 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       logoutFromStore();
-      // Clear localStorage properly
-      localStorage.clear();
-      // Clear sessionStorage
-      sessionStorage.clear();
-      // Invalidate queries
-      queryClient.setQueryData(["user"], null);
     },
     onError: (error) => {
       console.error("Sign-out error:", handleError(error));
     },
   });
-
   // Forgot password mutation
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email) => {
@@ -164,7 +155,6 @@ export const useAuth = () => {
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setAccessToken(data.accessToken);
       toast.success("Account setup complete!");
-      navigate("/home")
     }, 
     onError: (error) => {
       console.error("Continue with Google error", handleError(error));

@@ -6,12 +6,10 @@ import { Button } from "@mui/material";
 
 function Navbar() {
   const { signOut, isLoading } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await signOut();
-      navigate("/home");
     } catch (error) {
       toast.error(`Logout failed: ${error.message}`);
     }
