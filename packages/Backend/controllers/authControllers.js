@@ -114,10 +114,21 @@ const createSendToken_V2 = (user, statusCode, res) => {
   res.cookie("refreshToken", refreshToken, cookieOptions);
   res.cookie("accessToken", accessToken, cookieOptions);
   user.password = undefined;
-  console.log(user);
+  // console.log(user);
 
   res.redirect(`${frontendUrl}/google-signin`);
 };
+const getAuthUser = catchAsync(async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError("User not authenticated", 401));
+  }
+
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
+});
+
 const googleAuthCallback = (req, res, next) => {
   console.log("🔍 Google Authentication Callback Triggered");
 
@@ -139,19 +150,13 @@ const googleAuthCallback = (req, res, next) => {
           .status(400)
           .json({ status: "error", message: "Frontend URL missing" });
       }
-
-      //   if (!user.tempToken) {
-      //     const accessToken = generateAccessToken(user._id);
-      //     return res.redirect(`${frontendUrl}/auth/google/callback?accessToken=${accessToken}`);
-      // }
-
       if (user.tempToken) {
         console.log("🛑 New user, redirecting to complete signup...");
         return res.redirect(
           `${frontendUrl}/google-signup?token=${user.tempToken}`
         );
       }
-
+      // console.log("✅ User exists, redirecting to frontend...", user);
       createSendToken_V2(user, 201, res);
     }
   )(req, res, next);
@@ -397,6 +402,7 @@ export {
   googleAuth,
   googleAuthCallback,
   completeGoogleSignup,
+  getAuthUser,
   protect,
   refreshAccessToken,
   logout,

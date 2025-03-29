@@ -8,6 +8,7 @@ const router = express();
 
 router.route("/google").get(AC.googleAuth);
 router.route("/google/callback").get(AC.googleAuthCallback);
+router.route("/google/user").get(AC.getAuthUser);
 router.route("/continueSignUpWithGoogle").post(AC.completeGoogleSignup);
 router.route("/refresh").get(AC.refreshAccessToken);
 router.route("/signup").post(AC.signup);
