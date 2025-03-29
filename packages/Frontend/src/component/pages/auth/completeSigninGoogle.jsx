@@ -29,17 +29,22 @@ const CompleteSigninGoogle = () => {
     }
 
     try {
-      const decoded = jwtDecode(tokenFromURL);
+      const decoded =  jwtDecode(tokenFromURL);
       setUserData({
         name: decoded.name,
         email: decoded.email,
-        image: decoded.image || decoded.picture,
+        image: decoded.image.replace(/=s96-c$/, "=s400-c")  || decoded.picture.replace(/=s96-c$/, "=s400-c"),
       });
       setToken(tokenFromURL);
     } catch (error) {
       toast.error("Invalid or expired token. Please restart the process.");
     }
   }, [location.search]);
+
+  const hostGoogleImage = (url) => {
+    // Use a proxy service or your own backend to fetch and host the image
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -189,7 +194,7 @@ const CompleteSigninGoogle = () => {
               {userData.image && (
                 <div className="flex justify-center mb-4">
                   <img
-                    src={userData.image.replace("=s96-c", "=s200-c")}
+                    src={ hostGoogleImage(userData.image)}
                     alt="Profile"
                     className="w-32 h-32 rounded-full border-4 border-blue-100"
                   />
