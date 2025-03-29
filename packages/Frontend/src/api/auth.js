@@ -79,6 +79,14 @@ API.interceptors.response.use(
 );
 
 // Auth API Calls
+// export const getUser = async () => {
+//   const response = await API.get("/users/google/user", {
+//     withCredentials: true 
+//   });
+//   console.log(response);
+  
+//   return response;
+// };
 export const signUp = (userData) => API.post("/users/signup", userData);
 export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
 export const logout = () => {API.post("/users/logout", {}, { withCredentials: true })};

@@ -119,13 +119,15 @@ const createSendToken_V2 = (user, statusCode, res) => {
   res.redirect(`${frontendUrl}/google-signin`);
 };
 const getAuthUser = catchAsync(async (req, res, next) => {
+  req.user = currentUser;
+  console.log(currentUser);
   if (!req.user) {
     return next(new AppError("User not authenticated", 401));
   }
 
   res.status(200).json({
     status: "success",
-    user: req.user,
+    currentUser,
   });
 });
 
