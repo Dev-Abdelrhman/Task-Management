@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const GoogleCallback = () => {
-  const {handleGoogleCallback } = useAuth(); 
+  const {handleGoogleCallback} = useAuth(); 
   const navigate = useNavigate();
 
 

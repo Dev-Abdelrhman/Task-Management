@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle , handleGoogleCallback } from "../api/auth"; 
+import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword ,ContinueSignUpWithGoogle , handleGoogleCallback  } from "../api/auth"; 
 import { useAuthStore } from "../stores/authStore"; 
 import { toast } from "react-toastify";
 
@@ -14,6 +14,20 @@ export const useAuth = () => {
       "Something went wrong. Please try again."
     );
   };
+
+  // const getUserMutation = useMutation({
+  //   mutationFn: async () => {
+  //     const response = getUser();
+  //     const { user } = response.data;
+  //     return {user};
+  //   },
+  //   onSuccess: (data) => {
+  //     setUser();
+  //   },
+  //   onError: (error) => {
+  //     console.error("Failed to fetch user:", error);
+  //   },
+  // });
 
   // Sign-in mutation
   const signInMutation = useMutation({
@@ -105,14 +119,18 @@ export const useAuth = () => {
 
   const handleGoogleCallbackMutation = useMutation({
     mutationFn: async () => {
-      const response = await handleGoogleCallback();
-      const {user , accessToken} = response.data;
-      return {user , accessToken};
+      await handleGoogleCallback();
+      const response = await useAuthStore.getState().fetchUser();
+      const {currentUser} = response.data;
+      return currentUser;
+      // const {user , accessToken} = response.data;
+      // return {user , accessToken};
     },
     onSuccess: (data) => {
       console.log(data);
-      setUser(data.user)
-      localStorage.setItem("accessToken", data.accessToken);
+      setUser(data)
+      // setUser(data.user)
+      // localStorage.setItem("accessToken", data.accessToken);
     },
     onError: (error) => {
       console.error("Google callback failed:", error);
@@ -147,6 +165,7 @@ export const useAuth = () => {
     signIn: signInMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
+    // getUser: getUserMutation.mutateAsync,
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
     googleSignIn: googleSignInMutation.mutateAsync,

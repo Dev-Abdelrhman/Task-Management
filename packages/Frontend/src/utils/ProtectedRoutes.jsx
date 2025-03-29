@@ -9,12 +9,12 @@ const ProtectedRoutes = ({ isProtected = true }) => {
   console.log(isAuthenticated);
   
   const hasValidToken = localStorage.getItem("accessToken") || document.cookie.includes("accessToken");
-  console.log(document.cookie.includes("accessToken")); 
-  console.log(localStorage.getItem("accessToken")); 
+  // console.log(document.cookie.includes("accessToken")); 
+  // console.log(localStorage.getItem("accessToken")); 
   
   
   if (isProtected) {
-    return isAuthenticated || hasValidToken ? (
+    return isAuthenticated ? (
       <Outlet />
     ) : (
       <Navigate to="/login" state={{ from: location }} replace />
