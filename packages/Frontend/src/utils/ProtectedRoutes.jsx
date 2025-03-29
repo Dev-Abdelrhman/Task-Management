@@ -6,10 +6,15 @@ const ProtectedRoutes = ({ isProtected = true }) => {
   const location = useLocation();
 
   if (isLoading) return <div>Loading...</div>;
+  console.log(isAuthenticated);
   
-  const hasValidCookie = document.cookie.includes("accessToken");
+  const hasValidToken = localStorage.getItem("accessToken") || document.cookie.includes("accessToken");
+  console.log(document.cookie.includes("accessToken")); 
+  console.log(localStorage.getItem("accessToken")); 
+  
+  
   if (isProtected) {
-    return isAuthenticated || hasValidCookie ? (
+    return isAuthenticated || hasValidToken ? (
       <Outlet />
     ) : (
       <Navigate to="/login" state={{ from: location }} replace />

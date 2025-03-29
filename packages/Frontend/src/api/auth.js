@@ -115,11 +115,18 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
 };
 // Google Authentication
 export const googleAuth = async () => {
-  window.location.href = `http://localhost:9999/depiV1/users/google`;
+  window.location.href = `${API.defaults.baseURL}/users/google`;
 };
 
 ///////////////////////
-export const handleGoogleCallback = async () => API.get("/users/google/callback", {withCredentials: true}) 
+export const handleGoogleCallback = async () => {
+  const response = await axios.get(`${API}/auth/google/callback`, {
+    withCredentials: true, 
+  });
+  console.log(response);
+  
+  return response;
+};
 
 ///////////
 export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
