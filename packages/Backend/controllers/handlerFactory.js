@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 // const { CloudinaryStorage } = require("multer-storage-cloudinary");
 // const cloudinary = require("../utils/cloudinary");
 import { catchAsync } from "../utils/catchAsync.js";
