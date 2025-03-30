@@ -15,13 +15,26 @@ export const useAuthStore = create(
       },
       fetchUser: async () => {
         try {
-          const res = await axios.get("http://localhost:5173/users/google/user", {
-            withCredentials: true,  
-          });
-          set({ user: res.data.currentUser });
+          const res = await axios.get(
+            "http://localhost:9999/depiV1/users/google/user",
+            { withCredentials: true }
+          );
+
+          console.log("Full API response:", res); // ✅ Debugging
+
+          if (!res || !res.data) {
+            console.error("Invalid response:", res);
+            return null; // Avoid breaking the app
+          }
+
+          console.log("Fetched user:", res.data.user);
+          set({ user: res.data.user });
+
+          return res.data; // ✅ Return the full response
         } catch (error) {
           console.error("Error fetching user:", error);
           set({ user: null });
+          return null; // ✅ Prevent errors in `handleGoogleCallbackMutation`
         }
       },
 
@@ -29,7 +42,7 @@ export const useAuthStore = create(
         set({ user: null, accessToken: null });
         // localStorage.removeItem("accessToken");
         // sessionStorage.clear();
-      }
+      },
     }),
     {
       name: "auth-storage",

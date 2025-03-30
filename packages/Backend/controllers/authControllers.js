@@ -1,17 +1,12 @@
-// import bcrypt from "bcryptjs";
 import passport from "../strategies/google_Strategy.js";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
 import crypto from "crypto";
 import User from "../models/userModel.js";
-// import Role from "../models/roleModel";
-// import Project from "../models/projectsModel";
-// import { checkProjectPermission } from "../models/checkProjectPermission";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import sendEmail from "../utils/nodeMailer.js";
-import mongoose from "mongoose";
-
+//______________________________________________________________________________
 const frontendUrl =
   "http://localhost:5173" || "http://localhost:5174" || "http://localhost:5175";
 const generateAccessToken = function (id) {
@@ -25,7 +20,7 @@ const generateAccessToken = function (id) {
     }
   );
 };
-
+//______________________________________________________________________________
 const generateRefreshToken = function (id) {
   return jwt.sign(
     {
@@ -37,7 +32,7 @@ const generateRefreshToken = function (id) {
     }
   );
 };
-
+//______________________________________________________________________________
 const createSendToken = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -61,7 +56,7 @@ const createSendToken = (user, statusCode, res) => {
     user,
   });
 };
-
+//______________________________________________________________________________
 const signin = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -75,7 +70,7 @@ const signin = catchAsync(async (req, res, next) => {
   }
   createSendToken(user, 200, res);
 });
-
+//______________________________________________________________________________
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, password, passwordConfirmation } = req.body;
 
@@ -94,10 +89,11 @@ const signup = catchAsync(async (req, res, next) => {
 
   createSendToken(newUser, 201, res);
 });
-
+//______________________________________________________________________________
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
+//______________________________________________________________________________
 const createSendToken_V2 = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -114,56 +110,46 @@ const createSendToken_V2 = (user, statusCode, res) => {
   res.cookie("refreshToken", refreshToken, cookieOptions);
   res.cookie("accessToken", accessToken, cookieOptions);
   user.password = undefined;
-  // console.log(user);
 
   res.redirect(`${frontendUrl}/google-signin`);
 };
+//______________________________________________________________________________
 const getAuthUser = catchAsync(async (req, res, next) => {
-  req.user = currentUser;
-  console.log(currentUser);
   if (!req.user) {
     return next(new AppError("User not authenticated", 401));
   }
 
   res.status(200).json({
     status: "success",
-    currentUser,
+    user: req.user,
   });
 });
-
+//______________________________________________________________________________
 const googleAuthCallback = (req, res, next) => {
-  console.log("🔍 Google Authentication Callback Triggered");
-
   passport.authenticate(
     "google",
     { failureRedirect: "/login" },
     async (err, user) => {
       if (err || !user) {
-        console.error("❌ Authentication error:", err);
         return res
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
-      console.log("🌍 Retrieved frontendUrl from session:", frontendUrl);
-
       if (!frontendUrl) {
-        console.error("🚨 Frontend URL is missing!");
         return res
           .status(400)
           .json({ status: "error", message: "Frontend URL missing" });
       }
       if (user.tempToken) {
-        console.log("🛑 New user, redirecting to complete signup...");
         return res.redirect(
           `${frontendUrl}/google-signup?token=${user.tempToken}`
         );
       }
-      // console.log("✅ User exists, redirecting to frontend...", user);
       createSendToken_V2(user, 201, res);
     }
   )(req, res, next);
 };
-
+//______________________________________________________________________________
 const completeGoogleSignup = catchAsync(async (req, res, next) => {
   const { token, username, password, passwordConfirmation } = req.body;
 
@@ -185,11 +171,6 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
-  console.log("Decoded Token:", decoded);
-
-  if (!mongoose.Types.ObjectId.isValid(decoded.googleID)) {
-    console.log("invalid googleID", decoded.googleID);
-  }
 
   const existingUser = await User.findOne({ email: decoded.email });
   if (existingUser) {
@@ -209,9 +190,8 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
 
   createSendToken(newUser, 201, res);
 });
-
+//______________________________________________________________________________
 const forgotPassword = catchAsync(async (req, res, next) => {
-  // 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return next(new AppError("There is no user with that email address", 404));
@@ -220,7 +200,6 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
   const resetURL = `${req.protocol}://localhost:5173/resetPassword/${resetToken}`;
   const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
-  console.log(message);
   try {
     await sendEmail({
       to: user.email,
@@ -242,7 +221,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
-
+//______________________________________________________________________________
 const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash("sha256")
@@ -266,7 +245,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
-
+//______________________________________________________________________________
 const updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
@@ -277,9 +256,9 @@ const updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
   createSendToken(user, 200, res);
 });
-
+//______________________________________________________________________________
 const blacklist = new Set();
-
+//______________________________________________________________________________
 const logout = (req, res) => {
   const token = req.cookies.accessToken;
   const rToken = req.cookies.refreshToken;
@@ -306,58 +285,41 @@ const logout = (req, res) => {
 
   res.status(200).json({ message: "Logged out successfully" });
 };
-
+//______________________________________________________________________________
 const protect = catchAsync(async (req, res, next) => {
-  try {
-    let token;
+  let token;
 
-    // 1️⃣ Get token from cookies or Authorization header
-    if (req.cookies?.accessToken) {
-      token = req.cookies.accessToken;
-    } else if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
-
-    // 2️⃣ If no token, block access
-    if (!token) {
-      return next(new AppError("You are not logged in! Please log in.", 401));
-    }
-
-    console.log("Token found:", token); // Debugging
-
-    // 3️⃣ Check if token is blacklisted
-    if (blacklist.has(token)) {
-      return next(new AppError("Session expired. Please log in again.", 401));
-    }
-
-    // 4️⃣ Verify token
-    const decoded = await promisify(jwt.verify)(
-      token,
-      process.env.JWT_SECRET_ACCESS_TOKEN
-    );
-
-    console.log("Token verified, decoded:", decoded); // Debugging
-
-    // 5️⃣ Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      return next(new AppError("User no longer exists.", 401));
-    }
-
-    // 6️⃣ Grant access to protected route
-    req.user = currentUser;
-    next();
-  } catch (error) {
-    console.error("Error in protect middleware:", error);
-    return next(
-      new AppError("Invalid or expired token. Please log in again.", 401)
-    );
+  if (req.cookies?.accessToken) {
+    token = req.cookies.accessToken;
+  } else if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
   }
-});
 
+  if (!token) {
+    return next(new AppError("You are not logged in! Please log in.", 401));
+  }
+
+  if (blacklist.has(token)) {
+    return next(new AppError("Session expired. Please log in again.", 401));
+  }
+
+  const decoded = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET_ACCESS_TOKEN
+  );
+
+  const user = await User.findById(decoded.id);
+  if (!user) {
+    return next(new AppError("User no longer exists.", 401));
+  }
+
+  req.user = user;
+  next();
+});
+//______________________________________________________________________________
 const refreshAccessToken = catchAsync(async (req, res, next) => {
   const { refreshToken } = req.cookies;
 
@@ -397,7 +359,7 @@ const refreshAccessToken = catchAsync(async (req, res, next) => {
     }
   );
 });
-
+//______________________________________________________________________________
 export {
   signin,
   signup,

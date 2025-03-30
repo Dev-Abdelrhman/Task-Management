@@ -12,17 +12,11 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        console.log("🔍 Google Profile:", profile);
-
         let user = await User.findOne({ email: profile.emails?.[0]?.value });
-
         if (user) {
-          console.log("✅ Existing user, logging in...");
           return cb(null, user);
         }
-
-        console.log("🚀 New user, generating tempToken...");
-
+        
         const tempToken = jwt.sign(
           {
             googleID: profile.id,
@@ -35,8 +29,7 @@ passport.use(
         );
 
         return cb(null, { tempToken });
-      } catch (error) {
-        console.error("❌ Google OAuth Error:", error);
+      } catch (error) {;
         return cb(error, null);
       }
     }
