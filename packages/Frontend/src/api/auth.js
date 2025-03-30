@@ -5,7 +5,7 @@ const API = axios.create({
   withCredentials: true, // Allow cookies/session authentication
 });
 
-let refreshPromise = null; 
+let refreshPromise = null;
 
 // Attach token and refresh if expired
 API.interceptors.request.use(
@@ -79,17 +79,20 @@ API.interceptors.response.use(
 );
 
 // Auth API Calls
-// export const getUser = async () => {
-//   const response = await API.get("/users/google/user", {
-//     withCredentials: true 
-//   });
-//   console.log(response);
-  
-//   return response;
-// };
+export const getUser = async () => {
+  const res = await axios.get(
+    "http://localhost:9999/depiV1/users/google/user",
+    { withCredentials: true }
+  );
+  const { user } = res.data;
+  return { user };
+};
 export const signUp = (userData) => API.post("/users/signup", userData);
-export const signIn = (credentials) => API.post("/users/signin", credentials, { withCredentials: true });
-export const logout = () => {API.post("/users/logout", {}, { withCredentials: true })};
+export const signIn = (credentials) =>
+  API.post("/users/signin", credentials, { withCredentials: true });
+export const logout = () => {
+  API.post("/users/logout", {}, { withCredentials: true });
+};
 export const forgotPassword = async (email) => {
   try {
     const response = await API.post("/users/forgotPassword", { email });
@@ -125,32 +128,36 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
 export const googleAuth = async () => {
   window.location.href = `${API.defaults.baseURL}/users/google`;
 };
-
-///////////////////////
 export const handleGoogleCallback = async () => {
   const response = await axios.get(`${API}/auth/google/callback`, {
-    withCredentials: true, 
+    withCredentials: true,
   });
-  console.log(response);
-  
   return response;
 };
-
-///////////
-export const ContinueSignUpWithGoogle = async (token, username, password, passwordConfirmation) => {
+export const ContinueSignUpWithGoogle = async (
+  token,
+  username,
+  password,
+  passwordConfirmation
+) => {
   try {
-    const response = await API.post("/users/continueSignUpWithGoogle", { token, username, password, passwordConfirmation });
-    const { accessToken, user } = response.data;
-    localStorage.setItem("accessToken", accessToken);
+    const response = await API.post("/users/continueSignUpWithGoogle", {
+      token,
+      username,
+      password,
+      passwordConfirmation,
+    });
+    const { user } = response.data;
 
-    return { user, accessToken };
+    return { user };
   } catch (error) {
-
     if (error.response?.status === 401) {
       throw new Error("Session expired. Please restart the signup process.");
     }
     const errorMessage =
-      error.response?.data?.message || error.response?.data?.error || "Error completing Google signup";
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Error completing Google signup";
 
     if (error.response?.status === 400) {
       throw new Error(errorMessage);
@@ -161,6 +168,5 @@ export const ContinueSignUpWithGoogle = async (token, username, password, passwo
     throw new Error(errorMessage);
   }
 };
-
 
 export default API;

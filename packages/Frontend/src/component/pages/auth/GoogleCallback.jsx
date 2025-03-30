@@ -1,19 +1,17 @@
-import { useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth"; 
+import { useEffect, useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { useAuthStore } from "../../../stores/authStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const GoogleCallback = () => {
-  const {handleGoogleCallback} = useAuth(); 
+  const { handleGoogleCallback } = useAuth();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const processCallback = async () => {
       try {
         await handleGoogleCallback();
-        navigate("/home", { replace: true });
-
       } catch (error) {
         console.error("Google sign-in failed:", error);
         navigate("/login", { replace: true });
@@ -21,7 +19,7 @@ const GoogleCallback = () => {
     };
 
     processCallback();
-  }, [handleGoogleCallback, navigate]);
+  }, []);
 
   return <div>Signing in...</div>;
 };
