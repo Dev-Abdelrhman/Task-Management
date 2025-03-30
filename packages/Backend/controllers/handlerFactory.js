@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 // const { CloudinaryStorage } = require("multer-storage-cloudinary");
 // const cloudinary = require("../utils/cloudinary");
 import { catchAsync } from "../utils/catchAsync.js";
@@ -16,7 +15,6 @@ const deleteOne = (Model) =>
     res.status(204).json({
       status: "success",
       message: "Deleted successfully",
-      data: null,
     });
   });
 
@@ -34,7 +32,7 @@ const updateOne = (Model) =>
     res.status(200).json({
       status: "success",
       message: "Updated successfully",
-      data: doc,
+      doc,
     });
   });
 
@@ -52,7 +50,7 @@ const createOne = (Model, idField, idField2) =>
     res.status(201).json({
       status: "success",
       message: "Created successfully",
-      data: doc,
+      doc,
     });
   });
 
@@ -74,7 +72,7 @@ const getOne = (Model, popOptions = []) =>
 
     res.status(200).json({
       status: "success",
-      data: doc,
+      doc,
     });
   });
 
@@ -100,14 +98,12 @@ const getAll = (Model, filterField, popOptions = []) =>
       .limitFields()
       .paginate();
 
-    const docs = await features.query;
-    const totalDocuments = await Model.countDocuments(filter);
+    const doc = await features.query;
 
     res.status(200).json({
       status: "success",
-      results: docs.length,
-      totalDocuments,
-      data: docs,
+      results: doc.length,
+      doc,
     });
   });
 
