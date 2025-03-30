@@ -60,6 +60,10 @@
         "password": "password",
         "passwordConfirmation": "password"
       }
+    },
+    "Get user info for auth": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/google/user"
     }
   },
   "ProjectsAPI": {
