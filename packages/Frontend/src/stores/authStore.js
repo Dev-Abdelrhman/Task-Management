@@ -1,52 +1,44 @@
 import axios from "axios";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-export const useAuthStore = create(
-  persist(
-    (set, get) => ({
-      user: null,
-      accessToken: localStorage.getItem("accessToken") || null,
+export const useAuthStore = create((set) => ({
+  user: null,
 
-      setUser: (user) => set({ user }),
-      setAccessToken: (token) => {
-        localStorage.setItem("accessToken", token);
-        set({ accessToken: token });
-      },
-      fetchUser: async () => {
-        try {
-          const res = await axios.get(
-            "http://localhost:9999/depiV1/users/google/user",
-            { withCredentials: true }
-          );
-
-          console.log("Full API response:", res); // ✅ Debugging
-
-          if (!res || !res.data) {
-            console.error("Invalid response:", res);
-            return null; // Avoid breaking the app
-          }
-
-          console.log("Fetched user:", res.data.user);
-          set({ user: res.data.user });
-
-          return res.data; // ✅ Return the full response
-        } catch (error) {
-          console.error("Error fetching user:", error);
-          set({ user: null });
-          return null; // ✅ Prevent errors in `handleGoogleCallbackMutation`
-        }
-      },
-
-      logout: () => {
-        set({ user: null, accessToken: null });
-        // localStorage.removeItem("accessToken");
-        // sessionStorage.clear();
-      },
-    }),
-    {
-      name: "auth-storage",
-      getStorage: () => localStorage,
+  setUser: (user) => {
+    if (user && typeof user === "object") {
+      localStorage.setItem("user", JSON.stringify(user));
+      set({ user });
+    } else {
+      console.error("Invalid user data, not storing in localStorage.");
     }
-  )
-);
+  },
+
+  logout: () => {
+    set({ user: null });
+    localStorage.removeItem("user");
+  },
+}));
+
+// Ensure this runs only in the browser
+if (typeof window !== "undefined") {
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    try {
+      // Make sure storedUser is a valid JSON string before parsing
+      if (storedUser.startsWith("{") || storedUser.startsWith("[")) {
+        const parsedUser = JSON.parse(storedUser);
+
+        if (parsedUser && typeof parsedUser === "object") {
+          useAuthStore.getState().setUser(parsedUser);
+        }
+      } else {
+        console.error("Invalid JSON format in localStorage, removing...");
+        localStorage.removeItem("user"); // Remove broken data
+      }
+    } catch (error) {
+      console.error("Error parsing stored user:", error);
+      localStorage.removeItem("user"); // Remove invalid data
+    }
+  }
+}

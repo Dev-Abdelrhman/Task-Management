@@ -8,6 +8,7 @@ import {
   resetPassword,
   ContinueSignUpWithGoogle,
   handleGoogleCallback,
+  getUser,
 } from "../api/auth";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "react-toastify";
@@ -23,20 +24,6 @@ export const useAuth = () => {
     );
   };
 
-  // const getUserMutation = useMutation({
-  //   mutationFn: async () => {
-  //     const response = getUser();
-  //     const { user } = response.data;
-  //     return {user};
-  //   },
-  //   onSuccess: (data) => {
-  //     setUser();
-  //   },
-  //   onError: (error) => {
-  //     console.error("Failed to fetch user:", error);
-  //   },
-  // });
-
   // Sign-in mutation
   const signInMutation = useMutation({
     mutationFn: async (credentials) => {
@@ -45,8 +32,6 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("accessToken", data.accessToken);
-      useAuthStore.getState().setAccessToken(data.accessToken);
     },
     onError: (error) => {
       console.error("Sign-in error:", handleError(error));
@@ -61,8 +46,6 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("accessToken", data.accessToken);
-      useAuthStore.getState().setAccessToken(data.accessToken);
     },
     onError: (error) => {
       console.error("Sign-up error:", handleError(error));
@@ -72,7 +55,7 @@ export const useAuth = () => {
   // Sign-out mutation
   const signOutMutation = useMutation({
     mutationFn: async () => {
-      await logout();
+      logout();
     },
     onSuccess: () => {
       logoutFromStore();
@@ -137,17 +120,16 @@ export const useAuth = () => {
   const handleGoogleCallbackMutation = useMutation({
     mutationFn: async () => {
       await handleGoogleCallback();
-      const response = await useAuthStore.getState().fetchUser();
-
+      const response = await getUser();
       if (!response || !response.user) {
         throw new Error("User data is missing from response");
       }
-
-      return response.user;
+      return response;
     },
-    onSuccess: (data) => {
-      console.log("User after Google sign-in:", data);
-      setUser(data);
+    onSuccess: async (data) => {
+      useAuthStore.getState().setUser(data.user);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // window.location.reload();
     },
     onError: (error) => {
       console.error("Google callback failed:", error);
@@ -168,8 +150,6 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-      localStorage.setItem("accessToken", data.accessToken);
-      useAuthStore.getState().setAccessToken(data.accessToken);
       toast.success("Account setup complete!");
     },
     onError: (error) => {
