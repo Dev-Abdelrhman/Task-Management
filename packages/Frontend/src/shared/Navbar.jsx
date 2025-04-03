@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
+// import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Box,
+  IconButton,
+  Typography,
+  Badge,
+  MenuItem,
+  Menu,
+  Avatar,
+  Tooltip,
+} from "@mui/material";
+import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
+import { useAuth } from "../hooks/useAuth";
 
 function Navbar() {
   const { signOut, isLoading } = useAuth();
@@ -24,9 +28,6 @@ function Navbar() {
       toast.error(`Logout failed: ${error.message}`);
     }
   };
-  useEffect(() => {
-    console.log(user.image);
-  }, []);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -47,14 +48,42 @@ function Navbar() {
         <h4 className="text-2xl font-medium !text-[##53577A]-800">
           Hi, {user.username}
         </h4>
-        <Box sx={{ flexGrow: 0 }}>
+
+        <Box
+          className="!flex gap-5"
+          sx={{ display: { xs: "none", md: "flex" } }}
+        >
+          <IconButton
+            size="large"
+            aria-label="show 4 new mails"
+            color="inherit"
+            className="!bg-[#F5F5F7]"
+          >
+            <Badge cla badgeContent={0} color="error">
+              <Mail className="text-[#8E92BC]" />
+            </Badge>
+          </IconButton>
+          <IconButton
+            size="large"
+            aria-label="show 17 new notifications"
+            color="inherit"
+            className="!bg-[#F5F5F7]"
+          >
+            <Badge badgeContent={1} color="error">
+              <Bell className="text-[#8E92BC]" />
+            </Badge>
+          </IconButton>
+
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar src={hostGoogleImage(user.image)} />
+              <Avatar
+                className="!w-12 !h-auto"
+                src={hostGoogleImage(user.image)}
+              />
             </IconButton>
           </Tooltip>
           <Menu
-            sx={{ mt: "45px" }}
+            sx={{ mt: "53px" }}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
