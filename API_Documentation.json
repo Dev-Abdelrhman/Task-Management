@@ -72,10 +72,6 @@
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects"
     },
-    "GetOneProject": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
-    },
     "CreateProject": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
@@ -96,6 +92,10 @@
     },
     "DeleteProject": {
       "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
+    },
+    "GetOneProject": {
+      "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
     }
   },

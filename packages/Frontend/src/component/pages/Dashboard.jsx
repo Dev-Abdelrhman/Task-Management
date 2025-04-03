@@ -54,9 +54,10 @@ export default function TaskordDashboard() {
   return (
     <>
       <div className="flex min-h-screen bg-[#FAFAFA] !h-full">
-        <Sidebar  className= "hidden" />
+        <Sidebar />
         {/* Main Content */}
-        <div className=" sm:ml-[16rem] h-full p-8 overflow-auto">
+        <div className="md:ml-[16rem] h-full p-8">
+          {/* Nav */}
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl">Hi, {user.username}</h1>
@@ -64,10 +65,12 @@ export default function TaskordDashboard() {
             </div>
             <div className="flex items-center gap-4 ">
               <IconButton
+                  sx={{
+                    border: 1,
+                  }}
                 size="large"
-                aria-label="show 4 new mails"
                 color="inherit"
-                className="!bg-[#F5F5F7]"
+                className="w-12 h-12 !border !border-[#F5F5F7]"
               >
                 <Badge cla badgeContent={1} color="error">
                   <Mail className="text-[#8E92BC]" />
@@ -76,9 +79,8 @@ export default function TaskordDashboard() {
               <IconButton
                 sx={{
                   border: 1,
-                  borderColor: "red",
                 }}
-                className="relative w-12 h-12 !border !border-[#F5F5F7] !rounded-full !aspect-square"
+                className="relative w-12 h-12 !border !border-[#F5F5F7] !rounded-full"
               >
                 <Badge cla badgeContent={1} color="error">
                   <Bell className="text-[#8E92BC]" />
@@ -343,9 +345,9 @@ export default function TaskordDashboard() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:block border-l border-gray-200 bg-white p-5 overflow-auto">
+        <div className="hidden lg:flex border-l border-gray-200 bg-[#F5F5F7] p-7 !flex-col !gap-6">
           {/* Calendar */}
-          <div className="mb-8">
+          <div className="bg-[#FFFFFF]">
             <div className="flex justify-between items-center mb-4">
               <button className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
                 <ChevronLeft className="w-4 h-4" />
@@ -384,15 +386,14 @@ export default function TaskordDashboard() {
           </div>
 
           {/* Task Today */}
-          <div className="mb-8">
+          <div className="bg-[#FFFFFF]">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium">Task Today</h2>
               <button>
                 <MoreHorizontal className="w-5 h-5 text-gray-500" />
               </button>
             </div>
-
-            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+            <div className="rounded-xl overflow-hidden mb-5">
               <div className="mb-3">
                 <Image
                   src="/placeholder.svg?height=200&width=320"
@@ -445,10 +446,8 @@ export default function TaskordDashboard() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Detail Task */}
-          <div>
+            {/* Detail Task */}
+            <div className="">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium">Detail Task</h2>
               <span className="text-sm text-gray-500">UI/UX Designer</span>
@@ -482,6 +481,7 @@ export default function TaskordDashboard() {
             <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium">
               Go To Detail
             </button>
+            </div>
           </div>
         </div>
       </div>
