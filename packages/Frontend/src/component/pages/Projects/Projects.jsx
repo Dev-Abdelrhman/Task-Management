@@ -5,33 +5,26 @@ import axios from "axios";
 import AddProjectBtn from "../AddProjectBtn";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../../stores/authStore";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProjects } from "../../../api/project";
 
 function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    axios
-      .get(`http://localhost:9999/depiV1/users/${user._id}/projects`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        setProjects(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-        setLoading(false);
-      });
-  }, []);
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      return await getUserProjects(user._id);
+    },
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
 
   const handleDelete = (projectId) => {
-    const token = localStorage.getItem("accessToken");
     axios
       .delete(`http://localhost:9999/depiV1/users/${user._id}/${projectId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       })
       .then(() => {
         toast.success("Project deleted successfully!");
@@ -55,16 +48,16 @@ function Projects() {
         <div className="container py-3">
           <div className="d-flex justify-content-between align-items-center mt-3">
             <h2 className="mb-4 fw-bold">
-              Number Of Projects : {projects.totalDocuments}
+              Number Of Projects : {data.results}
             </h2>
             <h1>Omar, {user?.email}</h1>
             <AddProjectBtn />
           </div>
-          {loading ? (
+          {isLoading ? (
             <p>Loading...</p>
           ) : (
             <div className="row">
-              {projects.data?.map((project, index) => (
+              {data.doc.map((project, index) => (
                 <div className="col-md-4 mb-4" key={index}>
                   <div className="card shadow-sm">
                     <div className="position-relative">

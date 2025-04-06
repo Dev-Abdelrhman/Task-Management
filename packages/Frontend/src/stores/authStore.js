@@ -1,4 +1,3 @@
-import axios from "axios";
 import { create } from "zustand";
 
 export const useAuthStore = create((set) => ({
@@ -19,13 +18,11 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
-// Ensure this runs only in the browser
 if (typeof window !== "undefined") {
   const storedUser = localStorage.getItem("user");
 
   if (storedUser) {
     try {
-      // Make sure storedUser is a valid JSON string before parsing
       if (storedUser.startsWith("{") || storedUser.startsWith("[")) {
         const parsedUser = JSON.parse(storedUser);
 
@@ -34,11 +31,11 @@ if (typeof window !== "undefined") {
         }
       } else {
         console.error("Invalid JSON format in localStorage, removing...");
-        localStorage.removeItem("user"); // Remove broken data
+        localStorage.removeItem("user");
       }
     } catch (error) {
       console.error("Error parsing stored user:", error);
-      localStorage.removeItem("user"); // Remove invalid data
+      localStorage.removeItem("user");
     }
   }
 }
