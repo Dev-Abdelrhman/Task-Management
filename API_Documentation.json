@@ -82,7 +82,9 @@
       "body": {
         "name": "Example",
         "description": "Example",
-        "dueDate": "Date"
+        "dueDate": "Date",
+        "members": "will set automatically after add the invite logic to the project (soon)",
+        "tasks": "already added automatically"
       }
     },
     "UpdateProject": {
@@ -177,7 +179,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "UpdateUserTask": {
@@ -187,7 +190,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "DeleteUserTask": {
@@ -211,7 +215,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "UpdateProjectTask": {
@@ -221,7 +226,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "DeleteProjectTask": {
