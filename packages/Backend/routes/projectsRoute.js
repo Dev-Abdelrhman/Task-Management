@@ -5,6 +5,7 @@ import * as AC from "../controllers/authControllers.js";
 import CommentRouter from "./commentRoute.js";
 import RoleRouter from "./roleRoute.js";
 import TaskRouter from "./tasksRoute.js";
+import InviteRouter from "./inviteRoute.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -21,5 +22,6 @@ router
 router.use("/:id/comments", CommentRouter);
 router.use("/:id/roles", RoleRouter);
 router.use("/:id/tasks", TaskRouter);
+router.use("/:id/invite", InviteRouter);
 
 export default router;

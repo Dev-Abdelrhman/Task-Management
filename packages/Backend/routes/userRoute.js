@@ -3,7 +3,7 @@ import * as UC from "../controllers/userControllers.js";
 import * as AC from "../controllers/authControllers.js";
 
 import ProjectsRoutes from "./projectsRoute.js";
-
+import InviteRouter from "./inviteRoute.js";
 const router = express();
 
 router.route("/google").get(AC.googleAuth);
@@ -27,5 +27,5 @@ router
   .delete(UC.deleteUser);
 
 router.use("/:id/projects", ProjectsRoutes);
-
+router.use("/:id/invite", InviteRouter);
 export default router;

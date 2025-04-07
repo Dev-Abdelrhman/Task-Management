@@ -31,6 +31,14 @@ roleSchema.pre(/^find/, function (next) {
   next();
 });
 
+roleSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.project; // hide the 'project' field
+    delete ret.theCreator; // hide the 'theCreator' field
+    return ret;
+  },
+});
+
 const Role = mongoose.model("Role", roleSchema);
 
 export default Role;

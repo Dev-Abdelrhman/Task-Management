@@ -28,7 +28,6 @@ const projectSchema = new mongoose.Schema(
     members: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        role: { type: mongoose.Schema.Types.ObjectId, ref: "Role" },
         joinedAt: { type: Date, default: Date.now },
       },
     ],
@@ -50,9 +49,10 @@ projectSchema.pre("save", function (next) {
 });
 
 projectSchema.pre(/^find/, function (next) {
-  this.populate({ path: "owner", select: "name -_id" })
-    .populate({ path: "members.user", select: "name -_id" })
-    .populate({ path: "members.role", select: "name -_id" });
+  this.populate({ path: "owner", select: "name -_id" }).populate({
+    path: "members.user",
+    select: "name _id",
+  });
   next();
 });
 
@@ -61,6 +61,11 @@ projectSchema.virtual("memberCount").get(function () {
 });
 
 projectSchema.virtual("roles", {
+  ref: "Role",
+  localField: "_id",
+  foreignField: "project",
+});
+projectSchema.virtual("members.role", {
   ref: "Role",
   localField: "_id",
   foreignField: "project",
