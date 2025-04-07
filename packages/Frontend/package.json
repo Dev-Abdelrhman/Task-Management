@@ -29,7 +29,6 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
-    "swiper": "^8.4.7",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

@@ -6,3 +6,20 @@
 * {
   font-family: "Outfit", sans-serif !important;
 }
+/* .gradient-background {
+    background-color: linear-gradient(to right, #10197A, #9F84FD);
+}
+
+a:hover {
+    color: #4B5563 !important;
+}
+
+.form-floating>.form-control-plaintext~label::after, .form-floating>.form-control:focus~label::after, .form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after {
+    position: absolute;
+    inset: 1rem 0.375rem;
+    z-index: -1;
+    height: 1.5em;
+    content: "";
+    background-color: transparent;
+    border-radius: var(--bs-border-radius);
+} */
