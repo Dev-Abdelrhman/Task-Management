@@ -11,7 +11,11 @@ router.route("/search").get(IC.searchUsersForInvite);
 
 router.route("/:id/decline").post(IC.declineInvite);
 router.route("/:id/accept").post(IC.acceptInvite);
-router.route("/:id").get(IC.getOneInvite).delete(IC.deleteInvite);
+router
+  .route("/:id")
+  .get(IC.getOneInvite)
+  .patch(IC.updateInvite)
+  .delete(IC.deleteInvite);
 
 router.route("/sendInvite").post(IC.sendInvite);
 

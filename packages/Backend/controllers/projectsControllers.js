@@ -6,6 +6,7 @@ import AppError from "../utils/appError.js";
 const isMine = HF.isOwner(Project, "owner");
 
 const getProjects = HF.getAll(Project, "owner");
+const getInvitedProjects = HF.getAll(Project, "members.user");
 
 const getProjectById = HF.getOne(Project, [
   "roles",
@@ -20,6 +21,7 @@ const deleteProject = HF.deleteOne(Project);
 export {
   isMine,
   getProjects,
+  getInvitedProjects,
   getProjectById,
   createProject,
   updateProject,

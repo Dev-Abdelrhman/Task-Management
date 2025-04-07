@@ -179,7 +179,7 @@ const getAllInvitesForReceiver = HF.getAll(Invite, "receiver");
 const getAllInvitesForSender = HF.getAll(Invite, "sender");
 
 const getOneInvite = HF.getOne(Invite);
-
+const updateInvite = HF.updateOne(Invite);
 const deleteInvite = HF.deleteOne(Invite);
 
 export {
@@ -189,6 +189,7 @@ export {
   getAllInvitesForSender,
   getAllInvitesForReceiver,
   getOneInvite,
+  updateInvite,
   deleteInvite,
   searchUsersForInvite,
 };

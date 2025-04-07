@@ -12,6 +12,7 @@ const router = express.Router({ mergeParams: true });
 router.use(AC.protect);
 
 router.route("/").get(PC.getProjects).post(PC.createProject);
+router.route("/invited").get(PC.getInvitedProjects);
 
 router
   .route("/:id")
