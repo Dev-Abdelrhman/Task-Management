@@ -1,62 +1,93 @@
-import Sidebar from "../../shared/Sidebar";
-import React from "react";
-import {
-  Bell,
-  BookOpen,
-  ChevronLeft,
-  ChevronRight,
-  Clock,
-  MoreHorizontal,
-  Image,
-  Mail,
-} from "lucide-react";
+"use client"
+
+import Sidebar from "../../shared/Sidebar"
+import React, { useState } from "react"
+import { Bell, ChevronRight, Clock, MoreHorizontal, Mail, ChevronLeft } from "lucide-react"
 import {
   Button,
   Box,
   IconButton,
   Typography,
+  LinearProgress,
   Badge,
   MenuItem,
   Menu,
   Avatar,
   Tooltip,
   CircularProgress,
-} from "@mui/material";
-import { useAuth } from "../../hooks/useAuth";
-import { useAuthStore } from "../../stores/authStore";
+} from "@mui/material"
+import { useAuth } from "../../hooks/useAuth"
+import { useAuthStore } from "../../stores/authStore"
+import "swiper/css"
+import "swiper/css/navigation"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper"
 
 export default function TaskordDashboard() {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { user } = useAuthStore();
-  const { signOut, isLoading } = useAuth();
+  const [anchorElUser, setAnchorElUser] = React.useState(null)
+  const { user } = useAuthStore()
+  const [swiper, setSwiper] = useState(null)
+  const { signOut, isLoading } = useAuth()
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await signOut()
     } catch (error) {
-      toast.error(`Logout failed: ${error.message}`);
+      toast.error(`Logout failed: ${error.message}`)
     }
-  };
+  }
 
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
 
   const hostGoogleImage = (url) => {
-    return `https://images.weserv.nl/?url=${encodeURIComponent(
-      url
-    )}&w=200&h=200`;
-  };
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`
+  }
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
+
+  const [currentDate, setCurrentDate] = React.useState(new Date())
+
+  const getWeekDays = () => {
+    const today = new Date()
+    const days = []
+    // Get the start of the week (3 days before today)
+    const start = new Date(today)
+    start.setDate(today.getDate() - 3)
+
+    // Generate 7 days starting from the start date
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start)
+      date.setDate(start.getDate() + i)
+      days.push(date)
+    }
+    return days
+  }
+
+  const formatMonth = (date) => {
+    return date.toLocaleString("default", { month: "long", year: "numeric" })
+  }
+
+  const isToday = (date) => {
+    const today = new Date()
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    )
+  }
+
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA] !h-full">
+      <div className="flex min-h-screen bg-[#FAFAFA]">
         <Sidebar />
         {/* Main Content */}
-        <div className="md:ml-[16rem] h-full p-8">
+        <div className="md:ml-[16rem] flex-1 h-full w-full p-8 2xl:pr-[490px]">
           {/* Nav */}
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -65,9 +96,9 @@ export default function TaskordDashboard() {
             </div>
             <div className="flex items-center gap-4 ">
               <IconButton
-                  sx={{
-                    border: 1,
-                  }}
+                sx={{
+                  border: 1,
+                }}
                 size="large"
                 color="inherit"
                 className="w-12 h-12 !border !border-[#F5F5F7]"
@@ -89,10 +120,7 @@ export default function TaskordDashboard() {
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      className="!w-12 !h-auto"
-                      src={hostGoogleImage(user.image)}
-                    />
+                    <Avatar className="!w-12 !h-auto" src={hostGoogleImage(user.image)} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -111,11 +139,7 @@ export default function TaskordDashboard() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem
-                    key="logout"
-                    onClick={handleLogout}
-                    disabled={isLoading}
-                  >
+                  <MenuItem key="logout" onClick={handleLogout} disabled={isLoading}>
                     <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                   </MenuItem>
                 </Menu>
@@ -123,14 +147,14 @@ export default function TaskordDashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1  md:grid-cols-[220px_repeat(3,_minmax(233px,_1fr))] gap-6 mb-8">
-            {/* Running Task - Updated for responsiveness */}
-            <div className="w-[233px] relative flex flex-col gap-4 bg-[#111827] text-white p-6 rounded-xl">
+          <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 mb-8">
+            {/* Running Task */}
+            <div className="h-[250px] relative flex flex-col gap-4 bg-[#111827] text-white p-6 rounded-xl">
               <div>
                 <h2 className="text-lg">Running Task</h2>
               </div>
               <div className="text-4xl font-simi mb-4">65</div>
-              <div className="flex items-center justify-between md:justify-start md:absolute md:bottom-6">
+              <div className="flex items-center justify-between md:justify-start absolute bottom-6">
                 <div className="relative w-24 h-24">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
@@ -170,7 +194,7 @@ export default function TaskordDashboard() {
             </div>
 
             {/* Activity */}
-            <div className=" lg:col-span-3 bg-white p-6 rounded-xl border border-gray-200">
+            <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-medium">Activity</h2>
                 <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md">
@@ -178,19 +202,15 @@ export default function TaskordDashboard() {
                   <ChevronRight className="w-4 h-4" />
                 </div>
               </div>
-              <div className="relative h-40">
+              <div className="relative h-[calc(100%-60px)]">
                 {/* Activity Chart */}
                 <div className="absolute top-1/4 left-1/4 bg-blue-500 w-3 h-3 rounded-full z-10"></div>
                 <div className="absolute top-1/4 left-1/4 bg-blue-100 w-5 h-5 rounded-full"></div>
                 <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-full bg-gray-900 text-white px-2 py-1 rounded text-xs">
                   2 Task
                 </div>
-                
-                <svg
-                  className="w-full h-full"
-                  viewBox="0 0 300 100"
-                  preserveAspectRatio="none"
-                >
+
+                <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">
                   <path
                     d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
                     fill="none"
@@ -224,217 +244,225 @@ export default function TaskordDashboard() {
 
           {/* Upcoming Task */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Upcoming Task</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-medium">Upcoming Task</h2>
               <div className="flex gap-2">
-                <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
+                  <ChevronLeft className="w-5 h-5" />
+                </IconButton>
+                <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
+                  <ChevronRight className="w-5 h-5" />
+                </IconButton>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Task 1 */}
-              <div className="bg-white p-5 rounded-xl border border-gray-200">
-                <div className="mb-4">
-                  <Image
-                    src="/placeholder.svg?height=200&width=400"
-                    alt="Mobile App Design"
-                    width={400}
-                    height={200}
-                    className="w-full h-40 object-cover rounded-lg"
-                  />
-                </div>
-                <h3 className="font-semibold mb-1">
-                  Creating Mobile App Design
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">UI/UX Design</p>
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={16}
+              slidesPerView="auto"
+              navigation={{
+                prevEl: ".slider-prev",
+                nextEl: ".slider-next",
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1024: {
+                  slidesPerView: 2,
+                },
+              }}
+              className="upcoming-task-swiper"
+            >
+              {[
+                {
+                  id: 1,
+                  title: "Creating Mobile App Design",
+                  category: "UI/UX Design",
+                  progress: 75,
+                  daysLeft: 3,
+                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
+                },
+                {
+                  id: 2,
+                  title: "Creating Perfect Website",
+                  category: "Web Developer",
+                  progress: 85,
+                  daysLeft: 4,
+                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
+                },
+                {
+                  id: 3,
+                  title: "Learning React Fundamentals",
+                  category: "Frontend Developer",
+                  progress: 60,
+                  daysLeft: 2,
+                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
+                },
+              ].map((task) => (
+                <SwiperSlide key={task.id} className="!w-full sm:!w-auto">
+                  <div className="bg-white p-4 rounded-xl border border-gray-200">
+                    <div className="mb-3">
+                      <Box
+                        component="img"
+                        src={task.image}
+                        alt={task.title}
+                        sx={{
+                          width: "320px",
+                          height: 160,
+                          objectFit: "cover",
+                          borderRadius: 2,
+                          mb: 1.5,
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-lg ">{task.title}</h3>
+                      <p className="text-sm text-gray-500 mb-2">{task.category}</p>
 
-                <div className="mb-2">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Progress</span>
-                    <span className="text-blue-500">75%</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: "75%" }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm">3 Days Left</span>
-                  </div>
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div
-                        key={i}
-                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
-                      >
-                        <Image
-                          src={`/placeholder.svg?height=24&width=24&text=${i}`}
-                          alt="Team member"
-                          width={24}
-                          height={24}
-                          className="object-cover"
+                      <Box className="mb-3">
+                        <Box className="flex justify-between mb-1">
+                          <Typography variant="body2 text-lg">Progress</Typography>
+                          <Typography variant="body2" className="text-indigo-500 text-sm">
+                            {task.progress}%
+                          </Typography>
+                        </Box>
+                        <LinearProgress
+                          variant="determinate"
+                          value={task.progress}
+                          className="!h-2 rounded-full"
+                          sx={{
+                            backgroundColor: "#f3f4f6",
+                            "& .MuiLinearProgress-bar": {
+                              backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                              borderRadius: "9999px",
+                            },
+                          }}
                         />
+                      </Box>
+
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-6 h-6 text-gray-500" />
+                          <span >{task.daysLeft} Days Left</span>
+                        </div>
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                              <img
+                                src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                alt="Team member"
+                                width={24}
+                                height={24}
+                                className="object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Task 2 */}
-              <div className="bg-white p-5 rounded-xl border border-gray-200">
-                <div className="mb-4">
-                  <Image
-                    src="/placeholder.svg?height=200&width=400"
-                    alt="Website Design"
-                    width={400}
-                    height={200}
-                    className="w-full h-40 object-cover rounded-lg"
-                  />
-                </div>
-                <h3 className="font-semibold mb-1">Creating Perfect Website</h3>
-                <p className="text-sm text-gray-500 mb-4">Web Developer</p>
-
-                <div className="mb-2">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Progress</span>
-                    <span className="text-blue-500">85%</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: "85%" }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm">4 Days Left</span>
-                  </div>
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div
-                        key={i}
-                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
-                      >
-                        <Image
-                          src={`/placeholder.svg?height=24&width=24&text=${i}`}
-                          alt="Team member"
-                          width={24}
-                          height={24}
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden lg:flex border-l border-gray-200 bg-[#F5F5F7] p-7 !flex-col !gap-6">
+        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
           {/* Calendar */}
-          <div className="bg-[#FFFFFF]">
-            <div className="flex justify-between items-center mb-4">
-              <button className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <h2 className="text-lg font-medium">July 2024</h2>
-              <button className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-7 gap-2 text-center mb-2">
-              <div className="text-sm font-medium">S</div>
-              <div className="text-sm font-medium">M</div>
-              <div className="text-sm font-medium">T</div>
-              <div className="text-sm font-medium">W</div>
-              <div className="text-sm font-medium">T</div>
-              <div className="text-sm font-medium">F</div>
-              <div className="text-sm font-medium">S</div>
+          <div className="bg-[#FFFFFF] p-4 rounded-xl">
+            <div className="flex justify-center items-center mb-2">
+              <h2 className="text-lg mb-2">{formatMonth(currentDate)}</h2>
             </div>
 
             <div className="grid grid-cols-7 gap-2 text-center">
-              {[10, 11, 12, 13, 14, 15, 16].map((day, i) => {
-                const isToday = day === 14;
+              {getWeekDays().map((date, index) => {
+                const isCurrentDay = isToday(date)
                 return (
                   <div
-                    key={i}
-                    className={`w-8 h-8 mx-auto flex items-center justify-center rounded-full ${
-                      isToday ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+                    key={index}
+                    className={`relative flex flex-col gap-3 items-center justify-center w-11 h-full rounded-full p-2 ${
+                      isCurrentDay ? "bg-[#141522] text-white" : "text-[#141522]"
                     }`}
                   >
-                    {day}
+                    <span className={`text-sm font-medium ${isCurrentDay ? "text-white" : "text-[#141522]"}`}>
+                      {["S", "M", "T", "W", "T", "F", "S"][index]}
+                    </span>
+
+                    <span
+                      className={`text-sm px-[14px] py-[7px] rounded-full ${isCurrentDay ? "bg-[#546FFF] text-white" : "text-[#141522] bg-[#F5F5F7]"}`}
+                    >
+                      {date.getDate()}
+                    </span>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
 
           {/* Task Today */}
-          <div className="bg-[#FFFFFF]">
-            <div className="flex justify-between items-center mb-4">
+          <div className="bg-[#FFFFFF] p-4 rounded-xl">
+            <div className="flex justify-between items-center mb-3">
               <h2 className="text-lg font-medium">Task Today</h2>
               <button>
-                <MoreHorizontal className="w-5 h-5 text-gray-500" />
+                <MoreHorizontal className="w-5 h-5 text-[#141522]" />
               </button>
             </div>
-            <div className="rounded-xl overflow-hidden mb-5">
+
+            <div className="rounded-xl overflow-hidden mb-4">
               <div className="mb-3">
-                <Image
-                  src="/placeholder.svg?height=200&width=320"
-                  alt="Mobile Apps"
-                  width={320}
-                  height={200}
-                  className="w-full h-40 object-cover"
+                <Box
+                  component="img"
+                  src="https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                  alt="Albex 360 Mockup"
+                  sx={{
+                    width: "100%",
+                    height: 160,
+                    objectFit: "cover",
+                    borderRadius: 2,
+                    mb: 1.5,
+                  }}
                 />
               </div>
-              <div className="px-4 pb-4">
-                <h3 className="font-semibold text-lg mb-1">
-                  Creating Awesome Mobile Apps
-                </h3>
+              <div>
+                <h3 className="font-semibold text-lg mb-1">Creating Awesome Mobile Apps</h3>
                 <p className="text-sm text-gray-500 mb-3">UI/UX Designer</p>
 
-                <div className="mb-3">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Progress</span>
-                    <span className="text-blue-500">90%</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: "90%" }}
-                    ></div>
-                  </div>
-                </div>
+                <Box className="mb-3">
+                  <Box className="flex justify-between mb-1">
+                    <Typography variant="body2 !text-lg ">Progress</Typography>
+                    <Typography variant="body2" className=" !text-lg text-indigo-500">
+                      90%
+                    </Typography>
+                  </Box>
+                  <LinearProgress
+                    variant="determinate"
+                    value={90}
+                    className="!h-2 rounded-full"
+                    sx={{
+                      backgroundColor: "#f3f4f6",
+                      "& .MuiLinearProgress-bar": {
+                        backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                        borderRadius: "9999px",
+                      },
+                    }}
+                  />
+                </Box>
 
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-gray-500" />
+                    <Clock className="w-6 h-6 text-gray-500" />
                     <span className="text-sm">1 Hour</span>
                   </div>
                   <div className="flex -space-x-2">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <div
-                        key={i}
-                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
-                      >
-                        <Image
-                          src={`/placeholder.svg?height=24&width=24&text=${i}`}
+                      <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                        <img
+                          src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
                           alt="Team member"
                           width={24}
                           height={24}
@@ -446,45 +474,37 @@ export default function TaskordDashboard() {
                 </div>
               </div>
             </div>
+            <hr className="my-6 bg-[#F5F5F7]" />
             {/* Detail Task */}
-            <div className="">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium">Detail Task</h2>
-              <span className="text-sm text-gray-500">UI/UX Designer</span>
-            </div>
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-medium">Detail Task</h2>
+                <span className="text-sm text-gray-500">UI/UX Designer</span>
+              </div>
 
-            <div className="space-y-4 mb-6">
-              <div className="flex gap-3">
-                <div className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-300">
-                  1
-                </div>
-                <div className="text-sm">Understanding the tools in Figma</div>
+              <div className="space-y-4 mb-8">
+                {[
+                  "Understanding the tools in Figma",
+                  "Understand the basics of making designs",
+                  "Design a mobile application with Figma",
+                ].map((task, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="w-9 h-9 flex items-center justify-center !rounded-xl !bg-[#F5F5F7] text-sm">
+                      {i + 1}
+                    </div>
+                    <div className="text-sm ">{task}</div>
+                  </div>
+                ))}
               </div>
-              <div className="flex gap-3">
-                <div className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-300">
-                  2
-                </div>
-                <div className="text-sm">
-                  Understand the basics of making designs
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-300">
-                  3
-                </div>
-                <div className="text-sm">
-                  Design a mobile application with figma
-                </div>
-              </div>
-            </div>
 
-            <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium">
-              Go To Detail
-            </button>
+              <Button className="w-full !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
+                Go To Detail
+              </Button>
             </div>
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
+
