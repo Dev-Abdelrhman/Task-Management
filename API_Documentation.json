@@ -72,13 +72,19 @@
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects"
     },
+    "getInvitedProjects": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/invited"
+    },
     "CreateProject": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
       "body": {
         "name": "Example",
         "description": "Example",
-        "dueDate": "Date"
+        "dueDate": "Date",
+        "members": "will set automatically after add the invite logic to the project (soon)",
+        "tasks": "already added automatically"
       }
     },
     "UpdateProject": {
@@ -177,7 +183,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "UpdateUserTask": {
@@ -187,7 +194,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "DeleteUserTask": {
@@ -211,7 +219,8 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "UpdateProjectTask": {
@@ -221,12 +230,63 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"]
+          "status": ["Todo", "In Progress", "Completed"],
+          "completedAt": "Date"
         }
       },
       "DeleteProjectTask": {
         "method": "DELETE",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
+      }
+    }
+  },
+  "InviteAPI": {
+    "getAllInvitesForSender": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sender"
+    },
+    "getAllInvitesForReceiver": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/receiver"
+    },
+    "searchUsersForInvite": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/search",
+      "query": {
+        "username": "Example_20"
+      }
+    },
+    "getOneInvite": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
+    },
+    "deleteInvite": {
+      "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
+    },
+    "updateInvite": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID",
+      "body": {
+        "username": "Example_20",
+        "projectId": "projectID",
+        "roleId": "roleID"
+      }
+    },
+    "declineInvite": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/decline"
+    },
+    "acceptInvite": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/accept"
+    },
+    "sendInvite": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sendInvite",
+      "body": {
+        "username": "Example_20",
+        "roleId": "roleID"
       }
     }
   }
