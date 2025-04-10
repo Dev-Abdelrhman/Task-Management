@@ -125,7 +125,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
   console.log("Invite ID:", inviteId);
   console.log("Receiver ID:", receiverId);
 
-  // Fetch the invite
   const invite = await Invite.findOne({
     _id: inviteId,
     receiver: receiverId,
@@ -138,14 +137,12 @@ const acceptInvite = catchAsync(async (req, res, next) => {
     return next(new AppError("Invite not found or already processed.", 404));
   }
 
-  // Check if the invite has expired
   const inviteAge = Date.now() - new Date(invite.createdAt).getTime();
   const sevenDays = 7 * 24 * 60 * 60 * 1000;
   if (inviteAge > sevenDays) {
     return next(new AppError("This invite has expired", 400));
   }
 
-  // Update the project and add the member (without using .lean())
   const updatedProject = await Project.findOneAndUpdate(
     { _id: invite.project },
     {
@@ -157,12 +154,10 @@ const acceptInvite = catchAsync(async (req, res, next) => {
       },
     },
     { new: true }
-  ); // Do not use .lean()
+  );
 
-  // Populate the updated project with member details
   await updatedProject.populate("members.role");
 
-  // Mark invite as accepted
   invite.status = "accepted";
   await invite.save();
 

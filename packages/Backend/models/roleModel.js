@@ -33,8 +33,8 @@ roleSchema.pre(/^find/, function (next) {
 
 roleSchema.set("toJSON", {
   transform: function (doc, ret) {
-    delete ret.project; // hide the 'project' field
-    delete ret.theCreator; // hide the 'theCreator' field
+    delete ret.project;
+    delete ret.theCreator;
     return ret;
   },
 });

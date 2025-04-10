@@ -32,7 +32,6 @@ const projectSchema = new mongoose.Schema(
       },
     ],
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
-    // roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
   },
   {
     toJSON: { virtuals: true },
