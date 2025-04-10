@@ -394,7 +394,7 @@ export default function TaskordDashboard() {
                     </span>
 
                     <span
-                      className={`text-sm px-[14px] py-[7px] rounded-full ${isCurrentDay ? "bg-[#546FFF] text-white" : "text-[#141522] bg-[#F5F5F7]"}`}
+                      className={`text-sm px-[11px] py-[7px] rounded-full ${isCurrentDay ? "bg-[#546FFF] text-white" : "text-[#141522] bg-[#F5F5F7]"}`}
                     >
                       {date.getDate()}
                     </span>
