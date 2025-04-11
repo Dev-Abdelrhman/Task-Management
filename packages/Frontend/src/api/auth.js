@@ -7,76 +7,54 @@ const API = axios.create({
 
 let refreshPromise = null;
 
-// Attach token and refresh if expired
+// Request Interceptor
 API.interceptors.request.use(
   async (config) => {
-    let token = localStorage.getItem("accessToken");
-
-    if (token) {
-      const isExpired = (() => {
-        try {
-          const decoded = JSON.parse(atob(token.split(".")[1]));
-          return decoded.exp * 1000 < Date.now();
-        } catch {
-          return true;
-        }
-      })();
-
-      if (isExpired) {
-        if (!refreshPromise) {
-          refreshPromise = API.get("/users/refresh", { withCredentials: true })
-            .then((res) => {
-              localStorage.setItem("accessToken", res.data.accessToken);
-              return res.data.accessToken;
-            })
-            .catch((error) => {
-              console.error("Token refresh failed:", error);
-              localStorage.removeItem("accessToken");
-              window.location.href = "/login";
-              return Promise.reject(error);
-            })
-            .finally(() => {
-              refreshPromise = null;
-            });
-        }
-
-        try {
-          token = await refreshPromise;
-        } catch (error) {
-          // Ensure localStorage is cleared if refresh fails
-          localStorage.removeItem("accessToken");
-          window.location.href = "/login";
-          return Promise.reject("Session expired, please log in again.");
-        }
-      }
-
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
+    config.withCredentials = true; // Always send cookies
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Handle API errors globally
+// Response Interceptor
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Avoid redirecting for login/signup errors
     if (
-      error.response?.status === 401 &&
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry &&
       !originalRequest.url.includes("/users/signin") &&
-      !originalRequest.url.includes("/users/signup")
+      !originalRequest.url.includes("/users/signup") &&
+      !originalRequest.url.includes("/users/refresh")
     ) {
-      localStorage.removeItem("accessToken");
-      window.location.href = "/login";
+      originalRequest._retry = true;
+
+      if (!refreshPromise) {
+        refreshPromise = API.get("/users/refresh", { withCredentials: true })
+          .catch((refreshError) => {
+            console.error("Token refresh failed:", refreshError);
+            window.location.href = "/login";
+            return Promise.reject(refreshError);
+          })
+          .finally(() => {
+            refreshPromise = null;
+          });
+      }
+
+      try {
+        await refreshPromise;
+        return API(originalRequest); // Retry original request
+      } catch (err) {
+        return Promise.reject("Session expired, please log in again.");
+      }
     }
 
     return Promise.reject(error);
   }
 );
+
 
 // Auth API Calls
 export const getUser = async () => {
