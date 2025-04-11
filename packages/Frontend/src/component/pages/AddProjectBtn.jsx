@@ -3,102 +3,42 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../stores/authStore";
 import { addProject } from "../../api/project";
+import { Button } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 function AddProjectBtn() {
 
-const { user } = useAuthStore();
-console.log("userData   ", user);
-
-const [projects, setProjects] = useState([]);
+    const { user } = useAuthStore();
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [showModal, setShowModal] = useState(false);
-    // const handleSave = async () => {
-    //     const projectData = {
-    //         name: projectName,
-    //         description: projectDescription
-    //     };
-    //     const token = localStorage.getItem("accessToken");
-
-    //     if (!token) {
-    //         alert("You are not logged in! Please log in.");
-    //         return;
-    //     }
-    //     try {
-    //         const response = await axios.post(
-    //             "http://localhost:9999/depiV1/users/67cd552eeb136fc473543ae1/projects",
-    //             projectData,
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${token}`
-    //                 }
-    //             }
-    //         );
-    //         if (response.status === 200 || response.status === 201) {
-    //             toast.success("Add project Successfully!");
-
-    //             setProjectName("");
-    //             setProjectDescription("");
-    //             document.querySelector('[data-bs-dismiss="modal"]').click();
-
-    //             setTimeout(() => {
-    //                 window.location.reload();
-    //             }, 500);
-    //         } else {
-    //             toast.error("Failed to add project");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //         alert(error.response?.data?.message || "An error occurred while adding the project.");
-    //     }
-    // };
-    
-  
-    const handleSave = async () => {
-        const tempId = Date.now(); 
-        const newProject = {
-          id: tempId,
-          name: projectName,
-          description: projectDescription,
-        };
-      
-        
-        setProjects((prev) => [...prev, newProject]);
-      
-        try {
-          
-          const savedProject = await addProject(user._id, {
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: (newProject) => addProject(user._id, newProject),
+        onSuccess: () => {
+            queryClient.invalidateQueries(["projects"]);
+            toast.success("Project added successfully!");
+            setShowModal(false);
+            setProjectName("");
+            setProjectDescription("");
+        },
+        onError: () => {
+            toast.error("Failed to add project");
+        },
+    });
+    const handleSave = () => {
+        mutation.mutate({
             name: projectName,
             description: projectDescription,
-          });
-      
-          
-          setProjects((prev) =>
-            prev.map((proj) =>
-              proj.id === tempId ? savedProject : proj
-            )
-          );
-        } catch (error) {
-          
-          console.error("Failed to save project:", error);
-          setProjects((prev) =>
-            prev.filter((proj) => proj.id !== tempId)
-          );
-        }
-      
-        
-        setProjectName('');
-        setProjectDescription('');
-        setShowModal(false);
-      };
-      
-  
-  return <>
-        <button
+        });
+    };
+
+
+    return <>
+        <Button
             onClick={() => setShowModal(true)}
-            className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-            Add Project
-        </button>
+            className=" !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
+            + Add Project
+        </Button>
         {showModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setShowModal(false)} >
                 <div

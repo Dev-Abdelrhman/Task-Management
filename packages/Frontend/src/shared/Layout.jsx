@@ -12,7 +12,7 @@ function Layout() {
       </div>
 
       {/* Main Content Area */}
-      <div className="ml-64 flex-1">
+      <div className="bg-[#FAFAFA] ml-64 flex-1">
         {/* Fixed Navbar */}
         <Navbar />
         
