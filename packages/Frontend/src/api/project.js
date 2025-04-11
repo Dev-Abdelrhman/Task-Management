@@ -11,4 +11,13 @@ export const getUserProjects = async (user_id) => {
   return res.data;
 };
 
+export const addProject = async (user_id, projectData) => {
+  const res = await API.post(`${user_id}/projects`, projectData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res.data;
+};
+
 export default API;
