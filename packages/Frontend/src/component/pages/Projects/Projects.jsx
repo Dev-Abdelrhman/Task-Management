@@ -7,7 +7,9 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 function Projects() {
   const { user } = useAuthStore();
 
@@ -41,7 +43,13 @@ function Projects() {
         console.error("Error deleting project:", error);
       });
   };
-
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 2,
+  };
   return (
     <>
       <div className="bg-light  d-flex align-items-center">
@@ -51,46 +59,185 @@ function Projects() {
               Number Of Projects : {data.results}
             </h2>
             <h1>Omar, {user?.email}</h1>
+          </div>
+          <div className="flex justify-end mb-4">
             <AddProjectBtn />
           </div>
           {isLoading ? (
             <p>Loading...</p>
           ) : (
-            <div className="row">
-              {data.doc.map((project, index) => (
-                <div className="col-md-4 mb-4" key={index}>
-                  <div className="card shadow-sm">
-                    <div className="position-relative">
-                      <img
-                        src={cardImg}
-                        alt={project.title}
-                        className="card-img-top"
-                      />
-                      <div className="overlay position-absolute top-0 start-0 w-100 h-100 p-3 d-flex flex-column justify-content-end">
-                        <h5 className="fw-bold text-white">{project.name}</h5>
-                        <p className="text-white">{project.description}</p>
-                      </div>
-                    </div>
-                    <div className="card-body text-center">
-                      <div className="d-flex justify-content-between align-items-center gap-4">
-                        <button className="btn btn-primary w-100">Join</button>
-                        <div
-                          onClick={() => handleDelete(project._id)}
-                          role="button"
-                          className="icon-container p-2 rounded-circle border border-black "
-                        >
-                          <i className="fa-regular fa-trash-can"></i>
+            <div >
+              <Slider {...settings}>
+
+                {data.doc.map((project, index) => (
+                  <div key={index} className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                      <img src={cardImg} alt={project.title} className="w-full h-40 object-cover" />
+                      <div className="p-4">
+                        <h3 className="text-lg font-semibold text-gray-800">{project.name}</h3>
+                        <p className="text-sm text-gray-500">UI/UX Design</p>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-600">Progress</p>
+                          <div className="w-full bg-gray-200 rounded-full h-2.5">
+                            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">90%</p>
+                        </div>
+                        <div className="flex items-center mt-4">
+                          <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          </svg>
+                          <p className="text-sm text-gray-600">1 Hour</p>
+                          <div className="ml-auto flex -space-x-2">
+                            <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          </div>
                         </div>
                       </div>
-                      <p className="text-muted small mt-2">
-                        Created on {project.createdAt}
-                      </p>
+                    </div>
+                  </div>
+                ))}
+                <div className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800">Name</h3>
+                      <p className="text-sm text-gray-500">UI/UX Design</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">90%</p>
+                      </div>
+                      <div className="flex items-center mt-4">
+                        <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p className="text-sm text-gray-600">1 Hour</p>
+                        <div className="ml-auto flex -space-x-2">
+                          <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
+                <div className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800">Name</h3>
+                      <p className="text-sm text-gray-500">UI/UX Design</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">90%</p>
+                      </div>
+                      <div className="flex items-center mt-4">
+                        <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p className="text-sm text-gray-600">1 Hour</p>
+                        <div className="ml-auto flex -space-x-2">
+                          <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800">Name</h3>
+                      <p className="text-sm text-gray-500">UI/UX Design</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">90%</p>
+                      </div>
+                      <div className="flex items-center mt-4">
+                        <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p className="text-sm text-gray-600">1 Hour</p>
+                        <div className="ml-auto flex -space-x-2">
+                          <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800">Name</h3>
+                      <p className="text-sm text-gray-500">UI/UX Design</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">90%</p>
+                      </div>
+                      <div className="flex items-center mt-4">
+                        <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p className="text-sm text-gray-600">1 Hour</p>
+                        <div className="ml-auto flex -space-x-2">
+                          <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cardSlider grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" className="w-full h-40 object-cover" />
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-800">Name</h3>
+                      <p className="text-sm text-gray-500">UI/UX Design</p>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600">Progress</p>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "90%" }}></div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">90%</p>
+                      </div>
+                      <div className="flex items-center mt-4">
+                        <svg className="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p className="text-sm text-gray-600">1 Hour</p>
+                        <div className="ml-auto flex -space-x-2">
+                          <img src="https://images.unsplash.com/photo-1491528323818-fdd1f571ceff?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=60" alt="Avatar" className="w-8 h-8 rounded-full border-2 border-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Slider>
             </div>
           )}
+
+
         </div>
       </div>
     </>

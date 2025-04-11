@@ -2,7 +2,9 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "concurrently": "^9.0.1"
+    "concurrently": "^9.0.1",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "lerna": "^8.1.8"
@@ -10,7 +12,6 @@
   "workspaces": [
     "packages/*"
   ],
-  
   "scripts": {
     "dev_server": "lerna run start --scope=backend",
     "dev_front": "lerna run dev --scope=task-management",
