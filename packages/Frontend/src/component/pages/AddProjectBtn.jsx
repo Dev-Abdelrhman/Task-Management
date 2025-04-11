@@ -67,7 +67,7 @@ const [projects, setProjects] = useState([]);
       
         try {
           
-          const savedProject = await addProject(userId, {
+          const savedProject = await addProject(user._id, {
             name: projectName,
             description: projectDescription,
           });
