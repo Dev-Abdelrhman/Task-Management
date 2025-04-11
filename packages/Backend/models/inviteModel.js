@@ -38,9 +38,9 @@ const inviteSchema = new mongoose.Schema(
 inviteSchema.pre(/^find/, function (next) {
   this.populate([
     { path: "sender", select: "name -_id" },
-    { path: "project", select: "name -_id" },
+    { path: "project", select: "name _id" },
     { path: "receiver", select: "name -_id" },
-    { path: "role", select: "name -_id" },
+    { path: "role", select: "name _id" },
   ]);
   next();
 });

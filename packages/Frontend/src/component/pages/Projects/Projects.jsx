@@ -13,6 +13,11 @@ import "slick-carousel/slick/slick-theme.css";
 function Projects() {
   const { user } = useAuthStore();
 
+  useEffect(() => {
+    console.log(user._id);
+    
+  }, []);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {

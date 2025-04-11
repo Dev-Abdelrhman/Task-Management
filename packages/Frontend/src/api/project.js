@@ -6,7 +6,7 @@ const API = axios.create({
 });
 
 export const getUserProjects = async (user_id) => {
-  const res = await API.get(`${user_id}/projects`);
+  const res = await API.get(`${user_id}/projects`, { withCredentials: true });
   console.log(res);
   return res.data;
 };
