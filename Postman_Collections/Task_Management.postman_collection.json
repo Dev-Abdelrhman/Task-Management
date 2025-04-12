@@ -1,0 +1,1290 @@
+{
+	"info": {
+		"_postman_id": "f5df8a17-e015-4d2d-beac-a95a6b877b37",
+		"name": "Task_Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34054185",
+		"_collection_link": "https://dev-5353.postman.co/workspace/Task-Management~a3a42719-bae0-4214-ab6f-ca6de6f9100c/collection/34054185-f5df8a17-e015-4d2d-beac-a95a6b877b37?action=share&source=collection_link&creator=34054185"
+	},
+	"item": [
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Get the Comments for the Current Project",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/comments",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67ce95c3d62889c409fb0ef1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Comment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userId/projects/:projectId/comments/:commentId",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userId",
+								"projects",
+								":projectId",
+								"comments",
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "projectId",
+									"value": ""
+								},
+								{
+									"key": "commentId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create the Comments for the Current Project",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comment\":\"i hope it works\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/comments",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67ce95c3d62889c409fb0ef1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update the Comment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userId/projects/:projectId/comments/:commentId",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userId",
+								"projects",
+								":projectId",
+								"comments",
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "projectId",
+									"value": ""
+								},
+								{
+									"key": "commentId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete the Comment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userId/projects/:projectId/comments/:commentId",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userId",
+								"projects",
+								":projectId",
+								"comments",
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "projectId",
+									"value": ""
+								},
+								{
+									"key": "commentId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Projects for the Current User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Project ",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67e2130c58a46fa8c3e9a63d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invited Projects",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/projects/invited",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67c966028ad04d7ff9ea5fbf",
+								"projects",
+								"invited"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Project for the Current User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"first Project for this user\",\r\n    \"description\":\"test project\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update the Current User Projects",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userId/projects/:projectId",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userId",
+								"projects",
+								":projectId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "projectId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete the Current User Projects ",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userId/projects/:projectId",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userId",
+								"projects",
+								":projectId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								},
+								{
+									"key": "projectId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Get Roles for the current Project",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/roles",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67e2130c58a46fa8c3e9a63d",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one Role",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/67d0d6c733bac82eb9cd506c",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67ce95c3d62889c409fb0ef1",
+								"roles",
+								"67d0d6c733bac82eb9cd506c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Roles for the Current Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Test_Role_v2\",\r\n    \"permissions\":[\"read\",\"write\",\"delete\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/roles",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67e2130c58a46fa8c3e9a63d",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update the Role",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Viewer_V2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/67d0d6c733bac82eb9cd506c",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67ce95c3d62889c409fb0ef1",
+								"roles",
+								"67d0d6c733bac82eb9cd506c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete the Role",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/67d0d6c733bac82eb9cd506c",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67ce95c3d62889c409fb0ef1",
+								"roles",
+								"67d0d6c733bac82eb9cd506c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "For user",
+					"item": [
+						{
+							"name": "Create Tasks",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"first task without any projects just for private tasks\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}tasks",
+									"host": [
+										"{{URL}}tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Tasks",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}tasks/userTasks",
+									"host": [
+										"{{URL}}tasks"
+									],
+									"path": [
+										"userTasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one task for the current user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}tasks/67e299a9ec38e2032e4abbe1",
+									"host": [
+										"{{URL}}tasks"
+									],
+									"path": [
+										"67e299a9ec38e2032e4abbe1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update the task for the current user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"still work ?\",\r\n    \"status\":\"In Progress\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}tasks/67e299a9ec38e2032e4abbe1",
+									"host": [
+										"{{URL}}tasks"
+									],
+									"path": [
+										"67e299a9ec38e2032e4abbe1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete the task for the current user",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}tasks/67e299a9ec38e2032e4abbe1",
+									"host": [
+										"{{URL}}tasks"
+									],
+									"path": [
+										"67e299a9ec38e2032e4abbe1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "For project",
+					"item": [
+						{
+							"name": "Create tasks for the current project",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"for test is it work ?\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks",
+									"host": [
+										"{{URL}}users"
+									],
+									"path": [
+										"67cd552eeb136fc473543ae1",
+										"projects",
+										"67e2130c58a46fa8c3e9a63d",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Tasks for the current Project",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks",
+									"host": [
+										"{{URL}}users"
+									],
+									"path": [
+										"67cd552eeb136fc473543ae1",
+										"projects",
+										"67e2130c58a46fa8c3e9a63d",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get one Task for the current Project",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks/67e29edb1905f5df4178aaa4",
+									"host": [
+										"{{URL}}users"
+									],
+									"path": [
+										"67cd552eeb136fc473543ae1",
+										"projects",
+										"67e2130c58a46fa8c3e9a63d",
+										"tasks",
+										"67e29edb1905f5df4178aaa4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update task for the current project",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"does it work ?\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks/67e29edb1905f5df4178aaa4",
+									"host": [
+										"{{URL}}users"
+									],
+									"path": [
+										"67cd552eeb136fc473543ae1",
+										"projects",
+										"67e2130c58a46fa8c3e9a63d",
+										"tasks",
+										"67e29edb1905f5df4178aaa4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete the task for the current Project",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks/67e29edb1905f5df4178aaa4",
+									"host": [
+										"{{URL}}users"
+									],
+									"path": [
+										"67cd552eeb136fc473543ae1",
+										"projects",
+										"67e2130c58a46fa8c3e9a63d",
+										"tasks",
+										"67e29edb1905f5df4178aaa4"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get user info for auth",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/google/user",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"google",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"test106@gmail.com\",\r\n    \"password\":\"Test@2025\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/signin",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Abdelrhman Fawzy\",\r\n    \"username\":\"fawzy_3\",\r\n    \"email\":\"abdelrhman13204@gmail.com\",\r\n    \"password\":\"Test@2025\",\r\n    \"passwordConfirmation\":\"Test@2025\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/signup",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/logout",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/refresh",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forget Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"abdelrhman13204@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/forgotPassword",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\":\"Test@2004\",\r\n    \"passwordConfirmation\":\"Test@2004\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/depiV1/users/resetPassword/243f635d1c5e622948779dc8f1f52f1a20995613472a5cbf2416de13ddf14160",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"depiV1",
+								"users",
+								"resetPassword",
+								"243f635d1c5e622948779dc8f1f52f1a20995613472a5cbf2416de13ddf14160"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateUser(test)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"test1\",\r\n    \"username\":\"test1\",\r\n    \"email\":\"test101@gmail.com\",\r\n    \"password\":\"Test@2025\",\r\n    \"passwordConfirmation\":\"Test@2025\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users",
+							"host": [
+								"{{URL}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all user(test)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users",
+							"host": [
+								"{{URL}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User (test)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"test\",\r\n    \"username\":\"test1\",\r\n    \"email\":\"test101@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67bf52280dd8f84cbb447137",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67bf52280dd8f84cbb447137"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (test)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67d15334af70525b566392f9",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67d15334af70525b566392f9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invites",
+			"item": [
+				{
+					"name": "Send invite",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"test15\",\r\n    \"roleId\":\"67f372d2e2a45ef3e7e6ac6e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/invite/sendInvite",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67e2130c58a46fa8c3e9a63d",
+								"invite",
+								"sendInvite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept invite",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/invite/67f484ebb1927d4c6e12e4ab/accept",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67c966028ad04d7ff9ea5fbf",
+								"invite",
+								"67f484ebb1927d4c6e12e4ab",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Decline invite",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/invite/67f390b7d4a7dc679c8c7df5/decline",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67c966028ad04d7ff9ea5fbf",
+								"invite",
+								"67f390b7d4a7dc679c8c7df5",
+								"decline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search for a User to send Invite",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/invite/search?username=test",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67cd552eeb136fc473543ae1",
+								"projects",
+								"67e2130c58a46fa8c3e9a63d",
+								"invite",
+								"search"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "username",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all invite that related to the receiver",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/invite/receiver",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67c966028ad04d7ff9ea5fbf",
+								"invite",
+								"receiver"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
