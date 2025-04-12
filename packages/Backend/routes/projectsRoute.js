@@ -11,14 +11,20 @@ const router = express.Router({ mergeParams: true });
 
 router.use(AC.protect);
 
-router.route("/").get(PC.getProjects).post(PC.createProject);
+router
+  .route("/")
+  .get(PC.getProjects)
+  .post(PC.uploader, PC.uploadImages, PC.createProject);
+
 router.route("/invited").get(PC.getInvitedProjects);
 
 router
   .route("/:id")
   .get(PC.getProjectById)
-  .patch(PC.updateProject)
+  .patch(PC.uploader, PC.uploadImages, PC.updateProject)
   .delete(PC.deleteProject);
+
+router.route("/:id/removeImage").patch(PC.removeImages);
 
 router.use("/:id/comments", CommentRouter);
 router.use("/:id/roles", RoleRouter);

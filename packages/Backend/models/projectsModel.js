@@ -12,6 +12,14 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    image: [
+      {
+        public_id: String,
+        url: String,
+        original_filename: String,
+        format: String,
+      },
+    ],
     slug: {
       type: String,
       unique: true,

@@ -8,11 +8,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  image: {
-    type: String,
-    default:
-      "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?t=st=1742924913~exp=1742928513~hmac=e28cef785f6bdc131e55c0974a379eebfe37be362cbfdeb538eea21efe05a05a&w=740",
-  },
+  image: [
+    {
+      public_id: String,
+      url: String,
+      original_filename: String,
+      format: String,
+    },
+  ],
   googleID: { type: String, unique: true, sparse: true },
   username: {
     type: String,

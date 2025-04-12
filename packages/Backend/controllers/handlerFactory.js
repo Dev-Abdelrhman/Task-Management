@@ -1,5 +1,6 @@
-// const { CloudinaryStorage } = require("multer-storage-cloudinary");
-// const cloudinary = require("../utils/cloudinary");
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../utils/cloudinary.js";
+import uploadMiddleware from "../utils/multer.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 import APIFeatures from "../utils/apiFeatures.js";
@@ -111,7 +112,6 @@ const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
     console.log("Checking ownership for user:", req.user.id);
 
-    // Find the document where the owner matches the logged-in user
     const doc = await Model.findOne({ [ownerField]: req.user.id });
 
     if (!doc) {
@@ -120,61 +120,59 @@ const isOwner = (Model, ownerField) =>
 
     console.log("Found Document:", doc);
 
-    // Continue if user owns the resource
     next();
   });
 
-const uploadImages = (Model, folderPath) =>
+const uploadFiles = (Model, folderPath, fieldName) =>
   catchAsync(async (req, res, next) => {
-    if (!req.files || req.files.length === 0) {
-      return next();
-    }
-
-    const document = await Model.findById(req.params.id);
-    if (!document) {
-      return next(new AppError("No document found with that ID", 404));
-    }
-
-    const imageFiles = req.files.filter((file) =>
-      file.mimetype.startsWith("image/")
-    );
-    if (imageFiles.length === 0) {
-      return next(
-        new AppError("Only image files are allowed. Please try again.", 400)
-      );
-    }
-
     try {
-      const uploadPromises = imageFiles.map((file) =>
-        cloudinary.uploader.upload(file.path, { folder: folderPath })
+      if (!req.files || req.files.length === 0) {
+        return next();
+      }
+
+      const document = await Model.findById(req.params.id);
+      if (!document) {
+        return next(new AppError("No document found with that ID", 404));
+      }
+      const uploadPromises = req.files.map((file) =>
+        cloudinary.uploader.upload(file.path, {
+          folder: folderPath,
+          resource_type: "auto",
+        })
       );
 
       const uploadResults = await Promise.all(uploadPromises);
 
+      if (!document[fieldName]) document[fieldName] = [];
+      console.log(fieldName);
+
       uploadResults.forEach((result) => {
-        document.images.push({
-          url: result.secure_url,
+        document[fieldName].push({
           public_id: result.public_id,
+          url: result.secure_url,
+          original_filename: result.original_filename,
+          format: result.format,
         });
       });
 
       await document.save();
-
       res.status(200).json({
         status: "success",
-        message: "Images uploaded and saved successfully.",
+        message: "Files uploaded and saved successfully.",
         data: {
           document,
         },
       });
     } catch (error) {
       return next(
-        new AppError("Failed to upload images. Please try again.", 500)
+        new AppError(
+          "An error occurred while uploading files. Please try again.",
+          500
+        )
       );
     }
   });
-
-const removeImage = (Model) =>
+const removeFile = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     const publicId = req.body.public_id;
 
@@ -183,32 +181,27 @@ const removeImage = (Model) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
-    const imageIndex = document.images.findIndex(
-      (image) => image.public_id === publicId
+    const fileIndex = document[fieldName].findIndex(
+      (file) => file.public_id === publicId
     );
-    if (imageIndex === -1) {
-      return next(new AppError("Image not found in document", 404));
-    }
-
-    try {
-      await cloudinary.uploader.destroy(publicId);
-
-      document.images.splice(imageIndex, 1);
-      await document.save();
-
-      res.status(200).json({
-        status: "success",
-        message: "Image removed successfully from Cloudinary and database.",
-        data: { document },
-      });
-    } catch (error) {
+    if (fileIndex === -1) {
       return next(
-        new AppError(
-          "Failed to remove image from Cloudinary. Please try again.",
-          500
-        )
+        new AppError(`${fieldName.slice(0, -1)} not found in document`, 404)
       );
     }
+    await cloudinary.uploader.destroy(publicId);
+
+    document[fieldName].splice(fileIndex, 1);
+    await document.save();
+
+    res.status(200).json({
+      status: "success",
+      message: `${fieldName.slice(
+        0,
+        -1
+      )} removed successfully from Cloudinary and database.`,
+      data: { document },
+    });
   });
 
 export {
@@ -218,6 +211,6 @@ export {
   getOne,
   getAll,
   isOwner,
-  uploadImages,
-  removeImage,
+  uploadFiles,
+  removeFile,
 };

@@ -1,7 +1,12 @@
 import Project from "../models/projectsModel.js";
 import * as HF from "./handlerFactory.js";
+import upload from "../utils/multer.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
+
+const uploader = upload.array("image", 1);
+const uploadImages = HF.uploadFiles(Project, "Home/projects/", "image");
+const removeImages = HF.removeFile(Project, "image");
 
 const isMine = HF.isOwner(Project, "owner");
 
@@ -23,6 +28,9 @@ export {
   getProjects,
   getInvitedProjects,
   getProjectById,
+  uploader,
+  uploadImages,
+  removeImages,
   createProject,
   updateProject,
   deleteProject,
