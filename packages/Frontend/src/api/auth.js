@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:9999/depiV1",
+  baseURL: "http://localhost:9999/depiV1/users",
   withCredentials: true, // Allow cookies/session authentication
 });
 
@@ -25,14 +25,14 @@ API.interceptors.response.use(
     if (
       (error.response?.status === 401 || error.response?.status === 403) &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/users/signin") &&
-      !originalRequest.url.includes("/users/signup") &&
-      !originalRequest.url.includes("/users/refresh")
+      !originalRequest.url.includes("/signin") &&
+      !originalRequest.url.includes("/signup") &&
+      !originalRequest.url.includes("/refresh")
     ) {
       originalRequest._retry = true;
 
       if (!refreshPromise) {
-        refreshPromise = API.get("/users/refresh", { withCredentials: true })
+        refreshPromise = API.get("/refresh", { withCredentials: true })
           .catch((refreshError) => {
             console.error("Token refresh failed:", refreshError);
             window.location.href = "/login";
@@ -58,22 +58,22 @@ API.interceptors.response.use(
 
 // Auth API Calls
 export const getUser = async () => {
-  const res = await axios.get(
-    "http://localhost:9999/depiV1/users/google/user",
+  const res = await API.get(
+    "google/user",
     { withCredentials: true }
   );
   const { user } = res.data;
   return { user };
 };
-export const signUp = (userData) => API.post("/users/signup", userData);
+export const signUp = (userData) => API.post("/signup", userData);
 export const signIn = (credentials) =>
-  API.post("/users/signin", credentials, { withCredentials: true });
+  API.post("/signin", credentials, { withCredentials: true });
 export const logout = () => {
-  API.post("/users/logout", {}, { withCredentials: true });
+  API.post("/logout", {}, { withCredentials: true });
 };
 export const forgotPassword = async (email) => {
   try {
-    const response = await API.post("/users/forgotPassword", { email });
+    const response = await API.post("/forgotPassword", { email });
     return response.data;
   } catch (error) {
     console.error("Forgot password API error:", error);
@@ -87,7 +87,7 @@ export const forgotPassword = async (email) => {
 };
 export const resetPassword = async (token, password, passwordConfirmation) => {
   try {
-    const response = await API.patch(`/users/resetPassword/${token}`, {
+    const response = await API.patch(`/resetPassword/${token}`, {
       password,
       passwordConfirmation,
     });
@@ -104,7 +104,7 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
 };
 // Google Authentication
 export const googleAuth = async () => {
-  window.location.href = `${API.defaults.baseURL}/users/google`;
+  window.location.href = `${API.defaults.baseURL}/google`;
 };
 export const handleGoogleCallback = async () => {
   const response = await axios.get(`${API}/auth/google/callback`, {
@@ -119,7 +119,7 @@ export const ContinueSignUpWithGoogle = async (
   passwordConfirmation
 ) => {
   try {
-    const response = await API.post("/users/continueSignUpWithGoogle", {
+    const response = await API.post("/continueSignUpWithGoogle", {
       token,
       username,
       password,
