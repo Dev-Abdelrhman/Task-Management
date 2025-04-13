@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./ProjectsStyle.css";
 import cardImg from "../../../assets/cardImg.png";
-import axios from "axios";
 import AddProjectBtn from "../AddProjectBtn";
-import { toast } from "react-toastify";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-// import Swiper from "swiper";
 import {
   Box,
   Typography,
@@ -25,17 +19,6 @@ import { Navigation } from "swiper"
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 function Projects() {
   const { user } = useAuthStore();
-  const [projects, setProjects] = useState([]);
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const res = await fetch(`${user._id}/projects`);
-      const data = await res.json();
-      setProjects(data);
-    };
-
-    fetchProjects();
-  }, [user._id]);
-
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
@@ -46,42 +29,12 @@ function Projects() {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error.message}</div>;
 
-  const handleDelete = (projectId) => {
-    axios
-      .delete(`http://localhost:9999/depiV1/users/${user._id}/${projectId}`, {
-        withCredentials: true,
-      })
-      .then(() => {
-        toast.success("Project deleted successfully!");
-        setProjects((prevProjects) => ({
-          ...prevProjects,
-          data: prevProjects.data.filter(
-            (project) => project._id !== projectId
-          ),
-        }));
-      })
-      .catch((error) => {
-        toast.error("Error deleting project");
 
-        console.error("Error deleting project:", error);
-      });
-  };
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 2,
-  };
   return (
     <>
       <div className="bg-light  d-flex align-items-center">
         <div className="container py-3">
           <div className="d-flex justify-content-between align-items-center mt-3">
-            {/* <h2 className="mb-4 fw-bold">
-              Number Of Projects : {data.results}
-            </h2> */}
-            {/* <h1>Omar, {user?.email}</h1> */}
           </div>
           <div className="flex justify-between mb-4">
             <h2 className="mb-4 font-bold">
@@ -155,7 +108,7 @@ function Projects() {
                             <Box className="flex justify-between mb-1">
                               <Typography variant="body2 text-lg">Progress</Typography>
                               <Typography variant="body2" className="text-indigo-500 text-sm">
-                                %
+                                30%
                               </Typography>
                             </Box>
                             <LinearProgress
