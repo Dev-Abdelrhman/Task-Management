@@ -1,5 +1,5 @@
-import User from "../models/userModel.js";
-import * as HF from "./handlerFactory.js";
+const User = require("../models/userModel.js");
+const HF = require("./handlerFactory.js");
 
 const uploader = upload.array("image", 1);
 const uploadImages = HF.uploadFiles(Project, "Home/projects/", "image");
@@ -15,7 +15,7 @@ const updateUser = HF.updateOne(User);
 
 const deleteUser = HF.deleteOne(User);
 
-export {
+module.exports = {
   getAllUsers,
   getUserById,
   createUser,

@@ -1,5 +1,5 @@
-import passport from "./google_Strategy.js";
-import User from "../models/userModel.js";
+const passport = passport(passport);
+const User = require("../models/userModel.js");
 
 const pConfig = (app) => {
   app.use(passport.initialize());
@@ -19,4 +19,4 @@ const pConfig = (app) => {
   });
 };
 
-export default pConfig;
+module.exports = pConfig;

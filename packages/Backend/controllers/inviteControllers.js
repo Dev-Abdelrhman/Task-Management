@@ -1,9 +1,9 @@
-import Invite from "../models/inviteModel.js";
-import Project from "../models/projectsModel.js";
-import User from "../models/userModel.js";
-import Role from "../models/roleModel.js";
-import * as HF from "./handlerFactory.js";
-import { catchAsync } from "../utils/catchAsync.js";
+const Invite = require("../models/inviteModel.js");
+const Project = require("../models/projectsModel.js");
+const User = require("../models/userModel.js");
+const Role = require("../models/roleModel.js")
+const HF = require("./handlerFactory.js");
+const catchAsync = require("../utils/catchAsync.js");
 
 const searchUsersForInvite = catchAsync(async (req, res, next) => {
   const { username } = req.query;
@@ -177,7 +177,7 @@ const getOneInvite = HF.getOne(Invite);
 const updateInvite = HF.updateOne(Invite);
 const deleteInvite = HF.deleteOne(Invite);
 
-export {
+module.exports = {
   sendInvite,
   declineInvite,
   acceptInvite,

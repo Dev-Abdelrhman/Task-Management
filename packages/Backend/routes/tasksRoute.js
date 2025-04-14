@@ -1,6 +1,6 @@
-import express from "express";
-import * as TC from "../controllers/tasksControllers.js";
-import * as AC from "../controllers/authControllers.js";
+const express = require("express");
+const TC = require("../controllers/tasksControllers.js");
+const AC = require("../controllers/authControllers.js");
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,4 +16,4 @@ router
   .patch(TC.UpdateTask)
   .delete(TC.DeleteTask);
 
-export default router;
+module.exports = router;

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -110,4 +110,4 @@ userSchema.methods.createPasswordResetToken = function () {
 
 const User = mongoose.model("User", userSchema);
 
-export default User;
+module.exports = User;

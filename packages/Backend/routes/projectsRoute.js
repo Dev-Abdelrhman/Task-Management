@@ -1,11 +1,11 @@
-import express from "express";
-import * as PC from "../controllers/projectsControllers.js";
-import * as AC from "../controllers/authControllers.js";
+const express = require("express");
+const PC = require("../controllers/projectsControllers.js");
+const AC = require("../controllers/authControllers.js");
 
-import CommentRouter from "./commentRoute.js";
-import RoleRouter from "./roleRoute.js";
-import TaskRouter from "./tasksRoute.js";
-import InviteRouter from "./inviteRoute.js";
+const CommentRouter = require("./commentRoute.js");
+const RoleRouter = require("./roleRoute.js");
+const TaskRouter = require("./tasksRoute.js");
+const InviteRouter = require("./inviteRoute.js");
 
 const router = express.Router({ mergeParams: true });
 
@@ -31,4 +31,4 @@ router.use("/:id/roles", RoleRouter);
 router.use("/:id/tasks", TaskRouter);
 router.use("/:id/invite", InviteRouter);
 
-export default router;
+module.exports = router;

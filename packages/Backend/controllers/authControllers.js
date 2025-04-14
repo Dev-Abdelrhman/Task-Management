@@ -1,11 +1,11 @@
-import passport from "../strategies/google_Strategy.js";
-import jwt from "jsonwebtoken";
-import { promisify } from "util";
-import crypto from "crypto";
-import User from "../models/userModel.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import AppError from "../utils/appError.js";
-import sendEmail from "../utils/nodeMailer.js";
+const passport = require("../strategies/google_Strategy.js");
+const jwt = require("jsonwebtoken");
+const promisify = require("util");
+const crypto = require("crypto");
+const User = require("../models/userModel.js");
+const catchAsync = require("../utils/catchAsync.js");
+const AppError = require("../utils/appError.js");
+const sendEmail = require("../utils/nodeMailer.js");
 //______________________________________________________________________________
 const frontendUrl =
   "http://localhost:5173" || "http://localhost:5174" || "http://localhost:5175";
@@ -360,7 +360,7 @@ const refreshAccessToken = catchAsync(async (req, res, next) => {
   );
 });
 //______________________________________________________________________________
-export {
+module.exports = {
   signin,
   signup,
   googleAuth,

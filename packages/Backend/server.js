@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
-import app from "./app.js";
-import pConfig from "./strategies/passport_Config.js";
-
+const mongoose = require("mongoose");
+const app = require("./app.js");
+const pConfig = require("./strategies/passport_Config.js");
 process.on("uncaughtException", (err) => {
   console.error("Uncaught exception: ", err.message);
   console.error("Shutting down...");

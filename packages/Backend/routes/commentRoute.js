@@ -1,6 +1,6 @@
-import express from "express";
-import * as CC from "../controllers/commentControllers.js";
-import * as AC from "../controllers/authControllers.js";
+const express = require("express");
+const CC = require("../controllers/commentControllers.js");
+const AC = require("../controllers/authControllers.js");
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,4 +16,4 @@ router
   .patch(CC.updateComment)
   .delete(CC.deleteComment);
 
-export default router;
+module.exports = router;

@@ -1,14 +1,14 @@
-import express from "express";
-import dotenv from "dotenv";
-import morgan from "morgan";
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
-import xss from "xss";
-import sanitizeHtml from "sanitize-html";
-import hpp from "hpp";
-import cors from "cors";
-import cookieParser from "cookie-parser";
+const express = require("express");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss");
+const sanitizeHtml = require("sanitize-html");
+const hpp = require("hpp");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 /*______________________________________________________*/
 import AppError from "./utils/appError.js";
@@ -112,4 +112,4 @@ app.all("*", (req, res, next) => {
 /* ______________ Global Error Handling Middleware ______________ */
 app.use(GlobalErrorHandler);
 
-export default app;
+module.exports = app;

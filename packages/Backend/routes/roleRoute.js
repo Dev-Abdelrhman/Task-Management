@@ -1,6 +1,6 @@
-import express from "express";
-import * as RC from "../controllers/rolesControllers.js";
-import * as AC from "../controllers/authControllers.js";
+const express = require("express");
+const RC = require("../controllers/rolesControllers.js");
+const AC = require("../controllers/authControllers.js");
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,4 +16,4 @@ router
   .patch(RC.updateRole)
   .delete(RC.deleteRole);
 
-export default router;
+module.exports = router;

@@ -1,9 +1,9 @@
-import express from "express";
-import * as UC from "../controllers/userControllers.js";
-import * as AC from "../controllers/authControllers.js";
+const express = require("express");
+const UC = require("../controllers/userControllers.js");
+const AC = require("../controllers/authControllers.js");
 
-import ProjectsRoutes from "./projectsRoute.js";
-import InviteRouter from "./inviteRoute.js";
+const ProjectsRoutes = require("./projectsRoute.js");
+const InviteRouter = require("./inviteRoute.js");
 const router = express();
 
 router.route("/google").get(AC.googleAuth);
@@ -28,4 +28,5 @@ router
 
 router.use("/:id/projects", ProjectsRoutes);
 router.use("/:id/invite", InviteRouter);
-export default router;
+
+module.exports = router;

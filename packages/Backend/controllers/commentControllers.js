@@ -1,7 +1,7 @@
-import Comment from "../models/commentModel.js";
-import * as HF from "./handlerFactory.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import AppError from "../utils/appError.js";
+const Comment = require("../models/commentModel.js");
+const HF = require("./handlerFactory.js");
+const catchAsync = require("../utils/catchAsync.js");
+const AppError = require("../utils/appError.js");
 
 const getComments = HF.getAll(Comment, "project", ["project", "user"]);
 
@@ -15,7 +15,7 @@ const updateComment = HF.updateOne(Comment);
 
 const deleteComment = HF.deleteOne(Comment);
 
-export {
+module.exports = {
   getComments,
   getCommentById,
   createComment,

@@ -1,9 +1,8 @@
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../utils/cloudinary.js";
-import uploadMiddleware from "../utils/multer.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import AppError from "../utils/appError.js";
-import APIFeatures from "../utils/apiFeatures.js";
+const CloudinaryStorage = require("multer-storage-cloudinary");
+const cloudinary = require("../utils/cloudinary.js");
+const catchAsync = require("../utils/catchAsync.js");
+const AppError = require("../utils/appError.js");
+const APIFeatures = require("../utils/apiFeatures.js");
 
 const deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -204,7 +203,7 @@ const removeFile = (Model, fieldName) =>
     });
   });
 
-export {
+module.exports = {
   deleteOne,
   updateOne,
   createOne,

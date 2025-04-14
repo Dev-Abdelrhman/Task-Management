@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import slugify from "slugify";
+const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const projectSchema = new mongoose.Schema(
   {
@@ -85,4 +85,4 @@ projectSchema.virtual("comments", {
 
 const Project = mongoose.model("Project", projectSchema);
 
-export default Project;
+module.exports = Project;
