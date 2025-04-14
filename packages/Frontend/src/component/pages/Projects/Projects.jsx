@@ -7,10 +7,6 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-// import Swiper from "swiper";
 import {
   Box,
   Typography,
