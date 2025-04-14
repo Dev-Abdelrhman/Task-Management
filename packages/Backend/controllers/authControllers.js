@@ -348,46 +348,6 @@ const protect = catchAsync(async (req, res, next) => {
   );
 });
 //______________________________________________________________________________
-const refreshAccessToken = catchAsync(async (req, res, next) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    return next(
-      new AppError("Refresh token missing. Please log in again.", 403)
-    );
-  }
-
-  jwt.verify(
-    refreshToken,
-    process.env.JWT_SECRET_REFRESH_TOKEN,
-    async (err, decoded) => {
-      if (err)
-        return next(new AppError("Invalid or expired refresh token.", 403));
-
-      const user = await User.findById(decoded.id);
-      if (!user) return next(new AppError("User no longer exists.", 403));
-
-      const newRefreshToken = generateRefreshToken(user._id);
-      const newAccessToken = generateAccessToken(user._id);
-
-      const cookieOptions = {
-        expires: new Date(
-          Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
-        ),
-        httpOnly: true,
-        sameSite: "Strict",
-      };
-      if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
-
-      res.cookie("refreshToken", newRefreshToken, cookieOptions);
-      res.cookie("accessToken", newAccessToken, cookieOptions);
-      res.status(200).json({
-        status: "success",
-      });
-    }
-  );
-});
-//______________________________________________________________________________
 module.exports = {
   signin,
   signup,
@@ -396,7 +356,6 @@ module.exports = {
   completeGoogleSignup,
   getAuthUser,
   protect,
-  refreshAccessToken,
   logout,
   forgotPassword,
   resetPassword,

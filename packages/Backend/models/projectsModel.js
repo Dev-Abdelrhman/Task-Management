@@ -50,7 +50,10 @@ const projectSchema = new mongoose.Schema(
 
 projectSchema.pre("save", function (next) {
   if (!this.slug) {
-    this.slug = slugify(this.name, { lower: true, strict: true });
+    this.slug = slugify(this.name + Date.now + this.description, {
+      lower: true,
+      strict: true,
+    });
   }
   next();
 });
