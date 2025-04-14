@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ProjectsStyle.css";
 import cardImg from "../../../assets/cardImg.png";
 import AddProjectBtn from "../AddProjectBtn";
+import ProjectOptionsMenu from "../ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
@@ -17,6 +18,7 @@ import "swiper/css/navigation"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper"
 import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
+
 function Projects() {
   const { user } = useAuthStore();
   const { data, isLoading, isError, error } = useQuery({
@@ -37,9 +39,7 @@ function Projects() {
           <div className="d-flex justify-content-between align-items-center mt-3">
           </div>
           <div className="flex justify-between mb-4">
-            <h2 className="mb-4 font-bold">
-              Number Of Projects : {data.results}
-            </h2>
+
 
             <AddProjectBtn />
           </div>
@@ -85,8 +85,10 @@ function Projects() {
                 >
                   {data.doc.map((project, index) => (
                     <SwiperSlide className="!w-full sm:!w-auto">
+                       <ProjectOptionsMenu projectId={project._id} projectData={project} />
                       <div key={index} className="bg-white p-4 rounded-xl border border-gray-200">
-                        <div className="mb-3">
+                     
+                        <div className="my-5">
                           <Box
                             component="img"
                             src={cardImg}
@@ -99,6 +101,7 @@ function Projects() {
                               mb: 1.5,
                             }}
                           />
+                         
                         </div>
                         <div>
                           <h3 className="font-medium text-lg ">{project.name}</h3>
@@ -141,6 +144,7 @@ function Projects() {
                                     className="object-cover"
                                   />
                                 </div>
+                                
                               ))}
                             </div>
                           </div>
