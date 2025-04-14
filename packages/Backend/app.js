@@ -11,11 +11,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 /*______________________________________________________*/
-import AppError from "./utils/appError.js";
-import GlobalErrorHandler from "./controllers/errorControllers.js";
-import UserRoutes from "./routes/userRoute.js";
-import InviteRoutes from "./routes/inviteRoute.js";
-import TaskRoutes from "./routes/tasksRoute.js";
+const AppError = require("./utils/appError.js");
+const GlobalErrorHandler = require("./controllers/errorControllers.js");
+const UserRoutes = require("./routes/userRoute.js");
+const InviteRoutes = require("./routes/inviteRoute.js");
+const TaskRoutes = require("./routes/tasksRoute.js");
 
 /*______________________________________________________*/
 const app = express();

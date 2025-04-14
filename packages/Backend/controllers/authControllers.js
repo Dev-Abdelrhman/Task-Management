@@ -1,4 +1,3 @@
-const passport = require("../strategies/google_Strategy.js");
 const jwt = require("jsonwebtoken");
 const promisify = require("util");
 const crypto = require("crypto");
@@ -6,6 +5,7 @@ const User = require("../models/userModel.js");
 const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
+const passport = require("../strategies/google_Strategy.js");
 //______________________________________________________________________________
 const frontendUrl =
   "http://localhost:5173" || "http://localhost:5174" || "http://localhost:5175";
@@ -152,14 +152,6 @@ const googleAuthCallback = (req, res, next) => {
 //______________________________________________________________________________
 const completeGoogleSignup = catchAsync(async (req, res, next) => {
   const { token, username, password, passwordConfirmation } = req.body;
-
-  console.log("Received Data:", {
-    token,
-    username,
-    password,
-    passwordConfirmation,
-  });
-
   if (!token) {
     return next(new AppError("Token is required", 400));
   }
@@ -169,19 +161,23 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
   if (password !== passwordConfirmation) {
     return next(new AppError("Passwords do not match", 400));
   }
-
   const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
-
   const existingUser = await User.findOne({ email: decoded.email });
   if (existingUser) {
     return next(new AppError("User already exists. Please log in.", 400));
   }
-
   const newUser = await User.create({
     googleID: decoded.googleID,
     email: decoded.email,
     name: decoded.name,
-    image: decoded.image,
+    image: [
+      {
+        url: decoded.image,
+        public_id: username + decoded.googleID,
+        original_filename: decoded.name,
+        format: decoded.image.split(".").pop(),
+      },
+    ],
     username,
     password,
     passwordConfirmation,
@@ -287,37 +283,69 @@ const logout = (req, res) => {
 };
 //______________________________________________________________________________
 const protect = catchAsync(async (req, res, next) => {
-  let token;
+  let accessToken = req.cookies.accessToken;
+  let refreshToken = req.cookies.refreshToken;
 
-  if (req.cookies?.accessToken) {
-    token = req.cookies.accessToken;
-  } else if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
+  if (!accessToken && !refreshToken) {
+    return next(new AppError("Please log in to get access.", 401));
   }
 
-  if (!token) {
-    return next(new AppError("You are not logged in! Please log in.", 401));
-  }
+  jwt.verify(
+    accessToken,
+    process.env.JWT_SECRET_ACCESS_TOKEN,
+    async (err, decoded) => {
+      if (err && err.name === "TokenExpiredError") {
+        console.log("TokenExpiredError");
+        if (!refreshToken) {
+          return next(
+            new AppError("Session expired. Please log in again.", 401)
+          );
+        }
 
-  if (blacklist.has(token)) {
-    return next(new AppError("Session expired. Please log in again.", 401));
-  }
+        jwt.verify(
+          refreshToken,
+          process.env.JWT_SECRET_REFRESH_TOKEN,
+          async (refreshErr, refreshDecoded) => {
+            if (refreshErr) {
+              return next(
+                new AppError("Refresh token expired or invalid.", 401)
+              );
+            }
 
-  const decoded = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET_ACCESS_TOKEN
+            const user = await User.findById(refreshDecoded.id);
+            if (!user) return next(new AppError("User no longer exists.", 401));
+
+            const newAccessToken = generateAccessToken(user._id);
+            const newRefreshToken = generateRefreshToken(user._id);
+
+            const cookieOptions = {
+              httpOnly: true,
+              sameSite: "Strict",
+              expires: new Date(
+                Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
+              ),
+            };
+            if (process.env.NODE_ENV === "production")
+              cookieOptions.secure = true;
+
+            res.cookie("accessToken", newAccessToken, cookieOptions);
+            res.cookie("refreshToken", newRefreshToken, cookieOptions);
+
+            req.user = user;
+            next();
+          }
+        );
+      } else if (err) {
+        return next(new AppError("Invalid token. Please log in again.", 401));
+      } else {
+        console.log("Valid access token");
+        const user = await User.findById(decoded.id);
+        if (!user) return next(new AppError("User no longer exists.", 401));
+        req.user = user;
+        next();
+      }
+    }
   );
-
-  const user = await User.findById(decoded.id);
-  if (!user) {
-    return next(new AppError("User no longer exists.", 401));
-  }
-
-  req.user = user;
-  next();
 });
 //______________________________________________________________________________
 const refreshAccessToken = catchAsync(async (req, res, next) => {

@@ -1,4 +1,4 @@
-const passport = passport(passport);
+const passport = require("passport");
 const User = require("../models/userModel.js");
 
 const pConfig = (app) => {
