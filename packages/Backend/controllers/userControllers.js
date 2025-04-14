@@ -1,5 +1,5 @@
-import User from "../models/userModel.js";
-import * as HF from "./handlerFactory.js";
+const User = require("../models/userModel.js");
+const HF = require("./handlerFactory.js");
 
 const getAllUsers = HF.getAll(User);
 
@@ -11,4 +11,10 @@ const updateUser = HF.updateOne(User);
 
 const deleteUser = HF.deleteOne(User);
 
-export { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};

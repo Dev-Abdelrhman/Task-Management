@@ -1,5 +1,5 @@
-import Task from "../models/tasksModel.js";
-import * as HF from "./handlerFactory.js";
+const Task = require("../models/tasksModel.js");
+const HF = require("./handlerFactory.js");
 
 const isMine = HF.isOwner(Task, "owner");
 const GetUserTasks = HF.getAll(Task, "owner");
@@ -9,7 +9,7 @@ const CreateTask = HF.createOne(Task, "owner", "project");
 const DeleteTask = HF.deleteOne(Task);
 const UpdateTask = HF.updateOne(Task);
 
-export {
+module.exports = {
   isMine,
   GetTasks,
   GetUserTasks,

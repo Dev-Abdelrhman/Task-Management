@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const inviteSchema = new mongoose.Schema(
   {
@@ -47,4 +47,4 @@ inviteSchema.pre(/^find/, function (next) {
 
 const Invite = mongoose.model("Invite", inviteSchema);
 
-export default Invite;
+module.exports = Invite;

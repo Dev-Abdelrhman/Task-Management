@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import slugify from "slugify";
+const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const projectSchema = new mongoose.Schema(
   {
@@ -12,6 +12,14 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    image: [
+      {
+        public_id: String,
+        url: String,
+        original_filename: String,
+        format: String,
+      },
+    ],
     slug: {
       type: String,
       unique: true,
@@ -77,4 +85,4 @@ projectSchema.virtual("comments", {
 
 const Project = mongoose.model("Project", projectSchema);
 
-export default Project;
+module.exports = Project;

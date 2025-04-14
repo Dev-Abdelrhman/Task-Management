@@ -1,7 +1,7 @@
-import passport from "passport";
-import GoogleStrategy from "passport-google-oauth20";
-import User from "../models/userModel.js";
-import jwt from "jsonwebtoken";
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20");
+const User = require("../models/userModel.js");
+const jwt = require("jsonwebtoken");
 
 passport.use(
   new GoogleStrategy(
@@ -16,7 +16,7 @@ passport.use(
         if (user) {
           return cb(null, user);
         }
-        
+
         const tempToken = jwt.sign(
           {
             googleID: profile.id,
@@ -29,11 +29,11 @@ passport.use(
         );
 
         return cb(null, { tempToken });
-      } catch (error) {;
+      } catch (error) {
         return cb(error, null);
       }
     }
   )
 );
 
-export default passport;
+module.exports = passport;

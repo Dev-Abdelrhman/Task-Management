@@ -1,5 +1,5 @@
-import Role from "../models/roleModel.js";
-import * as HF from "./handlerFactory.js";
+const Role = require("../models/roleModel.js");
+const HF = require("./handlerFactory.js");
 
 const isMine = HF.isOwner(Role, "theCreator");
 
@@ -13,4 +13,11 @@ const updateRole = HF.updateOne(Role);
 
 const deleteRole = HF.deleteOne(Role);
 
-export { isMine, getAllRoles, getRoleById, createRole, updateRole, deleteRole };
+module.exports = {
+  isMine,
+  getAllRoles,
+  getRoleById,
+  createRole,
+  updateRole,
+  deleteRole,
+};

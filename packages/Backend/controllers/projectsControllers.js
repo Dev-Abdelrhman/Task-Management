@@ -1,7 +1,12 @@
-import Project from "../models/projectsModel.js";
-import * as HF from "./handlerFactory.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import AppError from "../utils/appError.js";
+const Project = require("../models/projectsModel.js");
+const HF = require("./handlerFactory.js");
+const upload = require("../utils/multer.js");
+const catchAsync = require("../utils/catchAsync.js");
+const AppError = require("../utils/appError.js");
+
+const uploader = upload.array("image", 1);
+const uploadImages = HF.uploadFiles(Project, "Home/projects/", "image");
+const removeImages = HF.removeFile(Project, "image");
 
 const isMine = HF.isOwner(Project, "owner");
 
@@ -18,11 +23,14 @@ const createProject = HF.createOne(Project, "owner");
 const updateProject = HF.updateOne(Project);
 const deleteProject = HF.deleteOne(Project);
 
-export {
+module.exports = {
   isMine,
   getProjects,
   getInvitedProjects,
   getProjectById,
+  uploader,
+  uploadImages,
+  removeImages,
   createProject,
   updateProject,
   deleteProject,
