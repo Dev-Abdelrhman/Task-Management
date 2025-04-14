@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema({
   },
   image: [
     {
-      public_id: String,
+      public_id: {
+        type: String,
+        trim: true,
+        lowercase: true,
+      },
       url: String,
       original_filename: String,
       format: String,
