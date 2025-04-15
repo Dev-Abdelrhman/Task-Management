@@ -247,7 +247,16 @@ export default function TaskordDashboard() {
           </div>
 
           {/* Latest Project */}
-          {data?.doc?.length > 0 ? (
+           
+      {isLoading ? (
+              <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
+                <CircularProgress />
+              </div>
+            ) : isError ? (
+              <div className="text-center text-red-500">
+                Error: {error.message}
+              </div>
+            ) : data?.doc?.length > 0 ? (
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-medium">Latest Project</h2>

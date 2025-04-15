@@ -29,6 +29,8 @@ function Projects() {
     },
   });
 
+  const dataLength = data?.doc?.length
+
   if (isError) return <div>Error: {error.message}</div>;
 
 
@@ -63,14 +65,8 @@ function Projects() {
           </Button>
         </div>
       </div>
-      {data.doc.length > 0 && (
-        <>
-      <div className="bg-light  d-flex align-items-center">
-        <div className="px-6 py-4">
-          <div className="d-flex justify-content-between align-items-center mt-3">
-          </div>
-          <div className="w-full">
-          {isLoading ? (
+      
+      {isLoading ? (
               <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
                 <CircularProgress />
               </div>
@@ -78,261 +74,265 @@ function Projects() {
               <div className="text-center text-red-500">
                 Error: {error.message}
               </div>
-            ) : (
-
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-medium">All Projects</h2>
-                  <div className="flex gap-2">
-                    <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                      <ChevronLeft className="!w-6 !h-6" />
-                    </IconButton>
-                    <IconButton className="fslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                      <ChevronRight className="!w-6 !h-6" />
-                    </IconButton>
+            ) : dataLength > 0 ? (
+              <>
+                <div className="bg-light  d-flex align-items-center">
+                  <div className="px-6 py-4">
+                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    </div>
+                    <div className="w-full">
+                  
+          
+                      <div>
+                        <div className="flex justify-between items-center mb-6">
+                          <h2 className="text-2xl font-medium">All Projects</h2>
+                          <div className="flex gap-2">
+                            <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
+                              <ChevronLeft className="!w-6 !h-6" />
+                            </IconButton>
+                            <IconButton className="fslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
+                              <ChevronRight className="!w-6 !h-6" />
+                            </IconButton>
+                          </div>
+                        </div>
+          
+          
+                        <Swiper
+                          modules={[Navigation]}
+                          spaceBetween={16}
+                          slidesPerView="auto"
+                          navigation={{
+                            prevEl: ".fslider-prev",
+                            nextEl: ".fslider-next",
+                          }}
+                          breakpoints={{
+                            640: {
+                              slidesPerView: 1,
+                            },
+                            768: {
+                              slidesPerView: 2,
+                            },
+                            1024: {
+                              slidesPerView: 2,
+                            },
+                          }}
+                          className="upcoming-task-swiper"
+                        >
+                          {data.doc.map((project, index) => (
+                            <SwiperSlide className="!w-full sm:!w-auto">
+                              <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
+                                <div className="my-1">
+                                  <Box
+                                    component="img"
+                                    src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
+                                    alt={project.title}
+                                    sx={{
+                                      width: "320px",
+                                      height: 160,
+                                      objectFit: "cover",
+                                      borderRadius: 2,
+                                      mb: 1.5,
+                                    }}
+                                  />
+                                 
+                                </div>
+                                <div>
+                                  <div className="flex justify-between p-0 m-0">
+                                    <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
+                                    <ProjectOptionsMenu projectId={project._id} projectData={project} />
+                                  </div>
+                                  <p className="text-sm text-gray-500 mb-2">{project.description}</p>
+            
+                                  <Box className="mb-4">
+                                    <Box className="flex justify-between mb-1">
+                                      <Typography variant="body2 text-lg !mb-1">Progress</Typography>
+                                      <Typography variant="body2" className="text-indigo-500 text-sm">
+                                        30%
+                                      </Typography>
+                                    </Box>
+                                    <LinearProgress
+                                      variant="determinate"
+                                      value="30"
+                                      className="!h-2 rounded-full"
+                                      sx={{
+                                        backgroundColor: "#f3f4f6",
+                                        "& .MuiLinearProgress-bar": {
+                                          backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                                          borderRadius: "9999px",
+                                        },
+                                      }}
+                                    />
+                                  </Box>
+            
+                                  <div className="flex justify-between items-center">
+                                    <div className="flex items-center gap-2">
+                                      <Clock className="w-6 h-6 text-gray-500" />
+                                      <span >30 Days Left</span>
+                                    </div>
+                                    <div className="flex -space-x-2">
+                                      {[1, 2, 3, 4, 5].map((i) => (
+                                        <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                                          <img
+                                            src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                            alt="Team member"
+                                            width={24}
+                                            height={24}
+                                            className="object-cover"
+                                          />
+                                        </div>
+                                        
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+            
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-
-                <Swiper
-                  modules={[Navigation]}
-                  spaceBetween={16}
-                  slidesPerView="auto"
-                  navigation={{
-                    prevEl: ".fslider-prev",
-                    nextEl: ".fslider-next",
-                  }}
-                  breakpoints={{
-                    640: {
-                      slidesPerView: 1,
-                    },
-                    768: {
-                      slidesPerView: 2,
-                    },
-                    1024: {
-                      slidesPerView: 2,
-                    },
-                  }}
-                  className="upcoming-task-swiper"
-                >
-                  {data.doc.map((project, index) => (
-                    <SwiperSlide className="!w-full sm:!w-auto">
-                      <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
-                        <div className="my-1">
-                          <Box
-                            component="img"
-                            src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
-                            alt={project.title}
-                            sx={{
-                              width: "320px",
-                              height: 160,
-                              objectFit: "cover",
-                              borderRadius: 2,
-                              mb: 1.5,
-                            }}
-                          />
-                         
+            
+                <div className="bg-light d-flex align-items-center !pb-2">
+                  <div className="px-6">
+                    <div className="d-flex justify-content-between align-items-center mt-3">
+                    </div>
+                    <div className="w-full">
+                    {isLoading ? (
+                        <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
+                          <CircularProgress />
                         </div>
+                      ) : isError ? (
+                        <div className="text-center text-red-500">
+                          Error: {error.message}
+                        </div>
+                      ) : (
+            
                         <div>
-                          <div className="flex justify-between p-0 m-0">
-                            <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
-                            <ProjectOptionsMenu projectId={project._id} projectData={project} />
-                          </div>
-                          <p className="text-sm text-gray-500 mb-2">{project.description}</p>
-
-                          <Box className="mb-4">
-                            <Box className="flex justify-between mb-1">
-                              <Typography variant="body2 text-lg !mb-1">Progress</Typography>
-                              <Typography variant="body2" className="text-indigo-500 text-sm">
-                                30%
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value="30"
-                              className="!h-2 rounded-full"
-                              sx={{
-                                backgroundColor: "#f3f4f6",
-                                "& .MuiLinearProgress-bar": {
-                                  backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
-                                  borderRadius: "9999px",
-                                },
-                              }}
-                            />
-                          </Box>
-
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-6 h-6 text-gray-500" />
-                              <span >30 Days Left</span>
+                          <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-medium">All Projects</h2>
+                            <div className="flex gap-2">
+                              <IconButton className="sslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
+                                <ChevronLeft className="!w-6 !h-6" />
+                              </IconButton>
+                              <IconButton className="sslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
+                                <ChevronRight className="!w-6 !h-6" />
+                              </IconButton>
                             </div>
-                            <div className="flex -space-x-2">
-                              {[1, 2, 3, 4, 5].map((i) => (
-                                <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
-                                  <img
-                                    src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
-                                    alt="Team member"
-                                    width={24}
-                                    height={24}
-                                    className="object-cover"
+                          </div>
+            
+            
+                        <Swiper
+                          modules={[Navigation]}
+                          spaceBetween={16}
+                          slidesPerView="auto"
+                          navigation={{
+                            prevEl: ".sslider-prev",
+                            nextEl: ".sslider-next",
+                          }}
+                          breakpoints={{
+                            640: {
+                              slidesPerView: 1,
+                            },
+                            768: {
+                              slidesPerView: 2,
+                            },
+                            1024: {
+                              slidesPerView: 2,
+                            },
+                          }}
+                          className="upcoming-task-swiper"
+                        >
+                          {data.doc.map((project, index) => (
+                            <SwiperSlide className="!w-full sm:!w-auto">
+                              <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
+                                <div className="my-1">
+                                  <Box
+                                    component="img"
+                                    src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
+                                    alt={project.title}
+                                    sx={{
+                                      width: "320px",
+                                      height: 160,
+                                      objectFit: "cover",
+                                      borderRadius: 2,
+                                      mb: 1.5,
+                                    }}
                                   />
+                                 
                                 </div>
-                                
-                              ))}
-                            </div>
-                          </div>
-                        </div>
+                                <div>
+                                  <div className="flex justify-between p-0 m-0">
+                                    <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
+                                    <ProjectOptionsMenu projectId={project._id} projectData={project} />
+                                  </div>
+                                  <p className="text-sm text-gray-500 mb-2">{project.description}</p>
+            
+                                  <Box className="mb-4">
+                                    <Box className="flex justify-between mb-1">
+                                      <Typography variant="body2 text-lg !mb-1">Progress</Typography>
+                                      <Typography variant="body2" className="text-indigo-500 text-sm">
+                                        30%
+                                      </Typography>
+                                    </Box>
+                                    <LinearProgress
+                                      variant="determinate"
+                                      value="30"
+                                      className="!h-2 rounded-full"
+                                      sx={{
+                                        backgroundColor: "#f3f4f6",
+                                        "& .MuiLinearProgress-bar": {
+                                          backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                                          borderRadius: "9999px",
+                                        },
+                                      }}
+                                    />
+                                  </Box>
+            
+                                  <div className="flex justify-between items-center">
+                                    <div className="flex items-center gap-2">
+                                      <Clock className="w-6 h-6 text-gray-500" />
+                                      <span >30 Days Left</span>
+                                    </div>
+                                    <div className="flex -space-x-2">
+                                      {[1, 2, 3, 4, 5].map((i) => (
+                                        <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                                          <img
+                                            src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                            alt="Team member"
+                                            width={24}
+                                            height={24}
+                                            className="object-cover"
+                                          />
+                                        </div>
+                                        
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </SwiperSlide>
+                          ))}
+                        </Swiper>
+            
                       </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-light d-flex align-items-center !pb-2">
-        <div className="px-6">
-          <div className="d-flex justify-content-between align-items-center mt-3">
-          </div>
-          <div className="w-full">
-          {isLoading ? (
-              <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
-                <CircularProgress />
-              </div>
-            ) : isError ? (
-              <div className="text-center text-red-500">
-                Error: {error.message}
-              </div>
-            ) : (
-
-              <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-medium">All Projects</h2>
-                  <div className="flex gap-2">
-                    <IconButton className="sslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                      <ChevronLeft className="!w-6 !h-6" />
-                    </IconButton>
-                    <IconButton className="sslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                      <ChevronRight className="!w-6 !h-6" />
-                    </IconButton>
+                    )}
                   </div>
                 </div>
-
-
-                <Swiper
-                  modules={[Navigation]}
-                  spaceBetween={16}
-                  slidesPerView="auto"
-                  navigation={{
-                    prevEl: ".sslider-prev",
-                    nextEl: ".sslider-next",
-                  }}
-                  breakpoints={{
-                    640: {
-                      slidesPerView: 1,
-                    },
-                    768: {
-                      slidesPerView: 2,
-                    },
-                    1024: {
-                      slidesPerView: 2,
-                    },
-                  }}
-                  className="upcoming-task-swiper"
-                >
-                  {data.doc.map((project, index) => (
-                    <SwiperSlide className="!w-full sm:!w-auto">
-                      <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
-                        <div className="my-1">
-                          <Box
-                            component="img"
-                            src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
-                            alt={project.title}
-                            sx={{
-                              width: "320px",
-                              height: 160,
-                              objectFit: "cover",
-                              borderRadius: 2,
-                              mb: 1.5,
-                            }}
-                          />
-                         
-                        </div>
-                        <div>
-                          <div className="flex justify-between p-0 m-0">
-                            <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
-                            <ProjectOptionsMenu projectId={project._id} projectData={project} />
-                          </div>
-                          <p className="text-sm text-gray-500 mb-2">{project.description}</p>
-
-                          <Box className="mb-4">
-                            <Box className="flex justify-between mb-1">
-                              <Typography variant="body2 text-lg !mb-1">Progress</Typography>
-                              <Typography variant="body2" className="text-indigo-500 text-sm">
-                                30%
-                              </Typography>
-                            </Box>
-                            <LinearProgress
-                              variant="determinate"
-                              value="30"
-                              className="!h-2 rounded-full"
-                              sx={{
-                                backgroundColor: "#f3f4f6",
-                                "& .MuiLinearProgress-bar": {
-                                  backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
-                                  borderRadius: "9999px",
-                                },
-                              }}
-                            />
-                          </Box>
-
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-6 h-6 text-gray-500" />
-                              <span >30 Days Left</span>
-                            </div>
-                            <div className="flex -space-x-2">
-                              {[1, 2, 3, 4, 5].map((i) => (
-                                <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
-                                  <img
-                                    src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
-                                    alt="Team member"
-                                    width={24}
-                                    height={24}
-                                    className="object-cover"
-                                  />
-                                </div>
-                                
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-
+              </div>
+              </> 
+            ) : (
+              <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
+                <div className="flex justify-center items-center flex-col gap-7">
+                  <h2 className="text-6xl font-medium text-gray-500">No projects found</h2>
+                  <h3 className="text-2xl text-gray-500">Add a project to get started</h3>
+                  <p className="text-gray-500"> clicking the button below</p>
+                </div>
+                <AddProjectBtn />
               </div>
             )}
-          </div>
-        </div>
-      </div>
-      </> 
-      )}
-      {data.doc.length === 0 && (
-        <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
-          <div className="flex justify-center items-center flex-col gap-7">
-          <h2 className="text-6xl font-medium text-gray-500">No projects found</h2>
-          <h3 className="text-2xl text-gray-500">Add a project to get started</h3>
-          <p className="text-gray-500"> clicking the button below</p>
-          </div>
-
-          <AddProjectBtn />
-        </div>
-      )}
     </>
   );
 }

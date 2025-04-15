@@ -120,7 +120,7 @@ function ProjectOptionsMenu({ projectId, projectData }) {
                                 <Button
                                     onClick={handleDelete}
                                     className="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={deleteConfirmation !== projectData.name}
+                                    disabled={deleteConfirmation.trim().toLowerCase() !== projectData.name.trim().toLowerCase()}
                                 >
                                     Delete Project
                                 </Button>
