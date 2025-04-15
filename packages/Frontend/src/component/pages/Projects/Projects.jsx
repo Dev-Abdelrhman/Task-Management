@@ -17,7 +17,7 @@ import "swiper/css"
 import "swiper/css/navigation"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper"
-import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { ArrowUpNarrowWide, ChartBarStacked, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 
 function Projects() {
   const { user } = useAuthStore();
@@ -34,11 +34,24 @@ function Projects() {
 
   return (
     <>
+     <div className="bg-white flex justify-between items-center p-4 mb-4">
+        <div className="w-1/2">
+          <input type="search" className="form-control w-full p-2 border border-solid border-sky-100 " placeholder="Search Task" />
+        </div>
+        <div className="flex gap-2">
+
+          <button type="button" class="flex justify-between items-center gap-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+            <ChartBarStacked />Category</button>
+          <button type="button" class="flex justify-between items-center gap-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+            <ArrowUpNarrowWide />SortBy</button>
+        </div>
+      </div>
+
       <div className="bg-light  d-flex align-items-center">
         <div className="container py-3">
           <div className="d-flex justify-content-between align-items-center mt-3">
           </div>
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-end mb-4">
 
 
             <AddProjectBtn />
