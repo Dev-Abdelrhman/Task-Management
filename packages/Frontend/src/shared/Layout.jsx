@@ -17,7 +17,8 @@ function Layout() {
         <Navbar />
         
         {/* Page Content */}
-        <main className="p-6 pt-20">  {/* pt-20 accounts for navbar height */}
+        <main className=" pt-20">  {/* pt-20 accounts for navbar height */}
+
           <Outlet />
         </main>
       </div>
