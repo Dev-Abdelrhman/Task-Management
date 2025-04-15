@@ -28,15 +28,14 @@ function Navbar() {
       toast.error(`Logout failed: ${error.message}`);
     }
   };
+  let title = "";
+  
+  if(window.location.pathname === "/projects"){
+    title = "Explore Project"
+  }
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const hostGoogleImage = (url) => {
-    return `https://images.weserv.nl/?url=${encodeURIComponent(
-      url
-    )}&w=200&h=200`;
   };
 
   const handleCloseUserMenu = () => {
@@ -45,8 +44,8 @@ function Navbar() {
   return (
     <>
       <nav className="flex justify-between items-center bg-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
-        <h4 className="text-2xl font-medium !text-[##53577A]-800">
-          Hi, {user.username}
+        <h4 className="text-3xl">
+          {title}
         </h4>
 
         <Box
@@ -56,8 +55,7 @@ function Navbar() {
           <IconButton
             size="large"
             aria-label="show 4 new mails"
-            color="inherit"
-            className="!bg-[#F5F5F7]"
+            className="!border-[1px] !border-[#F5F5F7]"
           >
             <Badge cla badgeContent={0} color="error">
               <Mail className="text-[#8E92BC]" />
@@ -65,9 +63,9 @@ function Navbar() {
           </IconButton>
           <IconButton
             size="large"
+
             aria-label="show 17 new notifications"
-            color="inherit"
-            className="!bg-[#F5F5F7]"
+            className="!border-[1px] !border-[#F5F5F7]"
           >
             <Badge badgeContent={1} color="error">
               <Bell className="text-[#8E92BC]" />
@@ -77,8 +75,8 @@ function Navbar() {
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar
-                className="!w-12 !h-auto"
-                src={hostGoogleImage(user.image)}
+                className="!w-12 !h-12"
+                src={user.image.length ? user.image[0].url : undefined}
               />
             </IconButton>
           </Tooltip>

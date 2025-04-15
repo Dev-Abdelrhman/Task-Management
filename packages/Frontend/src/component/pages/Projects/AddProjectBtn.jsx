@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useAuthStore } from "../../stores/authStore";
-import { addProject, updateProject } from "../../api/project";
+import { useAuthStore } from "../../../stores/authStore";
+import { addProject, updateProject } from "../../../api/project";
 import { Button } from "@mui/material";
+import { Plus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function AddProjectBtn({ isEditMode = false, projectToEdit = {}, open, onClose }) {
@@ -54,9 +55,10 @@ function AddProjectBtn({ isEditMode = false, projectToEdit = {}, open, onClose }
     return <>
         {!isEditMode && (
             <Button
+                endIcon={<Plus className="w-5 h-5" />}
                 onClick={() => setLocalShowModal(true)}
-                className="!text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
-                + Add Project
+                className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+                Add Project
             </Button>
         )}
         {showModal && (
@@ -85,6 +87,19 @@ function AddProjectBtn({ isEditMode = false, projectToEdit = {}, open, onClose }
                                 id="projectName" 
                                 name="name"
                                 value={newProject.name}
+                                onChange={handleInputs}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="dueDate" className="block mb-1 text-border font-medium text-gray-700">Due Date</label>
+                            <input
+                                type="date"
+                                className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                                placeholder="Select due date"
+                                id="dueDate" 
+                                name="dueDate"
+                                value={newProject.dueDate}
                                 onChange={handleInputs}
                                 required
                             />

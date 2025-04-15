@@ -1,7 +1,7 @@
 "use client"
 
 import Sidebar from "../../shared/Sidebar"
-import React, { useState } from "react"
+import React from "react"
 import { Bell, ChevronRight, Clock, MoreHorizontal, Mail, ChevronLeft } from "lucide-react"
 import {
   Button,
@@ -24,12 +24,23 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper"
+import { useQuery } from "@tanstack/react-query"
+import { getUserProjects } from "../../api/project"
+import { useNavigate } from "react-router-dom"
+
 
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null)
   const { user } = useAuthStore()
-  const [swiper, setSwiper] = useState(null)
-  const { signOut, isLoading } = useAuth()
+  const { signOut } = useAuth()
+  const navigate = useNavigate()
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      return await getUserProjects(user._id);
+    },
+  });
 
   const handleLogout = async () => {
     try {
@@ -43,10 +54,6 @@ export default function TaskordDashboard() {
     setAnchorElUser(event.currentTarget)
   }
 
-  const hostGoogleImage = (url) => {
-    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`
-  }
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
@@ -56,11 +63,8 @@ export default function TaskordDashboard() {
   const getWeekDays = () => {
     const today = new Date()
     const days = []
-    // Get the start of the week (3 days before today)
     const start = new Date(today)
     start.setDate(today.getDate() - 3)
-
-    // Generate 7 days starting from the start date
     for (let i = 0; i < 7; i++) {
       const date = new Date(start)
       date.setDate(start.getDate() + i)
@@ -120,7 +124,7 @@ export default function TaskordDashboard() {
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className="!w-12 !h-auto" src={hostGoogleImage(user.image)} />
+                    <Avatar className="!w-12 !h-12" src={user.image.length ? user.image[0].url : undefined} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -242,10 +246,11 @@ export default function TaskordDashboard() {
             </div>
           </div>
 
-          {/* Upcoming Task */}
+          {/* Latest Project */}
+          {data?.doc?.length > 0 ? (
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-medium">Upcoming Task</h2>
+              <h2 className="text-xl font-medium">Latest Project</h2>
               <div className="flex gap-2">
                 <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
                   <ChevronLeft className="w-5 h-5" />
@@ -255,7 +260,6 @@ export default function TaskordDashboard() {
                 </IconButton>
               </div>
             </div>
-
             <Swiper
               modules={[Navigation]}
               spaceBetween={16}
@@ -272,44 +276,19 @@ export default function TaskordDashboard() {
                   slidesPerView: 2,
                 },
                 1024: {
-                  slidesPerView: 2,
+                  slidesPerView: 3,
                 },
               }}
-              className="upcoming-task-swiper"
+              className="latest-project-swiper"
             >
-              {[
-                {
-                  id: 1,
-                  title: "Creating Mobile App Design",
-                  category: "UI/UX Design",
-                  progress: 75,
-                  daysLeft: 3,
-                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
-                },
-                {
-                  id: 2,
-                  title: "Creating Perfect Website",
-                  category: "Web Developer",
-                  progress: 85,
-                  daysLeft: 4,
-                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
-                },
-                {
-                  id: 3,
-                  title: "Learning React Fundamentals",
-                  category: "Frontend Developer",
-                  progress: 60,
-                  daysLeft: 2,
-                  image: "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png",
-                },
-              ].map((task) => (
-                <SwiperSlide key={task.id} className="!w-full sm:!w-auto">
+              {data?.doc?.slice(0, 4).map((project, index) => (
+                <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
                   <div className="bg-white p-4 rounded-xl border border-gray-200">
                     <div className="mb-3">
                       <Box
                         component="img"
-                        src={task.image}
-                        alt={task.title}
+                        src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
+                        alt={project.title}
                         sx={{
                           width: "320px",
                           height: 160,
@@ -320,19 +299,19 @@ export default function TaskordDashboard() {
                       />
                     </div>
                     <div>
-                      <h3 className="font-medium text-lg ">{task.title}</h3>
-                      <p className="text-sm text-gray-500 mb-2">{task.category}</p>
+                      <h3 className="font-medium text-lg ">{project.name}</h3>
+                      <p className="text-sm text-gray-500 mb-2">{project.description}</p>
 
                       <Box className="mb-3">
                         <Box className="flex justify-between mb-1">
                           <Typography variant="body2 text-lg">Progress</Typography>
                           <Typography variant="body2" className="text-indigo-500 text-sm">
-                            {task.progress}%
+                           30%
                           </Typography>
                         </Box>
                         <LinearProgress
                           variant="determinate"
-                          value={task.progress}
+                          value={30}
                           className="!h-2 rounded-full"
                           sx={{
                             backgroundColor: "#f3f4f6",
@@ -347,7 +326,7 @@ export default function TaskordDashboard() {
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                           <Clock className="w-6 h-6 text-gray-500" />
-                          <span >{task.daysLeft} Days Left</span>
+                          <span >{project.daysLeft} Days Left</span>
                         </div>
                         <div className="flex -space-x-2">
                           {[1, 2, 3, 4, 5].map((i) => (
@@ -369,6 +348,19 @@ export default function TaskordDashboard() {
               ))}
             </Swiper>
           </div>
+          ) : (
+            <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
+                  <div className="flex justify-center items-center flex-col gap-7">
+                  <h2 className="text-6xl font-medium text-gray-500">No projects found</h2>
+                  <h3 className="text-2xl text-gray-500">You can create a project by going to the projects page</h3>
+                  <p className="text-gray-500"> clicking the button below</p>
+                  <Button onClick={() => navigate("/projects")} className="w-52 !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
+                    Go To Projects
+                  </Button>
+                  </div>
+                </div>
+
+          )}
         </div>
 
         {/* Right Sidebar */}
