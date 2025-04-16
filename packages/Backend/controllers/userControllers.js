@@ -1,6 +1,10 @@
 const User = require("../models/userModel.js");
 const HF = require("./handlerFactory.js");
 
+const uploader = HF.uploader("image", 1);
+const uploadImage = HF.uploadFiles(User, "Home/users", "image");
+const removeImages = HF.removeFile(User, "image");
+
 const getAllUsers = HF.getAll(User);
 
 const getUserById = HF.getOne(User);
@@ -17,4 +21,7 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  uploader,
+  uploadImage,
+  removeImages,
 };

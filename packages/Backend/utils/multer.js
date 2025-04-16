@@ -16,13 +16,21 @@ const MS = multer.diskStorage({
     const filename = `file-${Id}-${Date.now()}-${Math.random()
       .toString(36)
       .substring(7)}.${ext}`;
+
+    const filePath = path.join(__dirname, "../uploads", filename);
+    setTimeout(() => {
+      fs.unlink(filePath, (err) => {
+        if (err) console.error("Failed to delete temp file:", err);
+        else console.log("🧹 Temp file deleted:", filePath);
+      });
+    }, 1 * 60 * 1000);
+
     cb(null, filename);
   },
 });
 
 const upload = multer({
   storage: MS,
-  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 module.exports = upload;
