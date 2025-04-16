@@ -11,6 +11,14 @@ const taskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image: [
+      {
+        public_id: String,
+        url: String,
+        original_filename: String,
+        format: String,
+      },
+    ],
     description: {
       type: String,
       // required: true,

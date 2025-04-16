@@ -4,18 +4,25 @@ const commentSchema = new mongoose.Schema(
   {
     comment: {
       type: String,
-      required: [true, "Review can't be empty"],
-      trim: true,
+      required: true,
     },
+    image: [
+      {
+        public_id: String,
+        url: String,
+        original_filename: String,
+        format: String,
+      },
+    ],
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      required: [true],
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: [true],
+      required: true,
     },
   },
   {
@@ -31,6 +38,13 @@ commentSchema.pre(/^find/, function (next) {
     select: "name",
   });
   next();
+});
+
+commentSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.project;
+    return ret;
+  },
 });
 
 const Comment = mongoose.model("Comment", commentSchema);

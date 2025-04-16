@@ -1,6 +1,10 @@
 const Task = require("../models/tasksModel.js");
 const HF = require("./handlerFactory.js");
 
+const uploader = HF.uploader("image", 4);
+
+const removeImages = HF.removeFile(Task, "image");
+
 const isMine = HF.isOwner(Task, "owner");
 const GetUserTasks = HF.getAll(Task, "owner");
 const GetTasks = HF.getAll(Task, "project");
@@ -17,4 +21,6 @@ module.exports = {
   CreateTask,
   DeleteTask,
   UpdateTask,
+  uploader,
+  removeImages,
 };

@@ -4,8 +4,7 @@ const upload = require("../utils/multer.js");
 const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 
-const uploader = upload.array("image", 1);
-const uploadImages = HF.uploadFiles(Project, "Home/projects/", "image");
+const uploader = HF.uploader("image", 1);
 const removeImages = HF.removeFile(Project, "image");
 
 const isMine = HF.isOwner(Project, "owner");
@@ -19,7 +18,7 @@ const getProjectById = HF.getOne(Project, [
   "comments",
 ]);
 
-const createProject = HF.createOne(Project, "owner");
+const createProject = HF.createOne(Project, "image", "owner");
 const updateProject = HF.updateOne(Project);
 const deleteProject = HF.deleteOne(Project);
 
@@ -29,7 +28,6 @@ module.exports = {
   getInvitedProjects,
   getProjectById,
   uploader,
-  uploadImages,
   removeImages,
   createProject,
   updateProject,
