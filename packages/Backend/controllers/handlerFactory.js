@@ -3,6 +3,7 @@ const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const APIFeatures = require("../utils/apiFeatures.js");
 const upload = require("../utils/multer.js");
+const { emitEvent } = require("../utils/eventLogger.js");
 
 const uploader = (fieldName, maxCount) => {
   return upload.array(fieldName, maxCount);
@@ -24,6 +25,9 @@ const deleteOne = (Model, filterField) =>
     }
 
     await doc.deleteOne();
+
+    // Emit deletion event
+    emitEvent(req, `${Model.modelName.toLowerCase()}-deleted`, req.params.id);
 
     res.status(204).json({
       status: "success",
@@ -60,6 +64,9 @@ const updateOne = (Model) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
+    // Emit update event
+    emitEvent(req, `${Model.modelName.toLowerCase()}-updated`, doc);
+
     res.status(200).json({
       status: "success",
       message: "Updated successfully",
@@ -93,6 +100,9 @@ const createOne = (Model, fieldName, idField, idField2) =>
     }
 
     const doc = await Model.create(req.body);
+
+    // Emit creation event
+    emitEvent(req, `${Model.modelName.toLowerCase()}-created`, doc);
 
     res.status(201).json({
       status: "success",
@@ -152,15 +162,11 @@ const getAll = (Model, filterField, popOptions = []) =>
 
 const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
-    console.log("Checking ownership for user:", req.user.id);
-
     const doc = await Model.findOne({ [ownerField]: req.user.id });
 
     if (!doc) {
       return next(new AppError(`${Model.modelName} not found`, 404));
     }
-
-    console.log("Found Document:", doc);
 
     next();
   });
@@ -184,7 +190,6 @@ const uploadFiles = (Model, folderPath, fieldName) =>
       const uploadResults = await Promise.all(uploadPromises);
 
       if (!document[fieldName]) document[fieldName] = [];
-      console.log(fieldName);
 
       uploadResults.forEach((result) => {
         document[fieldName].push({
@@ -212,6 +217,7 @@ const uploadFiles = (Model, folderPath, fieldName) =>
       );
     }
   });
+
 const removeFile = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     const publicId = req.body.public_id;
