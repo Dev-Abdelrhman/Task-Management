@@ -84,13 +84,34 @@ export const ContinueSignUpWithGoogle = async (
   username,
   password,
   passwordConfirmation
-) =>
-  await API.post(
-    "/continueSignUpWithGoogle",
-    token,
-    username,
-    password,
-    passwordConfirmation
-  );
+) => {
+  try {
+    const response = await API.post("/continueSignUpWithGoogle", {
+      token,
+      username,
+      password,
+      passwordConfirmation,
+    });
+    const { user } = response.data;
+
+    return { user };
+  } catch (error) {
+    if (error.response?.status === 401) {
+      throw new Error("Session expired. Please restart the signup process.");
+    }
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Error completing Google signup";
+
+    if (error.response?.status === 400) {
+      throw new Error(errorMessage);
+    }
+    if (error.response?.status === 401) {
+      throw new Error("Session expired - please restart the signup process");
+    }
+    throw new Error(errorMessage);
+  }
+};
 
 export default API;
