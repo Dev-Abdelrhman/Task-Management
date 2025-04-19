@@ -1,8 +1,8 @@
-const Invite = require("../models/inviteModel.js");
-const Project = require("../models/projectsModel.js");
-const User = require("../models/userModel.js");
-const Role = require("../models/roleModel.js")
-const HF = require("./handlerFactory.js");
+const Invite = require("../models/invite.Model.js");
+const Project = require("../models/project.Model.js");
+const User = require("../models/user.Model.js");
+const Role = require("../models/role.Model.js");
+const FC = require("./Factory.Controller.js");
 const catchAsync = require("../utils/catchAsync.js");
 
 const searchUsersForInvite = catchAsync(async (req, res, next) => {
@@ -170,12 +170,12 @@ const acceptInvite = catchAsync(async (req, res, next) => {
   });
 });
 
-const getAllInvitesForReceiver = HF.getAll(Invite, "receiver");
-const getAllInvitesForSender = HF.getAll(Invite, "sender");
+const getAllInvitesForReceiver = FC.getAll(Invite, "receiver");
+const getAllInvitesForSender = FC.getAll(Invite, "sender");
 
-const getOneInvite = HF.getOne(Invite);
-const updateInvite = HF.updateOne(Invite);
-const deleteInvite = HF.deleteOne(Invite);
+const getOneInvite = FC.getOne(Invite);
+const updateInvite = FC.updateOne(Invite);
+const deleteInvite = FC.deleteOne(Invite);
 
 module.exports = {
   sendInvite,

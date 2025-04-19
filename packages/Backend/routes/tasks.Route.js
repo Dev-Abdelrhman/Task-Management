@@ -1,6 +1,6 @@
 const express = require("express");
-const TC = require("../controllers/tasksControllers.js");
-const AC = require("../controllers/authControllers.js");
+const TC = require("../controllers/tasks.Controller.js");
+const AC = require("../controllers/auth.Controller.js");
 
 const router = express.Router({ mergeParams: true });
 

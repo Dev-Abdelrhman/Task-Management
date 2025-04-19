@@ -1,9 +1,9 @@
 const express = require("express");
-const UC = require("../controllers/userControllers.js");
-const AC = require("../controllers/authControllers.js");
+const UC = require("../controllers/user.Controller.js");
+const AC = require("../controllers/auth.Controller.js");
 
-const ProjectsRoutes = require("./projectsRoute.js");
-const InviteRouter = require("./inviteRoute.js");
+const ProjectsRoutes = require("./projects.Route.js");
+const InviteRouter = require("./invite.Route.js");
 const router = express();
 
 router.route("/google").get(AC.googleAuth);
