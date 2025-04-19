@@ -43,7 +43,6 @@ const CompleteSigninGoogle = () => {
   }, [location.search]);
 
   const hostGoogleImage = (url) => {
-    // Use a proxy service or your own backend to fetch and host the image
     return `https://images.weserv.nl/?url=${encodeURIComponent(
       url
     )}&w=200&h=200`;

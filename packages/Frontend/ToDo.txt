@@ -1,0 +1,5 @@
+PasswordStrengthMeter UI
+Home UI Complete Refactor
+Delete one of Shared Folders
+Deep Debug and test and improve the proformance to all project 
+hard test to refresh token
