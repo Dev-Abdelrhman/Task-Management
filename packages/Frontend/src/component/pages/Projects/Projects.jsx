@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import "./ProjectsStyle.css";
 import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
@@ -21,7 +21,21 @@ import { Navigation } from "swiper"
 import {  ChartBarStacked, ChevronLeft, ChevronRight, Clock, Search } from "lucide-react";
 
 function Projects() {
+  // const { user } = useAuthStore();
+  // const { data, isLoading, isError, error } = useQuery({
+  //   queryKey: ["projects"],
+  //   queryFn: async () => {
+  //     return await getUserProjects(user._id);
+  //   },
+  // });
+
+  // const dataLength = data?.doc?.length
+
+  // if (isError) return <div>Error: {error.message}</div>;
+
   const { user } = useAuthStore();
+  const [searchQuery, setSearchQuery] = useState(""); // 👈 حالة البحث
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
@@ -29,11 +43,15 @@ function Projects() {
     },
   });
 
-  const dataLength = data?.doc?.length
+  // فلترة البيانات حسب البحث (مع تجاهل حالة الحروف)
+  const filteredProjects = useMemo(() => {
+    if (!data?.doc) return [];
+    return data.doc.filter(project =>
+      project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [data, searchQuery]);
 
-  if (isError) return <div>Error: {error.message}</div>;
-
-
+  const dataLength = filteredProjects.length;
   return (
     <>
      <div className="bg-white flex justify-between items-center px-6 pt-2 pb-8 ">
@@ -41,11 +59,19 @@ function Projects() {
           <span className="absolute inset-y-0 right-6 flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
           </span>
-          <input
+          {/* <input
             type="search"
             className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search Task"
-          />
+          /> */}
+          <input
+  type="search"
+  className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+  placeholder="Search Project"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)} // 👈 تحديث حالة البحث
+/>
+
         </div>
         <div className="flex justify-end gap-4 items-center mr-1">
           <AddProjectBtn />
@@ -118,7 +144,7 @@ function Projects() {
                           }}
                           className="upcoming-task-swiper"
                         >
-                          {data.doc.map((project, index) => (
+                          {filteredProjects.map((project, index) => (
                             <SwiperSlide className="!w-full sm:!w-auto">
                               <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
                                 <div className="my-1">
