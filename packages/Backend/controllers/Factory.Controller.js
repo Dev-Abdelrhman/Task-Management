@@ -4,11 +4,11 @@ const AppError = require("../utils/appError.js");
 const APIFeatures = require("../utils/apiFeatures.js");
 const upload = require("../utils/multer.js");
 const { emitEvent } = require("../utils/eventLogger.js");
-
+//________________________________________________________________________
 const uploader = (fieldName, maxCount) => {
   return upload.array(fieldName, maxCount);
 };
-
+//________________________________________________________________________
 const deleteOne = (Model, filterField) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
@@ -33,7 +33,7 @@ const deleteOne = (Model, filterField) =>
       message: `Document deleted successfully.`,
     });
   });
-
+//________________________________________________________________________
 const updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     if (req.files && req.files.length > 0) {
@@ -71,7 +71,7 @@ const updateOne = (Model) =>
       doc,
     });
   });
-
+//________________________________________________________________________
 const createOne = (Model, fieldName, idField, idField2) =>
   catchAsync(async (req, res, next) => {
     if (!req.body[idField]) {
@@ -107,7 +107,7 @@ const createOne = (Model, fieldName, idField, idField2) =>
       doc,
     });
   });
-
+//________________________________________________________________________
 const getOne = (Model, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -129,7 +129,7 @@ const getOne = (Model, popOptions = []) =>
       doc,
     });
   });
-
+//________________________________________________________________________
 const getAll = (Model, filterField, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let filter = { [filterField]: req.params.id || req.user?.id };
@@ -156,7 +156,7 @@ const getAll = (Model, filterField, popOptions = []) =>
       doc,
     });
   });
-
+//________________________________________________________________________
 const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findOne({ [ownerField]: req.user.id });
@@ -167,54 +167,45 @@ const isOwner = (Model, ownerField) =>
 
     next();
   });
-
+//________________________________________________________________________
 const uploadFiles = (Model, folderPath, fieldName) =>
   catchAsync(async (req, res, next) => {
-    try {
-      if (!req.files || req.files.length === 0) {
-        return next();
-      }
-
-      const document = await Model.findById(req.params.id);
-
-      const uploadPromises = req.files.map((file) =>
-        cloudinary.uploader.upload(file.path, {
-          folder: folderPath,
-          resource_type: "auto",
-        })
-      );
-
-      const uploadResults = await Promise.all(uploadPromises);
-
-      if (!document[fieldName]) document[fieldName] = [];
-
-      uploadResults.forEach((result) => {
-        document[fieldName].push({
-          public_id: result.public_id,
-          url: result.secure_url,
-          original_filename: result.original_filename,
-          format: result.format,
-        });
-      });
-
-      await document.save();
-      res.status(200).json({
-        status: "success",
-        message: "Files uploaded and saved successfully.",
-        data: {
-          document,
-        },
-      });
-    } catch (error) {
-      return next(
-        new AppError(
-          "An error occurred while uploading files. Please try again.",
-          500
-        )
-      );
+    if (!req.files || req.files.length === 0) {
+      return next();
     }
-  });
 
+    const document = await Model.findById(req.params.id);
+
+    const uploadPromises = req.files.map((file) =>
+      cloudinary.uploader.upload(file.path, {
+        folder: folderPath,
+        resource_type: "auto",
+      })
+    );
+
+    const uploadResults = await Promise.all(uploadPromises);
+
+    if (!document[fieldName]) document[fieldName] = [];
+
+    uploadResults.forEach((result) => {
+      document[fieldName].push({
+        public_id: result.public_id,
+        url: result.secure_url,
+        original_filename: result.original_filename,
+        format: result.format,
+      });
+    });
+
+    await document.save();
+    res.status(200).json({
+      status: "success",
+      message: "Files uploaded and saved successfully.",
+      data: {
+        document,
+      },
+    });
+  });
+//________________________________________________________________________
 const removeFile = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     const publicId = req.body.public_id;
@@ -246,7 +237,7 @@ const removeFile = (Model, fieldName) =>
       data: { document },
     });
   });
-
+//________________________________________________________________________
 module.exports = {
   deleteOne,
   updateOne,
