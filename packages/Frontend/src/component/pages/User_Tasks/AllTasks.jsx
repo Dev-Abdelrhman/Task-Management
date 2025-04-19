@@ -241,9 +241,6 @@ export default function AllTasks() {
                 <div className="p-3 flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm">{column.title}</span>
-                    {/* <span className=" bg-[#0c86ff]  text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                      {column.count}
-                    </span> */}
                     <span
                       className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs
                         /*

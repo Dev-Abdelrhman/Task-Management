@@ -30,7 +30,8 @@
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
     "swiper": "8.4.7",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "react-beautiful-dnd": "^13.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

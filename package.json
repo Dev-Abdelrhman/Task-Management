@@ -2,9 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "concurrently": "^9.0.1",
-    "lucide-react": "^0.482.0",
-    "react-beautiful-dnd": "^13.1.1"
+    "concurrently": "^9.0.1"
   },
   "devDependencies": {
     "lerna": "^8.1.8"
