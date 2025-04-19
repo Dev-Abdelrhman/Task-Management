@@ -174,40 +174,55 @@ export default function AllTasks() {
     ],
   })
 
+
+  // Helper function to parse dueDate (e.g., "Nov 06") into a Date object
+  const parseDueDate = (dueDate) => {
+    const [month, day] = dueDate.split(" ");
+    const year = new Date().getFullYear(); // Assume current year
+    return new Date(`${month} ${day}, ${year}`);
+  };
+
   // Handle drag end event
   const handleDragEnd = (result) => {
-    const { destination, source, draggableId } = result
+    const { destination, source, draggableId } = result;
 
     // If there's no destination or the item is dropped back to its original position
     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
-      return
+      return;
     }
 
     // Create a copy of the board data
-    const newBoard = { ...board }
+    const newBoard = { ...board };
 
     // Find the source and destination columns
-    const sourceColumn = newBoard.columns.find((col) => col.id === source.droppableId)
-    const destColumn = newBoard.columns.find((col) => col.id === destination.droppableId)
+    const sourceColumn = newBoard.columns.find((col) => col.id === source.droppableId);
+    const destColumn = newBoard.columns.find((col) => col.id === destination.droppableId);
 
-    if (!sourceColumn || !destColumn) return
+    if (!sourceColumn || !destColumn) return;
 
     // Get the task that was moved
-    const task = sourceColumn.tasks[source.index]
+    const task = sourceColumn.tasks[source.index];
 
     // Remove the task from the source column
-    sourceColumn.tasks.splice(source.index, 1)
+    sourceColumn.tasks.splice(source.index, 1);
 
     // Add the task to the destination column
-    destColumn.tasks.splice(destination.index, 0, task)
+    destColumn.tasks.splice(destination.index, 0, task);
+
+    // Sort tasks in the destination column by dueDate
+    destColumn.tasks.sort((a, b) => {
+      const dateA = parseDueDate(a.dueDate);
+      const dateB = parseDueDate(b.dueDate);
+      return dateA - dateB; // Sort in ascending order
+    });
 
     // Update the counts
-    sourceColumn.count = sourceColumn.tasks.length
-    destColumn.count = destColumn.tasks.length
+    sourceColumn.count = sourceColumn.tasks.length;
+    destColumn.count = destColumn.tasks.length;
 
     // Update the board state
-    setBoard(newBoard)
-  }
+    setBoard(newBoard);
+  };
 
   // Function to add a new task to a column
   const addTask = (columnId) => {
