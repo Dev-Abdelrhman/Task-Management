@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../../hooks/useAuth';
-import { toast } from 'react-toastify';
-import { assets } from '../../../assets/assets';
+import React, { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { toast } from "react-toastify";
+import { assets } from "../../../assets/assets";
 import { useNavigate } from "react-router-dom";
-import { Button, TextField, Card, CardContent } from '@mui/material';
-import { Mail, ArrowLeft } from 'lucide-react';
-import {bg} from '../../../assets/assets';
+import { Button, TextField, Card, CardContent } from "@mui/material";
+import { Mail, ArrowLeft } from "lucide-react";
+import { bg } from "../../../assets/assets";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -15,29 +15,31 @@ const ForgetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await forgotPassword(email);
-      setIsSubmitted(true);
-      setEmail("");
-    } catch (error) {
-      toast.error(error.message || "Something went wrong. Please try again.");
-    }
+    await forgotPassword(email);
+    setIsSubmitted(true);
+    setEmail("");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bg})` }}>
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${bg})` }}
+    >
       <a href="/" className="absolute top-3 left-3">
         <img src={assets.logo} alt="logo" className="h-12 w-auto" />
       </a>
 
       <Card className="w-full max-w-md border-0 shadow-xl">
         <CardContent className="space-y-4">
-          <h2 className="text-3xl font-bold text-center text-blue-700">Forgot Password</h2>
-          
+          <h2 className="text-3xl font-bold text-center text-blue-700">
+            Forgot Password
+          </h2>
+
           {!isSubmitted ? (
             <>
               <p className="text-gray-600 text-center mb-4">
-                Enter your email address and we'll send you a link to reset your password
+                Enter your email address and we'll send you a link to reset your
+                password
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -53,7 +55,6 @@ const ForgetPassword = () => {
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  
                   className="pl-10"
                 />
 
@@ -68,8 +69,8 @@ const ForgetPassword = () => {
                 </Button>
 
                 <div className="text-center pt-4">
-                  <a 
-                    onClick={() => navigate('/login')} 
+                  <a
+                    onClick={() => navigate("/login")}
                     className="text-blue-600 hover:underline font-medium cursor-pointer flex items-center justify-center gap-1"
                   >
                     <ArrowLeft className="h-4 w-4" />
@@ -81,10 +82,11 @@ const ForgetPassword = () => {
           ) : (
             <div className="text-center p-6">
               <p className="text-gray-600 mb-4">
-                A reset link has been sent to your email {email}. Please check your inbox - you'll receive a password reset link shortly.
+                A reset link has been sent to your email {email}. Please check
+                your inbox - you'll receive a password reset link shortly.
               </p>
               <Button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 variant="outlined"
                 className="w-full !border-gray-300 !text-gray-700 hover:!bg-gray-50"
               >
