@@ -2,15 +2,13 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL: "http://localhost:9999/depiV1/users",
-  withCredentials: true, // Allow cookies/session authentication
+  withCredentials: true,
 });
-
-let refreshPromise = null;
 
 // Request Interceptor
 API.interceptors.request.use(
   async (config) => {
-    config.withCredentials = true; // Always send cookies
+    config.withCredentials = true;
     return config;
   },
   (error) => Promise.reject(error)
@@ -38,28 +36,21 @@ API.interceptors.response.use(
   }
 );
 
-
 // Auth API Calls
 export const getUser = async () => {
-  const res = await API.get(
-    "google/user",
-    { withCredentials: true }
-  );
+  const res = await API.get("google/user");
   const { user } = res.data;
   return { user };
 };
 export const signUp = (userData) => API.post("/signup", userData);
-export const signIn = (credentials) =>
-  API.post("/signin", credentials, { withCredentials: true });
+export const signIn = (credentials) => API.post("/signin", credentials);
 export const logout = () => {
-  API.post("/logout", {}, { withCredentials: true });
+  API.post("/logout");
 };
 export const forgotPassword = async (email) => {
   try {
-    const response = await API.post("/forgotPassword", { email });
-    return response.data;
+    await API.post("/forgotPassword", { email });
   } catch (error) {
-    console.error("Forgot password API error:", error);
     if (error.response?.status === 404) {
       throw new Error("No user found with this email address.");
     }

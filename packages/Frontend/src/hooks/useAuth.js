@@ -33,9 +33,6 @@ export const useAuth = () => {
     onSuccess: (data) => {
       setUser(data.user);
     },
-    onError: (error) => {
-      console.error("Sign-in error:", handleError(error));
-    },
   });
 
   // Sign-up mutation
@@ -46,9 +43,6 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
-    },
-    onError: (error) => {
-      console.error("Sign-up error:", handleError(error));
     },
   });
 
