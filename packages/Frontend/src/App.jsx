@@ -12,6 +12,7 @@ import Layout from "./shared/Layout";
 import Projects from "./component/pages/Projects/Projects";
 import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
+import AllTasks from "./component/pages/User_Tasks/AllTasks";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route element={<Layout />}>
             <Route path="/projects" element={<Projects />} />
+            <Route path="/user-tasks" element={<AllTasks />} />
           </Route>
         </Route>
 
