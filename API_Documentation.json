@@ -17,7 +17,8 @@
         "username": "Example_20",
         "email": "user@example.com",
         "password": "password",
-        "passwordConfirmation": "password"
+        "passwordConfirmation": "password",
+        "image": "you will upload it"
       }
     },
     "LogOut": {
@@ -84,7 +85,8 @@
         "description": "Example",
         "dueDate": "Date",
         "members": "will set automatically after add the invite logic to the project (soon)",
-        "tasks": "already added automatically"
+        "tasks": "already added automatically",
+        "image": "you will upload it"
       }
     },
     "UpdateProject": {
@@ -93,7 +95,8 @@
       "body": {
         "name": "Example",
         "description": "Example",
-        "dueDate": "Date"
+        "dueDate": "Date",
+        "image": "you will upload it"
       }
     },
     "DeleteProject": {
@@ -150,14 +153,16 @@
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments",
       "body": {
-        "comment": "text"
+        "comment": "text",
+        "image": "you will upload it"
       }
     },
     "UpdateComment": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID",
       "body": {
-        "comment": "text"
+        "comment": "text",
+        "image": "you will upload it"
       }
     },
     "DeleteComment": {
@@ -168,23 +173,25 @@
   "TasksAPI": {
     "STATUS": "Still in development",
     "UserTasks": {
-      "GetUserTasks": {
+      "GetAllUserTasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/userTasks"
       },
-      "GetUserTask": {
+      "GetOneUserTask": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/:taskID"
       },
       "CreateUserTask": {
+        "note": "The status will be set to Pending by default so you don't need to set it in the body unless you update it with the update task API for the drag and drop feature",
         "method": "POST",
         "url": "http://localhost:9999/depiV1/tasks",
         "body": {
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"],
-          "completedAt": "Date"
+          "status": ["Pending", "Todo", "In Progress", "Completed"],
+          "completedAt": "Date",
+          "image": "you will upload it"
         }
       },
       "UpdateUserTask": {
@@ -194,8 +201,9 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"],
-          "completedAt": "Date"
+          "status": ["Pending", "Todo", "In Progress", "Completed"],
+          "completedAt": "Date",
+          "image": "you will upload it"
         }
       },
       "DeleteUserTask": {
@@ -204,23 +212,25 @@
       }
     },
     "ProjectTasks": {
-      "GetProjectTasks": {
+      "GetAllProjectTasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks"
       },
-      "GetProjectTask": {
+      "GetOneProjectTask": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
       },
       "CreateProjectTask": {
+        "note": "The status will be set to Pending by default so you don't need to set it in the body unless you update it with the update task API for the drag and drop feature",
         "method": "POST",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks",
         "body": {
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"],
-          "completedAt": "Date"
+          "status": ["Pending", "Todo", "In Progress", "Completed"],
+          "completedAt": "Date",
+          "image": "you will upload it"
         }
       },
       "UpdateProjectTask": {
@@ -230,8 +240,9 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
-          "status": ["Todo", "In Progress", "Completed"],
-          "completedAt": "Date"
+          "status": ["Pending", "Todo", "In Progress", "Completed"],
+          "completedAt": "Date",
+          "image": "you will upload it"
         }
       },
       "DeleteProjectTask": {

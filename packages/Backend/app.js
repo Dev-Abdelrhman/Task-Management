@@ -9,14 +9,12 @@ const sanitizeHtml = require("sanitize-html");
 const hpp = require("hpp");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
 /*______________________________________________________*/
 const AppError = require("./utils/appError.js");
-const GlobalErrorHandler = require("./controllers/errorControllers.js");
-const UserRoutes = require("./routes/userRoute.js");
-const InviteRoutes = require("./routes/inviteRoute.js");
-const TaskRoutes = require("./routes/tasksRoute.js");
-
+const GlobalErrorHandler = require("./controllers/error.Controller.js");
+const UserRoutes = require("./routes/user.Route.js");
+const InviteRoutes = require("./routes/invite.Route.js");
+const TaskRoutes = require("./routes/tasks.Route.js");
 /*______________________________________________________*/
 const app = express();
 dotenv.config({

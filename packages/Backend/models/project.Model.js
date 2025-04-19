@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Task = require("./tasksModel");
-const Comment = require("./commentModel");
-const Role = require("./roleModel");
-const Invite = require("./inviteModel");
+const Task = require("./task.Model");
+const Comment = require("./comment.Model");
+const Role = require("./role.Model");
+const Invite = require("./invite.Model");
 const slugify = require("slugify");
 
 const projectSchema = new mongoose.Schema(

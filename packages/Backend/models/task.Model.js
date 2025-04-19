@@ -29,8 +29,8 @@ const taskSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Todo", "In Progress", "Completed"],
-      default: "Todo",
+      enum: ["Pending", "Todo", "In Progress", "Completed"],
+      default: "Pending",
     },
     completedAt: {
       type: Date,
@@ -39,6 +39,12 @@ const taskSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
     },
+    assignedTo: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     attachments: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -64,11 +70,12 @@ taskSchema.pre(/^find/, function (next) {
     path: "project",
     select: "name -_id",
     options: { strictPopulate: false },
-  }).populate({
-    path: "owner",
-    select: "name -_id",
-  });
-  // .populate({ path: "attachments", options: { strictPopulate: false } });
+  })
+    .populate({
+      path: "owner" || "assignedTo",
+      select: "name -_id",
+    })
+    .populate({ path: "attachments", options: { strictPopulate: false } });
 
   next();
 });
