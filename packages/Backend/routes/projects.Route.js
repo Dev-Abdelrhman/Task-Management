@@ -1,11 +1,11 @@
 const express = require("express");
-const PC = require("../controllers/projectsControllers.js");
-const AC = require("../controllers/authControllers.js");
+const PC = require("../controllers/projects.Controller.js");
+const AC = require("../controllers/auth.Controller.js");
 
-const CommentRouter = require("./commentRoute.js");
-const RoleRouter = require("./roleRoute.js");
-const TaskRouter = require("./tasksRoute.js");
-const InviteRouter = require("./inviteRoute.js");
+const CommentRouter = require("./comments.Route.js");
+const RoleRouter = require("./roles.Route.js");
+const TaskRouter = require("./tasks.Route.js");
+const InviteRouter = require("./invite.Route.js");
 
 const router = express.Router({ mergeParams: true });
 

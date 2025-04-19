@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const User = require("../models/userModel.js");
+const User = require("../models/user.Model.js");
 const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
@@ -193,7 +193,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  const resetURL = `${req.protocol}://localhost:5173/resetPassword/${resetToken}`;
+  const resetURL = `${frontendUrl}/resetPassword/${resetToken}`;
   const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
   try {
     await sendEmail({
@@ -238,7 +238,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   user.passwordResetExpires = undefined;
   await user.save();
 
-  createSendToken(user, 200, res);
+  createSendToken("", 200, res);
 });
 //______________________________________________________________________________
 const updatePassword = catchAsync(async (req, res, next) => {

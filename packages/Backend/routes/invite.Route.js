@@ -1,6 +1,6 @@
 const express = require("express");
-const IC = require("../controllers/inviteControllers.js");
-const AC = require("../controllers/authControllers.js");
+const IC = require("../controllers/invite.Controller.js");
+const AC = require("../controllers/auth.Controller.js");
 
 const router = express.Router({ mergeParams: true });
 router.use(AC.protect);
