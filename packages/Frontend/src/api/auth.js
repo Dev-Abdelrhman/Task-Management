@@ -19,36 +19,19 @@ API.interceptors.request.use(
 // Response Interceptor
 API.interceptors.response.use(
   (response) => response,
-  async (error) => {
+  (error) => {
     const originalRequest = error.config;
 
     if (
       (error.response?.status === 401 || error.response?.status === 403) &&
       !originalRequest._retry &&
       !originalRequest.url.includes("/signin") &&
-      !originalRequest.url.includes("/signup") &&
-      !originalRequest.url.includes("/refresh")
+      !originalRequest.url.includes("/signup")
     ) {
       originalRequest._retry = true;
 
-      if (!refreshPromise) {
-        refreshPromise = API.get("/refresh", { withCredentials: true })
-          .catch((refreshError) => {
-            console.error("Token refresh failed:", refreshError);
-            window.location.href = "/login";
-            return Promise.reject(refreshError);
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
-      }
-
-      try {
-        await refreshPromise;
-        return API(originalRequest); // Retry original request
-      } catch (err) {
-        return Promise.reject("Session expired, please log in again.");
-      }
+      window.location.href = "/login";
+      return Promise.reject("Session expired, please log in again.");
     }
 
     return Promise.reject(error);

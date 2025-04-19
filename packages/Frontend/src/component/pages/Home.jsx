@@ -1,8 +1,6 @@
 import Navbar from "../shared/Navbar";
 import Header from "../pages/Header";
 import  bg  from "../../assets/bg_img.png";
-import { assets } from "../../assets/assets";
-
 
 function Home() {
   

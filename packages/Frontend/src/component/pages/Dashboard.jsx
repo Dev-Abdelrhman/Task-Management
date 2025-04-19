@@ -1,5 +1,3 @@
-"use client"
-
 import Sidebar from "../../shared/Sidebar"
 import React from "react"
 import { Bell, ChevronRight, Clock, MoreHorizontal, Mail, ChevronLeft } from "lucide-react"
@@ -56,6 +54,10 @@ export default function TaskordDashboard() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const hostGoogleImage = (url) => {
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`
   }
 
   const [currentDate, setCurrentDate] = React.useState(new Date())
@@ -124,7 +126,7 @@ export default function TaskordDashboard() {
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className="!w-12 !h-12" src={user.image.length ? user.image[0].url : undefined} />
+                    <Avatar className="!w-12 !h-12" src={user.image.length ? hostGoogleImage(user.image[0].url) : undefined} />
                   </IconButton>
                 </Tooltip>
                 <Menu
