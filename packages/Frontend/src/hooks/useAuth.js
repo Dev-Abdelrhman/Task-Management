@@ -34,7 +34,7 @@ export const useAuth = () => {
       setUser(data.user);
     },
     onError: (error) => {
-      console.error("Sign-in error:", handleError(error));
+      toast.error(handleError(error) || "Sign-in failed. Please try again.");
     },
   });
 
@@ -48,7 +48,7 @@ export const useAuth = () => {
       setUser(data.user);
     },
     onError: (error) => {
-      console.error("Sign-up error:", handleError(error));
+      toast.error(handleError(error) || "Sign-up failed. Please try again.");
     },
   });
 
@@ -61,17 +61,15 @@ export const useAuth = () => {
       logoutFromStore();
     },
     onError: (error) => {
-      console.error("Sign-out error:", handleError(error));
+      toast.error(handleError(error) || "Sign-out failed. Please try again.");
     },
   });
   // Forgot password mutation
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email) => {
-      const response = await forgotPassword(email);
-      return response.data;
+      await forgotPassword(email);
     },
-    onSuccess: (data) => {
-      console.log("Forgot password success:", data);
+    onSuccess: () => {
       toast.success(
         "Password reset instructions have been sent to your email."
       );
@@ -88,18 +86,12 @@ export const useAuth = () => {
   // Reset password mutation
   const resetPasswordMutation = useMutation({
     mutationFn: async ({ token, password, passwordConfirmation }) => {
-      const response = await resetPassword(
-        token,
-        password,
-        passwordConfirmation
-      );
-      return response.data;
+      await resetPassword(token, password, passwordConfirmation);
     },
     onSuccess: () => {
       toast.success("Password reset successful!");
     },
     onError: (error) => {
-      console.error("Reset password error:", handleError(error));
       toast.error(
         handleError(error) || "Error resetting password. Please try again."
       );
@@ -121,15 +113,11 @@ export const useAuth = () => {
     mutationFn: async () => {
       await handleGoogleCallback();
       const response = await getUser();
-      if (!response || !response.user) {
-        throw new Error("User data is missing from response");
-      }
       return response;
     },
     onSuccess: async (data) => {
-      useAuthStore.getState().setUser(data.user);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      // window.location.reload();
+      console.log("Google callback response:", data);
+      setUser(data.user);
     },
     onError: (error) => {
       console.error("Google callback failed:", error);
@@ -146,6 +134,7 @@ export const useAuth = () => {
         password,
         passwordConfirmation
       );
+      console.log("Continue with Google response:", response);
       return response;
     },
     onSuccess: (data) => {
@@ -164,7 +153,6 @@ export const useAuth = () => {
     signIn: signInMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
-    // getUser: getUserMutation.mutateAsync,
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
     googleSignIn: googleSignInMutation.mutateAsync,

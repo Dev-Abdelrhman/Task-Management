@@ -27,26 +27,16 @@ const Login = () => {
     formSetter((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e, action) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await signIn(signInData);
-      // console.log(`${action} successful:`, response);
-      navigate("/home");
-    } catch (error) {
-      console.error(`${action} failed:`, error);
-      toast.error(
-        error?.response?.data?.message || "An unexpected error occurred."
-      );
-    }
+    await signIn(signInData);
+    navigate("/home");
   };
 
   const handleGoogleSignIn = async () => {
     try {
       await googleSignIn();
     } catch (error) {
-      console.error("Google sign-in failed:", error);
       toast.error("Google sign in failed, please try again.");
     }
   };
@@ -213,7 +203,7 @@ const Login = () => {
               <div className="text-center text-sm !text-opacity-65">
                 <a
                   onClick={() => navigate("/forget-password")}
-                  className="hover:underline font-medium"
+                  className="hover:underline font-medium cursor-pointer hover: !no-underline"
                 >
                   Forget Password?
                 </a>
@@ -223,7 +213,7 @@ const Login = () => {
                 <span className="text-gray-500">Don't have an account? </span>
                 <a
                   onClick={() => navigate("/sign-up")}
-                  className="text-blue-600 hover:underline font-medium"
+                  className="text-blue-600 hover:underline font-medium cursor-pointer hover: !no-underline"
                 >
                   Sign up
                 </a>

@@ -44,17 +44,9 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      const response = await signUp(signUpData);
-      // console.log(`${action} successful:`, response);
-      toast.success(`welcome ${response.user.name}!`);
-      navigate("/");
-    } catch (error) {
-      console.error(`${action} failed:`, error);
-      toast.error(
-        error?.response?.data?.message || "An unexpected error occurred."
-      );
-    }
+    await signUp(signUpData);
+    // console.log(`${action} successful:`, response);
+    navigate("/");
   };
   const handleGoogleSignIn = async () => {
     try {
@@ -180,6 +172,8 @@ const SignUp = () => {
                     type="text"
                     placeholder="Your Name"
                     className="pl-10 py-6 border-gray-200 focus:border-blue-500 focus:ring-blue-500 w-full"
+                    required
+                    InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
               </div>
@@ -198,8 +192,10 @@ const SignUp = () => {
                     value={signUpData.username}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
                     type="text"
+                    required
                     placeholder="Username"
                     className="pl-10 py-6 border-gray-200 focus:border-blue-500 focus:ring-blue-500 w-full"
+                    InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
               </div>
@@ -219,6 +215,8 @@ const SignUp = () => {
                     value={signUpData.email}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
                     className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    required
+                    InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
               </div>
@@ -238,6 +236,8 @@ const SignUp = () => {
                     value={signUpData.password}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
                     className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    required
+                    InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
               </div>
@@ -257,6 +257,8 @@ const SignUp = () => {
                     value={signUpData.passwordConfirmation}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
                     className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    required
+                    InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
               </div>
@@ -274,7 +276,7 @@ const SignUp = () => {
                 <span className="text-gray-500">Do you have an account? </span>
                 <a
                   onClick={() => navigate("/login")}
-                  className="text-blue-600 hover:underline font-medium"
+                  className="text-blue-600 hover:underline font-medium cursor-pointer hover: !no-underline"
                 >
                   Sign In
                 </a>

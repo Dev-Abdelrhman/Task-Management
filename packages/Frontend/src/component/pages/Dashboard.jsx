@@ -1,6 +1,13 @@
-import Sidebar from "../../shared/Sidebar"
-import React from "react"
-import { Bell, ChevronRight, Clock, MoreHorizontal, Mail, ChevronLeft } from "lucide-react"
+import Sidebar from "../../shared/Sidebar";
+import React from "react";
+import {
+  Bell,
+  ChevronRight,
+  Clock,
+  MoreHorizontal,
+  Mail,
+  ChevronLeft,
+} from "lucide-react";
 import {
   Button,
   Box,
@@ -13,25 +20,24 @@ import {
   Avatar,
   Tooltip,
   CircularProgress,
-} from "@mui/material"
-import { useAuth } from "../../hooks/useAuth"
-import { useAuthStore } from "../../stores/authStore"
-import "swiper/css"
-import "swiper/css/navigation"
-import { toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper"
-import { useQuery } from "@tanstack/react-query"
-import { getUserProjects } from "../../api/project"
-import { useNavigate } from "react-router-dom"
-
+} from "@mui/material";
+import { useAuth } from "../../hooks/useAuth";
+import { useAuthStore } from "../../stores/authStore";
+import "swiper/css";
+import "swiper/css/navigation";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProjects } from "../../api/project";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskordDashboard() {
-  const [anchorElUser, setAnchorElUser] = React.useState(null)
-  const { user } = useAuthStore()
-  const { signOut } = useAuth()
-  const navigate = useNavigate()
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user } = useAuthStore();
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -42,51 +48,53 @@ export default function TaskordDashboard() {
 
   const handleLogout = async () => {
     try {
-      await signOut()
+      await signOut();
     } catch (error) {
-      toast.error(`Logout failed: ${error.message}`)
+      toast.error(`Logout failed: ${error.message}`);
     }
-  }
+  };
 
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget)
-  }
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
-  }
+    setAnchorElUser(null);
+  };
 
   const hostGoogleImage = (url) => {
-    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`
-  }
+    return `https://images.weserv.nl/?url=${encodeURIComponent(
+      url
+    )}&w=200&h=200`;
+  };
 
-  const [currentDate, setCurrentDate] = React.useState(new Date())
+  const [currentDate, setCurrentDate] = React.useState(new Date());
 
   const getWeekDays = () => {
-    const today = new Date()
-    const days = []
-    const start = new Date(today)
-    start.setDate(today.getDate() - 3)
+    const today = new Date();
+    const days = [];
+    const start = new Date(today);
+    start.setDate(today.getDate() - 3);
     for (let i = 0; i < 7; i++) {
-      const date = new Date(start)
-      date.setDate(start.getDate() + i)
-      days.push(date)
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+      days.push(date);
     }
-    return days
-  }
+    return days;
+  };
 
   const formatMonth = (date) => {
-    return date.toLocaleString("default", { month: "long", year: "numeric" })
-  }
+    return date.toLocaleString("default", { month: "long", year: "numeric" });
+  };
 
   const isToday = (date) => {
-    const today = new Date()
+    const today = new Date();
     return (
       date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -126,7 +134,14 @@ export default function TaskordDashboard() {
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar className="!w-12 !h-12" src={user.image.length ? hostGoogleImage(user.image[0].url) : undefined} />
+                    <Avatar
+                      className="!w-12 !h-12"
+                      src={
+                        user.image.length
+                          ? hostGoogleImage(user.image[0].url)
+                          : undefined
+                      }
+                    />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -145,7 +160,11 @@ export default function TaskordDashboard() {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  <MenuItem key="logout" onClick={handleLogout} disabled={isLoading}>
+                  <MenuItem
+                    key="logout"
+                    onClick={handleLogout}
+                    disabled={isLoading}
+                  >
                     <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                   </MenuItem>
                 </Menu>
@@ -216,7 +235,11 @@ export default function TaskordDashboard() {
                   2 Task
                 </div>
 
-                <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">
+                <svg
+                  className="w-full h-full"
+                  viewBox="0 0 300 100"
+                  preserveAspectRatio="none"
+                >
                   <path
                     d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
                     fill="none"
@@ -249,128 +272,147 @@ export default function TaskordDashboard() {
           </div>
 
           {/* Latest Project */}
-           
-      {isLoading ? (
-              <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
-                <CircularProgress />
-              </div>
-            ) : isError ? (
-              <div className="text-center text-red-500">
-                Error: {error.message}
-              </div>
-            ) : data?.doc?.length > 0 ? (
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-medium">Latest Project</h2>
-              <div className="flex gap-2">
-                <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                  <ChevronLeft className="w-5 h-5" />
-                </IconButton>
-                <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                  <ChevronRight className="w-5 h-5" />
-                </IconButton>
-              </div>
-            </div>
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={16}
-              slidesPerView="auto"
-              navigation={{
-                prevEl: ".slider-prev",
-                nextEl: ".slider-next",
-              }}
-              breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                },
-                768: {
-                  slidesPerView: 2,
-                },
-                1024: {
-                  slidesPerView: 3,
-                },
-              }}
-              className="latest-project-swiper"
-            >
-              {data?.doc?.slice(0, 4).map((project, index) => (
-                <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
-                  <div className="bg-white p-4 rounded-xl border border-gray-200">
-                    <div className="mb-3">
-                      <Box
-                        component="img"
-                        src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
-                        alt={project.title}
-                        sx={{
-                          width: "320px",
-                          height: 160,
-                          objectFit: "cover",
-                          borderRadius: 2,
-                          mb: 1.5,
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-lg ">{project.name}</h3>
-                      <p className="text-sm text-gray-500 mb-2">{project.description}</p>
 
-                      <Box className="mb-3">
-                        <Box className="flex justify-between mb-1">
-                          <Typography variant="body2 text-lg">Progress</Typography>
-                          <Typography variant="body2" className="text-indigo-500 text-sm">
-                           30%
-                          </Typography>
-                        </Box>
-                        <LinearProgress
-                          variant="determinate"
-                          value={30}
-                          className="!h-2 rounded-full"
+          {isLoading ? (
+            <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
+              <CircularProgress />
+            </div>
+          ) : isError ? (
+            <div className="text-center text-red-500">
+              Error: {error.message}
+            </div>
+          ) : data?.doc?.length > 0 ? (
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-medium">Latest Project</h2>
+                <div className="flex gap-2">
+                  <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
+                    <ChevronLeft className="w-5 h-5" />
+                  </IconButton>
+                  <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
+                    <ChevronRight className="w-5 h-5" />
+                  </IconButton>
+                </div>
+              </div>
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={16}
+                slidesPerView="auto"
+                navigation={{
+                  prevEl: ".slider-prev",
+                  nextEl: ".slider-next",
+                }}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 1,
+                  },
+                  768: {
+                    slidesPerView: 2,
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                  },
+                }}
+                className="latest-project-swiper"
+              >
+                {data?.doc?.slice(0, 4).map((project, index) => (
+                  <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
+                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                      <div className="mb-3">
+                        <Box
+                          component="img"
+                          src={
+                            "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                          }
+                          alt={project.title}
                           sx={{
-                            backgroundColor: "#f3f4f6",
-                            "& .MuiLinearProgress-bar": {
-                              backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
-                              borderRadius: "9999px",
-                            },
+                            width: "320px",
+                            height: 160,
+                            objectFit: "cover",
+                            borderRadius: 2,
+                            mb: 1.5,
                           }}
                         />
-                      </Box>
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-lg ">{project.name}</h3>
+                        <p className="text-sm text-gray-500 mb-2">
+                          {project.description}
+                        </p>
 
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-6 h-6 text-gray-500" />
-                          <span >{project.daysLeft} Days Left</span>
-                        </div>
-                        <div className="flex -space-x-2">
-                          {[1, 2, 3, 4, 5].map((i) => (
-                            <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
-                              <img
-                                src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
-                                alt="Team member"
-                                width={24}
-                                height={24}
-                                className="object-cover"
-                              />
-                            </div>
-                          ))}
+                        <Box className="mb-3">
+                          <Box className="flex justify-between mb-1">
+                            <Typography variant="body2 text-lg">
+                              Progress
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              className="text-indigo-500 text-sm"
+                            >
+                              30%
+                            </Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={30}
+                            className="!h-2 rounded-full"
+                            sx={{
+                              backgroundColor: "#f3f4f6",
+                              "& .MuiLinearProgress-bar": {
+                                backgroundImage:
+                                  "linear-gradient(to right, #818cf8, #546FFF)",
+                                borderRadius: "9999px",
+                              },
+                            }}
+                          />
+                        </Box>
+
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-6 h-6 text-gray-500" />
+                            <span>{project.daysLeft} Days Left</span>
+                          </div>
+                          <div className="flex -space-x-2">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div
+                                key={i}
+                                className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                              >
+                                <img
+                                  src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                  alt="Team member"
+                                  width={24}
+                                  height={24}
+                                  className="object-cover"
+                                />
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
           ) : (
             <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
-                  <div className="flex justify-center items-center flex-col gap-7">
-                  <h2 className="text-6xl font-medium text-gray-500">No projects found</h2>
-                  <h3 className="text-2xl text-gray-500">You can create a project by going to the projects page</h3>
-                  <p className="text-gray-500"> clicking the button below</p>
-                  <Button onClick={() => navigate("/projects")} className="w-52 !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
-                    Go To Projects
-                  </Button>
-                  </div>
-                </div>
-
+              <div className="flex justify-center items-center flex-col gap-7">
+                <h2 className="text-6xl font-medium text-gray-500">
+                  No projects found
+                </h2>
+                <h3 className="text-2xl text-gray-500">
+                  You can create a project by going to the projects page
+                </h3>
+                <p className="text-gray-500"> clicking the button below</p>
+                <Button
+                  onClick={() => navigate("/projects")}
+                  className="w-52 !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl"
+                >
+                  Go To Projects
+                </Button>
+              </div>
+            </div>
           )}
         </div>
 
@@ -384,25 +426,35 @@ export default function TaskordDashboard() {
 
             <div className="grid grid-cols-7 gap-2 text-center">
               {getWeekDays().map((date, index) => {
-                const isCurrentDay = isToday(date)
+                const isCurrentDay = isToday(date);
                 return (
                   <div
                     key={index}
                     className={`relative flex flex-col gap-3 items-center justify-center w-11 h-full rounded-full p-2 ${
-                      isCurrentDay ? "bg-[#141522] text-white" : "text-[#141522]"
+                      isCurrentDay
+                        ? "bg-[#141522] text-white"
+                        : "text-[#141522]"
                     }`}
                   >
-                    <span className={`text-sm font-medium ${isCurrentDay ? "text-white" : "text-[#141522]"}`}>
+                    <span
+                      className={`text-sm font-medium ${
+                        isCurrentDay ? "text-white" : "text-[#141522]"
+                      }`}
+                    >
                       {["S", "M", "T", "W", "T", "F", "S"][index]}
                     </span>
 
                     <span
-                      className={`text-sm px-[11px] py-[7px] rounded-full ${isCurrentDay ? "bg-[#546FFF] text-white" : "text-[#141522] bg-[#F5F5F7]"}`}
+                      className={`text-sm px-[11px] py-[7px] rounded-full ${
+                        isCurrentDay
+                          ? "bg-[#546FFF] text-white"
+                          : "text-[#141522] bg-[#F5F5F7]"
+                      }`}
                     >
                       {date.getDate()}
                     </span>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -432,13 +484,18 @@ export default function TaskordDashboard() {
                 />
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-1">Creating Awesome Mobile Apps</h3>
+                <h3 className="font-semibold text-lg mb-1">
+                  Creating Awesome Mobile Apps
+                </h3>
                 <p className="text-sm text-gray-500 mb-3">UI/UX Designer</p>
 
                 <Box className="mb-3">
                   <Box className="flex justify-between mb-1">
                     <Typography variant="body2 !text-lg ">Progress</Typography>
-                    <Typography variant="body2" className=" !text-lg text-indigo-500">
+                    <Typography
+                      variant="body2"
+                      className=" !text-lg text-indigo-500"
+                    >
                       90%
                     </Typography>
                   </Box>
@@ -449,7 +506,8 @@ export default function TaskordDashboard() {
                     sx={{
                       backgroundColor: "#f3f4f6",
                       "& .MuiLinearProgress-bar": {
-                        backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                        backgroundImage:
+                          "linear-gradient(to right, #818cf8, #546FFF)",
                         borderRadius: "9999px",
                       },
                     }}
@@ -463,7 +521,10 @@ export default function TaskordDashboard() {
                   </div>
                   <div className="flex -space-x-2">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                      <div
+                        key={i}
+                        className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                      >
                         <img
                           src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
                           alt="Team member"
@@ -508,6 +569,5 @@ export default function TaskordDashboard() {
         </div>
       </div>
     </>
-  )
+  );
 }
-
