@@ -53,7 +53,7 @@ function Sidebar() {
           </NavLink>
 
           <NavLink
-            to="/tasks"
+            to="/user-tasks"
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
                 isActive
