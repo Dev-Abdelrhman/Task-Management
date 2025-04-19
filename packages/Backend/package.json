@@ -34,6 +34,7 @@
     "passport-local": "^1.0.0",
     "sanitize-html": "^2.14.0",
     "slugify": "^1.6.6",
+    "socket.io": "^4.8.1",
     "task-management": "file:../Frontend",
     "validator": "^13.12.0",
     "xss": "^1.0.15"
