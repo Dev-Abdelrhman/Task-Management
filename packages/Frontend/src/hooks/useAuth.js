@@ -75,7 +75,6 @@ export const useAuth = () => {
       );
     },
     onError: (error) => {
-      console.error("Forgot password error:", handleError(error));
       toast.error(
         handleError(error) ||
           "Error sending reset password email. Please try again."
@@ -104,7 +103,6 @@ export const useAuth = () => {
       await googleAuth();
     },
     onError: (error) => {
-      console.error("Google sign-in error:", handleError(error));
       toast.error("Google sign-in failed. Please try again.");
     },
   });
@@ -116,11 +114,9 @@ export const useAuth = () => {
       return response;
     },
     onSuccess: async (data) => {
-      console.log("Google callback response:", data);
       setUser(data.user);
     },
     onError: (error) => {
-      console.error("Google callback failed:", error);
       toast.error("Google sign-in failed. Please try again.");
     },
   });
@@ -134,7 +130,6 @@ export const useAuth = () => {
         password,
         passwordConfirmation
       );
-      console.log("Continue with Google response:", response);
       return response;
     },
     onSuccess: (data) => {
@@ -142,8 +137,9 @@ export const useAuth = () => {
       toast.success("Account setup complete!");
     },
     onError: (error) => {
-      console.error("Continue with Google error", handleError(error));
-      toast.error("Continue with Google failed. Please try again.");
+      toast.error(
+        handleError(error) || "Error completing Google signup. Please try again."
+      );
     },
   });
 

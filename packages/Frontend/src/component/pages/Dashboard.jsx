@@ -117,7 +117,7 @@ export default function TaskordDashboard() {
                 color="inherit"
                 className="w-12 h-12 !border !border-[#F5F5F7]"
               >
-                <Badge cla badgeContent={1} color="error">
+                <Badge badgeContent={1} color="error">
                   <Mail className="text-[#8E92BC]" />
                 </Badge>
               </IconButton>
@@ -127,7 +127,7 @@ export default function TaskordDashboard() {
                 }}
                 className="relative w-12 h-12 !border !border-[#F5F5F7] !rounded-full"
               >
-                <Badge cla badgeContent={1} color="error">
+                <Badge badgeContent={1} color="error">
                   <Bell className="text-[#8E92BC]" />
                 </Badge>
               </IconButton>

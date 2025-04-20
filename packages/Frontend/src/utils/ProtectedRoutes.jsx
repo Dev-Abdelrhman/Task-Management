@@ -7,19 +7,14 @@ const ProtectedRoutes = ({ isProtected = true }) => {
 
   if (isLoading) return <div>Loading...</div>;
 
-  
   if (isProtected) {
     return isAuthenticated ? (
       <Outlet />
     ) : (
-      <Navigate to="/login" state={{ from: location }} replace />
+      <Navigate to="/" state={{ from: location }} replace />
     );
   } else {
-    return isAuthenticated ? (
-      <Navigate to="/home" replace />
-    ) : (
-      <Outlet />
-    );
+    return isAuthenticated ? <Navigate to="/home" replace /> : <Outlet />;
   }
 };
 
