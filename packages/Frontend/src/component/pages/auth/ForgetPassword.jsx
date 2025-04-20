@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { toast } from "react-toastify";
 import { assets } from "../../../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { Mail, ArrowLeft } from "lucide-react";
-import { bg } from "../../../assets/assets";
 
 const ForgetPassword = () => {
   const navigate = useNavigate();
@@ -21,10 +19,7 @@ const ForgetPassword = () => {
   };
 
   return (
-    <div
-      className="flex items-center justify-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${bg})` }}
-    >
+    <div className="flex items-center justify-center min-h-screen !shadow-md ">
       <a href="/" className="absolute top-3 left-3">
         <img src={assets.logo} alt="logo" className="h-12 w-auto" />
       </a>

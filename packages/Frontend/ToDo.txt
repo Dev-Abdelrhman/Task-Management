@@ -1,5 +1,9 @@
-PasswordStrengthMeter UI
-Home UI Complete Refactor
-Delete one of Shared Folders
-Deep Debug and test and improve the proformance to all project 
+PasswordStrengthMeter UI Refactor - 
+ForgetPassword UI Refactor -
+Home UI Complete Refactor - DONE
+Delete one of Shared Folders - DONE
+Deep Debug and test and improve the proformance to all project and UI - finished the auth entification and  
 hard test to refresh token
+/// at the end 
+respon design for all pages 
+skeleton screen for all pages

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { assets, cursors } from "../../../assets/assets";
-import bg from "../../../assets/bg_img.png";
 import { toast } from "react-toastify";
 import PasswordStrengthMeter from "./PasswordMeter";
 import { User, Mail, Lock } from "lucide-react";
@@ -10,6 +8,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { motion } from "framer-motion";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -59,24 +58,24 @@ const SignUp = () => {
 
   return (
     <div className="flex h-screen w-full">
-      <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-blue-900">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500"></div>
+      <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-[#1A2793]">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1A2793] via-[#2A3BB7] to-[#546FFF]"></div>
 
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-[10%] left-[20%] w-64 h-64 bg-blue-400/20 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-[10%] left-[20%] w-64 h-64 bg-[#9F84FD]/20 rounded-full blur-xl animate-pulse"></div>
           <div
-            className="absolute bottom-[20%] right-[10%] w-80 h-80 bg-blue-300/20 rounded-full blur-xl animate-pulse"
+            className="absolute bottom-[20%] right-[10%] w-80 h-80 bg-[#98ABFF]/20 rounded-full blur-xl animate-pulse"
             style={{ animationDelay: "1s" }}
           ></div>
           <div
-            className="absolute top-[60%] left-[10%] w-40 h-40 bg-blue-500/30 rounded-full blur-xl animate-pulse"
+            className="absolute top-[60%] left-[10%] w-40 h-40 bg-[#546FFF]/30 rounded-full blur-xl animate-pulse"
             style={{ animationDelay: "2s" }}
           ></div>
         </div>
 
-        <div className="absolute top-[15%] right-[15%] w-20 h-20 border-4 border-blue-400/30 rounded-lg transform rotate-12"></div>
-        <div className="absolute bottom-[25%] left-[15%] w-16 h-16 border-4 border-blue-300/40 rounded-full"></div>
-        <div className="absolute top-[70%] right-[25%] w-24 h-24 border-4 border-blue-200/20 transform rotate-45"></div>
+        <div className="absolute top-[15%] right-[15%] w-20 h-20 border-4 border-[#9F84FD]/30 rounded-lg transform rotate-12"></div>
+        <div className="absolute bottom-[25%] left-[15%] w-16 h-16 border-4 border-[#98ABFF]/40 rounded-full"></div>
+        <div className="absolute top-[70%] right-[25%] w-24 h-24 border-4 border-[#BAC8FF]/20 transform rotate-45"></div>
 
         <svg
           className="absolute bottom-0 left-0 w-full opacity-20"
@@ -90,14 +89,20 @@ const SignUp = () => {
         </svg>
 
         <div className="relative flex flex-col justify-center h-full px-12 z-10">
-          <div className="max-w-md mx-auto">
-            <div className="inline-block px-3 py-1 mb-6 text-sm font-medium text-blue-900 bg-blue-200 rounded-full animate-bounce">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col gap-4"
+          >
+                      <div className="max-w-md mx-auto">
+            <div className="inline-block px-3 py-1 mb-6 text-sm font-medium text-[#1A2793] bg-[#BAC8FF] rounded-full animate-bounce">
               Welcome to our Task managment application ✨
             </div>
 
             <h1 className="text-5xl font-bold mb-4 text-white tracking-tight">
               <span className="block">Start your</span>
-              <span className="block text-blue-300">journey with us</span>
+              <span className="block text-[#98ABFF]">journey with us</span>
             </h1>
 
             <p className="text-xl text-blue-100 opacity-90 mb-8">
@@ -107,10 +112,10 @@ const SignUp = () => {
 
             <div className="space-y-4 mt-8">
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/30 mr-4">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1A2793]/30 mr-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-blue-200"
+                    className="h-5 w-5 text-[#BAC8FF]"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -126,10 +131,10 @@ const SignUp = () => {
                 </p>
               </div>
               <div className="flex items-center">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600/30 mr-4">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1A2793]/30 mr-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-blue-200"
+                    className="h-5 w-5 text-[#BAC8FF]"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -144,12 +149,20 @@ const SignUp = () => {
               </div>
             </div>
           </div>
+      </motion.div>
+
         </div>
       </div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-gray-50">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 , delay: 0.1}}
+        className="w-full flex items-center justify-center"
+      >
         <Card className="w-full max-w-md border-0 !shadow-xl">
-          <h2 className="text-3xl font-bold text-center text-blue-700 pt-6">
+          <h2 className="text-3xl font-bold text-center text-[#3D53DB] pt-6">
             Sign-up
           </h2>
           <p className="text-center text-gray-500">Create your account!</p>
@@ -171,7 +184,7 @@ const SignUp = () => {
                     onChange={(e) => handleInputChange(e, setSignUpData)}
                     type="text"
                     placeholder="Your Name"
-                    className="pl-10 py-6 border-gray-200 focus:border-blue-500 focus:ring-blue-500 w-full"
+                    className="pl-10 py-6  focus:border-[#546FFF] focus:ring-[#546FFF] w-full"
                     required
                     InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
@@ -194,7 +207,7 @@ const SignUp = () => {
                     type="text"
                     required
                     placeholder="Username"
-                    className="pl-10 py-6 border-gray-200 focus:border-blue-500 focus:ring-blue-500 w-full"
+                    className="pl-10 py-6  focus:border-[#546FFF] focus:ring-[#546FFF] w-full"
                     InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
                 </div>
@@ -214,7 +227,7 @@ const SignUp = () => {
                     name="email"
                     value={signUpData.email}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
-                    className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    className="pl-10 py-6  focus:border-[#546FFF] focus:ring-[#546FFF] w-full"
                     required
                     InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
@@ -235,7 +248,7 @@ const SignUp = () => {
                     name="password"
                     value={signUpData.password}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
-                    className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    className="pl-10 py-6  focus:border-[#546FFF] focus:ring-[#546FFF] w-full"
                     required
                     InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
@@ -256,7 +269,7 @@ const SignUp = () => {
                     name="passwordConfirmation" // Match state key spelling
                     value={signUpData.passwordConfirmation}
                     onChange={(e) => handleInputChange(e, setSignUpData)}
-                    className="pl-10 py-6  focus:border-blue-500 focus:ring-blue-500 w-full"
+                    className="pl-10 py-6  focus:border-[#546FFF] focus:ring-[#546FFF] w-full"
                     required
                     InputLabelProps={{ required: false }} // <-- this prevents the asterisk
                   />
@@ -267,7 +280,7 @@ const SignUp = () => {
                 type="submit"
                 variant="contained"
                 borderRadius="40px"
-                className="!bg-blue-600 text-white w-full !py-3 !rounded-xl"
+                className="!bg-[#546FFF] hover:!shadow-lg hover:!shadow-[#98ABFF] text-white w-full !py-3 !rounded-xl"
               >
                 Sign Up
               </Button>
@@ -276,7 +289,7 @@ const SignUp = () => {
                 <span className="text-gray-500">Do you have an account? </span>
                 <a
                   onClick={() => navigate("/login")}
-                  className="text-blue-600 hover:underline font-medium cursor-pointer hover: !no-underline"
+                  className="text-[#3D53DB] hover:underline font-medium cursor-pointer hover: !no-underline"
                 >
                   Sign In
                 </a>
@@ -331,6 +344,7 @@ const SignUp = () => {
             </CardContent>
           </form>
         </Card>
+      </motion.div>
       </div>
     </div>
   );
