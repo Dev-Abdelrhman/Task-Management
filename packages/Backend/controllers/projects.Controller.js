@@ -16,7 +16,7 @@ const getProjectById = FC.getOne(Project, [
 ]);
 
 const createProject = FC.createOne(Project, "image", "owner");
-const updateProject = FC.updateOne(Project);
+const updateProject = FC.updateOne(Project, "image");
 const deleteProject = FC.deleteOne(Project);
 
 module.exports = {

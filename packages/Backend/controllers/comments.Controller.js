@@ -13,7 +13,7 @@ const createComment = FC.createOne(Comment, "image", "user", "project");
 
 const isMine = FC.isOwner(Comment, "user");
 
-const updateComment = FC.updateOne(Comment);
+const updateComment = FC.updateOne(Comment, "image");
 
 const deleteComment = FC.deleteOne(Comment);
 

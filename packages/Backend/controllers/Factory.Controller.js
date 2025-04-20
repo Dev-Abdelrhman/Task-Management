@@ -34,19 +34,18 @@ const deleteOne = (Model, filterField) =>
     });
   });
 //________________________________________________________________________
-const updateOne = (Model) =>
+const updateOne = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map((file) =>
         cloudinary.uploader.upload(file.path, {
-          folder: "projects",
-          resource_type: "image",
+          resource_type: "auto",
         })
       );
 
       const uploadedImages = await Promise.all(uploadPromises);
 
-      req.body.image = uploadedImages.map((img) => ({
+      req.body[fieldName] = uploadedImages.map((img) => ({
         url: img.secure_url,
         public_id: img.public_id,
         original_filename: img.original_filename,
@@ -168,7 +167,7 @@ const isOwner = (Model, ownerField) =>
     next();
   });
 //________________________________________________________________________
-const uploadFiles = (Model, folderPath, fieldName) =>
+const uploadFiles = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     if (!req.files || req.files.length === 0) {
       return next();
@@ -178,7 +177,6 @@ const uploadFiles = (Model, folderPath, fieldName) =>
 
     const uploadPromises = req.files.map((file) =>
       cloudinary.uploader.upload(file.path, {
-        folder: folderPath,
         resource_type: "auto",
       })
     );

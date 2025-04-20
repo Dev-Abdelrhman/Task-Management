@@ -7,7 +7,7 @@ const getAllRoles = FC.getAll(Role, "project");
 
 const getRoleById = FC.getOne(Role);
 
-const createRole = FC.createOne(Role, "theCreator", "project");
+const createRole = FC.createOne(Role, "", "theCreator", "project");
 
 const updateRole = FC.updateOne(Role);
 

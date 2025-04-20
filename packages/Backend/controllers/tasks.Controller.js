@@ -9,9 +9,9 @@ const isMine = FC.isOwner(Task, "owner");
 const GetUserTasks = FC.getAll(Task, "owner");
 const GetTasks = FC.getAll(Task, "project");
 const GetOneTask = FC.getOne(Task, { path: "comments" });
-const CreateTask = FC.createOne(Task, "owner", "project");
+const CreateTask = FC.createOne(Task, "image", "owner", "project");
 const DeleteTask = FC.deleteOne(Task);
-const UpdateTask = FC.updateOne(Task);
+const UpdateTask = FC.updateOne(Task, "image");
 
 module.exports = {
   isMine,

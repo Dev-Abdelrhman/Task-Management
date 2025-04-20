@@ -84,4 +84,4 @@ process.on("SIGTERM", () => {
 
 setInterval(() => {
   emitEvent(io, "server:ping", { time: new Date().toISOString() });
-}, 30000);
+}, 1 * 60 * 1000);
