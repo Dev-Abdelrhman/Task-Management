@@ -18,6 +18,7 @@ import "swiper/css/navigation"
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper"
+import {useNavigate} from "react-router-dom"
 import {  ChartBarStacked, ChevronLeft, ChevronRight, Clock, Search } from "lucide-react";
 
 function Projects() {
@@ -35,6 +36,7 @@ function Projects() {
 
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState(""); // 👈 حالة البحث
+  const navigate = useNavigate()
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -42,6 +44,11 @@ function Projects() {
       return await getUserProjects(user._id);
     },
   });
+
+  const handleClick = (projectId) =>{
+    navigate(`/ProjectDetails/${projectId}`)
+    
+  }
 
   // فلترة البيانات حسب البحث (مع تجاهل حالة الحروف)
   const filteredProjects = useMemo(() => {
@@ -146,7 +153,8 @@ function Projects() {
                         >
                           {filteredProjects.map((project, index) => (
                             <SwiperSlide className="!w-full sm:!w-auto">
-                              <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
+                              <div key={index} className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                               onClick={() => handleClick(project._id)}>
                                 <div className="my-1">
                                   <Box
                                     component="img"
@@ -273,7 +281,8 @@ function Projects() {
                         >
                           {data.doc.map((project, index) => (
                             <SwiperSlide className="!w-full sm:!w-auto">
-                              <div key={index} className="bg-white p-4 rounded-xl border border-gray-200 ">
+                              <div key={index} className="bg-white p-4 mb-5 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]" 
+                                  onClick={() => handleClick(project._id)}>
                                 <div className="my-1">
                                   <Box
                                     component="img"
