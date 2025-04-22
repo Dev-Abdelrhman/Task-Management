@@ -45,12 +45,6 @@ const taskSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    attachments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Attachment",
-      },
-    ],
   },
   {
     toJSON: { virtuals: true },
@@ -70,12 +64,10 @@ taskSchema.pre(/^find/, function (next) {
     path: "project",
     select: "name -_id",
     options: { strictPopulate: false },
-  })
-    .populate({
-      path: "owner" || "assignedTo",
-      select: "name -_id",
-    })
-    .populate({ path: "attachments", options: { strictPopulate: false } });
+  }).populate({
+    path: "owner" || "assignedTo",
+    select: "name -_id",
+  });
 
   next();
 });

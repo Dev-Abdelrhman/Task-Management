@@ -50,6 +50,15 @@ io.on("connection", (socket) => {
     socketId: socket.id,
   });
 
+  socket.onAny((eventName, ...args) => {
+    console.log(`📩 Frontend emitted event: ${eventName}`, args);
+
+    emitEvent(io, `frontend:${eventName}`, {
+      args,
+      socketId: socket.id,
+    });
+  });
+
   socket.on("disconnect", () => {
     emitEvent(io, "server:client", {
       message: "A client disconnected",
@@ -84,4 +93,4 @@ process.on("SIGTERM", () => {
 
 setInterval(() => {
   emitEvent(io, "server:ping", { time: new Date().toISOString() });
-}, 1 * 60 * 1000);
+}, 10 * 60 * 1000);

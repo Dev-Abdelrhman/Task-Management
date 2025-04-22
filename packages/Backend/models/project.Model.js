@@ -16,6 +16,26 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+      default: "Other",
+      enum: [
+        "General",
+        "Design",
+        "Development",
+        "Marketing",
+        "Sales",
+        "Finance",
+        "HR",
+        "Operations",
+        "Customer Support",
+        "Legal",
+        "IT",
+        "Product",
+        "Research",
+        "Other",]
+    },
     image: [
       {
         public_id: String,
