@@ -1,27 +1,98 @@
 const User = require("../models/user.Model.js");
 const FC = require("./Factory.Controller.js");
+const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
 
 const uploader = FC.uploader("image", 1);
-const uploadImage = FC.uploadFiles(User, "Home/users", "image");
 const removeImages = FC.removeFile(User, "image");
 
-const getAllUsers = FC.getAll(User);
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) {
+      newObj[el] = obj[el];
+    }
+  });
+  return newObj;
+};
 
-const getUserById = FC.getOne(User);
+const getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+const getUser = catchAsync(async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError("User not authenticated", 401));
+  }
 
-const createUser = FC.createOne(User);
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
+});
 
-const updateUser = FC.updateOne(User);
+const updateMe = catchAsync(async (req, res, next) => {
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(new AppError("You cannot update password here", 400));
+  }
 
-const deleteUser = FC.deleteOne(User);
+  const filteredBody = filterObj(req.body, "name", "username", "email");
+
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto",
+    });
+
+    filteredBody.image = {
+      public_id: result.public_id,
+      url: result.secure_url,
+      original_filename: result.original_filename,
+      format: result.format,
+    };
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: updatedUser,
+  });
+});
+const updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+  user.password = req.body.password;
+  user.passwordConfirmation = req.body.passwordConfirmation;
+  await user.save();
+  createSendToken(user, 200, res);
+});
+
+const deleteMe = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  if (user.image && user.image.public_id) {
+    await cloudinary.uploader.destroy(user.image.public_id);
+  }
+
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
 
 module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
+  getMe,
+  getUser,
+  updateMe,
+  updatePassword,
+  deleteMe,
   uploader,
-  uploadImage,
   removeImages,
 };

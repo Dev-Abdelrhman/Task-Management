@@ -6,24 +6,23 @@ const ProjectsRoutes = require("./projects.Route.js");
 const InviteRouter = require("./invite.Route.js");
 const router = express();
 
-router.route("/google").get(AC.googleAuth);
-router.route("/google/callback").get(AC.googleAuthCallback);
-router.route("/google/user").get(AC.protect, AC.getAuthUser);
-router.route("/continueSignUpWithGoogle").post(AC.completeGoogleSignup);
-router.route("/signup").post(AC.signup);
-router.route("/signin").post(AC.signin);
-router.route("/forgotPassword").post(AC.forgotPassword);
-router.route("/resetPassword/:token").patch(AC.resetPassword);
-router.route("/logout").post(AC.logout);
-router.patch("/updateMyPassword", AC.updatePassword);
+router.get("/google", AC.googleAuth);
+router.get("/google/callback", AC.googleAuthCallback);
+router.post("/continueSignUpWithGoogle", AC.completeGoogleSignup);
+router.post("/signup", AC.signup);
+router.post("/signin", AC.signin);
+router.post("/forgotPassword", AC.forgotPassword);
+router.patch("/resetPassword/:token", AC.resetPassword);
+router.post("/logout", AC.logout);
 
-router.route("/").get(UC.getAllUsers).post(UC.createUser);
+router.use(AC.protect);
 
-router
-  .route("/:id")
-  .get(UC.getUserById)
-  .put(UC.updateUser)
-  .delete(UC.deleteUser);
+router.get("/google/user", UC.getUser);
+router.patch("/updateMyPassword", UC.updatePassword);
+router.get("/me", UC.getMe, UC.getUser);
+router.patch("/updateMe", UC.uploader, UC.updateMe);
+router.patch("/:id/removeImage", UC.removeImages);
+router.delete("/deleteMe", UC.deleteMe);
 
 router.use("/:id/projects", ProjectsRoutes);
 router.use("/:id/invite", InviteRouter);

@@ -34,7 +34,8 @@ const projectSchema = new mongoose.Schema(
         "IT",
         "Product",
         "Research",
-        "Other",]
+        "Other",
+      ],
     },
     image: [
       {
@@ -114,7 +115,6 @@ projectSchema.pre(
   "deleteOne",
   { document: true, query: false },
   async function (next) {
-    console.log("🔥 Middleware triggered for:", this._id);
     const projectId = this._id;
 
     await Comment.deleteMany({ project: projectId });
