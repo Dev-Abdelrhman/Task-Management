@@ -29,9 +29,9 @@ function Navbar() {
     }
   };
   let title = "";
-  
-  if(window.location.pathname === "/projects"){
-    title = "Explore Project"
+
+  if (window.location.pathname === "/projects") {
+    title = "Explore Project";
   }
 
   const handleOpenUserMenu = (event) => {
@@ -44,9 +44,7 @@ function Navbar() {
   return (
     <>
       <nav className="flex justify-between items-center bg-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
-        <h4 className="text-3xl">
-          {title}
-        </h4>
+        <h4 className="text-3xl">{title}</h4>
 
         <Box
           className="!flex gap-5"
@@ -57,13 +55,12 @@ function Navbar() {
             aria-label="show 4 new mails"
             className="!border-[1px] !border-[#F5F5F7]"
           >
-            <Badge cla badgeContent={0} color="error">
+            <Badge badgeContent={0} color="error">
               <Mail className="text-[#8E92BC]" />
             </Badge>
           </IconButton>
           <IconButton
             size="large"
-
             aria-label="show 17 new notifications"
             className="!border-[1px] !border-[#F5F5F7]"
           >

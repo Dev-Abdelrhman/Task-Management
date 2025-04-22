@@ -10,6 +10,8 @@ import Dashboard from "./component/pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
 import Projects from "./component/pages/Projects/Projects";
+import ProjectDetails from "./component/pages/Projects/ProjectDetails";
+import ProjectTasks from"./component/pages/Projects/ProjectTasks";
 import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import AllTasks from "./component/pages/User_Tasks/AllTasks";
@@ -35,6 +37,8 @@ function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route element={<Layout />}>
             <Route path="/projects" element={<Projects />} />
+            <Route path="/ProjectDetails/:projectId" element={<ProjectDetails/>}/>
+            <Route path="/projectTasks" element={<ProjectTasks />}/>
             <Route path="/user-tasks" element={<AllTasks />} />
           </Route>
         </Route>

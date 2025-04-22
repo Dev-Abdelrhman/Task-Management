@@ -64,7 +64,6 @@ export const resetPassword = async (token, password, passwordConfirmation) => {
       passwordConfirmation,
     });
   } catch (error) {
-    console.error("Reset password API error:", error);
     if (error.response?.status === 404) {
       throw new Error("Invalid token or password.");
     }
