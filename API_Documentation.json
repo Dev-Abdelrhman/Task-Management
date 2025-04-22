@@ -25,18 +25,14 @@
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/logout"
     },
-    "RefreshToken": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/refresh"
-    },
-    "ForgetPassword": {
+    "Forget Password": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/forgetPassword",
       "body": {
         "email": "user@example.com"
       }
     },
-    "ResetPassword": {
+    "Reset Password": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/resetPass/:resetToken",
       "body": {
@@ -48,11 +44,11 @@
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/google"
     },
-    "GoogleCallback": {
+    "Google Call back": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/google/callback"
     },
-    "ContinueSignUpWithGoogle": {
+    "Continue SignUp With Google": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/continueSignUpWithGoogle",
       "body": {
@@ -65,19 +61,53 @@
     "Get user info for auth": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/google/user"
+    },
+    "Get User Information for the profile ": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/me"
+    },
+    "Update User Information": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/updateMe",
+      "body": {
+        "name": "Example",
+        "username": "Example_20",
+        "email": "user@example.com",
+        "image": "you will upload it"
+      }
+    },
+    "Update User Password": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/updateMyPassword",
+      "body": {
+        "currentPassword": "password",
+        "newPassword": "password",
+        "newPasswordConfirmation": "password"
+      }
+    },
+    "Remove User Image": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/removeImage",
+      "body": {
+        "public_id": "public_id"
+      }
+    },
+    "Delete User": {
+      "method": "DELETE",
+      "url": "http://localhost:9999/depiV1/users/deleteMe"
     }
   },
   "ProjectsAPI": {
     "STATUS": "Completed",
-    "GetAllProjects": {
+    "Get All Projects": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects"
     },
-    "getInvitedProjects": {
+    "get Invited Projects": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/invited"
     },
-    "CreateProject": {
+    "Create Project": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
       "body": {
@@ -105,7 +135,7 @@
         "image": "you will upload it"
       }
     },
-    "UpdateProject": {
+    "Update Project": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID",
       "body": {
@@ -131,26 +161,33 @@
         "image": "you will upload it"
       }
     },
-    "DeleteProject": {
+    "Remove Project Image": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/removeImage",
+      "body": {
+        "public_id": "public_id"
+      }
+    },
+    "Delete Project": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
     },
-    "GetOneProject": {
+    "Get One Project": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
     }
   },
   "RolesAPI": {
     "STATUS": "Completed",
-    "GetRoles": {
+    "Get Roles": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles"
     },
-    "GetRole": {
+    "Get Role": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     },
-    "CreateRole": {
+    "Create Role": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles",
       "body": {
@@ -158,7 +195,7 @@
         "permissions": ["read", "write", "delete"]
       }
     },
-    "UpdateRole": {
+    "Update Role": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID",
       "body": {
@@ -166,22 +203,22 @@
         "permissions": ["read", "write", "delete"]
       }
     },
-    "DeleteRole": {
+    "Delete Role": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     }
   },
   "CommentsAPI": {
     "STATUS": "Completed",
-    "GetAllComments": {
+    "Get All Comments": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments"
     },
-    "GetOneComment": {
+    "Get One Comment": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
     },
-    "CreateComment": {
+    "Create Comment": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments",
       "body": {
@@ -189,7 +226,7 @@
         "image": "you will upload it"
       }
     },
-    "UpdateComment": {
+    "Update Comment": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID",
       "body": {
@@ -197,7 +234,14 @@
         "image": "you will upload it"
       }
     },
-    "DeleteComment": {
+    "Remove Comment Image": {
+      "method": "PATCH",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID/image",
+      "body": {
+        "public_id": "public_id"
+      }
+    },
+    "Delete Comment": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
     }
@@ -205,15 +249,15 @@
   "TasksAPI": {
     "STATUS": "Still in development",
     "UserTasks": {
-      "GetAllUserTasks": {
+      "Get AllUser Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/userTasks"
       },
-      "GetOneUserTask": {
+      "Get One User Task": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/:taskID"
       },
-      "CreateUserTask": {
+      "Create User Task": {
         "note": "The status will be set to Pending by default so you don't need to set it in the body unless you update it with the update task API for the drag and drop feature",
         "method": "POST",
         "url": "http://localhost:9999/depiV1/tasks",
@@ -226,7 +270,7 @@
           "image": "you will upload it"
         }
       },
-      "UpdateUserTask": {
+      "Update User Task": {
         "method": "PATCH",
         "url": "http://localhost:9999/depiV1/tasks/:taskID",
         "body": {
@@ -238,21 +282,21 @@
           "image": "you will upload it"
         }
       },
-      "DeleteUserTask": {
+      "Delete User Task": {
         "method": "DELETE",
         "url": "http://localhost:9999/depiV1/tasks/:taskID"
       }
     },
     "ProjectTasks": {
-      "GetAllProjectTasks": {
+      "GetAll Project Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks"
       },
-      "GetOneProjectTask": {
+      "Get One Project Task": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
       },
-      "CreateProjectTask": {
+      "Create Project Task": {
         "note": "The status will be set to Pending by default so you don't need to set it in the body unless you update it with the update task API for the drag and drop feature",
         "method": "POST",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks",
@@ -265,7 +309,7 @@
           "image": "you will upload it"
         }
       },
-      "UpdateProjectTask": {
+      "Update Project Task": {
         "method": "PATCH",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID",
         "body": {
@@ -277,37 +321,37 @@
           "image": "you will upload it"
         }
       },
-      "DeleteProjectTask": {
+      "Delete Project Task": {
         "method": "DELETE",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks/:taskID"
       }
     }
   },
   "InviteAPI": {
-    "getAllInvitesForSender": {
+    "get All Invites For Sender": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sender"
     },
-    "getAllInvitesForReceiver": {
+    "get All Invites For Receiver": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/receiver"
     },
-    "searchUsersForInvite": {
+    "search Users For Invite": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/search",
       "query": {
         "username": "Example_20"
       }
     },
-    "getOneInvite": {
+    "get One Invite": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
     },
-    "deleteInvite": {
+    "delete Invite": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
     },
-    "updateInvite": {
+    "update Invite": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID",
       "body": {
@@ -316,15 +360,15 @@
         "roleId": "roleID"
       }
     },
-    "declineInvite": {
+    "decline Invite": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/decline"
     },
-    "acceptInvite": {
+    "accept Invite": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/accept"
     },
-    "sendInvite": {
+    "send Invite": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sendInvite",
       "body": {

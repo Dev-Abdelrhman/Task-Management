@@ -13,7 +13,7 @@ router.use(AC.protect);
 
 router.route("/").get(PC.getProjects).post(PC.uploader, PC.createProject);
 
-router.route("/invited").get(PC.getInvitedProjects);
+router.get("/invited", PC.getInvitedProjects);
 
 router
   .route("/:id")
@@ -21,7 +21,7 @@ router
   .patch(PC.uploader, PC.updateProject)
   .delete(PC.deleteProject);
 
-router.route("/:id/removeImage").patch(PC.removeImages);
+router.patch("/:id/removeImage", PC.removeImages);
 
 router.use("/:id/comments", CommentRouter);
 router.use("/:id/roles", RoleRouter);

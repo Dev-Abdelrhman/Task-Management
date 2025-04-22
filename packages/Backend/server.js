@@ -51,7 +51,6 @@ io.on("connection", (socket) => {
   });
 
   socket.onAny((eventName, ...args) => {
-    console.log(`📩 Frontend emitted event: ${eventName}`, args);
 
     emitEvent(io, `frontend:${eventName}`, {
       args,

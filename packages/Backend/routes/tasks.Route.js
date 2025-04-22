@@ -7,7 +7,7 @@ const router = express.Router({ mergeParams: true });
 router.use(AC.protect);
 
 router.route("/").get(TC.GetTasks).post(TC.uploader, TC.CreateTask);
-router.route("/userTasks").get(TC.GetUserTasks);
+router.get("/userTasks", TC.GetUserTasks);
 
 router
   .route("/:id")

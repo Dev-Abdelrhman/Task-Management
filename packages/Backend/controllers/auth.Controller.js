@@ -78,16 +78,35 @@ const signup = catchAsync(async (req, res, next) => {
     return next(new AppError("Email already exists", 400));
   }
 
+  if (req.files && req.files.length > 0) {
+    const uploadResults = await Promise.all(
+      req.files.map((file) =>
+        cloudinary.uploader.upload(file.path, {
+          resource_type: "auto",
+        })
+      )
+    );
+
+    req.body.image = uploadResults.map((result) => ({
+      public_id: result.public_id,
+      url: result.secure_url,
+      original_filename: result.original_filename,
+      format: result.format,
+    }));
+  }
+
   const newUser = await User.create({
     name,
     username,
     email,
     password,
     passwordConfirmation,
+    image: req.body.image,
   });
 
   createSendToken(newUser, 201, res);
 });
+
 //______________________________________________________________________________
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
@@ -112,17 +131,6 @@ const createSendToken_V2 = (user, statusCode, res) => {
 
   res.redirect(`${frontendUrl}/google-signin`);
 };
-//______________________________________________________________________________
-const getAuthUser = catchAsync(async (req, res, next) => {
-  if (!req.user) {
-    return next(new AppError("User not authenticated", 401));
-  }
-
-  res.status(200).json({
-    status: "success",
-    user: req.user,
-  });
-});
 //______________________________________________________________________________
 const googleAuthCallback = (req, res, next) => {
   passport.authenticate(
@@ -241,17 +249,6 @@ const resetPassword = catchAsync(async (req, res, next) => {
   createSendToken("", 200, res);
 });
 //______________________________________________________________________________
-const updatePassword = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id).select("+password");
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError("Your current password is wrong.", 401));
-  }
-  user.password = req.body.password;
-  user.passwordConfirmation = req.body.passwordConfirmation;
-  await user.save();
-  createSendToken(user, 200, res);
-});
-//______________________________________________________________________________
 const blacklist = new Set();
 //______________________________________________________________________________
 const logout = (req, res) => {
@@ -294,7 +291,6 @@ const protect = catchAsync(async (req, res, next) => {
     process.env.JWT_SECRET_ACCESS_TOKEN,
     async (err, decoded) => {
       if (err && err.name === "TokenExpiredError") {
-        console.log("TokenExpiredError");
         if (!refreshToken) {
           return next(
             new AppError("Session expired. Please log in again.", 401)
@@ -337,7 +333,6 @@ const protect = catchAsync(async (req, res, next) => {
       } else if (err) {
         return next(new AppError("Invalid token. Please log in again.", 401));
       } else {
-        console.log("Valid access token");
         const user = await User.findById(decoded.id);
         if (!user) return next(new AppError("User no longer exists.", 401));
         req.user = user;
@@ -353,10 +348,8 @@ module.exports = {
   googleAuth,
   googleAuthCallback,
   completeGoogleSignup,
-  getAuthUser,
   protect,
   logout,
   forgotPassword,
   resetPassword,
-  updatePassword,
 };
