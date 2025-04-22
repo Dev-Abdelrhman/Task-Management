@@ -82,6 +82,22 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
       "body": {
         "name": "Example",
+        "category": [
+          "General",
+          "Design",
+          "Development",
+          "Marketing",
+          "Sales",
+          "Finance",
+          "HR",
+          "Operations",
+          "Customer Support",
+          "Legal",
+          "IT",
+          "Product",
+          "Research",
+          "Other"
+        ],
         "description": "Example",
         "dueDate": "Date",
         "members": "will set automatically after add the invite logic to the project (soon)",
@@ -94,6 +110,22 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID",
       "body": {
         "name": "Example",
+        "category": [
+          "General",
+          "Design",
+          "Development",
+          "Marketing",
+          "Sales",
+          "Finance",
+          "HR",
+          "Operations",
+          "Customer Support",
+          "Legal",
+          "IT",
+          "Product",
+          "Research",
+          "Other"
+        ],
         "description": "Example",
         "dueDate": "Date",
         "image": "you will upload it"
