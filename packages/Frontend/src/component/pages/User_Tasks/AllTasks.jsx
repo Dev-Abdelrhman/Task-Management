@@ -1,192 +1,133 @@
-import React from "react";
-
-import { useState } from "react"
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Calendar, MoreHorizontal, Plus } from "lucide-react"
+import React, { useMemo, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Calendar, MoreHorizontal, Plus } from "lucide-react";
+import { Button } from "@mui/material";
+import AddTask from "./AddTask";
+import { getAllUserTasks, createTask } from "../../../api/user_tasks";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function AllTasks() {
-  // Initial board data based on the design
-  const [board, setBoard] = useState({
-    columns: [
-      {
-        id: "backlog",
-        title: "BACKLOG",
-        count: 2,
-        tasks: [
-          {
-            id: "task-1",
-            title: "Implement Security Enhancements",
-            dueDate: "Nov 06",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-2",
-            title: "Organize Team Building Event",
-            dueDate: "Nov 11",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-        ],
-      },
-      {
-        id: "todo",
-        title: "TODO",
-        count: 3,
-        tasks: [
-          {
-            id: "task-3",
-            title: "Create Marketing Campaign",
-            dueDate: "Nov 12",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-4",
-            title: "Design New Logo Concepts",
-            dueDate: "Nov 13",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-5",
-            title: "Perform Data Analysis",
-            dueDate: "Nov 14",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-        ],
-      },
-      {
-        id: "in-progress",
-        title: "IN PROGRESS",
-        count: 4,
-        tasks: [
-          {
-            id: "task-6",
-            title: "Optimize Website Performance",
-            dueDate: "Nov 19",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-7",
-            title: "Develop Mobile App Prototype",
-            dueDate: "Nov 10",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-8",
-            title: "Coordinate Software Testing",
-            dueDate: "Nov 10",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-9",
-            title: "Organize Charity Fundraiser",
-            dueDate: "Nov 15",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-        ],
-      },
-      // {
-      //   id: "in-review",
-      //   title: "IN REVIEW",
-      //   count: 3,
-      //   tasks: [
-      //     {
-      //       id: "task-10",
-      //       title: "Coordinate Project Kickoff",
-      //       dueDate: "Nov 06",
-      //       assignee: {
-      //         avatar: "/placeholder.svg?height=32&width=32",
-      //       },
-      //     },
-      //     {
-      //       id: "task-11",
-      //       title: "Plan Product Launch Strategy",
-      //       dueDate: "Nov 07",
-      //       assignee: {
-      //         avatar: "/placeholder.svg?height=32&width=32",
-      //       },
-      //     },
-      //     {
-      //       id: "task-12",
-      //       title: "Lead Sales Training Workshop",
-      //       dueDate: "Nov 09",
-      //       assignee: {
-      //         avatar: "/placeholder.svg?height=32&width=32",
-      //       },
-      //     },
-      //     {
-      //       id: "task-13",
-      //       title: "Conduct Market Research",
-      //       dueDate: "Nov 10",
-      //       assignee: {
-      //         avatar: "/placeholder.svg?height=32&width=32",
-      //       },
-      //     },
-      //   ],
-      // },
-      {
-        id: "done",
-        title: "DONE",
-        count: 3,
-        tasks: [
-          {
-            id: "task-14",
-            title: "Write Content for Blog Posts",
-            dueDate: "Nov 08",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-15",
-            title: "Facilitate Client Feedback Session",
-            dueDate: "Nov 08",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-          {
-            id: "task-16",
-            title: "Review Financial Reports",
-            dueDate: "Nov 10",
-            assignee: {
-              avatar: "/placeholder.svg?height=32&width=32",
-            },
-          },
-        ],
-      },
-    ],
-  })
+  const queryClient = useQueryClient();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getAllUserTasks,
+  });
 
+  const [showModal, setShowModal] = useState(false);
 
-  // Helper function to parse dueDate (e.g., "Nov 06") into a Date object
+  // Create mutation with optimistic update
+  const mutation = useMutation({
+    mutationFn: createTask,
+    onMutate: async (newTask) => {
+      // Cancel any outgoing refetches to avoid overwriting our optimistic update
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // Snapshot the previous value
+      const previousTasks = queryClient.getQueryData(['tasks']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['tasks'], (old) => {
+        const newTaskWithId = {
+          ...newTask,
+          _id: Date.now().toString(), // Temporary ID for the optimistic update
+          status: "Pending", // Default status for new tasks
+          dueDate: newTask.dueDate || new Date().toISOString()
+        };
+        
+        return {
+          ...old,
+          doc: [...old.doc, newTaskWithId]
+        };
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousTasks };
+    },
+    onError: (err, newTask, context) => {
+      // Rollback to the previous value if mutation fails
+      queryClient.setQueryData(['tasks'], context.previousTasks);
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure sync with server
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    }
+  });
+
+  const board = useMemo(() => {
+    if (!data) {
+      return {
+        columns: [
+          {
+            id: "backlog",
+            title: "Backlog",
+            count: 0,
+            tasks: []
+          },
+          {
+            id: "todo",
+            title: "TODO",
+            count: 0,
+            tasks: []
+          },
+          {
+            id: "in-progress",
+            title: "IN PROGRESS",
+            count: 0,
+            tasks: []
+          },
+          {
+            id: "done",
+            title: "DONE",
+            count: 0,
+            tasks: []
+          }
+        ]
+      };
+    }
+
+    const pendingTasks = data.doc.filter(task => task.status === "Pending");
+    const todoTasks = data.doc.filter(task => task.status === "Todo");
+    const inProgressTasks = data.doc.filter(task => task.status === "InProgress");
+    const doneTasks = data.doc.filter(task => task.status === "Done");
+
+    return {
+      columns: [
+        {
+          id: "backlog",
+          title: "Backlog",
+          tasks: pendingTasks,
+          count: pendingTasks.length
+        },
+        {
+          id: "todo",
+          title: "TODO",
+          tasks: todoTasks,
+          count: todoTasks.length
+        },
+        {
+          id: "in-progress",
+          title: "IN PROGRESS",
+          tasks: inProgressTasks,
+          count: inProgressTasks.length
+        },
+        {
+          id: "done",
+          title: "DONE",
+          tasks: doneTasks,
+          count: doneTasks.length
+        }
+      ]
+    };
+  }, [data]);
+
   const parseDueDate = (dueDate) => {
-    const [month, day] = dueDate.split(" ");
-    const year = new Date().getFullYear(); // Assume current year
-    return new Date(`${month} ${day}, ${year}`);
+    if (!dueDate) return new Date();
+    return new Date(dueDate);
   };
 
-  // Handle drag end event
   const handleDragEnd = (result) => {
     const { destination, source, draggableId } = result;
 
-    // If there's no destination or the item is dropped back to its original position
     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
       return;
     }
@@ -213,7 +154,7 @@ export default function AllTasks() {
     destColumn.tasks.sort((a, b) => {
       const dateA = parseDueDate(a.dueDate);
       const dateB = parseDueDate(b.dueDate);
-      return dateA - dateB; // Sort in ascending order
+      return dateA - dateB;
     });
 
     // Update the counts
@@ -224,30 +165,42 @@ export default function AllTasks() {
     setBoard(newBoard);
   };
 
-  // Function to add a new task to a column
-  const addTask = (columnId) => {
-    const newBoard = { ...board }
-    const column = newBoard.columns.find((col) => col.id === columnId)
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
 
-    if (!column) return
+  const handleAddTask = (taskData) => {
+    mutation.mutate(taskData);
+    closeModal();
+  };
 
-    const newTask = {
-      id: `task-${Date.now()}`,
-      title: "New Task",
-      dueDate: "Nov 20",
-      assignee: {
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-    }
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
-    column.tasks.push(newTask)
-    column.count = column.tasks.length
-
-    setBoard(newBoard)
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500">
+        Error: {error.message}
+      </div>
+    );
   }
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen rounded-[30px]">
+      <div className="p-4">
+        <button
+          onClick={openModal}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Add Task
+        </button>
+
+        {showModal && <AddTask closeModal={closeModal} onAddTask={handleAddTask} />}
+      </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-4 overflow-x-auto pb-4">
           {board.columns.map((column) => (
@@ -258,13 +211,6 @@ export default function AllTasks() {
                     <span className="font-medium text-sm">{column.title}</span>
                     <span
                       className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs
-                        /*
-                        BACKLOG
-                        TODO
-                        IN PROGRESS
-                        IN REVIEW
-                        DONE
-                        */ 
                         ${column.id === "todo"
                           ? "bg-[#65aaee]"
                           : column.id === "in-progress"
@@ -277,20 +223,22 @@ export default function AllTasks() {
                       {column.count}
                     </span>
                   </div>
-                  <div className="btn-container bg-white rounded-[50%] border border-[#808080]">
-                    <button
-                      onClick={() => addTask(column.id)}
-                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
+                  {column.id === "backlog" && (
+                    <div className="btn-container bg-white rounded-[50%] border border-[#808080]">
+                      <button
+                        onClick={openModal}
+                        className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100"
+                      >
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <Droppable droppableId={column.id}>
                   {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps} className="p-2 min-h-[200px]">
                       {column.tasks.map((task, index) => (
-                        <Draggable key={task.id} draggableId={task.id} index={index}>
+                        <Draggable key={task._id} draggableId={task._id} index={index}>
                           {(provided) => (
                             <div
                               ref={provided.innerRef}
@@ -307,9 +255,10 @@ export default function AllTasks() {
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
                                   <Calendar size={14} />
-                                  <span>{task.dueDate}</span>
+                                  <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No date'}</span>
                                 </div>
                                 <div className="w-6 h-6 rounded-full overflow-hidden">
+                                  {/* User avatar if available */}
                                 </div>
                               </div>
                             </div>
@@ -326,5 +275,5 @@ export default function AllTasks() {
         </div>
       </DragDropContext>
     </div>
-  )
+  );
 }
