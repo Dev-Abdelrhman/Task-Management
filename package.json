@@ -15,3 +15,4 @@
     "dev_front": "lerna run dev --scope=task-management",
     "dev": "concurrently \"lerna run start --scope=backend\"  \"lerna run dev --scope=task-management\""
   }
+}
