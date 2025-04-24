@@ -165,7 +165,7 @@ const getAll = (Model, filterField, popOptions = [], additionalFilter = {}) =>
       doc,
     });
   });
-//________________________________________________________________________const isOwner = (Model, ownerField) =>
+//________________________________________________________________________
 const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
     const resourceId = req.params.id;
@@ -174,6 +174,7 @@ const isOwner = (Model, ownerField) =>
     if (!doc) {
       return next(new AppError(`${Model.modelName} not found`, 404));
     }
+    console.log(doc[ownerField]);
 
     if (doc[ownerField].toString() !== req.user.id) {
       return next(

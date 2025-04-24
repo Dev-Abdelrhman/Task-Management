@@ -16,7 +16,7 @@ router.get("/userTasks", TC.GetUserTasks);
 router
   .route("/:id")
   .get(RPP(["Read"]), TC.GetOneTask)
-  .patch(RPP(["Edit"]), TC.isMine, TC.uploader, TC.UpdateTask)
+  .patch(RPP(["Edit"]), TC.uploader, TC.UpdateTask)
   .delete(RPP(["Delete"]), TC.DeleteTask);
 
 module.exports = router;

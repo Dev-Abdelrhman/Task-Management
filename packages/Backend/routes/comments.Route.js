@@ -12,7 +12,7 @@ router
   .get(RPP(["Read"]), CC.getComments)
   .post(RPP(["Read"]), CC.uploader, CC.createComment);
 
-router.use(CC.isMine);
+// router.use(CC.isMine);
 router
   .route("/:id")
   .get(CC.getCommentById)
