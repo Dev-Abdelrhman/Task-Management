@@ -5,8 +5,13 @@ const uploader = FC.uploader("image", 4);
 
 const removeImages = FC.removeFile(Task, "image");
 
-const isMine = FC.isOwner(Task, "owner");
-const GetUserTasks = FC.getAll(Task, "owner");
+const isMine = (req, res, next) => {
+  return FC.isOwner(Task, "assignedTo")(req, res, next);
+};
+const GetUserTasks = FC.getAll(Task, "owner", [], {
+  project: { $exists: false },
+});
+
 const GetTasks = FC.getAll(Task, "project");
 const GetOneTask = FC.getOne(Task, { path: "comments" });
 const CreateTask = FC.createOne(Task, "image", "owner", "project");

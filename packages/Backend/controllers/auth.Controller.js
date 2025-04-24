@@ -201,7 +201,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   }
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  const resetURL = `${frontendUrl}/resetPassword/${resetToken}`;
+  const resetURL = `http://localhost:5174/resetPassword/${resetToken}`;
   const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
   try {
     await sendEmail({

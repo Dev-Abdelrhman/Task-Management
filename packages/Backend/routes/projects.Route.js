@@ -1,6 +1,7 @@
 const express = require("express");
 const PC = require("../controllers/projects.Controller.js");
 const AC = require("../controllers/auth.Controller.js");
+const RPP = require("../utils/requireProjectPermission.js");
 
 const CommentRouter = require("./comments.Route.js");
 const RoleRouter = require("./roles.Route.js");
@@ -13,15 +14,13 @@ router.use(AC.protect);
 
 router.route("/").get(PC.getProjects).post(PC.uploader, PC.createProject);
 
-router.get("/invited", PC.getInvitedProjects);
-
 router
   .route("/:id")
-  .get(PC.getProjectById)
-  .patch(PC.uploader, PC.updateProject)
-  .delete(PC.deleteProject);
+  .get(RPP(["Read"]), PC.getProjectById)
+  .patch(RPP(["Edit"]), PC.uploader, PC.updateProject)
+  .delete(RPP(["Delete"]), PC.deleteProject);
 
-router.patch("/:id/removeImage", PC.removeImages);
+router.patch("/:id/removeImage", RPP(["Edit"]), PC.removeImages);
 
 router.use("/:id/comments", CommentRouter);
 router.use("/:id/roles", RoleRouter);

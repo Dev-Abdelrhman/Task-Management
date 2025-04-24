@@ -100,7 +100,6 @@ const declineInvite = catchAsync(async (req, res, next) => {
   const inviteId = req.params.id;
   const receiverId = req.user.id;
 
-  // Find the invite that is pending and belongs to the receiver
   const invite = await Invite.findOne({
     _id: inviteId,
     receiver: receiverId,
@@ -110,7 +109,6 @@ const declineInvite = catchAsync(async (req, res, next) => {
     return next(new AppError("Invite not found or already processed.", 404));
   }
 
-  // Delete the invite
   await Invite.findByIdAndDelete(inviteId);
 
   return res.status(200).json({
@@ -122,16 +120,12 @@ const acceptInvite = catchAsync(async (req, res, next) => {
   const inviteId = req.params.id;
   const receiverId = req.user.id;
 
-  console.log("Invite ID:", inviteId);
-  console.log("Receiver ID:", receiverId);
-
   const invite = await Invite.findOne({
     _id: inviteId,
     receiver: receiverId,
     status: "pending",
   }).populate("project role");
 
-  console.log("Invite:", invite);
 
   if (!invite) {
     return next(new AppError("Invite not found or already processed.", 404));
@@ -160,8 +154,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
 
   invite.status = "accepted";
   await invite.save();
-
-  console.log("Updated Project:", updatedProject);
 
   return res.status(200).json({
     status: "success",
