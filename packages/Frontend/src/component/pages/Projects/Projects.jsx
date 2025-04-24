@@ -27,7 +27,7 @@ import {
   Search,
 } from "lucide-react";
 // import { differenceInDays, differenceInHours, parseISO } from "date-fns";
-import { format, utcToZonedTime } from "date-fns-tz";
+// import { format, utcToZonedTime } from "date-fns-tz";
 
 function Projects() {
   const { user } = useAuthStore();
@@ -52,28 +52,28 @@ function Projects() {
     );
   }, [data, searchQuery]);
 
-  const calculateDaysLeft = (dueDateString) => {
-    if (!dueDateString) {
-      console.error("Due date string is undefined or null");
-      return "Error";
-    }
+  // const calculateDaysLeft = (dueDateString) => {
+  //   if (!dueDateString) {
+  //     console.error("Due date string is undefined or null");
+  //     return "Error";
+  //   }
 
-    const currentDate = new Date();
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  //   const currentDate = new Date();
+  //   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    // Interpret dueDate in the target timezone
-    const dueDate = utcToZonedTime(dueDateString, timeZone);
+  //   // Interpret dueDate in the target timezone
+  //   const dueDate = utcToZonedTime(dueDateString, timeZone);
 
-    const timeDifference = dueDate - currentDate;
+  //   const timeDifference = dueDate - currentDate;
 
-    const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
-    const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  //   const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
+  //   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-    if (timeDifference < 24 * 60 * 60 * 1000) {
-      return hoursLeft; // Return hours if within the same day
-    }
-    return daysLeft; // Otherwise, return days
-  };
+  //   if (timeDifference < 24 * 60 * 60 * 1000) {
+  //     return hoursLeft; // Return hours if within the same day
+  //   }
+  //   return daysLeft; // Otherwise, return days
+  // };
 
   const dataLength = filteredProjects.length;
   return (
@@ -225,8 +225,9 @@ function Projects() {
                               <div className="flex items-center gap-2">
                                 <Clock className="w-6 h-6 text-gray-500" />
                                 <span>
-                                  {console.log(project)}
-                                  {calculateDaysLeft(project.dueDate)} Days Left
+                                  {/* {console.log(project)}
+                                  {calculateDaysLeft(project.dueDate)} Days Left */}
+                                  Days Left
                                 </span>
                               </div>
                               <div className="flex -space-x-2">
@@ -371,8 +372,8 @@ function Projects() {
                                 <div className="flex items-center gap-2">
                                   <Clock className="w-6 h-6 text-gray-500" />
                                   <span>
-                                    {calculateDaysLeft(project.dueDate)} Days
-                                    Left
+                                    {/* {calculateDaysLeft(project.dueDate)} Days */}
+                                    Days Left
                                   </span>
                                 </div>
                                 <div className="flex -space-x-2">
