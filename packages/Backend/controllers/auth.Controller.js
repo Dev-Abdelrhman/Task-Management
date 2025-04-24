@@ -6,8 +6,6 @@ const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
 const passport = require("../strategies/google_Strategy.js");
 //______________________________________________________________________________
-const frontendUrl =
-  "http://localhost:5173" || "http://localhost:5174" || "http://localhost:5175";
 const generateAccessToken = function (id) {
   return jwt.sign(
     {
@@ -129,7 +127,7 @@ const createSendToken_V2 = (user, statusCode, res) => {
   res.cookie("accessToken", accessToken, cookieOptions);
   user.password = undefined;
 
-  res.redirect(`${frontendUrl}/google-signin`);
+  res.redirect("http://localhost:5174/google-signin");
 };
 //______________________________________________________________________________
 const googleAuthCallback = (req, res, next) => {
@@ -142,14 +140,14 @@ const googleAuthCallback = (req, res, next) => {
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
-      if (!frontendUrl) {
-        return res
-          .status(400)
-          .json({ status: "error", message: "Frontend URL missing" });
-      }
+      // if (!frontendUrl) {
+      //   return res
+      //     .status(400)
+      //     .json({ status: "error", message: "Frontend URL missing" });
+      // }
       if (user.tempToken) {
         return res.redirect(
-          `${frontendUrl}/google-signup?token=${user.tempToken}`
+          "http://localhost:5174/google-signup?token=${user.tempToken}"
         );
       }
       createSendToken_V2(user, 201, res);
