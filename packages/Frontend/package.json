@@ -19,6 +19,8 @@
     "axios": "^1.8.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "framer-motion": "^12.7.4",
     "jwt-decode": "^4.0.0",
     "lucide": "^0.482.0",
@@ -32,9 +34,9 @@
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
     "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "swiper": "8.4.7",
-    "zustand": "^5.0.3",
-    "socket.io-client": "^4.8.1"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
