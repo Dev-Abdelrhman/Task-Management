@@ -64,10 +64,15 @@ taskSchema.pre(/^find/, function (next) {
     path: "project",
     select: "name -_id",
     options: { strictPopulate: false },
-  }).populate({
-    path: "owner" || "assignedTo",
-    select: "name -_id",
-  });
+  })
+    .populate({
+      path: "owner" || "assignedTo",
+      select: "name -_id",
+    })
+    .populate({
+      path: "assignedTo",
+      select: "name -_id",
+    });
 
   next();
 });

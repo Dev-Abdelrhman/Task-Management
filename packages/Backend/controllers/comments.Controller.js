@@ -11,7 +11,9 @@ const getCommentById = FC.getOne(Comment, "commentId", ["project", "user"]);
 
 const createComment = FC.createOne(Comment, "image", "user", "project");
 
-const isMine = FC.isOwner(Comment, "user");
+const isMine = (req, res, next) => {
+  return FC.isOwner(Comment, "user")(req, res, next);
+};
 
 const updateComment = FC.updateOne(Comment, "image");
 

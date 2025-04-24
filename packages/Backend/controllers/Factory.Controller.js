@@ -1,4 +1,5 @@
 const cloudinary = require("../utils/cloudinary.js");
+const { set, get } = require("lodash");
 const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const APIFeatures = require("../utils/apiFeatures.js");
@@ -73,13 +74,17 @@ const updateOne = (Model, fieldName) =>
 //________________________________________________________________________
 const createOne = (Model, fieldName, idField, idField2) =>
   catchAsync(async (req, res, next) => {
-    if (!req.body[idField]) {
-      req.body[idField] = req.user.id;
-    }
-    if (idField2 && !req.body[idField2]) {
-      req.body[idField2] = req.params.id;
+    if (idField) {
+      if (!get(req.body, idField)) {
+        set(req.body, idField, req.user.id);
+      }
     }
 
+    if (idField2) {
+      if (!get(req.body, idField2)) {
+        set(req.body, idField2, req.params.id);
+      }
+    }
     if (req.files && req.files.length > 0) {
       const uploadResults = await Promise.all(
         req.files.map((file) =>
@@ -129,9 +134,14 @@ const getOne = (Model, popOptions = []) =>
     });
   });
 //________________________________________________________________________
-const getAll = (Model, filterField, popOptions = []) =>
+const getAll = (Model, filterField, popOptions = [], additionalFilter = {}) =>
   catchAsync(async (req, res, next) => {
-    let filter = { [filterField]: req.params.id || req.user?.id };
+    const filterValue = req.params.id || req.user?.id;
+
+    const filter = {
+      ...(filterField ? { [filterField]: filterValue } : {}),
+      ...additionalFilter,
+    };
 
     let query = Model.find(filter);
 
@@ -155,53 +165,23 @@ const getAll = (Model, filterField, popOptions = []) =>
       doc,
     });
   });
-//________________________________________________________________________
+//________________________________________________________________________const isOwner = (Model, ownerField) =>
 const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findOne({ [ownerField]: req.user.id });
+    const resourceId = req.params.id;
 
+    const doc = await Model.findById(resourceId);
     if (!doc) {
       return next(new AppError(`${Model.modelName} not found`, 404));
     }
 
-    next();
-  });
-//________________________________________________________________________
-const uploadFiles = (Model, fieldName) =>
-  catchAsync(async (req, res, next) => {
-    if (!req.files || req.files.length === 0) {
-      return next();
+    if (doc[ownerField].toString() !== req.user.id) {
+      return next(
+        new AppError("You are not authorized to access this resource", 403)
+      );
     }
 
-    const document = await Model.findById(req.params.id);
-
-    const uploadPromises = req.files.map((file) =>
-      cloudinary.uploader.upload(file.path, {
-        resource_type: "auto",
-      })
-    );
-
-    const uploadResults = await Promise.all(uploadPromises);
-
-    if (!document[fieldName]) document[fieldName] = [];
-
-    uploadResults.forEach((result) => {
-      document[fieldName].push({
-        public_id: result.public_id,
-        url: result.secure_url,
-        original_filename: result.original_filename,
-        format: result.format,
-      });
-    });
-
-    await document.save();
-    res.status(200).json({
-      status: "success",
-      message: "Files uploaded and saved successfully.",
-      data: {
-        document,
-      },
-    });
+    next();
   });
 //________________________________________________________________________
 const removeFile = (Model, fieldName) =>
@@ -243,7 +223,6 @@ module.exports = {
   getOne,
   getAll,
   isOwner,
-  uploadFiles,
   removeFile,
   uploader,
 };

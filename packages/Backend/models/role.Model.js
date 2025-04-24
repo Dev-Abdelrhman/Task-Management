@@ -16,13 +16,19 @@ const roleSchema = new mongoose.Schema({
     {
       type: String,
       enum: {
-        values: ["read", "write", "delete"],
+        values: ["Read", "Add", "Delete", "Edit", "Admin"],
         message: "{VALUE} is not a valid permission.",
       },
     },
   ],
 });
-
+roleSchema.pre("save", function (next) {
+  if (this.permissions.includes("Admin")) {
+    const allPermissions = ["Read", "Add", "Delete", "Edit", "Admin"];
+    this.permissions = [...new Set([...this.permissions, ...allPermissions])];
+  }
+  next();
+});
 roleSchema.pre(/^find/, function (next) {
   this.populate({ path: "theCreator", select: "name _id" }).populate({
     path: "project",
@@ -34,7 +40,7 @@ roleSchema.pre(/^find/, function (next) {
 roleSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.project;
-    delete ret.theCreator;
+    // delete ret.theCreator;
     return ret;
   },
 });
