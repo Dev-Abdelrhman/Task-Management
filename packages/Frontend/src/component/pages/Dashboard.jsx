@@ -1,5 +1,5 @@
 import Sidebar from "../../shared/Sidebar";
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Bell,
   ChevronRight,
@@ -32,13 +32,15 @@ import { Navigation } from "swiper";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "../../api/project";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useAuthStore();
   const { signOut } = useAuth();
   const navigate = useNavigate();
-
+  const [progress, setProgress] = useState(0);
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
@@ -95,6 +97,19 @@ export default function TaskordDashboard() {
       date.getFullYear() === today.getFullYear()
     );
   };
+
+  useEffect(() => {
+    const targetValue = 45; // Target progress value
+    const duration = 500; // Duration of the animation in milliseconds
+
+    const step = (targetValue / duration) * 100; // Calculate the step based on the duration
+
+      setInterval(() => {
+      setProgress((prev) => {
+          return Math.min(prev + step, targetValue); // Ensure the value doesn't exceed target
+      });
+    }); 
+  }, []);
 
   return (
     <>
@@ -171,6 +186,12 @@ export default function TaskordDashboard() {
               </div>
             </div>
           </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col gap-4"
+          >
 
           <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 mb-8">
             {/* Running Task */}
@@ -196,20 +217,20 @@ export default function TaskordDashboard() {
                     sx={{ color: "#1F2937", position: "absolute" }}
                     className="absolute bottom-0"
                   />
-                  <CircularProgress
-                    variant="determinate"
-                    value={45}
-                    size={90}
-                    thickness={2}
-                    className="absolute bottom-0"
-                    sx={{
-                      color: "#4F46E5",
-                      background: "transparent",
-                      "& .MuiCircularProgress-circle": {
-                        strokeLinecap: "round",
-                      },
-                    }}
-                  />
+                <CircularProgress
+                  variant="determinate"
+                  value={progress}
+                  size={90}
+                  thickness={2}
+                  className="absolute bottom-0"
+                  sx={{
+                    color: "#4F46E5",
+                    background: "transparent",
+                    "& .MuiCircularProgress-circle": {
+                      strokeLinecap: "round",
+                    },
+                  }}
+                />
                 </div>
                 <div className="text-center md:ml-2">
                   <div className="text-2xl font-normal">100</div>
@@ -270,6 +291,7 @@ export default function TaskordDashboard() {
               </div>
             </div>
           </div>
+          </motion.div>
 
           {/* Latest Project */}
 
@@ -318,6 +340,12 @@ export default function TaskordDashboard() {
                 {data?.doc?.slice(0, 4).map((project, index) => (
                   <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
                     <div className="bg-white p-4 rounded-xl border border-gray-200">
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex flex-col gap-4"
+                    >
                       <div className="mb-3">
                         <Box
                           component="img"
@@ -334,6 +362,8 @@ export default function TaskordDashboard() {
                           }}
                         />
                       </div>
+                      </motion.div>
+
                       <div>
                         <h3 className="font-medium text-lg ">{project.name}</h3>
                         <p className="text-sm text-gray-500 mb-2">
@@ -418,6 +448,12 @@ export default function TaskordDashboard() {
 
         {/* Right Sidebar */}
         <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col gap-4"
+          >
           {/* Calendar */}
           <div className="bg-[#FFFFFF] p-4 rounded-xl">
             <div className="flex justify-center items-center mb-2">
@@ -566,6 +602,7 @@ export default function TaskordDashboard() {
               </Button>
             </div>
           </div>
+          </motion.div>
         </div>
       </div>
     </>

@@ -5,7 +5,6 @@ import {
   ListChecks,
   Settings,
   MessageSquareMore,
-  User,
 } from "lucide-react";
 import logo from "../assets/logo.png";
 import { Button } from "@mui/material";
@@ -24,12 +23,12 @@ function Sidebar() {
       <nav className="h-full !flex justify-center gap-4 mx-4">
         <div className="flex !flex-col gap-5">
           <NavLink
-            to="/"
+            to="/home"
             end
             className={({ isActive }) =>
               `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
                 isActive
-                  ? "hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
                   : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
               }`
             }
@@ -43,7 +42,7 @@ function Sidebar() {
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
                 isActive
-                  ? "hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
                   : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
               }`
             }
@@ -57,7 +56,7 @@ function Sidebar() {
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
                 isActive
-                  ? "hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
                   : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
               }`
             }
@@ -71,7 +70,7 @@ function Sidebar() {
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
                 isActive
-                  ? "hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
                   : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
               }`
             }
@@ -85,7 +84,7 @@ function Sidebar() {
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
                 isActive
-                  ? "hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
                   : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
               }`
             }

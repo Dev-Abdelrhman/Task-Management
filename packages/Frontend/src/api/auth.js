@@ -27,7 +27,7 @@ API.interceptors.response.use(
       !originalRequest.url.includes("/signup")
     ) {
       originalRequest._retry = true;
-
+      localStorage.removeItem("user");
       window.location.href = "/login";
       return Promise.reject("Session expired, please log in again.");
     }

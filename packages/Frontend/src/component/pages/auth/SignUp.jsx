@@ -276,6 +276,8 @@ const SignUp = () => {
                 </div>
               </div>
 
+              {signUpData.password && <PasswordStrengthMeter password={signUpData.password} />}
+
               <Button
                 type="submit"
                 variant="contained"

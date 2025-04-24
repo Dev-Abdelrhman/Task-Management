@@ -1,5 +1,5 @@
-PasswordStrengthMeter UI Refactor - 
-ForgetPassword UI Refactor -
+PasswordStrengthMeter UI Refactor - Done
+ForgetPassword UI Refactor - In Progress
 Home UI Complete Refactor - DONE
 Delete one of Shared Folders - DONE
 Deep Debug and test and improve the proformance to all project and UI - finished the auth entification and  

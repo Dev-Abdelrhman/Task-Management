@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 export const useAuthStore = create((set) => ({
   user: null,
-  // ما عشان كدا بقولك اي حاجه بيتعملها كاش في البورت او كدا بيتغير عندك في الموقعين غالبا 
   setUser: (user) => {
     if (user && typeof user === "object") {
       localStorage.setItem("user", JSON.stringify(user));

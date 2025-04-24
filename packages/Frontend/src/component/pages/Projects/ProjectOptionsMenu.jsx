@@ -12,6 +12,7 @@ function ProjectOptionsMenu({ projectId, projectData }) {
     const [isEditMode, setIsEditMode] = useState(false);
     const [deleteConfirmation, setDeleteConfirmation] = useState("");
     const queryClient = useQueryClient();
+    
 
     const mutation = useMutation({
         mutationFn: () => deleteProject(projectId),

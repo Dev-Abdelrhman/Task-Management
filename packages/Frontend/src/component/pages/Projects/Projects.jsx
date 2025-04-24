@@ -11,32 +11,28 @@ import {
   LinearProgress,
   IconButton,
   Button,
-  CircularProgress
-} from "@mui/material"
-import "swiper/css"
-import "swiper/css/navigation"
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper"
-import { useNavigate } from "react-router-dom"
-import { ChartBarStacked, ChevronLeft, ChevronRight, Clock, Search } from "lucide-react";
+  CircularProgress,
+} from "@mui/material";
+import "swiper/css";
+import "swiper/css/navigation";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+import { useNavigate } from "react-router-dom";
+import {
+  ChartBarStacked,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Search,
+} from "lucide-react";
+// import { differenceInDays, differenceInHours, parseISO } from "date-fns";
+import { format, utcToZonedTime } from "date-fns-tz";
 
 function Projects() {
-  // const { user } = useAuthStore();
-  // const { data, isLoading, isError, error } = useQuery({
-  //   queryKey: ["projects"],
-  //   queryFn: async () => {
-  //     return await getUserProjects(user._id);
-  //   },
-  // });
-
-  // const dataLength = data?.doc?.length
-
-  // if (isError) return <div>Error: {error.message}</div>;
-
   const { user } = useAuthStore();
-  const [searchQuery, setSearchQuery] = useState(""); // 👈 حالة البحث
-  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -46,17 +42,38 @@ function Projects() {
   });
 
   const handleClick = (projectId) => {
-    navigate(`/ProjectDetails/${projectId}`)
+    navigate(`/ProjectDetails/${projectId}`);
+  };
 
-  }
-
-  // فلترة البيانات حسب البحث (مع تجاهل حالة الحروف)
   const filteredProjects = useMemo(() => {
     if (!data?.doc) return [];
-    return data.doc.filter(project =>
+    return data.doc.filter((project) =>
       project.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [data, searchQuery]);
+
+  const calculateDaysLeft = (dueDateString) => {
+    if (!dueDateString) {
+      console.error("Due date string is undefined or null");
+      return "Error";
+    }
+
+    const currentDate = new Date();
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Interpret dueDate in the target timezone
+    const dueDate = utcToZonedTime(dueDateString, timeZone);
+
+    const timeDifference = dueDate - currentDate;
+
+    const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
+    const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    if (timeDifference < 24 * 60 * 60 * 1000) {
+      return hoursLeft; // Return hours if within the same day
+    }
+    return daysLeft; // Otherwise, return days
+  };
 
   const dataLength = filteredProjects.length;
   return (
@@ -66,19 +83,13 @@ function Projects() {
           <span className="absolute inset-y-0 right-6 flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
           </span>
-          {/* <input
-            type="search"
-            className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
-            placeholder="Search Task"
-          /> */}
           <input
             type="search"
             className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search Project"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)} // 👈 تحديث حالة البحث
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-
         </div>
         <div className="flex justify-end gap-4 items-center mr-1">
           <AddProjectBtn />
@@ -105,18 +116,13 @@ function Projects() {
           <CircularProgress />
         </div>
       ) : isError ? (
-        <div className="text-center text-red-500">
-          Error: {error.message}
-        </div>
+        <div className="text-center text-red-500">Error: {error.message}</div>
       ) : dataLength > 0 ? (
         <>
           <div className="bg-light  d-flex align-items-center">
             <div className="px-6 py-4">
-              <div className="d-flex justify-content-between align-items-center mt-3">
-              </div>
+              <div className="d-flex justify-content-between align-items-center mt-3"></div>
               <div className="w-full">
-
-
                 <div>
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-medium">All Projects</h2>
@@ -129,7 +135,6 @@ function Projects() {
                       </IconButton>
                     </div>
                   </div>
-
 
                   <Swiper
                     modules={[Navigation]}
@@ -154,12 +159,17 @@ function Projects() {
                   >
                     {filteredProjects.map((project, index) => (
                       <SwiperSlide className="!w-full sm:!w-auto">
-                        <div key={index} className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
-                          onClick={() => handleClick(project._id)}>
+                        <div
+                          key={index}
+                          className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                          onClick={() => handleClick(project._id)}
+                        >
                           <div className="my-1">
                             <Box
                               component="img"
-                              src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
+                              src={
+                                "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                              }
                               alt={project.title}
                               sx={{
                                 width: "320px",
@@ -169,19 +179,30 @@ function Projects() {
                                 mb: 1.5,
                               }}
                             />
-
                           </div>
                           <div>
                             <div className="flex justify-between p-0 m-0">
-                              <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
-                              <ProjectOptionsMenu projectId={project._id} projectData={project} />
+                              <h3 className="font-medium text-lg !m-0 !p-0">
+                                {project.name}
+                              </h3>
+                              <ProjectOptionsMenu
+                                projectId={project._id}
+                                projectData={project}
+                              />
                             </div>
-                            <p className="text-sm text-gray-500 mb-2">{project.description}</p>
+                            <p className="text-sm text-gray-500 mb-2">
+                              {project.description}
+                            </p>
 
                             <Box className="mb-4">
                               <Box className="flex justify-between mb-1">
-                                <Typography variant="body2 text-lg !mb-1">Progress</Typography>
-                                <Typography variant="body2" className="text-indigo-500 text-sm">
+                                <Typography variant="body2 text-lg !mb-1">
+                                  Progress
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  className="text-indigo-500 text-sm"
+                                >
                                   30%
                                 </Typography>
                               </Box>
@@ -192,7 +213,8 @@ function Projects() {
                                 sx={{
                                   backgroundColor: "#f3f4f6",
                                   "& .MuiLinearProgress-bar": {
-                                    backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                                    backgroundImage:
+                                      "linear-gradient(to right, #818cf8, #546FFF)",
                                     borderRadius: "9999px",
                                   },
                                 }}
@@ -202,11 +224,17 @@ function Projects() {
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
                                 <Clock className="w-6 h-6 text-gray-500" />
-                                <span >30 Days Left</span>
+                                <span>
+                                  {console.log(project)}
+                                  {calculateDaysLeft(project.dueDate)} Days Left
+                                </span>
                               </div>
                               <div className="flex -space-x-2">
                                 {[1, 2, 3, 4, 5].map((i) => (
-                                  <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                                  <div
+                                    key={i}
+                                    className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                                  >
                                     <img
                                       src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
                                       alt="Team member"
@@ -215,7 +243,6 @@ function Projects() {
                                       className="object-cover"
                                     />
                                   </div>
-
                                 ))}
                               </div>
                             </div>
@@ -224,7 +251,6 @@ function Projects() {
                       </SwiperSlide>
                     ))}
                   </Swiper>
-
                 </div>
               </div>
             </div>
@@ -232,8 +258,7 @@ function Projects() {
 
           <div className="bg-light d-flex align-items-center !pb-2">
             <div className="px-6">
-              <div className="d-flex justify-content-between align-items-center mt-3">
-              </div>
+              <div className="d-flex justify-content-between align-items-center mt-3"></div>
               <div className="w-full">
                 {isLoading ? (
                   <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
@@ -244,7 +269,6 @@ function Projects() {
                     Error: {error.message}
                   </div>
                 ) : (
-
                   <div>
                     <div className="flex justify-between items-center mb-6">
                       <h2 className="text-2xl font-medium">All Projects</h2>
@@ -257,7 +281,6 @@ function Projects() {
                         </IconButton>
                       </div>
                     </div>
-
 
                     <Swiper
                       modules={[Navigation]}
@@ -282,12 +305,17 @@ function Projects() {
                     >
                       {data.doc.map((project, index) => (
                         <SwiperSlide className="!w-full sm:!w-auto">
-                          <div key={index} className="bg-white p-4 mb-5 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
-                            onClick={() => handleClick(project._id)}>
+                          <div
+                            key={index}
+                            className="bg-white p-4 mb-5 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                            onClick={() => handleClick(project._id)}
+                          >
                             <div className="my-1">
                               <Box
                                 component="img"
-                                src={"https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"}
+                                src={
+                                  "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                                }
                                 alt={project.title}
                                 sx={{
                                   width: "320px",
@@ -297,19 +325,30 @@ function Projects() {
                                   mb: 1.5,
                                 }}
                               />
-
                             </div>
                             <div>
                               <div className="flex justify-between p-0 m-0">
-                                <h3 className="font-medium text-lg !m-0 !p-0">{project.name}</h3>
-                                <ProjectOptionsMenu projectId={project._id} projectData={project} />
+                                <h3 className="font-medium text-lg !m-0 !p-0">
+                                  {project.name}
+                                </h3>
+                                <ProjectOptionsMenu
+                                  projectId={project._id}
+                                  projectData={project}
+                                />
                               </div>
-                              <p className="text-sm text-gray-500 mb-2">{project.description}</p>
+                              <p className="text-sm text-gray-500 mb-2">
+                                {project.description}
+                              </p>
 
                               <Box className="mb-4">
                                 <Box className="flex justify-between mb-1">
-                                  <Typography variant="body2 text-lg !mb-1">Progress</Typography>
-                                  <Typography variant="body2" className="text-indigo-500 text-sm">
+                                  <Typography variant="body2 text-lg !mb-1">
+                                    Progress
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    className="text-indigo-500 text-sm"
+                                  >
                                     30%
                                   </Typography>
                                 </Box>
@@ -320,7 +359,8 @@ function Projects() {
                                   sx={{
                                     backgroundColor: "#f3f4f6",
                                     "& .MuiLinearProgress-bar": {
-                                      backgroundImage: "linear-gradient(to right, #818cf8, #546FFF)",
+                                      backgroundImage:
+                                        "linear-gradient(to right, #818cf8, #546FFF)",
                                       borderRadius: "9999px",
                                     },
                                   }}
@@ -330,11 +370,17 @@ function Projects() {
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
                                   <Clock className="w-6 h-6 text-gray-500" />
-                                  <span >30 Days Left</span>
+                                  <span>
+                                    {calculateDaysLeft(project.dueDate)} Days
+                                    Left
+                                  </span>
                                 </div>
                                 <div className="flex -space-x-2">
                                   {[1, 2, 3, 4, 5].map((i) => (
-                                    <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                                    <div
+                                      key={i}
+                                      className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                                    >
                                       <img
                                         src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
                                         alt="Team member"
@@ -343,7 +389,6 @@ function Projects() {
                                         className="object-cover"
                                       />
                                     </div>
-
                                   ))}
                                 </div>
                               </div>
@@ -352,7 +397,6 @@ function Projects() {
                         </SwiperSlide>
                       ))}
                     </Swiper>
-
                   </div>
                 )}
               </div>
@@ -362,8 +406,12 @@ function Projects() {
       ) : (
         <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
           <div className="flex justify-center items-center flex-col gap-7">
-            <h2 className="text-6xl font-medium text-gray-500">No projects found</h2>
-            <h3 className="text-2xl text-gray-500">Add a project to get started</h3>
+            <h2 className="text-6xl font-medium text-gray-500">
+              No projects found
+            </h2>
+            <h3 className="text-2xl text-gray-500">
+              Add a project to get started
+            </h3>
             <p className="text-gray-500"> clicking the button below</p>
           </div>
           <AddProjectBtn />
