@@ -4,15 +4,18 @@ import { useQuery } from "@tanstack/react-query"
 import { useNavigate, useParams } from "react-router-dom"
 import { getProjectById } from "../../../api/project"
 import { useState } from "react";
+import { useAuth } from "../../../hooks/useAuth";
 
 function ProjectDetails(){
     const {projectId} = useParams()
+    const navigate = useNavigate()
     const {data,isLoading,isError,error}= useQuery({
         queryKey: ["project",projectId],
         queryFn: async () => {
             return await getProjectById(projectId)
         }
     })
+    const { user } = useAuth()
     const [tasks, setTasks] = useState([])
     const [openModal, setOpenModal] = useState(false)
     const [newTask,setNewTask] = useState("")
@@ -39,6 +42,11 @@ function ProjectDetails(){
             </div>
         )
     }
+
+    const handleClick = () => {
+      navigate(`/users/${user?._id}/projects/${projectId}/tasks`);
+    };
+    
     
     return(
         <>
@@ -60,6 +68,7 @@ function ProjectDetails(){
                     <div className="flex justify-between ml-16 ">
                         <h1 className="font-medium text-4xl">{project?.name}</h1>
                         <Button
+                        onClick={ () => handleClick()}
                           className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl">
                           Join Tasks
                         </Button>
