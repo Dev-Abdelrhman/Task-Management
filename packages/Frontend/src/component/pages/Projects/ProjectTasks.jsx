@@ -259,6 +259,7 @@ const ProjectTasks = () => {
                                     <Trash2 width={19} height={24} />
                                   </button>
                                 </div>
+                                <p className="text-xs text-gray-500 mb-2">{task.description}</p>
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
                                   <Calendar size={14} />
                                   <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No date"}</span>
