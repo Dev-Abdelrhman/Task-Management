@@ -120,7 +120,6 @@ const projectSchema = new mongoose.Schema(
         joinedAt: { type: Date, default: Date.now },
       },
     ],
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
   },
   {
     toJSON: { virtuals: true },
@@ -157,10 +156,25 @@ projectSchema.virtual("roles", {
   foreignField: "project",
 });
 
+projectSchema.virtual("tasks", {
+  ref: "Task",
+  localField: "_id",
+  foreignField: "project",
+});
+
 projectSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "project",
+});
+
+projectSchema.virtual("progress").get(function () {
+  if (!this.tasks || !this.tasks.length) return 0;
+  const totalTasks = this.tasks.length;
+  const completedTasks = this.tasks.filter(
+    (task) => task.status === "Completed"
+  ).length;
+  return Math.round((completedTasks / totalTasks) * 100);
 });
 
 projectSchema.pre(

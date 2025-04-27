@@ -62,11 +62,10 @@ taskSchema.pre("save", function (next) {
 taskSchema.pre(/^find/, function (next) {
   this.populate({
     path: "project",
-    select: "name -_id",
-    options: { strictPopulate: false },
+    select: "name _id",
   })
     .populate({
-      path: "owner" || "assignedTo",
+      path: "owner",
       select: "name -_id",
     })
     .populate({
@@ -75,6 +74,13 @@ taskSchema.pre(/^find/, function (next) {
     });
 
   next();
+});
+
+taskSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.project;
+    return ret;
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);
