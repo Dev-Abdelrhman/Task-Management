@@ -40,6 +40,7 @@ function Projects() {
       return await getUserProjects(user._id);
     },
   });
+  console.log(data, "data");
 
   const handleClick = (projectId) => {
     navigate(`/ProjectDetails/${projectId}`);
@@ -162,9 +163,11 @@ function Projects() {
                         <div
                           key={index}
                           className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
-                         
                         >
-                          <div className="my-1"  onClick={() => handleClick(project._id)}>
+                          <div
+                            className="my-1"
+                            onClick={() => handleClick(project._id)}
+                          >
                             <Box
                               component="img"
                               src={
@@ -182,7 +185,10 @@ function Projects() {
                           </div>
                           <div>
                             <div className="flex justify-between p-0 m-0">
-                              <h3 className="font-medium text-lg !m-0 !p-0"  onClick={() => handleClick(project._id)}>
+                              <h3
+                                className="font-medium text-lg !m-0 !p-0"
+                                onClick={() => handleClick(project._id)}
+                              >
                                 {project.name}
                               </h3>
                               <ProjectOptionsMenu
@@ -203,12 +209,12 @@ function Projects() {
                                   variant="body2"
                                   className="text-indigo-500 text-sm"
                                 >
-                                  30%
+                                  {project.progress}%
                                 </Typography>
                               </Box>
                               <LinearProgress
                                 variant="determinate"
-                                value="30"
+                                value={project.progress}
                                 className="!h-2 rounded-full"
                                 sx={{
                                   backgroundColor: "#f3f4f6",
