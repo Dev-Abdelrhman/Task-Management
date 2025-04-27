@@ -245,14 +245,23 @@ const ProjectTasks = () => {
                   </button>
                 </div>
 
-                <Droppable droppableId={column.id}>
+                <Droppable droppableId={column.id} direction="vertical">
                   {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps} className="p-2 min-h-[200px]">
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="flex flex-col p-2 min-h-[200px] space-y-2"
+                    >
                       {column.tasks.length > 0 ? (
                         column.tasks.map((task, index) => (
                           <Draggable key={task._id} draggableId={task._id.toString()} index={index}>
                             {(provided) => (
-                              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="bg-white border border-gray-200 rounded-[12px] p-3 mb-2 shadow-sm">
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
+                              >
                                 <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
                                   <h3 className="text-sm font-medium">{task.title}</h3>
                                   <button onClick={() => setDeleteModal({ show: true, taskId: task._id })} className="text-red-400 hover:text-red-600">
