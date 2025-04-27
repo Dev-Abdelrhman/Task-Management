@@ -155,19 +155,16 @@ projectSchema.virtual("roles", {
   localField: "_id",
   foreignField: "project",
 });
-
 projectSchema.virtual("tasks", {
   ref: "Task",
   localField: "_id",
   foreignField: "project",
 });
-
 projectSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "project",
 });
-
 projectSchema.virtual("progress").get(function () {
   if (!this.tasks || !this.tasks.length) return 0;
   const totalTasks = this.tasks.length;
