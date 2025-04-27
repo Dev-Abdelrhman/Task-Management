@@ -146,50 +146,69 @@ const ProjectTasks = () => {
     onError: () => toast.error("Failed to delete task!")
   })
 
-  const handleDragEnd = result => {
-    const { destination, source, draggableId } = result
-    if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) return
-
-    const sourceCol = board.columns.find(col => col.id === source.droppableId)
-    const destCol = board.columns.find(col => col.id === destination.droppableId)
-    if (!sourceCol || !destCol) return
-
-    const taskIndex = sourceCol.tasks.findIndex(t => t._id === draggableId)
-    if (taskIndex === -1) return
-
-    const task = sourceCol.tasks[taskIndex]
-    const newBoard = { ...board }
-    const newSourceCol = { ...sourceCol, tasks: [...sourceCol.tasks] }
-    const newDestCol = { ...destCol, tasks: [...destCol.tasks] }
-
-    newSourceCol.tasks.splice(taskIndex, 1)
-    newSourceCol.count = newSourceCol.tasks.length
-
-    const updatedTask = { ...task, status: destCol.status }
-    newDestCol.tasks.splice(destination.index, 0, updatedTask)
-    newDestCol.count = newDestCol.tasks.length
-
-    newBoard.columns = board.columns.map(col => {
-      if (col.id === sourceCol.id) return newSourceCol
-      if (col.id === destCol.id) return newDestCol
-      return col
-    })
-
-    setBoard(newBoard)
-
-    if (user._id && task._id && !task._id.startsWith("temp-")) {
-      updateTaskStatus(user._id, projectId, task._id, destCol.status)
-        .then(() => {
-          toast.success("Task updated successfully!")
-          socket.emit("taskUpdated", updatedTask)
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+  
+    if (!destination) return;
+  
+    const sourceCol = board.columns.find(col => col.id === source.droppableId);
+    const destCol = board.columns.find(col => col.id === destination.droppableId);
+  
+    if (!sourceCol || !destCol) return;
+  
+    const sourceTasks = Array.from(sourceCol.tasks);
+    const destTasks = Array.from(destCol.tasks);
+  
+    const [movedTask] = sourceTasks.splice(source.index, 1);
+  
+    if (sourceCol.id === destCol.id) {
+      // Moving inside the same column
+      sourceTasks.splice(destination.index, 0, movedTask);
+  
+      const newBoard = {
+        ...board,
+        columns: board.columns.map(col => {
+          if (col.id === sourceCol.id) {
+            return { ...col, tasks: sourceTasks, count: sourceTasks.length };
+          }
+          return col;
         })
-        .catch(() => {
-          setBoard(board)
-          toast.error("Failed to update task status!")
+      };
+  
+      setBoard(newBoard);
+    } else {
+      // Moving to another column
+      movedTask.status = destCol.status;
+      destTasks.splice(destination.index, 0, movedTask);
+  
+      const newBoard = {
+        ...board,
+        columns: board.columns.map(col => {
+          if (col.id === sourceCol.id) {
+            return { ...col, tasks: sourceTasks, count: sourceTasks.length };
+          }
+          if (col.id === destCol.id) {
+            return { ...col, tasks: destTasks, count: destTasks.length };
+          }
+          return col;
         })
+      };
+  
+      setBoard(newBoard);
+  
+      if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
+        updateTaskStatus(user._id, projectId, movedTask._id, destCol.status)
+          .then(() => {
+            toast.success("Task updated successfully!");
+            socket.emit("taskUpdated", movedTask);
+          })
+          .catch(() => {
+            setBoard(board);
+            toast.error("Failed to update task status!");
+          });
+      }
     }
-  }
-
+  }  
   const openAddTaskModal = columnId => {
     setSelectedColumn(columnId)
     setShowModal(true)
