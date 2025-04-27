@@ -147,7 +147,7 @@ const googleAuthCallback = (req, res, next) => {
       // }
       if (user.tempToken) {
         return res.redirect(
-          "http://localhost:5174/google-signup?token=${user.tempToken}"
+          `http://localhost:5174/google-signup?token=${user.tempToken}`
         );
       }
       createSendToken_V2(user, 201, res);
