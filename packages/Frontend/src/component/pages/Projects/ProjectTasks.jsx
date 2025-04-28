@@ -34,6 +34,7 @@ const ProjectTasks = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedColumn, setSelectedColumn] = useState(null)
   const [deleteModal, setDeleteModal] = useState({ show: false, taskId: null })
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [board, setBoard] = useState({
     columns: statusColumns.map(col => ({ ...col, tasks: [], count: 0 }))
@@ -333,13 +334,33 @@ const ProjectTasks = () => {
                 className="!text-base !capitalize !bg-[#7787e2] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
                 Cancel
               </Button>
-              <Button
+              {/* <Button
                 onClick={() => {
                   deleteMutation.mutate(deleteModal.taskId);
                   setDeleteModal({ show: false, taskId: null });
                 }}
                 className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl">
                 Delete
+              </Button> */}
+              <Button
+                onClick={() => {
+                  setIsDeleting(true);
+                  deleteMutation.mutate(deleteModal.taskId, {
+                    onSettled: () => {
+                      setIsDeleting(false);
+                      setDeleteModal({ show: false, taskId: null });
+                    }
+                  });
+                }}
+                className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              >
+                {isDeleting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent border-solid rounded-full animate-spin mr-2"></div> Deleting
+                  </div>
+                ) : (
+                  "Delete"
+                )}
               </Button>
             </div>
           </div>
