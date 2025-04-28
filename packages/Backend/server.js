@@ -5,14 +5,21 @@ const app = require("./app.js");
 const pConfig = require("./app/strategies/passport_Config.js");
 const { emitEvent } = require("./app/utils/eventLogger.js");
 
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
   },
 });
-
 app.set("io", io);
 
 process.on("uncaughtException", (err) => {
