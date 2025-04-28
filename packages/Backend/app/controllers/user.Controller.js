@@ -1,7 +1,7 @@
 const User = require("../models/user.Model.js");
 const FC = require("./Factory.Controller.js");
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError.js");
+const catchAsync = require("../utils/catchAsync.js");
 
 const uploader = FC.uploader("image", 1);
 const removeImages = FC.removeFile(User, "image");

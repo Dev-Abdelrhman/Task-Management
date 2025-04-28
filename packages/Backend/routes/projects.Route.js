@@ -1,7 +1,7 @@
 const express = require("express");
-const PC = require("../controllers/projects.Controller.js");
-const AC = require("../controllers/auth.Controller.js");
-const RPP = require("../utils/requireProjectPermission.js");
+const PC = require("../app/controllers/projects.Controller.js");
+const AC = require("../app/controllers/auth.Controller.js");
+const RPP = require("../app/utils/requireProjectPermission.js");
 
 const CommentRouter = require("./comments.Route.js");
 const RoleRouter = require("./roles.Route.js");

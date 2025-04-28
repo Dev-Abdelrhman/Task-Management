@@ -1,6 +1,6 @@
 const express = require("express");
-const UC = require("../controllers/user.Controller.js");
-const AC = require("../controllers/auth.Controller.js");
+const UC = require("../app/controllers/user.Controller.js");
+const AC = require("../app/controllers/auth.Controller.js");
 
 const ProjectsRoutes = require("./projects.Route.js");
 const InviteRouter = require("./invite.Route.js");
