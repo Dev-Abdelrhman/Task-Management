@@ -1,5 +1,5 @@
 {
-  "UsersAPI": {
+  "UsersAPI ✅": {
     "STATUS": "Still in development",
     "SignIn": {
       "method": "POST",
@@ -99,7 +99,7 @@
   },
   "ProjectsAPI": {
     "STATUS": "Completed",
-    "Get All Projects": {
+    "Get All Projects ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects"
     },
@@ -107,11 +107,11 @@
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/invited"
     },
-    "Create Project": {
+    "Create Project ✅": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
       "body": {
-        "name": "Example",
+        "name ✅": "Example",
         "category": [
           "UI/UX",
           "Development",
@@ -183,10 +183,10 @@
           "Ethical AI",
           "AI Regulations"
         ],
-        "description": "Example",
-        "dueDate": "Date",
-        "members": "will set automatically after add the invite logic to the project (soon)",
-        "tasks": "already added automatically",
+        "description ✅": "Example",
+        "dueDate ✅": "Date",
+        "members ✅": "will set automatically after add the invite logic to the project (soon)",
+        "tasks ✅": "already added automatically",
         "image": "you will upload it"
       }
     },
@@ -271,18 +271,18 @@
         "image": "you will upload it"
       }
     },
-    "Remove Project Image": {
+    "Remove Project Image ": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/removeImage",
       "body": {
         "public_id": "public_id"
       }
     },
-    "Delete Project": {
+    "Delete Project ✅": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
     },
-    "Get One Project": {
+    "Get One Project ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
     }
