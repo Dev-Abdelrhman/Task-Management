@@ -1,7 +1,7 @@
 const express = require("express");
-const TC = require("../controllers/tasks.Controller.js");
-const AC = require("../controllers/auth.Controller.js");
-const RPP = require("../utils/requireProjectPermission.js");
+const TC = require("../app/controllers/tasks.Controller.js");
+const AC = require("../app/controllers/auth.Controller.js");
+const RPP = require("../app/utils/requireProjectPermission.js");
 
 const router = express.Router({ mergeParams: true });
 

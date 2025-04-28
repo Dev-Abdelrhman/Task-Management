@@ -1,6 +1,6 @@
 const Project = require("../models/project.Model.js");
 const catchAsync = require("./catchAsync.js");
-const AppError = require("./appError");
+const AppError = require("./appError.js");
 
 // Merged function for checking permissions for projects only
 const requireProjectPermission = (permissions) =>
