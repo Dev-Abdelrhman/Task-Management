@@ -136,7 +136,6 @@ function Projects() {
                       </IconButton>
                     </div>
                   </div>
-
                   <Swiper
                     modules={[Navigation]}
                     spaceBetween={16}
@@ -162,7 +161,7 @@ function Projects() {
                       <SwiperSlide className="!w-full sm:!w-auto">
                         <div
                           key={index}
-                          className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                          className="bg-white p-4 rounded-xl border border-gray-200 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
                         >
                           <div
                             className="my-1"
@@ -171,6 +170,7 @@ function Projects() {
                             <Box
                               component="img"
                               src={
+                                project?.image?.[0]?.url ||
                                 "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
                               }
                               alt={project.title}
@@ -181,12 +181,13 @@ function Projects() {
                                 borderRadius: 2,
                                 mb: 1.5,
                               }}
+                              className="cursor-pointer"
                             />
                           </div>
                           <div>
                             <div className="flex justify-between p-0 m-0">
                               <h3
-                                className="font-medium text-lg !m-0 !p-0"
+                                className="font-medium text-lg !m-0 !p-0 cursor-pointer"
                                 onClick={() => handleClick(project._id)}
                               >
                                 {project.name}
@@ -314,13 +315,14 @@ function Projects() {
                         <SwiperSlide className="!w-full sm:!w-auto">
                           <div
                             key={index}
-                            className="bg-white p-4 mb-5 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                            className="bg-white p-4 rounded-xl border border-gray-200 transition-shadow duration-300 hover:hover:!shadow-lg ml-2 mb-4"
                             onClick={() => handleClick(project._id)}
                           >
                             <div className="my-1">
                               <Box
                                 component="img"
                                 src={
+                                  project?.image?.[0]?.url ||
                                   "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
                                 }
                                 alt={project.title}
@@ -331,11 +333,12 @@ function Projects() {
                                   borderRadius: 2,
                                   mb: 1.5,
                                 }}
+                                className="cursor-pointer"
                               />
                             </div>
                             <div>
                               <div className="flex justify-between p-0 m-0">
-                                <h3 className="font-medium text-lg !m-0 !p-0">
+                                <h3 className="font-medium text-lg !m-0 !p-0 cursor-pointer">
                                   {project.name}
                                 </h3>
                                 <ProjectOptionsMenu
@@ -356,12 +359,12 @@ function Projects() {
                                     variant="body2"
                                     className="text-indigo-500 text-sm"
                                   >
-                                    30%
+                                    {project.progress}%
                                   </Typography>
                                 </Box>
                                 <LinearProgress
                                   variant="determinate"
-                                  value="30"
+                                  value={project.progress}
                                   className="!h-2 rounded-full"
                                   sx={{
                                     backgroundColor: "#f3f4f6",

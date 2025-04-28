@@ -381,6 +381,7 @@ export default function TaskordDashboard() {
                           <Box
                             component="img"
                             src={
+                              project?.image?.[0]?.url ||
                               "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
                             }
                             alt={project.title}
@@ -547,9 +548,13 @@ export default function TaskordDashboard() {
 
                   <div className="rounded-xl overflow-hidden mb-4">
                     <div className="mb-3">
+                      {console.log(ProjectData)}
                       <Box
                         component="img"
-                        src="https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                        src={
+                          ProjectData?.doc[0]?.image?.[0]?.url ||
+                          "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                        }
                         alt="Albex 360 Mockup"
                         sx={{
                           width: "100%",
