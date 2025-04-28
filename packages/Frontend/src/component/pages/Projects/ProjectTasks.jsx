@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Calendar, Plus, Trash2 } from "lucide-react"
+import { Calendar, CircleAlert, Plus, SquarePen, Trash2 } from "lucide-react"
 import { useAuth } from "../../../hooks/useAuth"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getAllProjectTasks, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
 import AddProjectTask from "./AddProjectTask"
 import { toast } from "react-toastify"
 import { io } from "socket.io-client"
+import { Button } from "@mui/material"
 
 const socket = io("http://localhost:9999")
 
@@ -148,23 +149,23 @@ const ProjectTasks = () => {
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
-  
+
     if (!destination) return;
-  
+
     const sourceCol = board.columns.find(col => col.id === source.droppableId);
     const destCol = board.columns.find(col => col.id === destination.droppableId);
-  
+
     if (!sourceCol || !destCol) return;
-  
+
     const sourceTasks = Array.from(sourceCol.tasks);
     const destTasks = Array.from(destCol.tasks);
-  
+
     const [movedTask] = sourceTasks.splice(source.index, 1);
-  
+
     if (sourceCol.id === destCol.id) {
       // Moving inside the same column
       sourceTasks.splice(destination.index, 0, movedTask);
-  
+
       const newBoard = {
         ...board,
         columns: board.columns.map(col => {
@@ -174,13 +175,13 @@ const ProjectTasks = () => {
           return col;
         })
       };
-  
+
       setBoard(newBoard);
     } else {
       // Moving to another column
       movedTask.status = destCol.status;
       destTasks.splice(destination.index, 0, movedTask);
-  
+
       const newBoard = {
         ...board,
         columns: board.columns.map(col => {
@@ -193,9 +194,9 @@ const ProjectTasks = () => {
           return col;
         })
       };
-  
+
       setBoard(newBoard);
-  
+
       if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
         updateTaskStatus(user._id, projectId, movedTask._id, destCol.status)
           .then(() => {
@@ -208,7 +209,7 @@ const ProjectTasks = () => {
           });
       }
     }
-  }  
+  }
   const openAddTaskModal = columnId => {
     setSelectedColumn(columnId)
     setShowModal(true)
@@ -232,8 +233,12 @@ const ProjectTasks = () => {
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen rounded-[30px]">
-      <div className="p-5 flex justify-between items-center">
-        <button onClick={() => openAddTaskModal()} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Task</button>
+      <div className="p-5 flex justify-end items-center">
+        <Button
+          onClick={() => openAddTaskModal()}
+          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+          Add Task
+        </Button>
       </div>
 
       {showModal && (
@@ -252,10 +257,9 @@ const ProjectTasks = () => {
                 <div className="p-3 flex justify-between items-center border-b">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm">{column.title}</span>
-                    <span className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${
-                      column.id === "todo" ? "bg-[#65aaee]" :
+                    <span className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo" ? "bg-[#65aaee]" :
                       column.id === "in-progress" ? "bg-[#e5e747]" :
-                      column.id === "done" ? "bg-red-500" : "bg-[#66d475]"}`}>
+                        column.id === "done" ? "bg-red-500" : "bg-[#66d475]"}`}>
                       {column.count}
                     </span>
                   </div>
@@ -283,9 +287,17 @@ const ProjectTasks = () => {
                               >
                                 <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
                                   <h3 className="text-sm font-medium">{task.title}</h3>
-                                  <button onClick={() => setDeleteModal({ show: true, taskId: task._id })} className="text-red-400 hover:text-red-600">
-                                    <Trash2 width={19} height={24} />
-                                  </button>
+                                  <div className="flex">
+                                    <button onClick={() => setDeleteModal({ show: true, taskId: task._id })} className="text-red-400 hover:text-red-600">
+                                      <Trash2 width={19} height={24} />
+                                    </button>
+                                    <button
+                                      className="text-gray-400 hover:text-gray-600 ml-2"
+                                    >
+                                      <SquarePen width={19} height={24} />
+                                    </button>
+
+                                  </div>
                                 </div>
                                 <p className="text-xs text-gray-500 mb-2">{task.description}</p>
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -311,14 +323,24 @@ const ProjectTasks = () => {
 
       {deleteModal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-            <h2 className="text-lg font-semibold mb-4">Are you sure you want to delete this task?</h2>
-            <div className="flex justify-end space-x-3">
-              <button onClick={() => setDeleteModal({ show: false, taskId: null })} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Cancel</button>
-              <button onClick={() => {
-                deleteMutation.mutate(deleteModal.taskId)
-                setDeleteModal({ show: false, taskId: null })
-              }} className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">Delete</button>
+          <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6  flex flex-col justify-center items-center">
+            <CircleAlert size={40} color="#f8bb86" />
+            <h2 className="text-gray-500 text-4xl font-medium mt-4 mb-4" >Delete Task</h2>
+            <div className=" mb-[24px]">Are you sure you want to delete this task?</div>
+            <div className="flex justify-end gap-4">
+              <Button
+                onClick={() => setDeleteModal({ show: false, taskId: null })}
+                className="!text-base !capitalize !bg-[#7787e2] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  deleteMutation.mutate(deleteModal.taskId);
+                  setDeleteModal({ show: false, taskId: null });
+                }}
+                className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl">
+                Delete
+              </Button>
             </div>
           </div>
         </div>
