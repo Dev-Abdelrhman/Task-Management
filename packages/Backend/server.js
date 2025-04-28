@@ -21,7 +21,6 @@ const io = new Server(server, {
   },
 });
 app.set("io", io);
-
 process.on("uncaughtException", (err) => {
   const event = {
     type: "uncaughtException",
