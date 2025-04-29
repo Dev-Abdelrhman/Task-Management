@@ -309,6 +309,7 @@ export default function AllTasks() {
           initialStatus={selectedColumn ? statusMap[selectedColumn] : "Pending"}
           initialData={editingTask}
           isEditing={!!editingTask}
+          disableStatus={!!selectedColumn && !editingTask}
         />
       )}
       {/* <div className="w-full"> */}

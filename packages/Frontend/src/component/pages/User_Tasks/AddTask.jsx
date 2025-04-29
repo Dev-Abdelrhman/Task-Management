@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, X } from 'lucide-react';
 import { Button } from '@mui/material';
 
-const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing }) => {
+const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing, disableStatus }) => {
   const [title, setTitle] = useState(initialData?.title || '');
   const [description, setDescription] = useState(initialData?.description || '');
   const [dueDate, setDueDate] = useState(initialData?.dueDate?.split('T')[0] || '');
@@ -79,7 +79,9 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing 
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${disableStatus ? 'bg-gray-100 text-gray-500' : ''
+                }`}
+              disabled={disableStatus}
             >
               <option value="Pending">Pending</option>
               <option value="Todo">Todo</option>
