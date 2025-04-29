@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Calendar, CircleAlert, Plus, SquarePen, Trash2 } from "lucide-react"
+import { Calendar, CircleAlert, Plus, Search, SquarePen, Trash2 } from "lucide-react"
 import { useAuth } from "../../../hooks/useAuth"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { getAllProjectTasks, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
@@ -35,6 +35,7 @@ const ProjectTasks = () => {
   const [selectedColumn, setSelectedColumn] = useState(null)
   const [deleteModal, setDeleteModal] = useState({ show: false, taskId: null })
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [board, setBoard] = useState({
     columns: statusColumns.map(col => ({ ...col, tasks: [], count: 0 }))
@@ -46,18 +47,34 @@ const ProjectTasks = () => {
     enabled: !!user?._id && !!projectId
   })
 
+
+  const filterTasksBySearchTerm = (tasks) => {
+    if (!searchTerm.trim()) return tasks;
+    return tasks.filter(task =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+
+
   useEffect(() => {
     if (data?.doc) {
       const newColumns = statusColumns.map(col => {
         const tasks = data.doc.filter(task => {
-          const taskStatus = task.status
-          return taskStatus === col.status || taskStatus.toLowerCase().replace(/\s/g, "-") === col.id
-        })
-        return { ...col, tasks, count: tasks.length }
-      })
-      setBoard({ columns: newColumns })
+          const taskStatus = task.status;
+          const statusMatch = taskStatus === col.status ||
+            taskStatus.toLowerCase().replace(/\s/g, "-") === col.id;
+          return statusMatch;
+        });
+
+        // Apply search filter to the tasks
+        const filteredTasks = filterTasksBySearchTerm(tasks);
+
+        return { ...col, tasks: filteredTasks, count: filteredTasks.length };
+      });
+      setBoard({ columns: newColumns });
     }
-  }, [data])
+  }, [data, searchTerm]); // Add searchTerm to dependencies
 
   useEffect(() => {
     if (!user || !projectId) return
@@ -128,7 +145,7 @@ const ProjectTasks = () => {
       return { previousTasks, tempId }
     },
     onSuccess: data => {
-      toast.success("Task created successfully!")
+      // toast.success("Task created successfully!")
       socket.emit("taskCreated", data.doc)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
@@ -201,7 +218,7 @@ const ProjectTasks = () => {
       if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
         updateTaskStatus(user._id, projectId, movedTask._id, destCol.status)
           .then(() => {
-            toast.success("Task updated successfully!");
+            // toast.success("Task updated successfully!");
             socket.emit("taskUpdated", movedTask);
           })
           .catch(() => {
@@ -232,15 +249,27 @@ const ProjectTasks = () => {
   if (!user) return <div className="flex justify-center items-center h-screen">Please log in to access tasks</div>
   if (isError) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error.message}</div>
 
-  return (
-    <div className="p-4 bg-gray-100 min-h-screen rounded-[30px]">
-      <div className="p-5 flex justify-end items-center">
-        <Button
-          onClick={() => openAddTaskModal()}
-          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
-          Add Task
-        </Button>
+  return <>
+    <div className="mb-4 px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+      <div className="relative w-1/2">
+        <span className="absolute inset-y-0  flex items-center pl-3">
+          <Search className="h-5 w-5 text-[#8E92BC]" />
+        </span>
+        <input
+          type="search"
+          className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+          placeholder="Search tasks by title"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
+      <Button
+        onClick={() => openAddTaskModal()}
+        className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+        Add Task
+      </Button>
+    </div>
+    <div className="px-4 pb-4 pt-0 bg-gray-100 min-h-screen rounded-[30px]">
 
       {showModal && (
         <AddProjectTask
@@ -367,7 +396,7 @@ const ProjectTasks = () => {
         </div>
       )}
     </div>
-  )
+  </>
 }
 
 export default ProjectTasks

@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Calendar, CircleAlert, MoreHorizontal, Plus, SquarePen, Trash2 } from "lucide-react";
+import { Calendar, CircleAlert, MoreHorizontal, Plus, Search, SquarePen, Trash2 } from "lucide-react";
 import AddTask from "./AddTask";
 import { getAllUserTasks, createTask, deleteTask, updateTask } from "../../../api/user_tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -120,7 +120,7 @@ export default function AllTasks() {
   const updateMutation = useMutation({
     mutationFn: ({ id, updates }) => updateTask(id, updates),
     onSuccess: (data) => {
-      toast.success("Task updated successfully!");
+      // toast.success("Task updated successfully!");
       socket.emit("taskUpdated", data.doc);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
@@ -129,7 +129,7 @@ export default function AllTasks() {
       toast.error("Failed to update task!");
     }
   });
-
+  const [searchTerm, setSearchTerm] = useState("");
   const board = useMemo(() => {
     const statusColumns = [
       { id: "backlog", title: "BACKLOG", status: statusMap.backlog },
@@ -143,14 +143,24 @@ export default function AllTasks() {
         columns: statusColumns.map(col => ({ ...col, tasks: [], count: 0 }))
       };
     }
-
     return {
       columns: statusColumns.map(col => {
-        const tasks = data.doc.filter(task => task.status === col.status);
+        const tasks = data.doc.filter(task =>
+          task.status === col.status &&
+          task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
         return { ...col, tasks, count: tasks.length };
       })
     };
-  }, [data]);
+  }, [data, searchTerm]);
+
+  //   return {
+  //     columns: statusColumns.map(col => {
+  //       const tasks = data.doc.filter(task => task.status === col.status);
+  //       return { ...col, tasks, count: tasks.length };
+  //     })
+  //   };
+  // }, [data]);
 
   const [boardState, setBoardState] = useState(board);
 
@@ -267,15 +277,27 @@ export default function AllTasks() {
     );
   }
 
-  return (
-    <div className="p-4 bg-gray-100 min-h-screen rounded-[30px]">
-      <div className="p-5 flex justify-end items-center">
-        <Button
-          onClick={() => openAddTaskModal()}
-          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
-          Add Task
-        </Button>
+  return <>
+    <div className="mb-4 px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+      <div className="relative w-1/2">
+        <span className="absolute inset-y-0  flex items-center pl-3">
+          <Search className="h-5 w-5 text-[#8E92BC]" />
+        </span>
+        <input
+          type="search"
+          className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+          placeholder="Search Project"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
+      <Button
+        onClick={() => openAddTaskModal()}
+        className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+        Add Task
+      </Button>
+    </div>
+    <div className="px-4 pb-4 pt-0 bg-gray-100 min-h-screen rounded-[30px]">
 
       {showModal && (
         <AddTask
@@ -291,90 +313,90 @@ export default function AllTasks() {
       )}
       {/* <div className="w-full"> */}
 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex gap-8 overflow-x-auto pb-4 px-4">
-            {boardState.columns.map((column) => (
-              <div key={column.id} className="flex-shrink-0 w-[23%]">
-                <div className="rounded-[15px] bg-white shadow-sm">
-                  <div className="p-3 flex justify-between items-center border-b">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm">{column.title}</span>
-                      <span className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo" ? "bg-[#65aaee]" :
-                        column.id === "in-progress" ? "bg-[#e5e747]" :
-                          column.id === "done" ? "bg-red-500" : "bg-[#66d475]"}`}>
-                        {column.count}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => openAddTaskModal(column.id)}
-                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
-                    >
-                      <Plus size={16} />
-                    </button>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="flex gap-8 overflow-x-auto pb-4 px-4">
+          {boardState.columns.map((column) => (
+            <div key={column.id} className="flex-shrink-0 w-[23%]">
+              <div className="rounded-[15px] bg-white shadow-sm">
+                <div className="p-3 flex justify-between items-center border-b">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-sm">{column.title}</span>
+                    <span className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo" ? "bg-[#65aaee]" :
+                      column.id === "in-progress" ? "bg-[#e5e747]" :
+                        column.id === "done" ? "bg-red-500" : "bg-[#66d475]"}`}>
+                      {column.count}
+                    </span>
                   </div>
+                  <button
+                    onClick={() => openAddTaskModal(column.id)}
+                    className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
 
-                  <Droppable droppableId={column.id} direction="vertical">
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className="flex flex-col p-2 min-h-[200px] space-y-2"
-                      >
-                        {column.tasks.length > 0 ? (
-                          column.tasks.map((task, index) => (
-                            <Draggable key={task._id} draggableId={task._id.toString()} index={index}>
-                              {(provided) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
-                                >
-                                  <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
-                                    <h3 className="text-sm font-medium">{task.title}</h3>
-                                    <div className="flex">
-                                      <button
-                                        onClick={() => setDeleteModal({ show: true, taskId: task._id })}
-                                        className="text-red-400 hover:text-red-600"
-                                      >
-                                        <Trash2 width={19} height={24} />
-                                      </button>
-                                      <button
-                                        onClick={() => openEditTaskModal(task)}
-                                        className="text-gray-400 hover:text-gray-600 ml-2"
-                                      >
-                                        <SquarePen width={19} height={24} />
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <p className="text-xs text-gray-500 mb-2">{task.description}</p>
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                                      <Calendar size={14} />
-                                      <span>
-                                        {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No date"}
-                                      </span>
-                                    </div>
-                                    <div className="w-6 h-6 rounded-full overflow-hidden">
-                                      {/* User avatar if available */}
-                                    </div>
+                <Droppable droppableId={column.id} direction="vertical">
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="flex flex-col p-2 min-h-[200px] space-y-2"
+                    >
+                      {column.tasks.length > 0 ? (
+                        column.tasks.map((task, index) => (
+                          <Draggable key={task._id} draggableId={task._id.toString()} index={index}>
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
+                              >
+                                <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
+                                  <h3 className="text-sm font-medium">{task.title}</h3>
+                                  <div className="flex">
+                                    <button
+                                      onClick={() => setDeleteModal({ show: true, taskId: task._id })}
+                                      className="text-red-400 hover:text-red-600"
+                                    >
+                                      <Trash2 width={19} height={24} />
+                                    </button>
+                                    <button
+                                      onClick={() => openEditTaskModal(task)}
+                                      className="text-gray-400 hover:text-gray-600 ml-2"
+                                    >
+                                      <SquarePen width={19} height={24} />
+                                    </button>
                                   </div>
                                 </div>
-                              )}
-                            </Draggable>
-                          ))
-                        ) : (
-                          <div className="text-center text-gray-400 py-4 text-sm">No tasks available</div>
-                        )}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </div>
+                                <p className="text-xs text-gray-500 mb-2">{task.description}</p>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                                    <Calendar size={14} />
+                                    <span>
+                                      {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No date"}
+                                    </span>
+                                  </div>
+                                  <div className="w-6 h-6 rounded-full overflow-hidden">
+                                    {/* User avatar if available */}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))
+                      ) : (
+                        <div className="text-center text-gray-400 py-4 text-sm">No tasks available</div>
+                      )}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
               </div>
-            ))}
-          </div>
-        </DragDropContext>
+            </div>
+          ))}
+        </div>
+      </DragDropContext>
       {/* </div> */}
 
       {deleteModal.show && (
@@ -414,5 +436,5 @@ export default function AllTasks() {
         </div>
       )}
     </div>
-  );
+  </>
 }
