@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Calendar, CircleAlert, MoreHorizontal, Plus, Search, SquarePen, Trash2 } from "lucide-react";
+import { Calendar, CircleAlert, MoreHorizontal, Plus, Search, SquarePen, Trash2, X } from "lucide-react";
 import AddTask from "./AddTask";
 import { getAllUserTasks, createTask, deleteTask, updateTask } from "../../../api/user_tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,8 +29,16 @@ export default function AllTasks() {
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingTask, setEditingTask] = useState(null); // New state for editing
-
+  const [taskDetailsModal, setTaskDetailsModal] = useState({ show: false, task: null });
+  const handleTaskClick = (task) => {
+    if (task.title && task.description) {
+      setTaskDetailsModal({ show: true, task });
+    } else {
+      fetchTaskDetails.mutate(task._id);
+    }
+  };
   useEffect(() => {
+
     if (!data) return;
 
     const handleNewTask = task => {
@@ -129,6 +137,19 @@ export default function AllTasks() {
       toast.error("Failed to update task!");
     }
   });
+  const getTaskById = useMutation({
+    mutationFn: (id) => getTaskById(id),
+    onSuccess: (data) => {
+      setTaskDetailsModal({ show: true, task: data.doc });
+      console.log("Task retrieved successfully:", data.doc);
+
+    },
+    onError: (err) => {
+      console.error("Error retrieving task:", err.message);
+      toast.error("Failed to retrieve task!");
+    }
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
   const board = useMemo(() => {
     const statusColumns = [
@@ -153,14 +174,6 @@ export default function AllTasks() {
       })
     };
   }, [data, searchTerm]);
-
-  //   return {
-  //     columns: statusColumns.map(col => {
-  //       const tasks = data.doc.filter(task => task.status === col.status);
-  //       return { ...col, tasks, count: tasks.length };
-  //     })
-  //   };
-  // }, [data]);
 
   const [boardState, setBoardState] = useState(board);
 
@@ -278,6 +291,7 @@ export default function AllTasks() {
   }
 
   return <>
+    {/* Nav */}
     <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center">
       <div className="relative w-1/2">
         <span className="absolute inset-y-0  flex items-center pl-3">
@@ -297,8 +311,118 @@ export default function AllTasks() {
         Add Task
       </Button>
     </div>
+    {/* Content */}
     <div className="px-4 pb-4 pt-3 bg-gray-100 min-h-screen ">
 
+      {taskDetailsModal.show && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
+          <div className="bg-white w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
+            <div className="flex justify-end items-center mb-4">
+              <button onClick={() => setTaskDetailsModal({ show: false, task: null })}>
+                <X size={24} />
+              </button>
+            </div>
+
+            {taskDetailsModal.task?.image && (
+              <div className="mb-4 flex justify-center w-1/2 ">
+                <img
+                  src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                  // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                  alt="Task"
+                  className="max-w-full h-auto rounded-lg"
+                />
+              </div>
+            )}
+
+            <div className="">
+              <div>
+                <h2 className="text-xl font-bold mb-4">{taskDetailsModal.task?.title}</h2>
+
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium  mb-1">Description :</h3>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {taskDetailsModal.task?.description || "No description provided"}
+                  </p>
+                </div>
+                <h6 class="text-sm font-medium">Properties : </h6>
+                <div className="mb-4 flex gap-8 mt-3">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
+                  <div className="flex items-center">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${taskDetailsModal.task?.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                      taskDetailsModal.task?.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                        taskDetailsModal.task?.status === 'Todo' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                      }`}>
+                      {taskDetailsModal.task?.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-4 flex gap-6">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Due Date</h3>
+                  <div className="flex items-center text-gray-700">
+                    <Calendar className="mr-2" size={16} />
+                    {taskDetailsModal.task?.dueDate ? (
+                      new Date(taskDetailsModal.task.dueDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })
+                    ) : "No due date"}
+                  </div>
+                </div>
+
+                {taskDetailsModal.task?.completedAt && (
+                  <div className="mb-4 ">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Completed At</h3>
+                    <div className="flex items-center text-gray-700">
+                      <Calendar className="mr-2" size={16} />
+                      {new Date(taskDetailsModal.task.completedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-4 flex gap-9">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Task ID</h3>
+                  <p className="text-gray-700 font-mono text-sm">
+                    {taskDetailsModal.task?._id}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 mt-6">
+              <Button
+                onClick={() => {
+                  setTaskDetailsModal({ show: false, task: null });
+                  openEditTaskModal(taskDetailsModal.task);
+                }}
+                className="!flex items-center justify-center gap-2 !text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => {
+                  setTaskDetailsModal({ show: false, task: null });
+                  setDeleteModal({ show: true, taskId: taskDetailsModal.task._id });
+                }}
+                className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+
+              // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {showModal && (
         <AddTask
           closeModal={() => {
@@ -312,7 +436,6 @@ export default function AllTasks() {
           disableStatus={!!selectedColumn && !editingTask}
         />
       )}
-      {/* <div className="w-full"> */}
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-8 overflow-x-auto pb-4 px-4">
@@ -321,7 +444,7 @@ export default function AllTasks() {
               <div className="rounded-[15px] bg-white shadow-sm">
                 <div className="p-3 flex justify-between items-center border-b">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm">{column.title}</span>
+                    <span className="font-medium text-sm cursor-pointer">{column.title}</span>
                     <span className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo" ? "bg-[#65aaee]" :
                       column.id === "in-progress" ? "bg-[#e5e747]" :
                         column.id === "done" ? "bg-red-500" : "bg-[#66d475]"}`}>
@@ -354,7 +477,11 @@ export default function AllTasks() {
                                 className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
                               >
                                 <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
-                                  <h3 className="text-sm font-medium">{task.title}</h3>
+                                  <h3 onClick={() => handleTaskClick(task)} className="text-sm font-medium">
+                                    {task.title.split(" ").length > 5
+                                      ? task.title.split(" ").slice(0, 5).join(" ") + "..."
+                                      : task.title}
+                                  </h3>
                                   <div className="flex">
                                     <button
                                       onClick={() => setDeleteModal({ show: true, taskId: task._id })}
@@ -370,7 +497,11 @@ export default function AllTasks() {
                                     </button>
                                   </div>
                                 </div>
-                                <p className="text-xs text-gray-500 mb-2">{task.description}</p>
+                                <p className="text-xs text-gray-500 mb-2">
+                                  {task.description.split(" ").length > 5
+                                    ? task.description.split(" ").slice(0, 5).join(" ") + "..."
+                                    : task.description}
+                                </p>
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-1 text-xs text-gray-500">
                                     <Calendar size={14} />
@@ -398,7 +529,6 @@ export default function AllTasks() {
           ))}
         </div>
       </DragDropContext>
-      {/* </div> */}
 
       {deleteModal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
