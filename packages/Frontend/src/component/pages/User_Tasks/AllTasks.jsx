@@ -278,7 +278,7 @@ export default function AllTasks() {
   }
 
   return <>
-    <div className="mb-4 px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+    <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center">
       <div className="relative w-1/2">
         <span className="absolute inset-y-0  flex items-center pl-3">
           <Search className="h-5 w-5 text-[#8E92BC]" />
@@ -297,7 +297,7 @@ export default function AllTasks() {
         Add Task
       </Button>
     </div>
-    <div className="px-4 pb-4 pt-0 bg-gray-100 min-h-screen rounded-[30px]">
+    <div className="px-4 pb-4 pt-3 bg-gray-100 min-h-screen ">
 
       {showModal && (
         <AddTask
