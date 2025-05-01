@@ -374,6 +374,7 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
+          "priority": ["Urgent", "High", "Medium", "Low", "Normal"],
           "status": ["Pending", "Todo", "In Progress", "Completed"],
           "completedAt": "Date",
           "image": "you will upload it"
@@ -386,6 +387,7 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
+          "priority": ["Urgent", "High", "Medium", "Low", "Normal"],
           "status": ["Pending", "Todo", "In Progress", "Completed"],
           "completedAt": "Date",
           "image": "you will upload it"
@@ -413,6 +415,7 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
+          "priority": ["Urgent", "High", "Medium", "Low", "Normal"],
           "status": ["Pending", "Todo", "In Progress", "Completed"],
           "completedAt": "Date",
           "image": "you will upload it"
@@ -425,6 +428,7 @@
           "title": "Example",
           "description": "Example",
           "dueDate": "Date",
+          "priority": ["Urgent", "High", "Medium", "Low", "Normal"],
           "status": ["Pending", "Todo", "In Progress", "Completed"],
           "completedAt": "Date",
           "image": "you will upload it"
