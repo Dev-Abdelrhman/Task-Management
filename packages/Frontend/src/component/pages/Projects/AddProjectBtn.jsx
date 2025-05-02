@@ -10,6 +10,78 @@ import { Button, CircularProgress } from "@mui/material";
 import { Plus, Upload, Trash } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+const categories = [
+  "UI/UX",
+  "Development",
+  "Marketing",
+  "Product Management",
+  "Business Strategy",
+  "Operations",
+  "Sales",
+  "Customer Support",
+  "Finance",
+  "Legal",
+  "Human Resources",
+  "IT Support",
+  "Research & Development",
+  "Data Science",
+  "Machine Learning",
+  "Artificial Intelligence",
+  "Cybersecurity",
+  "Blockchain",
+  "E-commerce",
+  "Supply Chain",
+  "Logistics",
+  "Event Management",
+  "Healthcare",
+  "Real Estate",
+  "Education",
+  "Non-Profit",
+  "Construction",
+  "Retail",
+  "Entertainment",
+  "Media & Publishing",
+  "Public Relations",
+  "Government",
+  "Telecommunications",
+  "Design",
+  "Consulting",
+  "Travel & Hospitality",
+  "Frontend Development",
+  "Backend Development",
+  "Fullstack Development",
+  "Quality Assurance",
+  "Testing",
+  "Bug Fixing",
+  "DevOps",
+  "Continuous Integration",
+  "Deployment",
+  "Cloud Computing",
+  "AWS",
+  "Google Cloud",
+  "Azure",
+  "Augmented Reality",
+  "Virtual Reality",
+  "AR/VR Development",
+  "Internet of Things",
+  "IoT Development",
+  "Smart Devices",
+  "Automation",
+  "Robotic Process Automation (RPA)",
+  "CRM Development",
+  "Customer Insights",
+  "CRM Integration",
+  "ERP Development",
+  "Enterprise Solutions",
+  "Business Systems",
+  "Game Development",
+  "Unity Development",
+  "Unreal Engine",
+  "AI Ethics",
+  "Ethical AI",
+  "AI Regulations",
+];
+
 function AddProjectBtn({
   isEditMode = false,
   projectToEdit = {},
@@ -21,12 +93,13 @@ function AddProjectBtn({
     name: "",
     description: "",
     dueDate: "",
+    category: "",
     imageFile: null,
     existingImage: [],
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [localShowModal, setLocalShowModal] = useState(false);
-  const [isDeletingImage, setIsDeletingImage] = useState(false); // State to track image deletion
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -35,6 +108,7 @@ function AddProjectBtn({
         name: projectToEdit.name || "",
         description: projectToEdit.description || "",
         dueDate: projectToEdit.dueDate || "",
+        category: projectToEdit.category || "",
         imageFile: null,
         existingImage: projectToEdit.image || [],
       });
@@ -69,7 +143,7 @@ function AddProjectBtn({
   const isLoading = mutation.isPending;
 
   const handleClose = () => {
-    if (isLoading || isDeletingImage) return; // prevent closing modal if loading
+    if (isLoading || isDeletingImage) return;
     if (isEditMode) {
       onClose();
     } else {
@@ -79,6 +153,7 @@ function AddProjectBtn({
       name: "",
       description: "",
       dueDate: "",
+      category: "",
       imageFile: null,
       existingImage: [],
     });
@@ -114,12 +189,14 @@ function AddProjectBtn({
       if (newProject.description.trim() !== "")
         formData.append("description", newProject.description);
       if (newProject.dueDate) formData.append("dueDate", newProject.dueDate);
+      if (newProject.category) formData.append("category", newProject.category);
       if (newProject.imageFile instanceof File)
         formData.append("image", newProject.imageFile);
     } else {
       formData.append("name", newProject.name);
       formData.append("description", newProject.description);
       formData.append("dueDate", newProject.dueDate);
+      formData.append("category", newProject.category);
       if (newProject.imageFile instanceof File)
         formData.append("image", newProject.imageFile);
     }
@@ -130,8 +207,6 @@ function AddProjectBtn({
     const { name, value } = e.target;
     setNewProject({ ...newProject, [name]: value });
   };
-
-  console.log(imagePreview);
 
   return (
     <>
@@ -256,6 +331,33 @@ function AddProjectBtn({
                 />
               </div>
 
+              {/* Category Select Input */}
+              <div>
+                <label
+                  htmlFor="projectCategory"
+                  className="block mb-1 text-border font-medium text-gray-700"
+                >
+                  Category
+                </label>
+                <select
+                  id="projectCategory"
+                  name="category"
+                  value={newProject.category}
+                  onChange={handleInputs}
+                  required={!isEditMode}
+                  disabled={isLoading || isDeletingImage}
+                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400 bg-white"
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Existing name input */}
               <div>
                 <label
                   htmlFor="projectName"
@@ -276,6 +378,7 @@ function AddProjectBtn({
                 />
               </div>
 
+              {/* Existing description input */}
               <div>
                 <label
                   htmlFor="projectDescription"
@@ -296,6 +399,7 @@ function AddProjectBtn({
                 ></textarea>
               </div>
 
+              {/* Existing due date input */}
               <div>
                 <label
                   htmlFor="dueDate"
