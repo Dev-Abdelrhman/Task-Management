@@ -1,12 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@mui/material";
 
-const AddProjectTask = ({ closeModal, onAddTask }) => {
+const AddProjectTask = ({closeModal, onAddTask,editTask}) => {
     const [status, setStatus] = useState("Pending");
     const [taskName, setTaskName] = useState("")
     const [dueDate, setDueDate] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (editTask) {
+            setTaskName(editTask.title || "")
+            setDescription(editTask.description || "")
+            setDueDate(editTask.dueDate ? editTask.dueDate.substring(0, 10) : "")
+            setStatus(editTask.status || "Pending")
+
+        }
+    }, [editTask])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -39,7 +49,7 @@ const AddProjectTask = ({ closeModal, onAddTask }) => {
                     >
                         ✖
                     </button>
-                    <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+                    <h2 className="text-xl font-semibold mb-4">{editTask ? "Edit Task" : "Add New Task"}</h2>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -99,7 +109,7 @@ const AddProjectTask = ({ closeModal, onAddTask }) => {
                             {loading && (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent border-solid rounded-full animate-spin"></div>
                             )}
-                            Add Task
+                           {editTask ? "Save Changes" : "Add Task"}
                         </Button>
                     </div>
                 </form>

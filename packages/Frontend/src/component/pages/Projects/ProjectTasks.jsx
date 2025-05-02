@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Calendar, CircleAlert, Plus, Search, SquarePen, Trash2 } from "lucide-react"
+import { Calendar, CircleAlert,Plus, Search, SquarePen, Trash2, X } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { getAllProjectTasks, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
+import { getAllProjectTasks,getOneTask, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
 import AddProjectTask from "./AddProjectTask"
 import { toast } from "react-toastify"
 import { io } from "socket.io-client"
@@ -37,6 +37,8 @@ const ProjectTasks = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [editTask, setEditTask] = useState(null)
+  const [DetailsModal, setDetailsModal] = useState({show: false, task: null})
   const [board, setBoard] = useState({
     columns: statusColumns.map(col => ({ ...col, tasks: [], count: 0 }))
   })
@@ -145,7 +147,7 @@ const ProjectTasks = () => {
       return { previousTasks, tempId }
     },
     onSuccess: data => {
-      // toast.success("Task created successfully!")
+      toast.success("Task created successfully!")
       socket.emit("taskCreated", data.doc)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
@@ -155,6 +157,8 @@ const ProjectTasks = () => {
     }
   })
 
+  
+
   const deleteMutation = useMutation({
     mutationFn: taskId => deleteTaskStatus(user._id, projectId, taskId),
     onSuccess: (_, taskId) => {
@@ -163,6 +167,38 @@ const ProjectTasks = () => {
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
     onError: () => toast.error("Failed to delete task!")
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: ({taskId , taskData}) => updateTaskStatus(user._id, projectId,taskId, taskData ),
+    onSuccess: (data, {taskId}) =>{
+      socket.emit("taskUpdated" ,taskId)
+      queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
+
+    },
+    onError: () => toast.error("Failed to update task!")
+  })
+
+  const handleclickTask = (task) =>{
+    console.log("Task clicked:", task);
+    fetchtaskDetails.mutate({ taskId: task._id, userId: user._id, projectId })
+  }
+  const fetchtaskDetails = useMutation({
+    mutationFn: ({ taskId, userId, projectId }) => getOneTask(userId, projectId, taskId),
+    onSuccess: (data) =>{
+      console.log("Raw AOI response:" , data)
+      const task = data.doc || data
+      if (!task){
+        throw new Error ("No task data returned from API")
+      }
+      setDetailsModal({show: true, task})
+      console.log("Task retrieved successfully:", task);
+
+    },
+    onError: (err) => {
+      console.error("Error retrieving task:", err.message);
+      toast.error("Failed to retrieve task!");
+    }
   })
 
   const handleDragEnd = (result) => {
@@ -216,9 +252,10 @@ const ProjectTasks = () => {
       setBoard(newBoard);
 
       if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
-        updateTaskStatus(user._id, projectId, movedTask._id, destCol.status)
-          .then(() => {
-            // toast.success("Task updated successfully!");
+        updateTaskStatus(user._id, projectId, movedTask._id,{...movedTask, status: destCol.status})
+          .then((response) => {
+            console.log("API Response:", response)
+            toast.success("Task updated successfully!");
             socket.emit("taskUpdated", movedTask);
           })
           .catch(() => {
@@ -230,19 +267,35 @@ const ProjectTasks = () => {
   }
   const openAddTaskModal = columnId => {
     setSelectedColumn(columnId)
+    setEditTask(null)
     setShowModal(true)
   }
+  const openModal = (task) => {
+        setEditTask(task)
+        setSelectedColumn(null)
+        setShowModal(true)
+  }
 
-  const handleAddTask = async taskData => {
+ 
+  const handleAddTask = async (taskData) => {
+    console.log("Edit Mode:", editTask);
+    console.log("Data to submit:", taskData);
     try {
-      if (selectedColumn) {
+      if (!editTask &&selectedColumn) {
         const column = board.columns.find(col => col.id === selectedColumn)
         if (column) taskData.status = column.status
       }
+      if (editTask) {
+        await updateMutation.mutateAsync({taskId: editTask._id, taskData })
+        setEditTask(null)
+      }else{
       await mutation.mutateAsync(taskData)
+      }
       setShowModal(false)
+      
     } catch (err) {
-      console.error("Failed to add task:", err)
+      console.error("Failed to save task:", err)
+      toast.error("Failed to save task!")
     }
   }
 
@@ -275,9 +328,118 @@ const ProjectTasks = () => {
         <AddProjectTask
           closeModal={() => setShowModal(false)}
           onAddTask={handleAddTask}
+          editTask={editTask}
           initialStatus={selectedColumn ? board.columns.find(col => col.id === selectedColumn)?.status : "Pending"}
         />
       )}
+
+{DetailsModal.show && DetailsModal.task && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
+          <div className="bg-white w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
+            <div className="flex justify-end items-center mb-4">
+              <button onClick={() => setDetailsModal({ show: false, task: null })}>
+                <X size={24} />
+              </button>
+            </div>
+
+            {DetailsModal.task.image && (
+              <div className="mb-4   ">
+                <img
+                  src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                  alt="Task"
+                  className="max-w-full h-auto rounded"
+                />
+              </div>
+            )}
+
+            <div className="">
+              <div>
+                <h2 className="text-xl font-bold mb-4">{DetailsModal.task.title}</h2>
+
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium  mb-1">Description :</h3>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {DetailsModal.task.description || "No description provided"}
+                  </p>
+                </div>
+                <h6 class="text-sm font-medium">Properties : </h6>
+                <div className="mb-4 flex gap-8 mt-3">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
+                  <div className="flex items-center">
+                    <span className={`px-3 py-1 rounded text-xs font-medium ${DetailsModal.task?.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                      DetailsModal.task?.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                      DetailsModal.task?.status === 'Todo' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                      }`}>
+                      {DetailsModal.task.status}
+                    </span>
+                  </div>
+                </div>
+                <div className="mb-4 flex gap-8 mt-3">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">priority</h3>
+                  <div className="flex items-center">
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-4 flex gap-6">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Due Date</h3>
+                  <div className="flex items-center text-gray-700">
+                    <Calendar className="mr-2" size={16} />
+                    {DetailsModal.task.dueDate ? (
+                      new Date(DetailsModal.task.dueDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })
+                    ) : "No due date"}
+                  </div>
+                </div>
+
+                {DetailsModal.task.completedAt && (
+                  <div className="mb-4 ">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Completed At</h3>
+                    <div className="flex items-center text-gray-700">
+                      <Calendar className="mr-2" size={16} />
+                      {new Date(DetailsModal.task.completedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 mt-6">
+              <Button
+                onClick={() => {
+                  setDetailsModal({ show: false, task: null });
+                  openModal(DetailsModal.task);
+                }}
+                className="!flex items-center justify-center gap-2 !text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={() => {
+                  setDetailsModal({ show: false, task: null });
+                  setDeleteModal({ show: true, taskId: DetailsModal.task._id });
+                }}
+                className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              >
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-8 overflow-x-auto pb-4 px-4">
@@ -316,13 +478,16 @@ const ProjectTasks = () => {
                                 className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
                               >
                                 <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
-                                  <h3 className="text-sm font-medium">{task.title}</h3>
+                                  <h3 className="text-sm font-medium" onClick= {()=> handleclickTask(task)}>{task.title.split(" ").length > 5
+                                      ? task.title.split(" ").slice(0, 5).join(" ") + "..."
+                                      : task.title}</h3>
                                   <div className="flex">
                                     <button onClick={() => setDeleteModal({ show: true, taskId: task._id })} className="text-red-400 hover:text-red-600">
                                       <Trash2 width={19} height={24} />
                                     </button>
-                                    <button
+                                    <button  onClick={() => openModal(task)}
                                       className="text-gray-400 hover:text-gray-600 ml-2"
+                                      
                                     >
                                       <SquarePen width={19} height={24} />
                                     </button>
