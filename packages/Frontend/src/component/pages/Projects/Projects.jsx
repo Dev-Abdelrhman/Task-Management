@@ -43,7 +43,7 @@ function Projects() {
   console.log(data, "data");
 
   const handleClick = (projectId) => {
-    navigate(`/ProjectDetails/${projectId}`);
+    navigate(`/projects/ProjectDetails/${projectId}`);
   };
 
   const filteredProjects = useMemo(() => {
@@ -171,7 +171,7 @@ function Projects() {
                               component="img"
                               src={
                                 project?.image?.[0]?.url ||
-                                "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                                "https://fakeimg.pl/1280x720?text=No+Image"
                               }
                               alt={project.title}
                               sx={{
@@ -244,7 +244,7 @@ function Projects() {
                                     className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                   >
                                     <img
-                                      src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                      src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
                                       alt="Team member"
                                       width={24}
                                       height={24}
@@ -323,7 +323,7 @@ function Projects() {
                                 component="img"
                                 src={
                                   project?.image?.[0]?.url ||
-                                  "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                                  "https://fakeimg.pl/1280x720?text=No+Image"
                                 }
                                 alt={project.title}
                                 sx={{
@@ -392,7 +392,7 @@ function Projects() {
                                       className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                     >
                                       <img
-                                        src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                        src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
                                         alt="Team member"
                                         width={24}
                                         height={24}

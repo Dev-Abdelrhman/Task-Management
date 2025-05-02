@@ -187,10 +187,10 @@
         "dueDate ✅": "Date",
         "members ✅": "will set automatically after add the invite logic to the project (soon)",
         "tasks ✅": "already added automatically",
-        "image": "you will upload it"
+        "image ✅": "you will upload it"
       }
     },
-    "Update Project": {
+    "Update Project ": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID",
       "body": {
@@ -271,7 +271,7 @@
         "image": "you will upload it"
       }
     },
-    "Remove Project Image ": {
+    "Remove Project Image ✅": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/removeImage",
       "body": {
