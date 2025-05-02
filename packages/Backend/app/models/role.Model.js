@@ -21,6 +21,10 @@ const roleSchema = new mongoose.Schema({
       },
     },
   ],
+  color: {
+    type: String,
+    default: "##FFFFFF",
+  },
 });
 roleSchema.pre("save", function (next) {
   if (this.permissions.includes("Admin")) {
