@@ -23,7 +23,7 @@ const roleSchema = new mongoose.Schema({
   ],
   color: {
     type: String,
-    default: "##FFFFFF",
+    default: "#FFFFFF",
   },
 });
 roleSchema.pre("save", function (next) {
