@@ -23,7 +23,7 @@ const MS = multer.diskStorage({
         if (err) console.error("Failed to delete temp file:", err);
         else console.log("🧹 Temp file deleted:", filePath);
       });
-    }, 1 * 60 * 1000);
+    }, 15 * 1000);
 
     cb(null, filename);
   },

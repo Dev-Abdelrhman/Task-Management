@@ -198,7 +198,7 @@ function Projects() {
                               />
                             </div>
                             <p className="text-sm text-gray-500 mb-2">
-                              {project.description}
+                              {project.category}
                             </p>
 
                             <Box className="mb-4">
@@ -347,7 +347,7 @@ function Projects() {
                                 />
                               </div>
                               <p className="text-sm text-gray-500 mb-2">
-                                {project.description}
+                                {project.category}
                               </p>
 
                               <Box className="mb-4">
