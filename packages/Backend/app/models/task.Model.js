@@ -50,6 +50,10 @@ const taskSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    developerNote: {
+      type: String,
+      default: "Please write your notes after completing the task.",
+    },
   },
   {
     toJSON: { virtuals: true },
