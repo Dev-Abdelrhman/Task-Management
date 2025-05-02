@@ -12,6 +12,8 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -25,14 +27,90 @@ import {
   ChevronRight,
   Clock,
   Search,
+  Ban,
+  CircleCheck,
 } from "lucide-react";
-// import { differenceInDays, differenceInHours, parseISO } from "date-fns";
-// import { format, utcToZonedTime } from "date-fns-tz";
+import { DateTime } from "luxon";
 
 function Projects() {
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
+
+  const categories = [
+    "UI/UX",
+    "Development",
+    "Marketing",
+    "Product Management",
+    "Business Strategy",
+    "Operations",
+    "Sales",
+    "Customer Support",
+    "Finance",
+    "Legal",
+    "Human Resources",
+    "IT Support",
+    "Research & Development",
+    "Data Science",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Cybersecurity",
+    "Blockchain",
+    "E-commerce",
+    "Supply Chain",
+    "Logistics",
+    "Event Management",
+    "Healthcare",
+    "Real Estate",
+    "Education",
+    "Non-Profit",
+    "Construction",
+    "Retail",
+    "Entertainment",
+    "Media & Publishing",
+    "Public Relations",
+    "Government",
+    "Telecommunications",
+    "Design",
+    "Consulting",
+    "Travel & Hospitality",
+    "Frontend Development",
+    "Backend Development",
+    "Fullstack Development",
+    "Quality Assurance",
+    "Testing",
+    "Bug Fixing",
+    "DevOps",
+    "Continuous Integration",
+    "Deployment",
+    "Cloud Computing",
+    "AWS",
+    "Google Cloud",
+    "Azure",
+    "Augmented Reality",
+    "Virtual Reality",
+    "AR/VR Development",
+    "Internet of Things",
+    "IoT Development",
+    "Smart Devices",
+    "Automation",
+    "Robotic Process Automation (RPA)",
+    "CRM Development",
+    "Customer Insights",
+    "CRM Integration",
+    "ERP Development",
+    "Enterprise Solutions",
+    "Business Systems",
+    "Game Development",
+    "Unity Development",
+    "Unreal Engine",
+    "AI Ethics",
+    "Ethical AI",
+    "AI Regulations",
+  ];
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -46,36 +124,80 @@ function Projects() {
     navigate(`/projects/ProjectDetails/${projectId}`);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => {
+      if (prev === null) return "asc";
+      if (prev === "asc") return "desc";
+      return null;
+    });
+  };
+
   const filteredProjects = useMemo(() => {
     if (!data?.doc) return [];
-    return data.doc.filter((project) =>
-      project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    let projects = data.doc.filter((project) => {
+      const matchesSearch = project.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory
+        ? project.category === selectedCategory
+        : true;
+      return matchesSearch && matchesCategory;
+    });
+
+    // Sort by deadline
+    if (sortOrder) {
+      projects = [...projects].sort((a, b) => {
+        const aDate = a.dueDate
+          ? DateTime.fromISO(a.dueDate).toMillis()
+          : Infinity;
+        const bDate = b.dueDate
+          ? DateTime.fromISO(b.dueDate).toMillis()
+          : Infinity;
+
+        // Handle projects without due dates
+        if (aDate === Infinity && bDate === Infinity) return 0;
+        if (aDate === Infinity) return 1;
+        if (bDate === Infinity) return -1;
+
+        return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+      });
+    }
+
+    return projects;
+  }, [data, searchQuery, selectedCategory, sortOrder]);
+  const calculateDaysLeft = (dueDateString) => {
+    if (!dueDateString) return "Error";
+
+    const now = DateTime.local();
+    const dueDate = DateTime.fromISO(dueDateString).setZone("local");
+
+    if (dueDate < now) {
+      return (
+        <>
+          <Ban className="w-6 h-6 text-red-500" />
+          <span className="text-red-500 ">Overdue</span>
+        </>
+      );
+    }
+
+    const diff = dueDate.diff(now, ["days", "hours"]);
+
+    if (diff.days < 1) {
+      return (
+        <>
+          <Clock className="w-6 h-6 text-gray-500" />
+          <span>{Math.ceil(diff.hours)} Hours Left</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Clock className="w-6 h-6 text-gray-500" />
+        <span>{Math.ceil(diff.days)} Days Left</span>
+      </>
     );
-  }, [data, searchQuery]);
-
-  // const calculateDaysLeft = (dueDateString) => {
-  //   if (!dueDateString) {
-  //     console.error("Due date string is undefined or null");
-  //     return "Error";
-  //   }
-
-  //   const currentDate = new Date();
-  //   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  //   // Interpret dueDate in the target timezone
-  //   const dueDate = utcToZonedTime(dueDateString, timeZone);
-
-  //   const timeDifference = dueDate - currentDate;
-
-  //   const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
-  //   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-  //   if (timeDifference < 24 * 60 * 60 * 1000) {
-  //     return hoursLeft; // Return hours if within the same day
-  //   }
-  //   return daysLeft; // Otherwise, return days
-  // };
-
+  };
   const dataLength = filteredProjects.length;
   return (
     <>
@@ -97,17 +219,50 @@ function Projects() {
           <Button
             variant="outlined"
             startIcon={<ChartBarStacked className="w-6 h-6 !text-[#8E92BC]" />}
-            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] !py-3 !px-6  hover:!bg-gray-50 !capitalize"
+            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            onClick={(e) => setAnchorEl(e.currentTarget)}
           >
-            Category
+            {selectedCategory || "Category"}
           </Button>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+            PaperProps={{ style: { maxHeight: 200, overflow: "auto" } }}
+          >
+            <MenuItem
+              onClick={() => {
+                setSelectedCategory(null);
+                setAnchorEl(null);
+              }}
+            >
+              All Categories
+            </MenuItem>
+            {categories.map((cat) => (
+              <MenuItem
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setAnchorEl(null);
+                }}
+              >
+                {cat}
+              </MenuItem>
+            ))}
+          </Menu>
 
           <Button
             variant="outlined"
             startIcon={<FilterListIcon className="!w-6 !h-6 !text-[#8E92BC]" />}
             className="!border-gray-200 !text-gray-700 !rounded-[10px] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            onClick={toggleSortOrder}
           >
-            Sort By : Deadline
+            {sortOrder === "asc"
+              ? "Deadline (Asc)"
+              : sortOrder === "desc"
+              ? "Deadline (Desc)"
+              : "Sort By : Deadline"}
           </Button>
         </div>
       </div>
@@ -230,12 +385,16 @@ function Projects() {
 
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <Clock className="w-6 h-6 text-gray-500" />
-                                <span>
-                                  {/* {console.log(project)}
-                                  {calculateDaysLeft(project.dueDate)} Days Left */}
-                                  Days Left
-                                </span>
+                                {project.progress === 100 ? (
+                                  <>
+                                    <CircleCheck className="w-6 h-6 text-green-500" />
+                                    <span className="text-green-500">
+                                      Completed
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>{calculateDaysLeft(project.dueDate)}</>
+                                )}
                               </div>
                               <div className="flex -space-x-2">
                                 {[1, 2, 3, 4, 5].map((i) => (
@@ -311,7 +470,7 @@ function Projects() {
                       }}
                       className="upcoming-task-swiper"
                     >
-                      {data.doc.map((project, index) => (
+                      {filteredProjects.map((project, index) => (
                         <SwiperSlide className="!w-full sm:!w-auto">
                           <div
                             key={index}
@@ -379,11 +538,7 @@ function Projects() {
 
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                  <Clock className="w-6 h-6 text-gray-500" />
-                                  <span>
-                                    {/* {calculateDaysLeft(project.dueDate)} Days */}
-                                    Days Left
-                                  </span>
+                                  {calculateDaysLeft(project.dueDate)}
                                 </div>
                                 <div className="flex -space-x-2">
                                   {[1, 2, 3, 4, 5].map((i) => (
