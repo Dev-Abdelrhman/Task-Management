@@ -41,7 +41,7 @@ function ProjectDetails() {
   }
 
   const handleClick = () => {
-      navigate(`/users/${user?._id}/projects/${projectId}/tasks`);
+    navigate(`/users/${user?._id}/projects/${projectId}/tasks`);
   };
 
   return (
