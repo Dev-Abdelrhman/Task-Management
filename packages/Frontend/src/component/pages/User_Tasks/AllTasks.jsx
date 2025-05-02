@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Calendar, CircleAlert, MoreHorizontal, Plus, Search, SquarePen, Trash2, X } from "lucide-react";
+import { Ban, Calendar, CircleAlert, MoreHorizontal, Plus, Search, SignalHigh, SignalLow, SignalMedium, SquarePen, Trash2, X } from "lucide-react";
 import AddTask from "./AddTask";
-import { getAllUserTasks, createTask, deleteTask, updateTask } from "../../../api/user_tasks";
+import { getAllUserTasks, createTask, deleteTask, updateTask, getTaskById } from "../../../api/user_tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
@@ -30,13 +30,7 @@ export default function AllTasks() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingTask, setEditingTask] = useState(null); // New state for editing
   const [taskDetailsModal, setTaskDetailsModal] = useState({ show: false, task: null });
-  const handleTaskClick = (task) => {
-    if (task.title && task.description) {
-      setTaskDetailsModal({ show: true, task });
-    } else {
-      fetchTaskDetails.mutate(task._id);
-    }
-  };
+
   useEffect(() => {
 
     if (!data) return;
@@ -137,7 +131,14 @@ export default function AllTasks() {
       toast.error("Failed to update task!");
     }
   });
-  const getTaskById = useMutation({
+  const handleTaskClick = (task) => {
+    if (task.title && task.description) {
+      setTaskDetailsModal({ show: true, task });
+    } else {
+      fetchTaskDetails.mutate(task._id);
+    }
+  };
+  const fetchTaskDetails = useMutation({
     mutationFn: (id) => getTaskById(id),
     onSuccess: (data) => {
       setTaskDetailsModal({ show: true, task: data.doc });
@@ -324,12 +325,12 @@ export default function AllTasks() {
             </div>
 
             {taskDetailsModal.task?.image && (
-              <div className="mb-4 flex justify-center w-1/2 ">
+              <div className="mb-4   ">
                 <img
                   src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
                   // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
                   alt="Task"
-                  className="max-w-full h-auto rounded-lg"
+                  className="max-w-full h-auto rounded"
                 />
               </div>
             )}
@@ -348,13 +349,38 @@ export default function AllTasks() {
                 <div className="mb-4 flex gap-8 mt-3">
                   <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
                   <div className="flex items-center">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${taskDetailsModal.task?.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                    <span className={`px-3 py-1 rounded text-xs font-medium ${taskDetailsModal.task?.status === 'Completed' ? 'bg-green-100 text-green-800' :
                       taskDetailsModal.task?.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
                         taskDetailsModal.task?.status === 'Todo' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
                       }`}>
                       {taskDetailsModal.task?.status}
                     </span>
+                  </div>
+                </div>
+                <div className="mb-4 flex gap-8 mt-3">
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">priority</h3>
+                  <div className="flex items-center">
+                    {taskDetailsModal.task?.priority && (
+                      <span className={`flex items-center px-3 py-1 rounded text-xs font-medium
+                        ${taskDetailsModal.task.priority === 'Urgent' ? 'bg-red-600/20 text-red-500 border-red-600' :
+                          taskDetailsModal.task.priority === 'High' ? 'bg-orange-500/20 text-orange-500 border-orange-500' :
+                            taskDetailsModal.task.priority === 'Medium' ? 'bg-yellow-500/20 text-yellow-500 border-yellow-500' :
+                              taskDetailsModal.task.priority === 'Low' ? 'bg-blue-500 text-blue-300 border-blue-300' :
+                                taskDetailsModal.task.priority === 'Normal' ? 'bg-gray-500 text-gray-200 border-gray-300' :
+                                  'bg-gray-100 text-gray-800'}`}>
+                        {
+                          {
+                            'Urgent': <CircleAlert size={18} className="mr-1 border rounded p-0.5 bg-red-600/20 text-red-500 border-red-600" />,
+                            'High': <SignalHigh size={18} className="mr-1 border rounded p-0.5 bg-orange-500/20 text-orange-500 border-orange-500" />,
+                            'Medium': <SignalMedium size={18} className="mr-1 border rounded p-0.5 bg-yellow-500/20 text-yellow-500 border-yellow-500" />,
+                            'Low': <SignalLow size={18} className="mr-1 border rounded p-0.5 bg-blue-500 text-blue-300 border-blue-300" />,
+                            'Normal': <Ban size={18} className="mr-1  border rounded p-0.5 bg-gray-500 text-gray-200 border-gray-300" />
+                          }[taskDetailsModal.task.priority]
+                        }
+                        {taskDetailsModal.task.priority}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -388,12 +414,6 @@ export default function AllTasks() {
                   </div>
                 )}
 
-                <div className="mb-4 flex gap-9">
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Task ID</h3>
-                  <p className="text-gray-700 font-mono text-sm">
-                    {taskDetailsModal.task?._id}
-                  </p>
-                </div>
               </div>
             </div>
 
