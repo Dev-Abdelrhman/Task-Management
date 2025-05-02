@@ -112,7 +112,7 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects",
       "body": {
         "name ✅": "Example",
-        "category": [
+        "category ✅": [
           "UI/UX",
           "Development",
           "Marketing",
@@ -190,7 +190,7 @@
         "image ✅": "you will upload it"
       }
     },
-    "Update Project ": {
+    "Update Project ✅": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID",
       "body": {
