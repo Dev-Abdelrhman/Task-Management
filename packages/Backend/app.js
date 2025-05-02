@@ -56,11 +56,7 @@ const limiter = rateLimit({
 });
 app.use("/depiV1", limiter);
 /* ______________ JSON Body Parser with Size Limit ______________ */
-app.use(
-  express.json({
-    limit: "10kb",
-  })
-);
+app.use(express.json({ limit: "50mb" }));
 /* ______________ NoSQL Injection Protection ______________ */
 app.use(mongoSanitize());
 /* ______________ HTTP Parameter Pollution Protection ______________ */

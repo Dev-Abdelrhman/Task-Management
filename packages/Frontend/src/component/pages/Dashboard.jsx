@@ -382,7 +382,7 @@ export default function TaskordDashboard() {
                             component="img"
                             src={
                               project?.image?.[0]?.url ||
-                              "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                              "https://fakeimg.pl/1280x720?text=No+Image"
                             }
                             alt={project.title}
                             sx={{
@@ -399,7 +399,7 @@ export default function TaskordDashboard() {
                       <div>
                         <h3 className="font-medium text-lg ">{project.name}</h3>
                         <p className="text-sm text-gray-500 mb-2">
-                          {project.description}
+                          {project.category}
                         </p>
 
                         <Box className="mb-3">
@@ -441,7 +441,7 @@ export default function TaskordDashboard() {
                                 className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                               >
                                 <img
-                                  src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                  src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
                                   alt="Team member"
                                   width={24}
                                   height={24}
@@ -553,7 +553,7 @@ export default function TaskordDashboard() {
                         component="img"
                         src={
                           ProjectData?.doc[0]?.image?.[0]?.url ||
-                          "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                          "https://fakeimg.pl/1280x720?text=No+Image"
                         }
                         alt="Albex 360 Mockup"
                         sx={{
@@ -570,7 +570,7 @@ export default function TaskordDashboard() {
                         {ProjectData.doc[0].name}
                       </h3>
                       <p className="text-sm text-gray-500 mb-3">
-                        {ProjectData.doc[0].description}
+                        {ProjectData.doc[0].category}
                       </p>
 
                       <Box className="mb-3">
@@ -612,7 +612,7 @@ export default function TaskordDashboard() {
                               className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                             >
                               <img
-                                src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
                                 alt="Team member"
                                 width={24}
                                 height={24}
