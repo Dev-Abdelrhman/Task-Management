@@ -37,8 +37,8 @@ function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route element={<Layout />}>
             <Route path="/projects" element={<Projects />} />
-            <Route path="/ProjectDetails/:projectId" element={<ProjectDetails/>}/>
-            <Route path="/users/:userId/projects/:projectId/tasks" element={<ProjectTasks />}/>
+            <Route path="/projects/ProjectDetails/:projectId" element={<ProjectDetails/>}/>
+            <Route path="/projects/users/:userId/projects/:projectId/tasks" element={<ProjectTasks />}/>
             <Route path="/user-tasks" element={<AllTasks />} />
           </Route>
         </Route>

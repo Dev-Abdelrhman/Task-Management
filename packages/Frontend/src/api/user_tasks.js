@@ -40,7 +40,19 @@ export const updateTask = async (id, taskData) => {
     throw error;
   }
 };
+// http://localhost:9999/depiV1/tasks/:taskID
+export const getTaskById = async (id) => {
+  try {
+    console.log("Fetching task by ID:", id);
 
+    const res = await API.get(`${BASE_URL}/tasks/${id}`, { withCredentials: true });
+    console.log("Task fetched successfully:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching task by ID:", error.response?.data || error.message);
+    throw error;
+  }
+}
 // Delete a task
 export const deleteTask = async (id) => {
   try {
