@@ -222,7 +222,7 @@ const ProjectTasks = () => {
 
       const newBoard = {
         ...board,
-        columns: board.columns.map(col => {
+        columns: board.columns.map((col) => {
           if (col.id === sourceCol.id) {
             return { ...col, tasks: sourceTasks, count: sourceTasks.length };
           }
@@ -238,7 +238,7 @@ const ProjectTasks = () => {
 
       const newBoard = {
         ...board,
-        columns: board.columns.map(col => {
+        columns: board.columns.map((col) => {
           if (col.id === sourceCol.id) {
             return { ...col, tasks: sourceTasks, count: sourceTasks.length };
           }
@@ -252,16 +252,12 @@ const ProjectTasks = () => {
       setBoard(newBoard);
 
       if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
-        updateTaskStatus(user._id, projectId, movedTask._id,{...movedTask, status: destCol.status})
-          .then((response) => {
-            console.log("API Response:", response)
-            toast.success("Task updated successfully!");
-            socket.emit("taskUpdated", movedTask);
-          })
-          .catch(() => {
-            setBoard(board);
-            toast.error("Failed to update task status!");
-          });
+          updateMutation.mutate({
+          taskId:movedTask._id,
+          taskData: {status: destCol.status}
+       
+        })
+        
       }
     }
   }
