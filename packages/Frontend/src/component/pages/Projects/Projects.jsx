@@ -214,10 +214,10 @@ function Projects() {
   const dataLength = filteredProjects.length;
   return (
     <>
-      <div className="bg-white flex justify-between items-center px-6 pt-2 pb-8 ">
+      <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">
         <div className="relative w-1/2">
-          <span className="absolute inset-y-0 right-6 flex items-center pl-3">
-            <Search className="h-5 w-5 text-[#8E92BC]" />
+          <span className="absolute inset-y-0 right-6 flex items-center pl-3 ">
+            <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
           <input
             type="search"
@@ -232,7 +232,7 @@ function Projects() {
           <Button
             variant="outlined"
             startIcon={<ChartBarStacked className="w-6 h-6 !text-[#8E92BC]" />}
-            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] dark:hover:!bg-[#353535] dark:!text-[#a0a0a0] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
             onClick={(e) => setAnchorEl(e.currentTarget)}
           >
             {selectedCategory || "Category"}
@@ -268,7 +268,7 @@ function Projects() {
           <Button
             variant="outlined"
             startIcon={<FilterListIcon className="!w-6 !h-6 !text-[#8E92BC]" />}
-            className="!border-gray-200 !text-gray-700 !rounded-[10px] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            className="!border-gray-200 !text-gray-700 !rounded-[10px] dark:!text-[#a0a0a0] dark:hover:!bg-[#353535] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
             onClick={toggleSortOrder}
           >
             {sortOrder === "asc"
@@ -294,7 +294,7 @@ function Projects() {
               <div className="w-full">
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-medium">All Projects</h2>
+                    <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">All Projects</h2>
                     <div className="flex gap-2">
                       <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
                         <ChevronLeft className="!w-6 !h-6" />
@@ -329,7 +329,7 @@ function Projects() {
                       <SwiperSlide className="!w-full sm:!w-auto">
                         <div
                           key={index}
-                          className="bg-white p-4 rounded-xl border border-gray-200 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
+                          className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
                         >
                           <div
                             className="my-1"
@@ -353,9 +353,9 @@ function Projects() {
                             />
                           </div>
                           <div>
-                            <div className="flex justify-between p-0 m-0">
+                            <div className="flex  justify-between p-0 m-0">
                               <h3
-                                className="font-medium text-lg !m-0 !p-0 cursor-pointer"
+                                className="font-medium text-lg dark:text-[#e2e2e2] !m-0 !p-0 cursor-pointer"
                                 onClick={() => handleClick(project._id)}
                               >
                                 {project.name}
@@ -365,7 +365,7 @@ function Projects() {
                                 projectData={project}
                               />
                             </div>
-                            <p className="text-sm text-gray-500 mb-2">
+                            <p className="text-sm text-gray-500 dark:text-[#a0a0a0] mb-2">
                               {project.category}
                             </p>
 

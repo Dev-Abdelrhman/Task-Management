@@ -331,7 +331,7 @@ export default function AllTasks() {
   return (
     <>
       {/* Nav */}
-      <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#121212]  flex justify-between items-center">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0  flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
@@ -352,12 +352,12 @@ export default function AllTasks() {
         </Button>
       </div>
       {/* Content */}
-      <div className="px-4 pb-4 pt-3 bg-gray-100 min-h-screen ">
+      <div className="px-4 pb-4 pt-3 bg-gray-100 dark:bg-[#121212] min-h-screen ">
         {taskDetailsModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white w-[480px] rounded-[10px] h-screen shadow-lg px-6 overflow-y-auto">
+            <div className="bg-white w-[480px] rounded-[10px] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
               <div className="flex justify-end items-center ">
-                <button
+                <button className="mb-3"
                   onClick={() =>
                     setTaskDetailsModal({ show: false, task: null })
                   }
