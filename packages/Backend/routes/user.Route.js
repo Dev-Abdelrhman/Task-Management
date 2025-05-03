@@ -1,18 +1,19 @@
 const express = require("express");
 const UC = require("../app/controllers/user.Controller.js");
 const AC = require("../app/controllers/auth.Controller.js");
+const { generalLimiter, authLimiter } = require("../app/utils/rateLimite.js");
 
 const ProjectsRoutes = require("./projects.Route.js");
 const InviteRouter = require("./invite.Route.js");
 const router = express();
 
-router.get("/google", AC.googleAuth);
-router.get("/google/callback", AC.googleAuthCallback);
+router.get("/google", generalLimiter, AC.googleAuth);
+router.get("/google/callback", generalLimiter, AC.googleAuthCallback);
 router.post("/continueSignUpWithGoogle", AC.completeGoogleSignup);
-router.post("/signup", AC.signup);
-router.post("/signin", AC.signin);
-router.post("/forgotPassword", AC.forgotPassword);
-router.patch("/resetPassword/:token", AC.resetPassword);
+router.post("/signup", authLimiter, AC.signup);
+router.post("/signin", authLimiter, AC.signin);
+router.post("/forgotPassword", authLimiter, AC.forgotPassword);
+router.patch("/resetPassword/:token", authLimiter, AC.resetPassword);
 router.post("/logout", AC.logout);
 
 router.use(AC.protect);
