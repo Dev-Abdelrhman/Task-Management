@@ -12,11 +12,10 @@ router
   .get(RPP(["Read"]), CC.getComments)
   .post(RPP(["Read"]), CC.uploader, CC.createComment);
 
-// router.use(CC.isMine);
 router
   .route("/:id")
-  .get(CC.getCommentById)
-  .patch(CC.uploader, CC.updateComment)
-  .delete(CC.deleteComment);
+  .get(CC.isMine, CC.getCommentById)
+  .patch(CC.isMine, CC.uploader, CC.updateComment)
+  .delete(CC.isMine, CC.deleteComment);
 
 module.exports = router;

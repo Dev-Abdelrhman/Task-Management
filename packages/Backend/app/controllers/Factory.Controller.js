@@ -171,15 +171,11 @@ const isOwner = (Model, ownerField) =>
     if (!doc) {
       return next(new AppError(`${Model.modelName} not found`, 404));
     }
-    console.log(doc[ownerField]);
-
-    if (doc[ownerField].toString() !== req.user.id) {
-      return next(
-        new AppError("You are not authorized to access this resource", 403)
-      );
+    if (doc[ownerField].equals(req.user.id)) {
+      return next();
     }
 
-    next();
+    next(new AppError("You are not authorized to access this resource", 403));
   });
 //________________________________________________________________________
 const removeFile = (Model, fieldName) =>
