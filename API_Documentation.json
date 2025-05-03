@@ -285,6 +285,10 @@
     "Get One Project ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
+    },
+    "Get Project Members": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/members"
     }
   },
   "RolesAPI": {
