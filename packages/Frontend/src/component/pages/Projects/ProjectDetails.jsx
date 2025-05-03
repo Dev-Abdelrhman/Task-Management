@@ -56,14 +56,7 @@ function ProjectDetails() {
       [name]: value,
     }));
   };
-  const handleDeleteRole = async (userId, projectId, roleId) => {
-    try {
-      console.log("Deleting role with:", { userId, projectId, roleId });
-      await deleteRole(userId, projectId, roleId);
-    } catch (error) {
-      console.error("Error deleting role:", error);
-    }
-  };
+
   const handleRoleDetails = async (userId, projectId, roleId) => {
     setDetailsModalOpen(true); // Open modal immediately
     setSelectedRole(null); // Clear previous data
@@ -87,9 +80,9 @@ function ProjectDetails() {
     )}&w=200&h=200`;
   };
 
-  if (isLoading) {
+  if (isLoading || rolesLoading) {
     return (
-      <div className="flex fixed top-0 left-0 w-full h-full justify-center">
+      <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
         <CircularProgress />
       </div>
     );
