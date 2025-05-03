@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { Calendar, CircleAlert,Plus, Search, SquarePen, Trash2, X } from "lucide-react";
+import { Calendar, CircleAlert, Plus, Search, SquarePen, Trash2, X } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { getAllProjectTasks,getOneTask, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
+import { getAllProjectTasks, getOneTask, createProjectTask, updateTaskStatus, deleteTaskStatus } from "../../../api/projectTasks"
 import AddProjectTask from "./AddProjectTask"
 import { toast } from "react-toastify"
 import { io } from "socket.io-client"
@@ -38,7 +38,7 @@ const ProjectTasks = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [editTask, setEditTask] = useState(null)
-  const [DetailsModal, setDetailsModal] = useState({show: false, task: null})
+  const [DetailsModal, setDetailsModal] = useState({ show: false, task: null })
   const [board, setBoard] = useState({
     columns: statusColumns.map(col => ({ ...col, tasks: [], count: 0 }))
   })
@@ -157,7 +157,7 @@ const ProjectTasks = () => {
     }
   })
 
-  
+
 
   const deleteMutation = useMutation({
     mutationFn: taskId => deleteTaskStatus(user._id, projectId, taskId),
@@ -170,28 +170,28 @@ const ProjectTasks = () => {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({taskId , taskData}) => updateTaskStatus(user._id, projectId,taskId, taskData ),
-    onSuccess: (data, {taskId}) =>{
-      socket.emit("taskUpdated" ,taskId)
+    mutationFn: ({ taskId, taskData }) => updateTaskStatus(user._id, projectId, taskId, taskData),
+    onSuccess: (data, { taskId }) => {
+      socket.emit("taskUpdated", taskId)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
 
     },
     onError: () => toast.error("Failed to update task!")
   })
 
-  const handleclickTask = (task) =>{
+  const handleclickTask = (task) => {
     console.log("Task clicked:", task);
     fetchtaskDetails.mutate({ taskId: task._id, userId: user._id, projectId })
   }
   const fetchtaskDetails = useMutation({
     mutationFn: ({ taskId, userId, projectId }) => getOneTask(userId, projectId, taskId),
-    onSuccess: (data) =>{
-      console.log("Raw AOI response:" , data)
+    onSuccess: (data) => {
+      console.log("Raw AOI response:", data)
       const task = data.doc || data
-      if (!task){
-        throw new Error ("No task data returned from API")
+      if (!task) {
+        throw new Error("No task data returned from API")
       }
-      setDetailsModal({show: true, task})
+      setDetailsModal({ show: true, task })
       console.log("Task retrieved successfully:", task);
 
     },
@@ -252,12 +252,12 @@ const ProjectTasks = () => {
       setBoard(newBoard);
 
       if (user._id && movedTask._id && !movedTask._id.startsWith("temp-")) {
-          updateMutation.mutate({
-          taskId:movedTask._id,
-          taskData: {status: destCol.status}
-       
+        updateMutation.mutate({
+          taskId: movedTask._id,
+          taskData: { status: destCol.status }
+
         })
-        
+
       }
     }
   }
@@ -267,28 +267,28 @@ const ProjectTasks = () => {
     setShowModal(true)
   }
   const openModal = (task) => {
-        setEditTask(task)
-        setSelectedColumn(null)
-        setShowModal(true)
+    setEditTask(task)
+    setSelectedColumn(null)
+    setShowModal(true)
   }
 
- 
+
   const handleAddTask = async (taskData) => {
     console.log("Edit Mode:", editTask);
     console.log("Data to submit:", taskData);
     try {
-      if (!editTask &&selectedColumn) {
+      if (!editTask && selectedColumn) {
         const column = board.columns.find(col => col.id === selectedColumn)
         if (column) taskData.status = column.status
       }
       if (editTask) {
-        await updateMutation.mutateAsync({taskId: editTask._id, taskData })
+        await updateMutation.mutateAsync({ taskId: editTask._id, taskData })
         setEditTask(null)
-      }else{
-      await mutation.mutateAsync(taskData)
+      } else {
+        await mutation.mutateAsync(taskData)
       }
       setShowModal(false)
-      
+
     } catch (err) {
       console.error("Failed to save task:", err)
       toast.error("Failed to save task!")
@@ -299,7 +299,7 @@ const ProjectTasks = () => {
   if (isError) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error.message}</div>
 
   return <>
-    <div className="mb-4 px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+    <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center">
       <div className="relative w-1/2">
         <span className="absolute inset-y-0  flex items-center pl-3">
           <Search className="h-5 w-5 text-[#8E92BC]" />
@@ -318,7 +318,7 @@ const ProjectTasks = () => {
         Add Task
       </Button>
     </div>
-    <div className="px-4 pb-4 pt-0 bg-gray-100 min-h-screen rounded-[30px]">
+    <div className="px-4 pb-4 pt-3 bg-gray-100 min-h-screen ">
 
       {showModal && (
         <AddProjectTask
@@ -329,7 +329,7 @@ const ProjectTasks = () => {
         />
       )}
 
-{DetailsModal.show && DetailsModal.task && (
+      {DetailsModal.show && DetailsModal.task && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
           <div className="bg-white w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
             <div className="flex justify-end items-center mb-4">
@@ -364,7 +364,7 @@ const ProjectTasks = () => {
                   <div className="flex items-center">
                     <span className={`px-3 py-1 rounded text-xs font-medium ${DetailsModal.task?.status === 'Completed' ? 'bg-green-100 text-green-800' :
                       DetailsModal.task?.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                      DetailsModal.task?.status === 'Todo' ? 'bg-blue-100 text-blue-800' :
+                        DetailsModal.task?.status === 'Todo' ? 'bg-blue-100 text-blue-800' :
                           'bg-gray-100 text-gray-800'
                       }`}>
                       {DetailsModal.task.status}
@@ -374,7 +374,7 @@ const ProjectTasks = () => {
                 <div className="mb-4 flex gap-8 mt-3">
                   <h3 className="text-sm font-medium text-gray-500 mb-1">priority</h3>
                   <div className="flex items-center">
-                    
+
                   </div>
                 </div>
               </div>
@@ -435,7 +435,7 @@ const ProjectTasks = () => {
           </div>
         </div>
       )}
-      
+
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-8 overflow-x-auto pb-4 px-4">
@@ -474,16 +474,16 @@ const ProjectTasks = () => {
                                 className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
                               >
                                 <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
-                                  <h3 className="text-sm font-medium" onClick= {()=> handleclickTask(task)}>{task.title.split(" ").length > 5
-                                      ? task.title.split(" ").slice(0, 5).join(" ") + "..."
-                                      : task.title}</h3>
+                                  <h3 className="text-sm font-medium" onClick={() => handleclickTask(task)}>{task.title.split(" ").length > 5
+                                    ? task.title.split(" ").slice(0, 5).join(" ") + "..."
+                                    : task.title}</h3>
                                   <div className="flex">
                                     <button onClick={() => setDeleteModal({ show: true, taskId: task._id })} className="text-red-400 hover:text-red-600">
                                       <Trash2 width={19} height={24} />
                                     </button>
-                                    <button  onClick={() => openModal(task)}
+                                    <button onClick={() => openModal(task)}
                                       className="text-gray-400 hover:text-gray-600 ml-2"
-                                      
+
                                     >
                                       <SquarePen width={19} height={24} />
                                     </button>

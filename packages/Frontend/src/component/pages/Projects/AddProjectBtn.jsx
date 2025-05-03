@@ -233,13 +233,15 @@ function AddProjectBtn({
               <h3 className="text-xl font-semibold text-gray-900">
                 {isEditMode ? "Updating Project" : "Create New Project"}
               </h3>
-              <button
+             <div>
+             <button
                 onClick={handleClose}
                 className="text-gray-400 hover:text-gray-900"
                 disabled={isLoading || isDeletingImage}
               >
                 ✖
               </button>
+             </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-6">
@@ -312,11 +314,10 @@ function AddProjectBtn({
                 ) : null}
                 <label
                   htmlFor="projectImage"
-                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${
-                    isLoading || isDeletingImage
+                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${isLoading || isDeletingImage
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-gray-700"
-                  }`}
+                    }`}
                 >
                   Upload image
                   <Upload />
@@ -327,6 +328,27 @@ function AddProjectBtn({
                   id="projectImage"
                   name="image"
                   onChange={handleFileChange}
+                  disabled={isLoading || isDeletingImage}
+                />
+              </div>
+
+              {/* Existing name input */}
+              <div>
+                <label
+                  htmlFor="projectName"
+                  className="block mb-1 text-border font-medium text-gray-700"
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  placeholder="Type project name"
+                  id="projectName"
+                  name="name"
+                  value={newProject.name}
+                  onChange={handleInputs}
+                  required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
                 />
               </div>
@@ -355,27 +377,6 @@ function AddProjectBtn({
                     </option>
                   ))}
                 </select>
-              </div>
-
-              {/* Existing name input */}
-              <div>
-                <label
-                  htmlFor="projectName"
-                  className="block mb-1 text-border font-medium text-gray-700"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
-                  placeholder="Type project name"
-                  id="projectName"
-                  name="name"
-                  value={newProject.name}
-                  onChange={handleInputs}
-                  required={!isEditMode}
-                  disabled={isLoading || isDeletingImage}
-                />
               </div>
 
               {/* Existing description input */}

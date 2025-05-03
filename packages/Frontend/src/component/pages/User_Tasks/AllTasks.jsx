@@ -317,20 +317,20 @@ export default function AllTasks() {
 
       {taskDetailsModal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-          <div className="bg-white w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
-            <div className="flex justify-end items-center mb-4">
+          <div className="bg-white w-[850px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
+            <div className="flex justify-end items-center ">
               <button onClick={() => setTaskDetailsModal({ show: false, task: null })}>
                 <X size={24} />
               </button>
             </div>
 
             {taskDetailsModal.task?.image && (
-              <div className="mb-4   ">
+              <div className="mb-6   ">
                 <img
                   src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
                   // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
                   alt="Task"
-                  className="max-w-full h-auto rounded"
+                  className="w-1/2 h-auto rounded"
                 />
               </div>
             )}
