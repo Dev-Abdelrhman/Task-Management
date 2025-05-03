@@ -19,14 +19,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/comments",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/68098450cc51d9ee9ec0dac0/comments",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67ce95c3d62889c409fb0ef1",
+								"68098450cc51d9ee9ec0dac0",
 								"comments"
 							]
 						}
@@ -84,28 +84,26 @@
 							"formdata": [
 								{
 									"key": "comment",
-									"value": "I hope it works",
+									"value": "I hope it works V2",
 									"type": "text"
 								},
 								{
 									"key": "image",
 									"type": "file",
-									"src": [
-										"/C:/Users/Fawzy/Downloads/Sans_battle_idle.webp",
-										"/C:/Users/Fawzy/Downloads/61IeerlNLuL._AC_UF350,350_QL80_.jpg"
-									]
+									"src": [],
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/67ffc20d7fa5ad91263de617/comments",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb/comments",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"67ffc20d7fa5ad91263de617",
+								"680ea8ddf2b860bb9664f5cb",
 								"comments"
 							]
 						}
@@ -120,31 +118,27 @@
 						},
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "comment",
+									"value": "I hope it works V2",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "{{URL}}users/:userId/projects/:projectId/comments/:commentId",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/68098450cc51d9ee9ec0dac0/comments/68098ffa265f19b1195ee4f9",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								":userId",
+								"67fd51086586ec862e97d494",
 								"projects",
-								":projectId",
+								"68098450cc51d9ee9ec0dac0",
 								"comments",
-								":commentId"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "projectId",
-									"value": ""
-								},
-								{
-									"key": "commentId",
-									"value": ""
-								}
+								"68098ffa265f19b1195ee4f9"
 							]
 						}
 					},
@@ -260,21 +254,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67e2130c58a46fa8c3e9a63d"
+								"680ea8ddf2b860bb9664f5cb"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Invited Projects",
+					"name": "Get Project Members",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -282,14 +276,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/projects/invited",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/members",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67c966028ad04d7ff9ea5fbf",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"invited"
+								"681433a53e25c243b0dadf00",
+								"members"
 							]
 						}
 					},
@@ -308,18 +303,18 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "test",
+									"value": "El Z3bol",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "sdsfhdgfhgj",
+									"value": "Sa3dola up",
 									"type": "text"
 								},
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/C:/Users/Fawzy/Downloads/Sans_battle_idle.webp"
+									"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-03-14 043705.png"
 								}
 							]
 						},
@@ -391,7 +386,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"public_id\": \"nuadsll7ijdvicy6w0ay\"\r\n}\r\n",
+							"raw": "{\r\n  \"public_id\": \"z18gj0vgaw20hr0gkmxc\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -399,21 +394,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}users/:userId/projects/67e2130c58a46fa8c3e9a63d/removeImage",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680fdb3dce17764460e1582d/removeImage",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								":userId",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67e2130c58a46fa8c3e9a63d",
+								"680fdb3dce17764460e1582d",
 								"removeImage"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								}
 							]
 						}
 					},
@@ -562,7 +551,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Test_Role_v2\",\r\n    \"permissions\":[\"read\",\"write\",\"delete\"]\r\n}",
+							"raw": "{\r\n    \"name\":\"lol test\",\r\n    \"permissions\":[\"Read\", \"Add\", \"Delete\", \"Edit\"],\r\n    \"color\":\"#000000\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -570,14 +559,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/roles",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb/roles",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67e2130c58a46fa8c3e9a63d",
+								"680ea8ddf2b860bb9664f5cb",
 								"roles"
 							]
 						}
@@ -659,7 +648,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"title\":\"first task without any projects just for private tasks\"\r\n}",
+									"raw": "{\r\n    \"title\":\"for test is it work ?\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -667,9 +656,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{URL}}tasks",
+									"raw": "{{URL}}tasks/",
 									"host": [
 										"{{URL}}tasks"
+									],
+									"path": [
+										""
 									]
 								}
 							},
@@ -733,12 +725,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{URL}}tasks/68039436244da4230ba6a69b",
+									"raw": "{{URL}}tasks/68098db93cb18246478e640b",
 									"host": [
 										"{{URL}}tasks"
 									],
 									"path": [
-										"68039436244da4230ba6a69b"
+										"68098db93cb18246478e640b"
 									]
 								}
 							},
@@ -787,14 +779,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks",
+									"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb/tasks",
 									"host": [
 										"{{URL}}users"
 									],
 									"path": [
-										"67cd552eeb136fc473543ae1",
+										"67fd51086586ec862e97d494",
 										"projects",
-										"67e2130c58a46fa8c3e9a63d",
+										"680ea8ddf2b860bb9664f5cb",
 										"tasks"
 									]
 								}
@@ -810,14 +802,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks",
+									"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/68098450cc51d9ee9ec0dac0/tasks",
 									"host": [
 										"{{URL}}users"
 									],
 									"path": [
-										"67cd552eeb136fc473543ae1",
+										"67fd51086586ec862e97d494",
 										"projects",
-										"67e2130c58a46fa8c3e9a63d",
+										"68098450cc51d9ee9ec0dac0",
 										"tasks"
 									]
 								}
@@ -1385,6 +1377,28 @@
 								"67c966028ad04d7ff9ea5fbf",
 								"invite",
 								"receiver"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all invite that related to the sender",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/67c966028ad04d7ff9ea5fbf/invite/sender",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"67c966028ad04d7ff9ea5fbf",
+								"invite",
+								"sender"
 							]
 						}
 					},

@@ -13,7 +13,6 @@ const router = express.Router({ mergeParams: true });
 router.use(AC.protect);
 
 router.route("/").get(PC.getProjects).post(PC.uploader, PC.createProject);
-router.get("/:projectId/members");
 router
   .route("/:id")
   .get(RPP(["Read"]), PC.getProjectById)
