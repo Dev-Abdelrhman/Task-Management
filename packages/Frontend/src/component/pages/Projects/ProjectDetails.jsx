@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Button, Chip } from "@mui/material";
+import { Box, CircularProgress, Button, Chip, Avatar } from "@mui/material";
 import { Clock, Users, Search, X, Pencil, ReceiptText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,7 +23,7 @@ function ProjectDetails() {
   const [newRole, setnewRole] = useState({
     name: "",
     permissions: [],
-    color: "",
+    color: "#546FFF",
   });
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
@@ -46,6 +46,7 @@ function ProjectDetails() {
     },
   });
   const project = data?.doc;
+  const projectMembers = data?.doc?.members;
 
   // Handles
   const handleInputChange = (e) => {
@@ -80,6 +81,11 @@ function ProjectDetails() {
   const handleClick = () => {
     navigate(`/projects/users/${user?._id}/projects/${projectId}/tasks`);
   };
+  const hostGoogleImage = (url) => {
+    return `https://images.weserv.nl/?url=${encodeURIComponent(
+      url
+    )}&w=200&h=200`;
+  };
 
   if (isLoading) {
     return (
@@ -93,7 +99,6 @@ function ProjectDetails() {
       <div className="text-center text-red-500">Error: {error.message}</div>
     );
   }
-  console.log(data);
 
   return (
     <>
@@ -490,7 +495,7 @@ function ProjectDetails() {
               {rolesData?.doc.map((role) => (
                 <div
                   key={role._id}
-                  className="flex gap-2 px-2 !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer"
+                  className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer"
                 >
                   <div className="flex items-center gap-2 ">
                     <div
@@ -528,6 +533,27 @@ function ProjectDetails() {
                       }
                     />
                   </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 font-semibold text-2xl">
+              <h2 className="mb-4">Members</h2>
+              {projectMembers.map((mem) => (
+                <div
+                  key={mem.id}
+                  className="flex gap-2 items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2"
+                >
+                  <Avatar
+                    className="!w-10 !h-10"
+                    src={
+                      mem.user.image.length
+                        ? hostGoogleImage(user.image[0].url)
+                        : undefined
+                    }
+                  />
+                  <span key={mem.id} className="font-normal text-xl">
+                    {mem.user.name}
+                  </span>
                 </div>
               ))}
             </div>

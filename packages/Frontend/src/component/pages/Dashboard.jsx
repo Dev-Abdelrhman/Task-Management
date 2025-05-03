@@ -71,11 +71,6 @@ export default function TaskordDashboard() {
     totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0
   );
 
-  console.log("doneTasks", doneTasks);
-  console.log("ramainingTasks", ramainingTasks);
-
-  console.log("tasksData", tasksData);
-
   const handleLogout = async () => {
     try {
       await signOut();
@@ -548,7 +543,6 @@ export default function TaskordDashboard() {
 
                   <div className="rounded-xl overflow-hidden mb-4">
                     <div className="mb-3">
-                      {console.log(ProjectData)}
                       <Box
                         component="img"
                         src={
