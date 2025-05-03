@@ -291,33 +291,35 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/members"
     }
   },
-  "RolesAPI": {
+  "RolesAPI ✅": {
     "STATUS": "Completed",
-    "Get Roles": {
+    "Get Roles ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles"
     },
-    "Get Role": {
+    "Get Role ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     },
-    "Create Role": {
+    "Create Role ✅": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles",
       "body": {
         "name": "Example",
-        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"]
+        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"],
+        "color": "#000000"
       }
     },
-    "Update Role": {
+    "Update Role ✅": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID",
       "body": {
         "name": "Example",
-        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"]
+        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"],
+        "color": "#000000"
       }
     },
-    "Delete Role": {
+    "Delete Role ✅": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     }

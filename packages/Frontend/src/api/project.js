@@ -4,9 +4,7 @@ export const getUserProjects = async (user_id) => {
   return res.data;
 };
 export const getProjectById = async (projectId) => {
-  const res = await API.get(`/api/projects/${projectId}`, {
-    withCredentials: true,
-  });
+  const res = await API.get(`/api/projects/${projectId}`);
   return res.data;
 };
 
