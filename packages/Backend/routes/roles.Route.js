@@ -12,7 +12,7 @@ router
   .get(RPP(["Read"]), RC.getAllRoles)
   .post(RPP(["Admin"]), RC.createRole);
 
-router.use(RC.isMine);
+// router.use(RC.isMine);
 router.use(RPP(["Admin"]));
 router
   .route("/:id")
