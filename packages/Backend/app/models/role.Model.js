@@ -23,7 +23,7 @@ const roleSchema = new mongoose.Schema({
   ],
   color: {
     type: String,
-    default: "##FFFFFF",
+    default: "#FFFFFF",
   },
 });
 roleSchema.pre("save", function (next) {
@@ -44,7 +44,6 @@ roleSchema.pre(/^find/, function (next) {
 roleSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.project;
-    // delete ret.theCreator;
     return ret;
   },
 });
