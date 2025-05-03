@@ -97,7 +97,7 @@
       "url": "http://localhost:9999/depiV1/users/deleteMe"
     }
   },
-  "ProjectsAPI": {
+  "ProjectsAPI ✅": {
     "STATUS": "Completed",
     "Get All Projects ✅": {
       "method": "GET",
@@ -362,9 +362,9 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
     }
   },
-  "TasksAPI": {
+  "TasksAPI✅": {
     "STATUS": "Still in development",
-    "UserTasks": {
+    "UserTasks ✅": {
       "Get AllUser Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/userTasks"
@@ -406,7 +406,7 @@
         "url": "http://localhost:9999/depiV1/tasks/:taskID"
       }
     },
-    "ProjectTasks": {
+    "ProjectTasks✅": {
       "GetAll Project Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks"
@@ -450,7 +450,7 @@
       }
     }
   },
-  "InviteAPI": {
+  "InviteAPI ": {
     "get All Invites For Sender": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sender"

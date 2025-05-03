@@ -4,7 +4,7 @@ import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProjects } from "../../../api/project";
+import { getUserProjects, getInvitedProjects } from "../../../api/project";
 import {
   Box,
   Typography,
@@ -112,12 +112,25 @@ function Projects() {
     "AI Regulations",
   ];
 
+  // const {
+  //   data: invitedData,
+  //   isLoading: invitedIsLoading,
+  //   isError: invitedIsError,
+  //   error: invitedError,
+  // } = useQuery({
+  //   queryKey: ["invitedPojects"],
+  //   queryFn: async () => {
+  //     return await getInvitedProjects(user._id);
+  //   },
+  // });
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
       return await getUserProjects(user._id);
     },
   });
+
   console.log(data, "data");
 
   const handleClick = (projectId) => {
