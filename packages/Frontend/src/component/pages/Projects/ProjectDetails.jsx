@@ -95,7 +95,7 @@ function ProjectDetails() {
 
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA]">
+      <div className="flex min-h-screen dark:bg-[#1E1E1E] bg-[#FAFAFA]">
         <div className="h-full w-[68%]">
           <Box
             component="img"
@@ -115,7 +115,7 @@ function ProjectDetails() {
           />
           <div>
             <div className="flex justify-between ml-16 ">
-              <h1 className="font-medium text-4xl">{project?.name}</h1>
+              <h1 className="font-medium text-4xl dark:text-[#e2e2e2] ">{project?.name}</h1>
               <Button
                 onClick={() => handleClick()}
                 className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl"
@@ -124,23 +124,23 @@ function ProjectDetails() {
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mb-4 ml-20">
-              <p className="text-gray-800 ">{project?.category}</p>
+              <p className="text-gray-800 dark:text-[#a0a0a0]">{project?.category}</p>
 
               <p className=" text-[#546FFF]  cursor-pointer select-none">
                 + Add Members
               </p>
             </div>
             <div className="flex flex-wrap gap-2 mb-4 ml-20 text-black">
-              <Users className="w-5 h-5" />
-              <p variant="body2" className="mr-5">
+              <Users className="w-5 h-5 dark:text-[#a0a0a0]" />
+              <p variant="body2" className="mr-5 dark:text-[#a0a0a0]">
                 200 Members Involved
               </p>
-              <Clock className="w-5 h-5 mt-[2px]" />
-              <p variant="body2 !mb-5">1 Hour</p>
+              <Clock className="w-5 h-5 mt-[2px] dark:text-[#a0a0a0]" />
+              <p variant="body2 !mb-5 " className="dark:text-[#a0a0a0]">1 Hour</p>
             </div>
             <div className=" ml-16 pt-4 ">
-              <h1 className="font-medium text-4xl">Description</h1>
-              <p className="text-gray-800 leading-8 text-xl my-4">
+              <h1 className="font-medium text-4xl dark:text-[#e2e2e2]">Description</h1>
+              <p className="text-gray-800 leading-8 text-xl my-4 dark:text-[#a0a0a0]">
                 {" "}
                 Follow the video tutorial above. Understand how to use each tool
                 in the Figma application. Also learn how to make a good and

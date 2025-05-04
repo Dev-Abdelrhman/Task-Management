@@ -43,7 +43,7 @@ function Navbar() {
   };
   return (
     <>
-      <nav className="flex justify-between items-center bg-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
+      <nav className="flex justify-between items-center bg-white dark:bg-[#121212] dark:text-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
         <h4 className="text-3xl">{title}</h4>
 
         <Box
