@@ -16,6 +16,7 @@ import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import AllTasks from "./component/pages/User_Tasks/AllTasks";
 import Settings from "./component/pages/Setting";
+import InviteManagement from "./component/pages/Invite/InviteManagement";
 
 function App() {
   return (
@@ -38,9 +39,16 @@ function App() {
           <Route path="/home" element={<Dashboard />} />
           <Route element={<Layout />}>
             <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/ProjectDetails/:projectId" element={<ProjectDetails />} />
-            <Route path="/projects/users/:userId/projects/:projectId/tasks" element={<ProjectTasks />} />
+            <Route
+              path="/projects/ProjectDetails/:projectId"
+              element={<ProjectDetails />}
+            />
+            <Route
+              path="/projects/users/:userId/projects/:projectId/tasks"
+              element={<ProjectTasks />}
+            />
             <Route path="/user-tasks" element={<AllTasks />} />
+            <Route path="/invites" element={<InviteManagement />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
