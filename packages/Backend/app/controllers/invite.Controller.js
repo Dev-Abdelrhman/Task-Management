@@ -48,7 +48,7 @@ const sendInvite = catchAsync(async (req, res, next) => {
   }
 
   const project = await Project.findById(projectId)
-    .populate({ path: "owner", select: "_id name username" })
+    .populate({ path: "members.user", select: "_id name username" })
     .populate("members.role");
 
   if (!project) {
