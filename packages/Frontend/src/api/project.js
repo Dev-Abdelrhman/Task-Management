@@ -4,12 +4,6 @@ export const getUserProjects = async (user_id) => {
   return res.data;
 };
 
-export const getInvitedProjects = async (userId) => {
-  const res = await API.get(`${userId}/projects/invited`, {
-    withCredentials: true,
-  });
-  return res.data;
-};
 export const getProjectById = async (projectId) => {
   const res = await API.get(`/api/projects/${projectId}`);
   return res.data;

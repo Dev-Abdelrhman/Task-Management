@@ -6,7 +6,8 @@ import { getProjectById } from "../../../api/project";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useRoles } from "../../../hooks/useRoles";
-import { getRoles, deleteRole } from "../../../api/roles";
+import { getRoles } from "../../../api/roles";
+import InviteModal from "../Invite/InviteModal";
 function ProjectDetails() {
   const { user } = useAuth();
   const { projectId } = useParams();
@@ -15,6 +16,7 @@ function ProjectDetails() {
     useRoles();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isRoleDetailsLoading, setIsRoleDetailsLoading] = useState(false);
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   const [editingRoleId, setEditingRoleId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -115,7 +117,9 @@ function ProjectDetails() {
           />
           <div>
             <div className="flex justify-between ml-16 ">
-              <h1 className="font-medium text-4xl dark:text-[#e2e2e2] ">{project?.name}</h1>
+              <h1 className="font-medium text-4xl dark:text-[#e2e2e2] ">
+                {project?.name}
+              </h1>
               <Button
                 onClick={() => handleClick()}
                 className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl"
@@ -124,9 +128,14 @@ function ProjectDetails() {
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mb-4 ml-20">
-              <p className="text-gray-800 dark:text-[#a0a0a0]">{project?.category}</p>
+              <p className="text-gray-800 dark:text-[#a0a0a0]">
+                {project?.category}
+              </p>
 
-              <p className=" text-[#546FFF]  cursor-pointer select-none">
+              <p
+                className="text-[#546FFF] cursor-pointer select-none"
+                onClick={() => setInviteModalOpen(true)}
+              >
                 + Add Members
               </p>
             </div>
@@ -136,10 +145,14 @@ function ProjectDetails() {
                 200 Members Involved
               </p>
               <Clock className="w-5 h-5 mt-[2px] dark:text-[#a0a0a0]" />
-              <p variant="body2 !mb-5 " className="dark:text-[#a0a0a0]">1 Hour</p>
+              <p variant="body2 !mb-5 " className="dark:text-[#a0a0a0]">
+                1 Hour
+              </p>
             </div>
             <div className=" ml-16 pt-4 ">
-              <h1 className="font-medium text-4xl dark:text-[#e2e2e2]">Description</h1>
+              <h1 className="font-medium text-4xl dark:text-[#e2e2e2]">
+                Description
+              </h1>
               <p className="text-gray-800 leading-8 text-xl my-4 dark:text-[#a0a0a0]">
                 {" "}
                 Follow the video tutorial above. Understand how to use each tool
@@ -553,6 +566,12 @@ function ProjectDetails() {
           </div>
         </div>
       </div>
+      <InviteModal
+        projectId={projectId}
+        open={inviteModalOpen}
+        onClose={() => setInviteModalOpen(false)}
+        roles={rolesData} // Pass the roles data here
+      />
     </>
   );
 }

@@ -66,6 +66,20 @@ function Sidebar() {
           </NavLink>
 
           <NavLink
+            to="/invites"
+            className={({ isActive }) =>
+              `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
+                isActive
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
+                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+              }`
+            }
+          >
+            <ListChecks className="h-5 w-5 mr-3" />
+            <span className="text-lg">Invites</span>
+          </NavLink>
+
+          <NavLink
             to="/tasks"
             className={({ isActive }) =>
               `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
