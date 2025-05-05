@@ -164,8 +164,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
 const getAllInvitesForReceiver = FC.getAll(Invite, "receiver");
 const getAllInvitesForSender = FC.getAll(Invite, "sender");
 
-const getOneInvite = FC.getOne(Invite);
-const updateInvite = FC.updateOne(Invite);
 const deleteInvite = FC.deleteOne(Invite);
 
 module.exports = {
@@ -174,8 +172,6 @@ module.exports = {
   acceptInvite,
   getAllInvitesForSender,
   getAllInvitesForReceiver,
-  getOneInvite,
-  updateInvite,
   deleteInvite,
   searchUsersForInvite,
 };
