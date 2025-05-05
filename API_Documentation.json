@@ -449,43 +449,30 @@
   "InviteAPI ": {
     "get All Invites For Sender": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/sender"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/sender"
     },
     "get All Invites For Receiver": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/receiver"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/receiver"
     },
     "search Users For Invite": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/search",
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/search",
       "query": {
         "username": "Example_20"
       }
     },
-    "get One Invite": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/:inviteID"
-    },
     "delete Invite": {
       "method": "DELETE",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/:inviteID"
-    },
-    "update Invite": {
-      "method": "PATCH",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/:inviteID",
-      "body": {
-        "username": "Example_20",
-        "projectId": "projectID",
-        "roleId": "roleID"
-      }
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID"
     },
     "decline Invite": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/:inviteID/decline"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID/decline"
     },
     "accept Invite": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/:inviteID/accept"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID/accept"
     },
     "send Invite": {
       "method": "POST",

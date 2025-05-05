@@ -18,10 +18,6 @@ router.get("/search", IC.searchUsersForInvite);
 
 router.post("/sendInvite", IC.sendInvite);
 
-router
-  .route("/:id")
-  .get(IC.getOneInvite)
-  .patch(IC.updateInvite)
-  .delete(IC.deleteInvite);
+router.delete("/:id", IC.deleteInvite);
 
 module.exports = router;
