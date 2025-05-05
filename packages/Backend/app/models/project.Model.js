@@ -150,6 +150,10 @@ projectSchema.virtual("memberCount").get(function () {
   return this.members.length;
 });
 
+projectSchema.virtual("type").get(function () {
+  return this.memberCount > 1 ? "Public" : "Private";
+});
+
 projectSchema.virtual("roles", {
   ref: "Role",
   localField: "_id",
