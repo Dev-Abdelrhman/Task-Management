@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    match: [
+      /^(?=.{3,30}$)(?!.*[_.]{2})[a-zA-Z0-9](?:[a-zA-Z0-9._]*[a-zA-Z0-9])?$/,
+    ],
   },
   email: {
     type: String,
