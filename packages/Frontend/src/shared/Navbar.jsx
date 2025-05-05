@@ -41,6 +41,11 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const hostGoogleImage = (url) => {
+    return `https://images.weserv.nl/?url=${encodeURIComponent(
+      url
+    )}&w=200&h=200`;
+  };
   return (
     <>
       <nav className="flex justify-between items-center bg-white dark:bg-[#121212] dark:text-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
@@ -73,7 +78,11 @@ function Navbar() {
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar
                 className="!w-12 !h-12"
-                src={user.image.length ? user.image[0].url : undefined}
+                src={
+                  user.image.length
+                    ? hostGoogleImage(user.image[0].url)
+                    : undefined
+                }
               />
             </IconButton>
           </Tooltip>
