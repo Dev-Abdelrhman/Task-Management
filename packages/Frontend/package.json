@@ -21,6 +21,7 @@
     "bootstrap-icons": "^1.11.3",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.7.4",
     "jwt-decode": "^4.0.0",
     "lucide": "^0.482.0",

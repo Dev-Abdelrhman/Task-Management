@@ -4,7 +4,7 @@ import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProjects, getInvitedProjects } from "../../../api/project";
+import { getUserProjects } from "../../../api/project";
 import {
   Box,
   Typography,
@@ -111,18 +111,6 @@ function Projects() {
     "Ethical AI",
     "AI Regulations",
   ];
-
-  // const {
-  //   data: invitedData,
-  //   isLoading: invitedIsLoading,
-  //   isError: invitedIsError,
-  //   error: invitedError,
-  // } = useQuery({
-  //   queryKey: ["invitedPojects"],
-  //   queryFn: async () => {
-  //     return await getInvitedProjects(user._id);
-  //   },
-  // });
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -294,7 +282,9 @@ function Projects() {
               <div className="w-full">
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">All Projects</h2>
+                    <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">
+                      All Projects
+                    </h2>
                     <div className="flex gap-2">
                       <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
                         <ChevronLeft className="!w-6 !h-6" />
