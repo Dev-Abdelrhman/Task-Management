@@ -12,7 +12,7 @@ const searchUsersForInvite = catchAsync(async (req, res, next) => {
   const users = await User.find({
     username: { $regex: new RegExp(username, "i") },
     _id: { $ne: currentUserId },
-  }).select("username name");
+  }).select("username name image");
 
   if (users.length === 0) {
     return res.status(404).json({ status: "fail", message: "No users found" });
@@ -125,7 +125,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
     receiver: receiverId,
     status: "pending",
   }).populate("project role");
-
 
   if (!invite) {
     return next(new AppError("Invite not found or already processed.", 404));
