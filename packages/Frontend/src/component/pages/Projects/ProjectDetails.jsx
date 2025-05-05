@@ -1,5 +1,14 @@
 import { Box, CircularProgress, Button, Chip, Avatar } from "@mui/material";
-import { Clock, Users, Search, X, Pencil, ReceiptText } from "lucide-react";
+import {
+  Clock,
+  Users,
+  Search,
+  X,
+  Pencil,
+  ReceiptText,
+  CircleCheck,
+  Ban,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "../../../api/project";
@@ -8,6 +17,8 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useRoles } from "../../../hooks/useRoles";
 import { getRoles } from "../../../api/roles";
 import InviteModal from "../Invite/InviteModal";
+import { DateTime } from "luxon";
+
 function ProjectDetails() {
   const { user } = useAuth();
   const { projectId } = useParams();
@@ -37,6 +48,8 @@ function ProjectDetails() {
       return await getProjectById(projectId);
     },
   });
+  console.log(data);
+
   const {
     data: rolesData,
     isLoading: rolesLoading,
@@ -80,6 +93,49 @@ function ProjectDetails() {
     return `https://images.weserv.nl/?url=${encodeURIComponent(
       url
     )}&w=200&h=200`;
+  };
+
+  const calculateDueDateStatus = (dueDateString, progress) => {
+    if (progress === 100) {
+      return (
+        <>
+          <CircleCheck className="w-5 h-5 text-green-500" />
+          <span className="text-green-500">Completed</span>
+        </>
+      );
+    }
+
+    if (!dueDateString) return "No due date";
+
+    const now = DateTime.local();
+    const dueDate = DateTime.fromISO(dueDateString);
+
+    if (dueDate < now) {
+      return (
+        <>
+          <Ban className="w-5 h-5 text-red-500" />
+          <span className="text-red-500">Overdue</span>
+        </>
+      );
+    }
+
+    const diff = dueDate.diff(now, ["days", "hours"]);
+
+    if (diff.days < 1) {
+      return (
+        <>
+          <Clock className="w-5 h-5 text-gray-500" />
+          <span>{Math.ceil(diff.hours)} Hours Left</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Clock className="w-5 h-5 text-gray-500" />
+        <span>{Math.ceil(diff.days)} Days Left</span>
+      </>
+    );
   };
 
   if (isLoading || rolesLoading) {
@@ -127,9 +183,9 @@ function ProjectDetails() {
                 Join Tasks
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2 mb-4 ml-20">
-              <p className="text-gray-800 dark:text-[#a0a0a0]">
-                {project?.category}
+            <div className="flex flex-wrap gap-2 mb-4 ml-16">
+              <p className="text-gray-500 dark:text-[#a0a0a0]">
+                {project?.category} |
               </p>
 
               <p
@@ -139,15 +195,14 @@ function ProjectDetails() {
                 + Add Members
               </p>
             </div>
-            <div className="flex flex-wrap gap-2 mb-4 ml-20 text-black">
+            <div className="flex flex-wrap items-center gap-2 mb-4 ml-16 text-black">
               <Users className="w-5 h-5 dark:text-[#a0a0a0]" />
               <p variant="body2" className="mr-5 dark:text-[#a0a0a0]">
-                200 Members Involved
+                {data.doc.memberCount} Members Involved
               </p>
-              <Clock className="w-5 h-5 mt-[2px] dark:text-[#a0a0a0]" />
-              <p variant="body2 !mb-5 " className="dark:text-[#a0a0a0]">
-                1 Hour
-              </p>
+              <div className="flex items-center gap-2">
+                {calculateDueDateStatus(project?.dueDate, project?.progress)}
+              </div>
             </div>
             <div className=" ml-16 pt-4 ">
               <h1 className="font-medium text-4xl dark:text-[#e2e2e2]">
@@ -543,25 +598,27 @@ function ProjectDetails() {
               ))}
             </div>
             <div className="mt-5 font-semibold text-2xl">
-              <h2 className="mb-4">Members</h2>
-              {projectMembers.map((mem) => (
-                <div
-                  key={mem.id}
-                  className="flex gap-2 items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2"
-                >
-                  <Avatar
-                    className="!w-10 !h-10"
-                    src={
-                      mem.user.image.length
-                        ? hostGoogleImage(user.image[0].url)
-                        : undefined
-                    }
-                  />
-                  <span key={mem.id} className="font-normal text-xl">
-                    {mem.user.name}
-                  </span>
-                </div>
-              ))}
+              <h2 className="mb-4">Members - {project.memberCount}</h2>
+              <div className="flex-col gap-3">
+                {projectMembers.map((mem) => (
+                  <div
+                    key={mem.id}
+                    className="flex gap-2 mb-2 items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2"
+                  >
+                    <Avatar
+                      className="!w-10 !h-10"
+                      src={
+                        mem.user.image.length
+                          ? hostGoogleImage(mem.user.image[0].url)
+                          : undefined
+                      }
+                    />
+                    <span key={mem.id} className="font-normal text-lg">
+                      {mem.user.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -570,7 +627,7 @@ function ProjectDetails() {
         projectId={projectId}
         open={inviteModalOpen}
         onClose={() => setInviteModalOpen(false)}
-        roles={rolesData} // Pass the roles data here
+        roles={rolesData}
       />
     </>
   );

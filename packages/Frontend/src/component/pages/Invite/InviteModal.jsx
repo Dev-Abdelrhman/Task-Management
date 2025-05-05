@@ -57,7 +57,6 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
           roleId: selectedRoleId, // Now using the role ID
         },
       });
-      toast.success("Invite sent successfully!");
       onClose();
       resetForm();
     } catch (error) {
@@ -90,28 +89,27 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
           </button>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Search Users</label>
-          <div className="relative">
+        <div className="mb-4 w-full">
+          <label className="text-base font-medium">Search Users</label>
+          <div className="flex items-center gap-3 mt-2">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Enter username"
-              className="w-full p-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 pl-4 pr-4 py-2 border border-gray-200 !rounded-[10px] text-lg !font-light focus:outline-none"
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
-            <button
+            <Button
               onClick={handleSearch}
               disabled={isSearching}
-              className="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+              className="!text-sm !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
             >
-              {isSearching ? (
-                <CircularProgress size={20} />
-              ) : (
-                <Search className="w-5 h-5" />
+              Search
+              {isSearching && (
+                <CircularProgress size={20} sx={{ color: "white", ml: 1 }} />
               )}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -125,14 +123,14 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
           </div>
         ) : searchResults.length > 0 ? (
           <div className="mb-4">
-            <h3 className="text-sm font-medium mb-2">Search Results</h3>
+            <h3 className="text-base font-medium mb-2">Search Results</h3>
             <div className="space-y-2">
               {searchResults.map((user) => (
                 <div
                   key={user._id}
                   className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer ${
                     selectedUser?._id === user._id
-                      ? "bg-blue-50 border border-blue-200"
+                      ? "bg-gray-100 border border-gray-200"
                       : "hover:bg-gray-50"
                   }`}
                   onClick={() => setSelectedUser(user)}
@@ -141,9 +139,8 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
                     src={user.image?.[0]?.url}
                     className="!w-8 !h-8 !mr-2"
                   />
-                  {console.log(user)}
                   <div>
-                    <p className="text-sm font-medium">{user.name}</p>
+                    <p className="text-md font-medium">{user.name}</p>
                     <p className="text-xs text-gray-500">{user.username}</p>
                   </div>
                 </div>
@@ -154,9 +151,7 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
 
         {selectedUser && (
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              Select Role
-            </label>
+            <label className="block  font-medium mb-2">Select Role</label>
             <select
               value={selectedRoleId}
               onChange={(e) => setSelectedRoleId(e.target.value)}
@@ -179,14 +174,14 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
               resetForm();
             }}
             variant="outlined"
-            className="!text-sm !capitalize !border-gray-500 !text-gray-700"
+            className="!text-sm !rounded-xl !capitalize !border-gray-300 !text-gray-700"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSendInvite}
             disabled={!selectedUser || !selectedRoleId || isSending}
-            className="!text-sm !capitalize !bg-[#546FFF] !text-white"
+            className="!text-sm !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl disabled:!bg-[#BAC8FF]"
           >
             {isSending ? (
               <CircularProgress size={20} sx={{ color: "white" }} />
