@@ -2,26 +2,22 @@ const Project = require("../models/project.Model.js");
 const catchAsync = require("./catchAsync.js");
 const AppError = require("./appError.js");
 
-// Merged function for checking permissions for projects only
 const requireProjectPermission = (permissions) =>
   catchAsync(async (req, res, next) => {
     const userId = req.user.id;
     let projectId = req.params.projectId || req.params.id;
 
-    // If no projectId found, skip permission check
     if (!projectId) {
-      return next(); // Skip permission check if no projectId
+      return next();
     }
 
-    // Ensure permissions is always an array
     if (!Array.isArray(permissions)) {
       permissions = [permissions];
     }
 
-    // Check if user has the required permissions in the project
     const project = await Project.findById(projectId).populate("members.role");
     if (!project) {
-      return next(); // If no project, skip permission check
+      return next();
     }
 
     const member = project.members.find(
