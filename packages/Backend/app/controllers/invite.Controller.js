@@ -57,13 +57,14 @@ const sendInvite = catchAsync(async (req, res, next) => {
       .json({ status: "fail", message: "Project not found" });
   }
 
-  if (
-    !project.members.user.name ||
-    project.members.user.name.toString() !== senderName
-  ) {
+  const isMember = project.members.some(
+    (member) => member.user.name.toString() === senderName
+  );
+
+  if (!isMember) {
     return res.status(403).json({
       status: "fail",
-      message: "You are not the project owner",
+      message: "You are not a project member",
     });
   }
 
