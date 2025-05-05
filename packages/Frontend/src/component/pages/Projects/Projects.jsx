@@ -339,7 +339,7 @@ function Projects() {
                                 borderRadius: 2,
                                 mb: 1.5,
                               }}
-                              className="cursor-pointer"
+                              className="cursor-pointer select-none"
                             />
                           </div>
                           <div>
@@ -400,17 +400,20 @@ function Projects() {
                                 )}
                               </div>
                               <div className="flex -space-x-2">
-                                {[1, 2, 3, 4, 5].map((i) => (
+                                {project.members.map((pro) => (
                                   <div
-                                    key={i}
+                                    key={pro._id}
                                     className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                   >
                                     <img
-                                      src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
+                                      src={
+                                        pro.user.image[0]?.url ||
+                                        "https://fakeimg.pl/600x800?text=No+Image"
+                                      } // default image
                                       alt="Team member"
                                       width={24}
                                       height={24}
-                                      className="object-cover"
+                                      className="object-cover select-none"
                                     />
                                   </div>
                                 ))}
@@ -544,13 +547,16 @@ function Projects() {
                                   {calculateDaysLeft(project.dueDate)}
                                 </div>
                                 <div className="flex -space-x-2">
-                                  {[1, 2, 3, 4, 5].map((i) => (
+                                  {project.members.map((pro) => (
                                     <div
-                                      key={i}
+                                      key={pro._id}
                                       className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                     >
                                       <img
-                                        src={`https://fakeimg.pl/1280x720?text=No+Image?height=24&width=24&text=${i}`}
+                                        src={
+                                          pro.user.image[0]?.url ||
+                                          "https://fakeimg.pl/600x800?text=No+Image"
+                                        } // default image
                                         alt="Team member"
                                         width={24}
                                         height={24}
