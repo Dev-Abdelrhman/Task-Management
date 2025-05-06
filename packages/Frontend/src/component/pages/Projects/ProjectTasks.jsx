@@ -147,7 +147,6 @@ const ProjectTasks = () => {
     },
     onSuccess: (data) => {
       toast.success("Task created successfully!")
-      socket.emit("task-created", data.doc)
       queryClient.setQueriesData({ queryKey: ["projectTasks", user._id, projectId] })
     },
     onError: (_, __, context) => {
@@ -162,7 +161,6 @@ const ProjectTasks = () => {
     mutationFn: taskId => deleteTaskStatus(user._id, projectId, taskId),
     onSuccess: (_, taskId) => {
       toast.success("Deleted successfully!")
-      socket.emit("task-deleted", taskId)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
     onError: () => toast.error("Failed to delete task!")
@@ -171,7 +169,6 @@ const ProjectTasks = () => {
   const updateMutation = useMutation({
     mutationFn: ({taskId , taskData}) => updateTaskStatus(user._id, projectId,taskId, taskData ),
     onSuccess: (data, {taskId}) =>{
-      socket.emit("task-updated" ,taskId)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
 
     },
