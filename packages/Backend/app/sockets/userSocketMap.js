@@ -1,6 +1,5 @@
 const userSocketMap = {};
 
-// Add socket to user's list
 const addSocket = (userId, socketId) => {
   if (!userSocketMap[userId]) {
     userSocketMap[userId] = new Set();

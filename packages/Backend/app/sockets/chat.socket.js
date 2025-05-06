@@ -8,7 +8,6 @@ const chatSocket = (io) => {
   io.on("connection", (socket) => {
     console.log("🔌 New socket connected:", socket.id);
 
-    // Handle user connection
     socket.on("user:connected", (userId) => {
       if (!mongoose.Types.ObjectId.isValid(userId)) {
         socket.emit("error", "Invalid user ID format");
@@ -18,12 +17,10 @@ const chatSocket = (io) => {
       io.emit("user:online", userId);
     });
 
-    // Handle private messages
     socket.on("private:message", (data) => {
       handlePrivateMessage(io, userSocketMap, data);
     });
 
-    // Typing indicator
     socket.on("typing", ({ from, to }) => {
       const receiverSockets = userSocketMap[to];
       if (receiverSockets) {
@@ -33,7 +30,6 @@ const chatSocket = (io) => {
       }
     });
 
-    // Message seen confirmation
     socket.on("message:seen", ({ messageId, from, to }) => {
       const senderSockets = userSocketMap[from];
       if (senderSockets) {
@@ -43,7 +39,6 @@ const chatSocket = (io) => {
       }
     });
 
-    // Handle disconnection
     socket.on("disconnect", () => {
       const userId = Object.keys(userSocketMap).find((id) =>
         userSocketMap[id].has(socket.id)
