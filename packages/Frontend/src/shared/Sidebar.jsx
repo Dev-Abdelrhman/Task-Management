@@ -12,7 +12,7 @@ import HelpRoundedIcon from "@mui/icons-material/HelpOutlined";
 
 function Sidebar() {
   return (
-    <div className="w-64 fixed h-full bg-[#FFFFFF] pt-4 hidden md:block ">
+    <div className="w-64 fixed h-full bg-[#FFFFFF] dark:bg-[#252525] pt-4 hidden md:block ">
       {/* Logo Section */}
       <div className="flex items-center justify-center gap-2 pt-4 mb-8">
         <img src={logo} alt="Logo" className="h-9 w-auto" />
@@ -63,6 +63,20 @@ function Sidebar() {
           >
             <ListChecks className="h-5 w-5 mr-3" />
             <span className="text-lg">All Tasks</span>
+          </NavLink>
+
+          <NavLink
+            to="/invites"
+            className={({ isActive }) =>
+              `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${
+                isActive
+                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
+                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+              }`
+            }
+          >
+            <ListChecks className="h-5 w-5 mr-3" />
+            <span className="text-lg">Invites</span>
           </NavLink>
 
           <NavLink

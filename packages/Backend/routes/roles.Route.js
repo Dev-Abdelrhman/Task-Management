@@ -12,12 +12,11 @@ router
   .get(RPP(["Read"]), RC.getAllRoles)
   .post(RPP(["Admin"]), RC.createRole);
 
-router.use(RC.isMine);
 router.use(RPP(["Admin"]));
 router
   .route("/:id")
-  .get(RC.getRoleById)
-  .patch(RC.updateRole)
-  .delete(RC.deleteRole);
+  .get(RC.isMine, RC.getRoleById)
+  .patch(RC.isMine, RC.updateRole)
+  .delete(RC.isMine, RC.deleteRole);
 
 module.exports = router;

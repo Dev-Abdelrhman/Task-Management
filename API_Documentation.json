@@ -80,9 +80,9 @@
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/updateMyPassword",
       "body": {
-        "currentPassword": "password",
-        "newPassword": "password",
-        "newPasswordConfirmation": "password"
+        "passwordCurrent": "password",
+        "password": "password",
+        "passwordConfirmation": "password"
       }
     },
     "Remove User Image": {
@@ -97,15 +97,11 @@
       "url": "http://localhost:9999/depiV1/users/deleteMe"
     }
   },
-  "ProjectsAPI": {
+  "ProjectsAPI ✅": {
     "STATUS": "Completed",
     "Get All Projects ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects"
-    },
-    "get Invited Projects": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/invited"
     },
     "Create Project ✅": {
       "method": "POST",
@@ -285,35 +281,41 @@
     "Get One Project ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID"
+    },
+    "Get Project Members": {
+      "method": "GET",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/members"
     }
   },
-  "RolesAPI": {
+  "RolesAPI ✅": {
     "STATUS": "Completed",
-    "Get Roles": {
+    "Get Roles ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles"
     },
-    "Get Role": {
+    "Get Role ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     },
-    "Create Role": {
+    "Create Role ✅": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles",
       "body": {
         "name": "Example",
-        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"]
+        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"],
+        "color": "#000000"
       }
     },
-    "Update Role": {
+    "Update Role ✅": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID",
       "body": {
         "name": "Example",
-        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"]
+        "permissions": ["Read", "Add", "Delete", "Edit", "Admin"],
+        "color": "#000000"
       }
     },
-    "Delete Role": {
+    "Delete Role ✅": {
       "method": "DELETE",
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/roles/:roleID"
     }
@@ -356,9 +358,9 @@
       "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/comments/:commentID"
     }
   },
-  "TasksAPI": {
+  "TasksAPI✅": {
     "STATUS": "Still in development",
-    "UserTasks": {
+    "UserTasks ✅": {
       "Get AllUser Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/tasks/userTasks"
@@ -400,7 +402,7 @@
         "url": "http://localhost:9999/depiV1/tasks/:taskID"
       }
     },
-    "ProjectTasks": {
+    "ProjectTasks✅": {
       "GetAll Project Tasks": {
         "method": "GET",
         "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/tasks"
@@ -444,50 +446,37 @@
       }
     }
   },
-  "InviteAPI": {
+  "InviteAPI ": {
     "get All Invites For Sender": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sender"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/sender"
     },
     "get All Invites For Receiver": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/receiver"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/receiver"
     },
     "search Users For Invite": {
       "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/search",
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/search",
       "query": {
         "username": "Example_20"
       }
     },
-    "get One Invite": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
-    },
     "delete Invite": {
       "method": "DELETE",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID"
-    },
-    "update Invite": {
-      "method": "PATCH",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID",
-      "body": {
-        "username": "Example_20",
-        "projectId": "projectID",
-        "roleId": "roleID"
-      }
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID"
     },
     "decline Invite": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/decline"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID/decline"
     },
     "accept Invite": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/:inviteID/accept"
+      "url": "http://localhost:9999/depiV1/users/:userID/invite/:inviteID/accept"
     },
     "send Invite": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invites/sendInvite",
+      "url": "http://localhost:9999/depiV1/users/:userID/projects/:projectID/invite/sendInvite",
       "body": {
         "username": "Example_20",
         "roleId": "roleID"
@@ -502,5 +491,27 @@
   },
   "Postman APIs": {
     "link": "https://dev-5353.postman.co/workspace/Task-Management~a3a42719-bae0-4214-ab6f-ca6de6f9100c/collection/34054185-f5df8a17-e015-4d2d-beac-a95a6b877b37?action=share&creator=34054185&active-environment=34054185-dc50f3d6-ff0d-4e16-b78c-456ee5b36bd7"
+  },
+  "Socket Events": {
+    "comment": {
+      "comment-deleted": "",
+      "comment-updated": "",
+      "comment-created": ""
+    },
+    "role": {
+      "role-deleted": "",
+      "role-updated": "",
+      "role-created": ""
+    },
+    "task": {
+      "task-deleted": "",
+      "task-updated": "",
+      "task-created": ""
+    },
+    "project": {
+      "project-deleted": "",
+      "project-updated": "",
+      "project-created": ""
+    }
   }
 }

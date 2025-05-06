@@ -21,6 +21,10 @@ const roleSchema = new mongoose.Schema({
       },
     },
   ],
+  color: {
+    type: String,
+    default: "#FFFFFF",
+  },
 });
 roleSchema.pre("save", function (next) {
   if (this.permissions.includes("Admin")) {
@@ -40,7 +44,6 @@ roleSchema.pre(/^find/, function (next) {
 roleSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.project;
-    // delete ret.theCreator;
     return ret;
   },
 });

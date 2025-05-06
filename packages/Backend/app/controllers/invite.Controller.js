@@ -12,7 +12,7 @@ const searchUsersForInvite = catchAsync(async (req, res, next) => {
   const users = await User.find({
     username: { $regex: new RegExp(username, "i") },
     _id: { $ne: currentUserId },
-  }).select("username name");
+  }).select("username name image");
 
   if (users.length === 0) {
     return res.status(404).json({ status: "fail", message: "No users found" });
@@ -48,20 +48,13 @@ const sendInvite = catchAsync(async (req, res, next) => {
   }
 
   const project = await Project.findById(projectId)
-    .populate({ path: "owner", select: "_id name username" })
+    .populate({ path: "members.user", select: "_id name username" })
     .populate("members.role");
 
   if (!project) {
     return res
       .status(404)
       .json({ status: "fail", message: "Project not found" });
-  }
-
-  if (!project.owner.name || project.owner.name.toString() !== senderName) {
-    return res.status(403).json({
-      status: "fail",
-      message: "You are not the project owner",
-    });
   }
 
   const isAlreadyMember = project.members.some(
@@ -126,7 +119,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
     status: "pending",
   }).populate("project role");
 
-
   if (!invite) {
     return next(new AppError("Invite not found or already processed.", 404));
   }
@@ -165,8 +157,6 @@ const acceptInvite = catchAsync(async (req, res, next) => {
 const getAllInvitesForReceiver = FC.getAll(Invite, "receiver");
 const getAllInvitesForSender = FC.getAll(Invite, "sender");
 
-const getOneInvite = FC.getOne(Invite);
-const updateInvite = FC.updateOne(Invite);
 const deleteInvite = FC.deleteOne(Invite);
 
 module.exports = {
@@ -175,8 +165,6 @@ module.exports = {
   acceptInvite,
   getAllInvitesForSender,
   getAllInvitesForReceiver,
-  getOneInvite,
-  updateInvite,
   deleteInvite,
   searchUsersForInvite,
 };
