@@ -7,7 +7,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
   const [description, setDescription] = useState(initialData?.description || '');
   const [dueDate, setDueDate] = useState(initialData?.dueDate?.split('T')[0] || '');
   const [status, setStatus] = useState(initialStatus || 'Pending');
-  const [priority, setPriority] = useState(  'Normal');
+  const [priority, setPriority] = useState('Normal');
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +30,10 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[700px] relative !rounded-xl">
+      <div className="bg-white dark:bg-[#121212] rounded-lg shadow-lg p-6 w-[700px] relative !rounded-xl">
         {/* <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6"> */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-gray-500 text-2xl font-medium">
+          <h2 className="text-gray-500 dark:text-gray-400 text-2xl font-medium">
             {isEditing ? 'Edit Task' : 'Add New Task'}
           </h2>
           <button onClick={closeModal} className="text-gray-400 hover:text-gray-600">
@@ -43,62 +43,65 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-medium mb-1">Title</label>
+            <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-medium mb-1">Description</label>
+            <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="3"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-medium mb-1">Due Date</label>
+            <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Due Date</label>
             <div className="relative">
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <Calendar className="absolute right-3 top-2.5 text-gray-400" size={18} />
             </div>
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-1">Status</label>
+            <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Status</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${disableStatus ? 'bg-gray-100 text-gray-500' : ''
+              className={`w-full px-3 py-2 dark:bg-[#2D2D2D] dark:border-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${disableStatus ? 'bg-gray-100 text-gray-500' : ''
                 }`}
               disabled={disableStatus}
             >
-              <option value="Pending">Pending</option>
-              <option value="Todo">Todo</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
+              <option className='dark:text-gray-400' value="Pending">Pending</option>
+              <option className='dark:text-gray-400' value="Todo">Todo</option>
+              <option className='dark:text-gray-400' value="In Progress">In Progress</option>
+              <option className='dark:text-gray-400' value="Completed">Completed</option>
             </select>
           </div>
           <div className="mb-6">
             <FormControl fullWidth>
+              <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Priority</label>
+
               <InputLabel id="status-label">Priority</InputLabel> {/* Changed label to Priority */}
               <Select
                 labelId="status-label"
                 id="status-select"
                 value={priority}
                 label="Priority"
+                className='dark:bg-[#2D2D2D] dark:border-gray-500'
                 onChange={(e) => setPriority(e.target.value)}
                 // disabled={disableStatus}
                 renderValue={(value) => {
@@ -110,27 +113,27 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
                     Normal: <Ban size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-gray-500 text-gray-200 border-gray-300" />
                   };
                   return (
-                    <span className="flex items-center gap-2">
+                    <span className="flex dark:text-gray-400 items-center gap-2">
                       {iconMap[value]} {value}
                     </span>
                   );
                 }}
               >
-                <MenuItem value="Urgent">
-                    <CircleAlert size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-red-600/20 text-red-500 border-red-600" />
+                <MenuItem className='dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500' value="Urgent">
+                  <CircleAlert size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-red-600/20 text-red-500 border-red-600" />
 
                   Urgent
                 </MenuItem>
-                <MenuItem value="High">
+                <MenuItem className='dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500' value="High">
                   <SignalHigh size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-orange-500/20 text-orange-500 border-orange-500" /> High
                 </MenuItem>
-                <MenuItem value="Medium">
+                <MenuItem className='dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500' value="Medium">
                   <SignalMedium size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-yellow-500/20 text-yellow-500 border-yellow-500" /> Medium
                 </MenuItem>
-                <MenuItem value="Low">
+                <MenuItem className='dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500' value="Low">
                   <SignalLow size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-blue-500 text-blue-300 border-blue-300" /> Low
                 </MenuItem>
-                <MenuItem value="Normal">
+                <MenuItem className='dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500' value="Normal">
                   <Ban size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-gray-500 text-gray-200 border-gray-300" /> Normal
                 </MenuItem>
               </Select>

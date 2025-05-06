@@ -145,15 +145,15 @@ export default function TaskordDashboard() {
 
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA]">
+      <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#121212]">
         <Sidebar />
         {/* Main Content */}
         <div className="md:ml-[16rem] flex-1 h-full w-full p-8 2xl:pr-[490px]">
           {/* Nav */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl">Hi, {user.username}</h1>
-              <p className="text-gray-600">Let's finish your task today!</p>
+              <h1 className="text-3xl dark:text-white">Hi, {user.username}</h1>
+              <p className="text-gray-600 dark:text-[#a0a0a0]">Let's finish your task today!</p>
             </div>
             <div className="flex items-center gap-4 ">
               <IconButton
@@ -337,13 +337,13 @@ export default function TaskordDashboard() {
           ) : ProjectData?.doc?.length > 0 ? (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-medium">Latest Project</h2>
+                <h2 className="text-xl font-medium dark:text-white">Latest Project</h2>
                 <div className="flex gap-2">
                   <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-5 h-5 dark:text-gray-500" />
                   </IconButton>
                   <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5 dark:text-gray-500" />
                   </IconButton>
                 </div>
               </div>
