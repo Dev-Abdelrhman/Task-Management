@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
-import { Button } from "@mui/material";
+import { Ban, Calendar, CircleAlert, SignalHigh, SignalLow, SignalMedium, X } from 'lucide-react';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+
 
 const AddProjectTask = ({closeModal, onAddTask,editTask}) => {
     const [status, setStatus] = useState("Pending");
@@ -7,6 +9,8 @@ const AddProjectTask = ({closeModal, onAddTask,editTask}) => {
     const [dueDate, setDueDate] = useState("")
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
+    const [priority, setPriority] = useState(  'Normal')
+    
 
     useEffect(() => {
         if (editTask) {
@@ -85,6 +89,52 @@ const AddProjectTask = ({closeModal, onAddTask,editTask}) => {
                             <option value="In Progress">In Progress</option>
                             <option value="Completed">Done</option>
                         </select>
+                    </div>
+                    <div className="mb-6">
+                        <FormControl fullWidth>
+                          <InputLabel id="status-label">Priority</InputLabel> {/* Changed label to Priority */}
+                          <Select
+                            labelId="status-label"
+                            id="status-select"
+                            value={priority}
+                            label="Priority"
+                            onChange={(e) => setPriority(e.target.value)}
+                            // disabled={disableStatus}
+                            renderValue={(value) => {
+                              const iconMap = {
+                                Urgent: <CircleAlert size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-red-600/20 text-red-500 border-red-600" />,
+                                High: <SignalHigh size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-orange-500/20 text-orange-500 border-orange-500" />,
+                                Medium: <SignalMedium size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-yellow-500/20 text-yellow-500 border-yellow-500" />,
+                                Low: <SignalLow size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-blue-500 text-blue-300 border-blue-300" />,
+                                Normal: <Ban size={18} className=" mr-1 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-gray-500 text-gray-200 border-gray-300" />
+                              };
+                              return (
+                                <span className="flex items-center gap-2">
+                                  {iconMap[value]} {value}
+                                </span>
+                              );
+                            }}
+                          >
+                            <MenuItem value="Urgent">
+                                <CircleAlert size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-red-600/20 text-red-500 border-red-600" />
+                    
+                              Urgent
+                            </MenuItem>
+                            <MenuItem value="High">
+                              <SignalHigh size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-orange-500/20 text-orange-500 border-orange-500" /> High
+                            </MenuItem>
+                            <MenuItem value="Medium">
+                              <SignalMedium size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-yellow-500/20 text-yellow-500 border-yellow-500" /> Medium
+                            </MenuItem>
+                            <MenuItem value="Low">
+                              <SignalLow size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-blue-500 text-blue-300 border-blue-300" /> Low
+                            </MenuItem>
+                            <MenuItem value="Normal">
+                              <Ban size={18} className="mr-2 flex items-center justify-center border rounded p-0.5 flex-shrink-0 bg-gray-500 text-gray-200 border-gray-300" /> Normal
+                            </MenuItem>
+                          </Select>
+                          {/* Optional: you can add helper text here if needed */}
+                        </FormControl>
                     </div>
                     <div className="mb-3">
                         <label className="block text-sm font-medium mb-1">Due Date</label>

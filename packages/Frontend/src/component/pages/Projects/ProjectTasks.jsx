@@ -80,8 +80,9 @@ const ProjectTasks = () => {
 
   useEffect(() => {
     if (!user || !projectId) return
+    console.log("Socket connecting")
 
-    const handleNewTask = task => {
+    const handleNewTask = (task) => {
       queryClient.setQueryData(["projectTasks", user._id, projectId], old => {
         if (!old?.doc) return { doc: [task] }
         const exists = old.doc.some(t => t._id === task._id)
@@ -89,7 +90,7 @@ const ProjectTasks = () => {
       })
     }
 
-    const handleTaskUpdate = updatedTask => {
+    const handleTaskUpdate = (updatedTask) => {
       queryClient.setQueryData(["projectTasks", user._id, projectId], old => {
         if (!old?.doc) return old
         return {
@@ -99,7 +100,7 @@ const ProjectTasks = () => {
       })
     }
 
-    const handleTaskDeleted = deletedId => {
+    const handleTaskDeleted = (deletedId) => {
       queryClient.setQueryData(["projectTasks", user._id, projectId], old => {
         if (!old?.doc) return old
         return {
@@ -108,15 +109,15 @@ const ProjectTasks = () => {
         }
       })
     }
-
-    socket.on("taskCreated", handleNewTask)
-    socket.on("taskUpdated", handleTaskUpdate)
-    socket.on("taskDeleted", handleTaskDeleted)
+    socket.on("connect" , () => console.log("socket connected"))
+    socket.on("task-created", handleNewTask)
+    socket.on("task-updated", handleTaskUpdate)
+    socket.on("task-deleted", handleTaskDeleted)
 
     return () => {
-      socket.off("taskCreated", handleNewTask)
-      socket.off("taskUpdated", handleTaskUpdate)
-      socket.off("taskDeleted", handleTaskDeleted)
+      socket.off("task-created", handleNewTask)
+      socket.off("task-updated", handleTaskUpdate)
+      socket.off("task-deleted", handleTaskDeleted)
     }
   }, [user, projectId, queryClient])
 
@@ -148,7 +149,7 @@ const ProjectTasks = () => {
     },
     onSuccess: data => {
       toast.success("Task created successfully!")
-      socket.emit("taskCreated", data.doc)
+      socket.emit("task-created", data.doc)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
     onError: (_, __, context) => {
@@ -163,7 +164,7 @@ const ProjectTasks = () => {
     mutationFn: taskId => deleteTaskStatus(user._id, projectId, taskId),
     onSuccess: (_, taskId) => {
       toast.success("Deleted successfully!")
-      socket.emit("taskDeleted", taskId)
+      socket.emit("task-deleted", taskId)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
     },
     onError: () => toast.error("Failed to delete task!")
@@ -172,7 +173,7 @@ const ProjectTasks = () => {
   const updateMutation = useMutation({
     mutationFn: ({taskId , taskData}) => updateTaskStatus(user._id, projectId,taskId, taskData ),
     onSuccess: (data, {taskId}) =>{
-      socket.emit("taskUpdated" ,taskId)
+      socket.emit("task-updated" ,taskId)
       queryClient.invalidateQueries({ queryKey: ["projectTasks", user._id, projectId] })
 
     },
@@ -299,7 +300,7 @@ const ProjectTasks = () => {
   if (isError) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error.message}</div>
 
   return <>
-    <div className="mb-4 px-5 pb-5 pt-0 bg-white flex justify-between items-center">
+    <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center ">
       <div className="relative w-1/2">
         <span className="absolute inset-y-0  flex items-center pl-3">
           <Search className="h-5 w-5 text-[#8E92BC]" />
@@ -318,7 +319,7 @@ const ProjectTasks = () => {
         Add Task
       </Button>
     </div>
-    <div className="px-4 pb-4 pt-0 bg-gray-100 min-h-screen rounded-[30px]">
+    <div className="px-4 pb-4 pt-4 bg-gray-100 min-h-screen rounded-[30px]">
 
       {showModal && (
         <AddProjectTask
@@ -341,7 +342,7 @@ const ProjectTasks = () => {
             {DetailsModal.task.image && (
               <div className="mb-4   ">
                 <img
-                  src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                  src={`http://localhost:9999/uploads/${DetailsModal.task.image}`}
                   alt="Task"
                   className="max-w-full h-auto rounded"
                 />
@@ -439,8 +440,8 @@ const ProjectTasks = () => {
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex gap-8 overflow-x-auto pb-4 px-4">
-          {board.columns.map(column => (
-            <div key={column.id} className="flex-shrink-0 w-72">
+          {board.columns.map((column) => (
+            <div key={column.id} className="flex-shrink-0 w-[23%]">
               <div className="rounded-[15px] bg-white shadow-sm">
                 <div className="p-3 flex justify-between items-center border-b">
                   <div className="flex items-center gap-2">
@@ -490,7 +491,9 @@ const ProjectTasks = () => {
 
                                   </div>
                                 </div>
-                                <p className="text-xs text-gray-500 mb-2">{task.description}</p>
+                                <p className="text-xs text-gray-500 mb-2"> {task.description.split(" ").length > 5
+                                    ? task.description.split(" ").slice(0, 5).join(" ") + "..."
+                                    : task.description}</p>
                                 <div className="flex items-center gap-1 text-xs text-gray-500">
                                   <Calendar size={14} />
                                   <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No date"}</span>
