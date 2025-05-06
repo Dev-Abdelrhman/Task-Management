@@ -80,9 +80,9 @@
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/updateMyPassword",
       "body": {
-        "currentPassword": "password",
-        "newPassword": "password",
-        "newPasswordConfirmation": "password"
+        "passwordCurrent": "password",
+        "password": "password",
+        "passwordConfirmation": "password"
       }
     },
     "Remove User Image": {
