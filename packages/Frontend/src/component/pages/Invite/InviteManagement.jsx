@@ -152,8 +152,8 @@ const InviteManagement = () => {
   return (
     <div className="p-4">
       <Tabs value={tabValue} onChange={handleTabChange} className="mb-4">
-        <Tab label="Sent Invites" />
-        <Tab label="Received Invites" />
+        <Tab className="dark:text-gray-500" label="Sent Invites" />
+        <Tab className="dark:text-gray-500" label="Received Invites" />
       </Tabs>
 
       {isLoadingSent || isLoadingReceived ? (
@@ -163,13 +163,13 @@ const InviteManagement = () => {
       ) : (
         <>
           {tabValue === 0 && (
-            <List className="bg-white rounded-xl shadow-md hover:shadow-lg">
+            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl shadow-md hover:shadow-lg">
               {sentInvitesList.length > 0 ? (
                 sentInvitesList.map((invite) =>
                   renderInviteItem(invite, "sent")
                 )
               ) : (
-                <Typography className="p-4 text-gray-500">
+                <Typography className="p-4 text-gray-500 dark:text-gray-400">
                   No sent invitations
                 </Typography>
               )}
@@ -177,13 +177,13 @@ const InviteManagement = () => {
           )}
 
           {tabValue === 1 && (
-            <List className="bg-white rounded-lg shadow">
+            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl  shadow">
               {receivedInvitesList.length > 0 ? (
                 receivedInvitesList.map((invite) =>
                   renderInviteItem(invite, "received")
                 )
               ) : (
-                <Typography className="p-4 text-gray-500">
+                <Typography className="p-4 text-gray-500 dark:text-gray-400">
                   No received invitations
                 </Typography>
               )}
