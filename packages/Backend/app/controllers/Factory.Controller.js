@@ -27,7 +27,7 @@ const deleteOne = (Model, filterField) =>
 
     await doc.deleteOne();
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-deleted`, req.params.id);
+    emitEvent(io, `${Model.modelName.toLowerCase()}-deleted`, req.params.id);
 
     res.status(204).json({
       status: "success",
@@ -60,7 +60,7 @@ const updateOne = (Model, fieldName) =>
       return next(new AppError("No document found with that ID", 404));
     }
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-updated`, doc);
+    emitEvent(io, `${Model.modelName.toLowerCase()}-updated`, doc);
 
     res.status(200).json({
       status: "success",
@@ -100,7 +100,7 @@ const createOne = (Model, fieldName, idField, idField2) =>
 
     const doc = await Model.create(req.body);
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-created`, doc);
+    emitEvent(io, `${Model.modelName.toLowerCase()}-created`, doc);
 
     res.status(201).json({
       status: "success",
