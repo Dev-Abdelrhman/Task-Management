@@ -13,7 +13,6 @@ const uploader = (fieldName, maxCount) => {
 const deleteOne = (Model, filterField) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
-
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
     }
@@ -27,7 +26,11 @@ const deleteOne = (Model, filterField) =>
 
     await doc.deleteOne();
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-deleted`, req.params.id);
+    emitEvent(
+      req.app.get("io"),
+      `${Model.modelName.toLowerCase()}-deleted`,
+      req.params.id
+    );
 
     res.status(204).json({
       status: "success",
@@ -43,7 +46,6 @@ const updateOne = (Model, fieldName) =>
           resource_type: "auto",
         })
       );
-
       const uploadedImages = await Promise.all(uploadPromises);
 
       req.body[fieldName] = uploadedImages.map((img) => ({
@@ -54,13 +56,19 @@ const updateOne = (Model, fieldName) =>
       }));
     }
 
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body);
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
     }
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-updated`, doc);
+    emitEvent(
+      req.app.get("io"),
+      `${Model.modelName.toLowerCase()}-updated`,
+      doc
+    );
 
     res.status(200).json({
       status: "success",
@@ -76,7 +84,6 @@ const createOne = (Model, fieldName, idField, idField2) =>
         set(req.body, idField, req.user.id);
       }
     }
-
     if (idField2) {
       if (!get(req.body, idField2)) {
         set(req.body, idField2, req.params.id);
@@ -100,7 +107,11 @@ const createOne = (Model, fieldName, idField, idField2) =>
 
     const doc = await Model.create(req.body);
 
-    emitEvent(req, `${Model.modelName.toLowerCase()}-created`, doc);
+    emitEvent(
+      req.app.get("io"),
+      `${Model.modelName.toLowerCase()}-created`,
+      doc
+    );
 
     res.status(201).json({
       status: "success",
