@@ -88,6 +88,11 @@ userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
+  if (!candidatePassword || !userPassword) {
+    throw new Error(
+      "Password comparison failed: one or both passwords are missing."
+    );
+  }
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
