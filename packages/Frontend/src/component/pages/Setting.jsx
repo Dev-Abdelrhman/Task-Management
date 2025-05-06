@@ -10,9 +10,9 @@ export default function Setting() {
   const [timeFormat, setTimeFormat] = useState("24hours");
   const [theme, setTheme] = useState("light");
   const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    newPasswordConfirmation: "",
+    passwordCurrent: "",
+    password: "",
+    passwordConfirmation: "",
   });
 
   useEffect(() => {
@@ -39,40 +39,33 @@ export default function Setting() {
   };
 
   const handleUpdatePassword = async () => {
-    const { currentPassword, newPassword, newPasswordConfirmation } = passwordData;
+    const { passwordCurrent, password, passwordConfirmation } = passwordData;
 
-    if (newPassword !== newPasswordConfirmation) {
+    if (password !== passwordConfirmation) {
       toast.error("New passwords do not match");
       return;
     }
 
     try {
       await updateUserPassword({
-        currentPassword,
-        newPassword,
-        newPasswordConfirmation,
+        passwordCurrent,
+        password,
+        passwordConfirmation,
       });
 
       toast.success("Password updated successfully");
 
       // Clear fields
       setPasswordData({
-        currentPassword: "",
-        newPassword: "",
-        newPasswordConfirmation: "",
+        passwordCurrent: "",
+        password: "",
+        passwordConfirmation: "",
       });
     } catch (err) {
       const message = err?.response?.data?.message || "Failed to update password";
       toast.error(message);
     }
   };
-
-
-
-
-
-
-
 
 
   return (
@@ -131,6 +124,20 @@ export default function Setting() {
                 </div>
                 <div>
                   <label
+                    htmlFor="username"
+                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+                  >
+                    Change User Name
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    defaultValue="John Doe"
+                    className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-500 rounded border-gray-300  text-sm"
+                  />
+                </div>
+                {/* <div>
+                  <label
                     htmlFor="email"
                     className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
                   >
@@ -142,35 +149,7 @@ export default function Setting() {
                     defaultValue="john.doe@example.com"
                     className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
                   />
-                </div>
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
-                  >
-                    Change password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    defaultValue="********"
-                    className="w-full px-3 py-2 border  border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 dark:focus:border-red-500 rounded text-sm"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
-                  >
-                    Confirm password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    defaultValue="********"
-                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
-                  />
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
                     Update profile picture
@@ -198,56 +177,35 @@ export default function Setting() {
               <div className="space-y-4">
                 <div>
                   <label
-                    htmlFor="language"
-                    className="block text-sm text-gray-600 dark:text-[#a0a0a0] mb-1"
-                  >
-                    Language
-                  </label>
-                  <select
-                    id="language"
-                    defaultValue="en"
-                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
-                  >
-                    <option value="en">English (Default)</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="timezone"
-                    className="block  text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
-                  >
-                    Time zone
-                  </label>
-                  <select
-                    id="timezone"
-                    defaultValue="utc"
-                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
-                  >
-                    <option value="utc">UTC (Default)</option>
-                    <option value="est">Eastern Time (EST)</option>
-                    <option value="cst">Central Time (CST)</option>
-                    <option value="pst">Pacific Time (PST)</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="dateFormat"
+                    htmlFor="email"
                     className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
                   >
-                    Date format
+                    Change email
                   </label>
-                  <select
-                    id="dateFormat"
-                    defaultValue="ymd"
+                  <input
+                    type="email"
+                    id="email"
+                    defaultValue="john.doe@example.com"
                     className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
-                  >
-                    <option value="ymd">YYYY/MM/DD (2025/05/03)</option>
-                    <option value="dmy">DD/MM/YYYY (03/05/2025)</option>
-                  </select>
+                  />
                 </div>
+                {/* <div>
+                  <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
+                    Update profile picture
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden">
+                      <img
+                        src="https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button className="px-4 py-2 border border-gray-300 rounded-md text-sm">
+                      Upload
+                    </button>
+                  </div>
+                </div> */}
                 <div>
                   <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
                     Theme
@@ -311,10 +269,10 @@ export default function Setting() {
               Current password
             </label>
             <input
-             type="password"
-             name="currentPassword"
-             value={passwordData.currentPassword}
-             onChange={handleInputChange}
+              type="password"
+              name="passwordCurrent"
+              value={passwordData.passwordCurrent}
+              onChange={handleInputChange}
               className="w-full px-3 py-2 border  border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 dark:focus:border-red-500 rounded text-sm"
             />
           </div>
@@ -323,12 +281,12 @@ export default function Setting() {
               htmlFor="password"
               className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
             >
-              newPassword
+              Password
             </label>
             <input
               type="password"
-              name="newPassword"
-              value={passwordData.newPassword}
+              name="password"
+              value={passwordData.password}
               onChange={handleInputChange}
 
               className="w-full px-3 py-2 border  border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 dark:focus:border-red-500 rounded text-sm"
@@ -339,22 +297,23 @@ export default function Setting() {
               htmlFor="password"
               className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
             >
-              newPasswordConfirmation
+              Password Confirmation
             </label>
             <input
               type="password"
-              name="newPasswordConfirmation"
-              value={passwordData.newPasswordConfirmation}
+              name="passwordConfirmation"
+              value={passwordData.passwordConfirmation}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
             />
           </div>
           {/* </div> */}
-          <Button    onClick={handleUpdatePassword}
-            className="!text-base !capitalize !bg-[#546FFF] !text-white hover:shadow-lg ..."
-          >
-            Save Changes
-          </Button>
+          <div className="flex justify-end mt-4">
+            <Button onClick={handleUpdatePassword} className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+              Save Changes
+            </Button>
+
+          </div>
 
 
 
