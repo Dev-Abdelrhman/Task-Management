@@ -1,9 +1,26 @@
 PasswordStrengthMeter UI Refactor - Done
-ForgetPassword UI Refactor - In Progress
+ForgetPassword UI Refactor - Done
 Home UI Complete Refactor - DONE
 Delete one of Shared Folders - DONE
 Deep Debug and test and improve the proformance to all project and UI - finished the auth entification and  
-hard test to refresh token
+hard test to refresh token and login - DONE
+///
+Nav Text 
+invite notification
+DashBoard chart
+invite ui refactor - and swap send and rec 
+search why Project Details is slow render 
+Project Taskes double task create
+settings UI refactor
+Help Center 
+verify
++
+4 Rows of project 
+Due Date in DashBoard'
+image in project task details - settings - All tasks
+Remove user from project aka kick
+color if task done and not assined
+Messages
 /// at the end 
 respon design for all pages 
 skeleton screen for all pages

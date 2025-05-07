@@ -15,8 +15,8 @@ function Sidebar() {
     <div className="w-64 fixed h-full bg-[#FFFFFF] dark:bg-[#252525] pt-4 hidden md:block ">
       {/* Logo Section */}
       <div className="flex items-center justify-center gap-2 pt-4 mb-8">
-        <img src={logo} alt="Logo" className="h-9 w-auto" />
-        <h1 className="text-4xl">Taskord</h1>
+        <img src={logo} alt="Logo" className="h-9 w-auto select-none" />
+        <h1 className="text-4xl select-none">Taskord</h1>
       </div>
 
       {/* Navigation Links */}
