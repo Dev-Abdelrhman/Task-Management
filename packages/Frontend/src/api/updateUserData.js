@@ -4,19 +4,19 @@ export const getUserInfoForAuth = async () => {
   const response = await API.get("/google/user");
   return response.data;
 };
-
+// Pending
 export const getUserInfoForProfile = async () => {
   const response = await API.get("/me");
-  return response.data;
+  return response.data?.user || {};
 };
 
 export const updateUserInfo = async (userInfo) => {
-  const response = await API.patch("/updateMe", { userInfo });
+  const response = await API.patch("/updateMe", userInfo);
   return response.data;
 };
-
+// DONE
 export const updateUserPassword = async (password) => {
-  const response = await API.patch("/updateMyPassword",  password );
+  const response = await API.patch("/updateMyPassword", password);
   return response.data;
 };
 
