@@ -10,6 +10,9 @@ import { Button, CircularProgress } from "@mui/material";
 import { Plus, Upload, Trash } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+const MAX_NAME_LENGTH = 100;
+const MAX_DESCRIPTION_LENGTH = 400;
+
 const categories = [
   "UI/UX",
   "Development",
@@ -105,8 +108,9 @@ function AddProjectBtn({
   useEffect(() => {
     if (isEditMode) {
       setNewProject({
-        name: projectToEdit.name || "",
-        description: projectToEdit.description || "",
+        name: projectToEdit.name.slice(0, MAX_NAME_LENGTH) || "",
+        description:
+          projectToEdit.description.slice(0, MAX_DESCRIPTION_LENGTH) || "",
         dueDate: projectToEdit.dueDate || "",
         category: projectToEdit.category || "",
         imageFile: null,
@@ -124,6 +128,14 @@ function AddProjectBtn({
       : () => addProject(user._id, createFormData()),
     onSuccess: () => {
       queryClient.invalidateQueries(["projects"]);
+      setNewProject({
+        name: "",
+        description: "",
+        dueDate: "",
+        category: "",
+        imageFile: null,
+        existingImage: [],
+      });
       toast.success(
         isEditMode
           ? "Project updated successfully"
@@ -205,6 +217,8 @@ function AddProjectBtn({
 
   const handleInputs = (e) => {
     const { name, value } = e.target;
+    if (name === "name" && value.length > MAX_NAME_LENGTH) return;
+    if (name === "description" && value.length > MAX_DESCRIPTION_LENGTH) return;
     setNewProject({ ...newProject, [name]: value });
   };
 
@@ -282,9 +296,7 @@ function AddProjectBtn({
                               );
                             }
                             toast.success("Image removed successfully");
-                            setImagePreview(
-                              "https://fakeimg.pl/1280x720?text=No+Image"
-                            );
+                            setImagePreview(null);
                             setNewProject((prev) => ({
                               ...prev,
                               imageFile: null,
@@ -312,12 +324,14 @@ function AddProjectBtn({
                     )}
                   </div>
                 ) : null}
+
                 <label
                   htmlFor="projectImage"
-                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${isLoading || isDeletingImage
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-700"
-                    }`}
+                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${
+                    isLoading || isDeletingImage
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-gray-700"
+                  }`}
                 >
                   Upload image
                   <Upload />
@@ -351,6 +365,9 @@ function AddProjectBtn({
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
                 />
+                <span className="block text-xs text-gray-500 mt-1">
+                  Characters left: {MAX_NAME_LENGTH - newProject.name.length}
+                </span>
               </div>
 
               {/* Category Select Input */}
@@ -368,11 +385,11 @@ function AddProjectBtn({
                   onChange={handleInputs}
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
-                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400 bg-white"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                 >
-                  <option value="" cla>Select a category</option>
+                  <option value="">Select a category</option>
                   {categories.map((category) => (
-                    <option className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400" key={category} value={category}>
+                    <option key={category} value={category}>
                       {category}
                     </option>
                   ))}
@@ -398,6 +415,10 @@ function AddProjectBtn({
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
                 ></textarea>
+                <span className="block text-xs text-gray-500 mt-1">
+                  Characters left:{" "}
+                  {MAX_DESCRIPTION_LENGTH - newProject.description.length}
+                </span>
               </div>
 
               {/* Existing due date input */}

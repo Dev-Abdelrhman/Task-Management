@@ -357,7 +357,8 @@ export default function AllTasks() {
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
             <div className="bg-white w-[480px] rounded-[10px] dark:bg-[#1E1E1E] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
               <div className="flex justify-end items-center ">
-                <button className="mb-3 dark:text-red-50"
+                <button
+                  className="mb-3 dark:text-red-50"
                   onClick={() =>
                     setTaskDetailsModal({ show: false, task: null })
                   }
@@ -384,27 +385,32 @@ export default function AllTasks() {
                   </h2>
 
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">Description :</h3>
+                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">
+                      Description :
+                    </h3>
                     <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
                       {taskDetailsModal.task?.description ||
                         "No description provided"}
                     </p>
                   </div>
-                  <h6 class="text-sm font-medium dark:text-gray-200 ">Properties : </h6>
+                  <h6 class="text-sm font-medium dark:text-gray-200 ">
+                    Properties :{" "}
+                  </h6>
                   <div className="mb-4 flex gap-8 mt-3">
                     <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       Status
                     </h3>
                     <div className="flex items-center">
                       <span
-                        className={`px-3 py-1 rounded text-xs font-medium ${taskDetailsModal.task?.status === "Completed"
-                          ? "bg-green-100 text-green-800"
-                          : taskDetailsModal.task?.status === "In Progress"
+                        className={`px-3 py-1 rounded text-xs font-medium ${
+                          taskDetailsModal.task?.status === "Completed"
+                            ? "bg-green-100 text-green-800"
+                            : taskDetailsModal.task?.status === "In Progress"
                             ? "bg-yellow-100 text-yellow-800"
                             : taskDetailsModal.task?.status === "Todo"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
                       >
                         {taskDetailsModal.task?.status}
                       </span>
@@ -418,18 +424,19 @@ export default function AllTasks() {
                       {taskDetailsModal.task?.priority && (
                         <span
                           className={`flex items-center px-3 py-1 rounded text-xs font-medium
-                        ${taskDetailsModal.task.priority === "Urgent"
-                              ? "bg-red-600/20 text-red-500 border-red-600"
-                              : taskDetailsModal.task.priority === "High"
-                                ? "bg-orange-500/20 text-orange-500 border-orange-500"
-                                : taskDetailsModal.task.priority === "Medium"
-                                  ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
-                                  : taskDetailsModal.task.priority === "Low"
-                                    ? "bg-blue-500 text-blue-300 border-blue-300"
-                                    : taskDetailsModal.task.priority === "Normal"
-                                      ? "bg-gray-500 text-gray-200 border-gray-300"
-                                      : "bg-gray-100 text-gray-800"
-                            }`}
+                        ${
+                          taskDetailsModal.task.priority === "Urgent"
+                            ? "bg-red-600/20 text-red-500 border-red-600"
+                            : taskDetailsModal.task.priority === "High"
+                            ? "bg-orange-500/20 text-orange-500 border-orange-500"
+                            : taskDetailsModal.task.priority === "Medium"
+                            ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
+                            : taskDetailsModal.task.priority === "Low"
+                            ? "bg-blue-500 text-blue-300 border-blue-300"
+                            : taskDetailsModal.task.priority === "Normal"
+                            ? "bg-gray-500 text-gray-200 border-gray-300"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
                         >
                           {
                             {
@@ -481,12 +488,12 @@ export default function AllTasks() {
                       <Calendar className="mr-2" size={16} />
                       {taskDetailsModal.task?.dueDate
                         ? new Date(
-                          taskDetailsModal.task.dueDate
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
+                            taskDetailsModal.task.dueDate
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
                         : "No due date"}
                     </div>
                   </div>
@@ -531,7 +538,7 @@ export default function AllTasks() {
                   }}
                   className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
 
-                // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
+                  // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
                 >
                   Delete
                 </Button>
@@ -566,14 +573,15 @@ export default function AllTasks() {
                         {column.title}
                       </span>
                       <span
-                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo"
-                          ? "bg-[#65aaee]"
-                          : column.id === "in-progress"
+                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${
+                          column.id === "todo"
+                            ? "bg-[#65aaee]"
+                            : column.id === "in-progress"
                             ? "bg-[#e5e747]"
                             : column.id === "done"
-                              ? "bg-red-500"
-                              : "bg-[#66d475]"
-                          }`}
+                            ? "bg-red-500"
+                            : "bg-[#66d475]"
+                        }`}
                       >
                         {column.count}
                       </span>
@@ -605,18 +613,18 @@ export default function AllTasks() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
+                                  className="bg-white border max-w-[350px] border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
                                 >
-                                  <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
+                                  <div className="flex justify-between  items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
                                       onClick={() => handleTaskClick(task)}
-                                      className="text-sm font-medium dark:text-gray-200"
+                                      className="text-sm font-medium dark:text-gray-200 truncate "
                                     >
                                       {task.title?.split(" ").length > 5
                                         ? task.title
-                                          .split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") + "..."
+                                            .split(" ")
+                                            .slice(0, 5)
+                                            .join(" ") + "..."
                                         : task.title}
                                     </h3>
                                     <div className="flex">
@@ -639,12 +647,12 @@ export default function AllTasks() {
                                       </button>
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2">
+                                  <p className="text-xs text-gray-500 mb-2 truncate">
                                     {task.description?.split(" ").length > 5
                                       ? task.description
-                                        .split(" ")
-                                        .slice(0, 5)
-                                        .join(" ") + "..."
+                                          .split(" ")
+                                          .slice(0, 5)
+                                          .join(" ") + "..."
                                       : task.description}
                                   </p>
                                   <div className="flex items-center justify-between">
@@ -653,8 +661,8 @@ export default function AllTasks() {
                                       <span>
                                         {task.dueDate
                                           ? new Date(
-                                            task.dueDate
-                                          ).toLocaleDateString()
+                                              task.dueDate
+                                            ).toLocaleDateString()
                                           : "No date"}
                                       </span>
                                     </div>
