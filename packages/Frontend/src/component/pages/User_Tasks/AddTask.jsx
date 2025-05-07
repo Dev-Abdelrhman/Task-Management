@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Ban, Calendar, CircleAlert, SignalHigh, SignalLow, SignalMedium, X } from 'lucide-react';
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Ban, Calendar, CircleAlert, SignalHigh, SignalLow, SignalMedium, Trash, Upload, X } from 'lucide-react';
+import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing, disableStatus }) => {
   const [title, setTitle] = useState(initialData?.title || '');
@@ -9,24 +9,61 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
   const [status, setStatus] = useState(initialStatus || 'Pending');
   const [priority, setPriority] = useState('Normal');
   const [loading, setLoading] = useState(false)
+
+  // States for image handling
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(initialData?.image || null);
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setImageFile(file);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setIsDeletingImage(true);
+    try {
+      setImagePreview(null);
+      setImageFile(null);
+      toast.success("Image removed successfully");
+    } catch (error) {
+      toast.error("Failed to remove image");
+      console.error("Delete image error:", error);
+    } finally {
+      setIsDeletingImage(false);
+    }
+  };
+  const createFormData = () => {
+    const formData = new FormData();
+    formData.append('title', title || '');
+    formData.append('description', description || '');
+    if (dueDate) formData.append('dueDate', new Date(dueDate).toISOString());
+    formData.append('status', status || 'Pending');
+    formData.append('priority', priority || 'Normal');
+    if (imageFile instanceof File) formData.append('image', imageFile);
+    return formData;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const taskData = {
-      title,
-      description,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
-      status,
-      priority
-    };
 
     try {
-      await onAddTask(taskData);
+      const formData = createFormData();
+      await onAddTask(formData);
     } finally {
       setLoading(false);
     }
-    // onAddTask(taskData);
   };
+
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -42,6 +79,49 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
         </div>
 
         <form onSubmit={handleSubmit}>
+          <div className="flex flex-col justify-center items-center mb-4">
+            {imagePreview ? (
+              <div className="relative mb-3">
+                <img
+                  src={imagePreview}
+                  alt="Task preview"
+                  className="rounded-3xl h-40 w-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="absolute -right-8 bottom-1 p-1 rounded-full"
+                  disabled={loading || isDeletingImage}
+                >
+                  {isDeletingImage ? (
+                    <CircularProgress size={24} sx={{ color: "#dc2626" }} />
+                  ) : (
+                    <Trash className="w-5 h-5 text-red-600" />
+                  )}
+                </button>
+              </div>
+            ) : null}
+
+            <label
+              htmlFor="taskImage"
+              className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${loading || isDeletingImage
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-gray-700"
+                }`}
+            >
+              Upload image
+              <Upload />
+            </label>
+            <input
+              type="file"
+              className="hidden"
+              id="taskImage"
+              name="image"
+              onChange={handleFileChange}
+              disabled={loading || isDeletingImage}
+            />
+          </div>
+
           <div className="mb-4">
             <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">Title</label>
             <input
@@ -50,6 +130,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={loading || isDeletingImage}
             />
           </div>
 

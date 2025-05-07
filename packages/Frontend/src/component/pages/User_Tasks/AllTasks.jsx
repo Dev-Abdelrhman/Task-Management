@@ -193,11 +193,18 @@ export default function AllTasks() {
     }
     return {
       columns: statusColumns.map((col) => {
+        // const tasks = data.doc.filter(
+        //   (task) =>
+        //     task.status === col.status &&
+        //     task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        // );
         const tasks = data.doc.filter(
           (task) =>
             task.status === col.status &&
+            task.title &&
             task.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
+
         return { ...col, tasks, count: tasks.length };
       }),
     };
@@ -369,12 +376,19 @@ export default function AllTasks() {
 
               {taskDetailsModal.task?.image && (
                 <div className="mb-6  ">
-                  <img
-                    src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
-                    // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                  {/* <img
+                    src={taskDetailsModal?.task?.image?.[0].url || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
                     alt="Task"
                     className="w-full h-auto rounded-xl"
-                  />
+                  /> */}
+                   <img
+    src={
+      taskDetailsModal.task?.image?.[0]?.url ||
+      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+    }
+    alt="Task"
+    className="w-full h-auto rounded-xl"
+  />
                 </div>
               )}
 
@@ -402,15 +416,14 @@ export default function AllTasks() {
                     </h3>
                     <div className="flex items-center">
                       <span
-                        className={`px-3 py-1 rounded text-xs font-medium ${
-                          taskDetailsModal.task?.status === "Completed"
+                        className={`px-3 py-1 rounded text-xs font-medium ${taskDetailsModal.task?.status === "Completed"
                             ? "bg-green-100 text-green-800"
                             : taskDetailsModal.task?.status === "In Progress"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : taskDetailsModal.task?.status === "Todo"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+                              ? "bg-yellow-100 text-yellow-800"
+                              : taskDetailsModal.task?.status === "Todo"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
                       >
                         {taskDetailsModal.task?.status}
                       </span>
@@ -424,19 +437,18 @@ export default function AllTasks() {
                       {taskDetailsModal.task?.priority && (
                         <span
                           className={`flex items-center px-3 py-1 rounded text-xs font-medium
-                        ${
-                          taskDetailsModal.task.priority === "Urgent"
-                            ? "bg-red-600/20 text-red-500 border-red-600"
-                            : taskDetailsModal.task.priority === "High"
-                            ? "bg-orange-500/20 text-orange-500 border-orange-500"
-                            : taskDetailsModal.task.priority === "Medium"
-                            ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
-                            : taskDetailsModal.task.priority === "Low"
-                            ? "bg-blue-500 text-blue-300 border-blue-300"
-                            : taskDetailsModal.task.priority === "Normal"
-                            ? "bg-gray-500 text-gray-200 border-gray-300"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+                        ${taskDetailsModal.task.priority === "Urgent"
+                              ? "bg-red-600/20 text-red-500 border-red-600"
+                              : taskDetailsModal.task.priority === "High"
+                                ? "bg-orange-500/20 text-orange-500 border-orange-500"
+                                : taskDetailsModal.task.priority === "Medium"
+                                  ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
+                                  : taskDetailsModal.task.priority === "Low"
+                                    ? "bg-blue-500 text-blue-300 border-blue-300"
+                                    : taskDetailsModal.task.priority === "Normal"
+                                      ? "bg-gray-500 text-gray-200 border-gray-300"
+                                      : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {
                             {
@@ -488,12 +500,12 @@ export default function AllTasks() {
                       <Calendar className="mr-2" size={16} />
                       {taskDetailsModal.task?.dueDate
                         ? new Date(
-                            taskDetailsModal.task.dueDate
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                          taskDetailsModal.task.dueDate
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
                         : "No due date"}
                     </div>
                   </div>
@@ -538,7 +550,7 @@ export default function AllTasks() {
                   }}
                   className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
 
-                  // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
+                // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
                 >
                   Delete
                 </Button>
@@ -573,15 +585,14 @@ export default function AllTasks() {
                         {column.title}
                       </span>
                       <span
-                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${
-                          column.id === "todo"
+                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo"
                             ? "bg-[#65aaee]"
                             : column.id === "in-progress"
-                            ? "bg-[#e5e747]"
-                            : column.id === "done"
-                            ? "bg-red-500"
-                            : "bg-[#66d475]"
-                        }`}
+                              ? "bg-[#e5e747]"
+                              : column.id === "done"
+                                ? "bg-red-500"
+                                : "bg-[#66d475]"
+                          }`}
                       >
                         {column.count}
                       </span>
@@ -622,9 +633,9 @@ export default function AllTasks() {
                                     >
                                       {task.title?.split(" ").length > 5
                                         ? task.title
-                                            .split(" ")
-                                            .slice(0, 5)
-                                            .join(" ") + "..."
+                                          .split(" ")
+                                          .slice(0, 5)
+                                          .join(" ") + "..."
                                         : task.title}
                                     </h3>
                                     <div className="flex">
@@ -650,9 +661,9 @@ export default function AllTasks() {
                                   <p className="text-xs text-gray-500 mb-2 truncate">
                                     {task.description?.split(" ").length > 5
                                       ? task.description
-                                          .split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") + "..."
+                                        .split(" ")
+                                        .slice(0, 5)
+                                        .join(" ") + "..."
                                       : task.description}
                                   </p>
                                   <div className="flex items-center justify-between">
@@ -661,8 +672,8 @@ export default function AllTasks() {
                                       <span>
                                         {task.dueDate
                                           ? new Date(
-                                              task.dueDate
-                                            ).toLocaleDateString()
+                                            task.dueDate
+                                          ).toLocaleDateString()
                                           : "No date"}
                                       </span>
                                     </div>
