@@ -51,7 +51,9 @@ const updateMe = catchAsync(async (req, res, next) => {
     };
   }
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody);
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+  });
 
   res.status(200).json({
     status: "success",
