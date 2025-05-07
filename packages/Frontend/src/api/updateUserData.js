@@ -11,7 +11,7 @@ export const getUserInfoForProfile = async () => {
 };
 
 export const updateUserInfo = async (userInfo) => {
-  const response = await API.patch("/updateMe", { userInfo });
+  const response = await API.patch("/updateMe", userInfo);
   return response.data;
 };
 // DONE
