@@ -12,8 +12,11 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
 
   // States for image handling
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(initialData?.image || null);
+  const [imagePreview, setImagePreview] = useState(
+    initialData?.image?.[0]?.url || initialData?.image || null
+  );
   const [isDeletingImage, setIsDeletingImage] = useState(false);
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -47,10 +50,15 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
     if (dueDate) formData.append('dueDate', new Date(dueDate).toISOString());
     formData.append('status', status || 'Pending');
     formData.append('priority', priority || 'Normal');
-    if (imageFile instanceof File) formData.append('image', imageFile);
+
+    if (imageFile instanceof File) {
+      formData.append('image', imageFile);
+    } else if (isEditing && imagePreview && !imageFile) {
+      formData.append('image', 'keep');
+    }
+
     return formData;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
