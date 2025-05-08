@@ -128,7 +128,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               disabled={loading || isDeletingImage}
             />
@@ -139,7 +139,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               rows="3"
             />
           </div>
@@ -151,9 +151,8 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <Calendar className="absolute right-3 top-2.5 text-gray-400" size={18} />
             </div>
           </div>
 
@@ -162,7 +161,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className={`w-full px-3 py-2 dark:bg-[#2D2D2D] dark:border-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${disableStatus ? 'bg-gray-100 text-gray-500' : ''
+              className={`w-full px-3 py-2 dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${disableStatus ? 'bg-gray-100 text-gray-500' : ''
                 }`}
               disabled={disableStatus}
             >
@@ -182,7 +181,7 @@ const AddTask = ({ closeModal, onAddTask, initialStatus, initialData, isEditing,
                 id="status-select"
                 value={priority}
                 label="Priority"
-                className='dark:bg-[#2D2D2D] dark:border-gray-500'
+                className='dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300'
                 onChange={(e) => setPriority(e.target.value)}
                 // disabled={disableStatus}
                 renderValue={(value) => {
