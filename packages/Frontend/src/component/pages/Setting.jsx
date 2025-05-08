@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Settings, Bell, Save } from "lucide-react";
 import { Button } from "@mui/material";
 import { useEffect } from "react";
 import { toast } from "react-toastify"
-import { updateUserPassword } from "../../api/updateUserData";
+import { getUserInfoForProfile, updateUserInfo, updateUserPassword } from "../../api/updateUserData";
 
 export default function Setting() {
   const [activeTab, setActiveTab] = useState("general");
@@ -14,20 +13,46 @@ export default function Setting() {
     password: "",
     passwordConfirmation: "",
   });
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    username: ''
+  });
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getUserInfoForProfile();
+        setUserData({
+          name: data.name,
+          email: data.email,
+          username: data.username,
+        });
+        console.log(data);
+
+      } catch (err) {
+        toast.error("Failed to fetch user info");
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
   }, []);
 
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  // useEffect(() => {
+  //   if (theme === "dark") {
+  //     document.documentElement.classList.add("dark");
+  //   } else {
+  //     document.documentElement.classList.remove("dark");
+  //   }
+  //   localStorage.setItem("theme", theme);
+  // }, [theme]);
 
 
   const handleInputChange = (e) => {
@@ -66,6 +91,18 @@ export default function Setting() {
       toast.error(message);
     }
   };
+
+  const handleUpdateUserInfo = async () => {
+    try {
+      await updateUserInfo(userData);
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      const message = err?.response?.data?.message || "Failed to update profile";
+      toast.error(message);
+    }
+  };
+
+
 
 
   return (
@@ -118,7 +155,8 @@ export default function Setting() {
                   <input
                     type="text"
                     id="name"
-                    defaultValue="John Doe"
+                    value={userData.name || ""}
+                    onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                     className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-500 rounded border-gray-300  text-sm"
                   />
                 </div>
@@ -132,24 +170,11 @@ export default function Setting() {
                   <input
                     type="text"
                     id="username"
-                    defaultValue="John Doe"
+                    value={userData.username || ""}
+                    onChange={(e) => setUserData({ ...userData, username: e.target.value })}
                     className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-500 rounded border-gray-300  text-sm"
                   />
                 </div>
-                {/* <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
-                  >
-                    Change email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    defaultValue="john.doe@example.com"
-                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
-                  />
-                </div> */}
                 <div>
                   <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
                     Update profile picture
@@ -185,27 +210,11 @@ export default function Setting() {
                   <input
                     type="email"
                     id="email"
-                    defaultValue="john.doe@example.com"
+                    value={userData.email || ""}
+                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
                   />
                 </div>
-                {/* <div>
-                  <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
-                    Update profile picture
-                  </label>
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden">
-                      <img
-                        src="https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <button className="px-4 py-2 border border-gray-300 rounded-md text-sm">
-                      Upload
-                    </button>
-                  </div>
-                </div> */}
                 <div>
                   <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
                     Theme
@@ -235,7 +244,7 @@ export default function Setting() {
             </section>
           </div>
           <div className="flex justify-end ">
-            <Button className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+            <Button onClick={handleUpdateUserInfo} className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
               Save Changes
             </Button>
           </div>
@@ -252,6 +261,7 @@ export default function Setting() {
           </p>
         </div>
       )}
+      {/* DONE */}
       {activeTab === "security" && (
         <div className="bg-white dark:bg-[#121212] rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-gray-800 dark:text-gray-400 mb-2">

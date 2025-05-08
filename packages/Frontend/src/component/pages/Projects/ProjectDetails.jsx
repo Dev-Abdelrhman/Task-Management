@@ -172,13 +172,13 @@ function ProjectDetails() {
             }}
           />
           <div>
-            <div className="flex justify-between ml-16 ">
+            <div className="flex justify-between ml-16">
               <h1 className="font-medium text-4xl dark:text-[#e2e2e2] ">
                 {project?.name}
               </h1>
               <Button
                 onClick={() => handleClick()}
-                className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl"
+                className="!text-base !ml-2 !min-w-[150px] !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl"
               >
                 Join Tasks
               </Button>
@@ -209,12 +209,7 @@ function ProjectDetails() {
                 Description
               </h1>
               <p className="text-gray-800 leading-8 text-xl my-4 dark:text-[#a0a0a0]">
-                {" "}
-                Follow the video tutorial above. Understand how to use each tool
-                in the Figma application. Also learn how to make a good and
-                correct design. Starting from spacing, typography, content, and
-                many other design hierarchies. Then try to make it yourself with
-                your imagination and inspiration.
+                {project?.description}
               </p>
             </div>
           </div>

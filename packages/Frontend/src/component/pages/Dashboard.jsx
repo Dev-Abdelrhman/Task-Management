@@ -34,6 +34,7 @@ import { getUserProjects } from "../../api/project";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllUserTasks } from "../../api/user_tasks";
+import ProjectOptionsMenu from "./Projects/ProjectOptionsMenu";
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useAuthStore();
@@ -63,6 +64,10 @@ export default function TaskordDashboard() {
     queryFn: getAllUserTasks,
   });
 
+  console.log(tasksData, "TaskData");
+  console.log(ProjectData, "ProjectData");
+  console.log(user, "UserData");
+
   const totalTasks = tasksData?.results || 0;
   const doneTasks =
     tasksData?.doc?.filter((task) => task.status === "Completed")?.length || 0;
@@ -86,10 +91,6 @@ export default function TaskordDashboard() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  // const handleClick = (projectId) => {
-  //   navigate(`/projects/ProjectDetails/${projectId}`);
-  // };
 
   const hostGoogleImage = (url) => {
     return `https://images.weserv.nl/?url=${encodeURIComponent(
@@ -152,8 +153,10 @@ export default function TaskordDashboard() {
           {/* Nav */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl dark:text-white">Hi, {user.username}</h1>
-              <p className="text-gray-600 dark:text-[#a0a0a0]">Let's finish your task today!</p>
+              <h1 className="text-3xl dark:text-white">Hi, {user.name}</h1>
+              <p className="text-gray-600 dark:text-[#a0a0a0]">
+                Let's finish your task today!
+              </p>
             </div>
             <div className="flex items-center gap-4 ">
               <IconButton
@@ -337,7 +340,9 @@ export default function TaskordDashboard() {
           ) : ProjectData?.doc?.length > 0 ? (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-medium dark:text-white">Latest Project</h2>
+                <h2 className="text-xl font-medium dark:text-white">
+                  Latest Project
+                </h2>
                 <div className="flex gap-2">
                   <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
                     <ChevronLeft className="w-5 h-5 dark:text-gray-500" />
@@ -370,7 +375,7 @@ export default function TaskordDashboard() {
               >
                 {ProjectData?.doc?.slice(0, 4).map((project, index) => (
                   <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
-                    <div className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
+                    <div className="bg-white max-w-[350px] p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -403,14 +408,18 @@ export default function TaskordDashboard() {
                       </motion.div>
 
                       <div>
-                        <h3
-                          className="font-medium text-lg cursor-pointer"
-                          onClick={() =>
-                            navigate(`/projects/ProjectDetails/${project._id}`)
-                          }
-                        >
-                          {project.name}
-                        </h3>
+                        <div className="flex  justify-between p-0 m-0">
+                          <h3
+                            className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
+                            onClick={() => handleClick(project._id)}
+                          >
+                            {project.name}
+                          </h3>
+                          <ProjectOptionsMenu
+                            projectId={project._id}
+                            projectData={project}
+                          />
+                        </div>
                         <p className="text-sm text-gray-500 mb-2">
                           {project.category}
                         </p>
@@ -581,7 +590,7 @@ export default function TaskordDashboard() {
                       />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-1">
+                      <h3 className="font-semibold text-lg mb-1 truncate">
                         {ProjectData.doc[0].name}
                       </h3>
                       <p className="text-sm text-gray-500 mb-3">
@@ -646,22 +655,20 @@ export default function TaskordDashboard() {
                   {/* Detail Task */}
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <h2 className="text-lg font-medium">
+                      <h2 className="text-lg font-medium">Project Task</h2>
+                      <span className="text-md text-gray-500">
                         {ProjectData.doc[0].category}
-                      </h2>
-                      <span className="text-sm text-gray-500">
-                        UI/UX Designer
                       </span>
                     </div>
                     {/* {console.log(ProjectData.doc[0].tasks)} */}
 
                     <div className="space-y-4 mb-8">
-                      {ProjectData?.doc[0]?.tasks.map((task, i) => (
+                      {ProjectData?.doc[0]?.tasks.slice(0, 3).map((task, i) => (
                         <div key={task._id} className="flex items-center gap-2">
-                          <div className="w-9 h-9 flex items-center justify-center !rounded-xl !bg-[#F5F5F7] text-sm">
+                          <div className="w-9 h-9 flex items-center justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
                             {i + 1}
                           </div>
-                          <div className="text-sm ">{task.title}</div>
+                          <div className="text-sm truncate">{task.title}</div>
                         </div>
                       ))}
                     </div>

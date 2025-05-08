@@ -193,11 +193,18 @@ export default function AllTasks() {
     }
     return {
       columns: statusColumns.map((col) => {
+        // const tasks = data.doc.filter(
+        //   (task) =>
+        //     task.status === col.status &&
+        //     task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        // );
         const tasks = data.doc.filter(
           (task) =>
             task.status === col.status &&
+            task.title &&
             task.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
+
         return { ...col, tasks, count: tasks.length };
       }),
     };
@@ -357,7 +364,8 @@ export default function AllTasks() {
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
             <div className="bg-white w-[480px] rounded-[10px] dark:bg-[#1E1E1E] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
               <div className="flex justify-end items-center ">
-                <button className="mb-3 dark:text-red-50"
+                <button
+                  className="mb-3 dark:text-red-50"
                   onClick={() =>
                     setTaskDetailsModal({ show: false, task: null })
                   }
@@ -368,9 +376,16 @@ export default function AllTasks() {
 
               {taskDetailsModal.task?.image && (
                 <div className="mb-6  ">
+                  {/* <img
+                    src={taskDetailsModal?.task?.image?.[0].url || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                    alt="Task"
+                    className="w-full h-auto rounded-xl"
+                  /> */}
                   <img
-                    src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
-                    // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                    src={
+                      taskDetailsModal.task?.image?.[0]?.url ||
+                      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                    }
                     alt="Task"
                     className="w-full h-auto rounded-xl"
                   />
@@ -384,13 +399,17 @@ export default function AllTasks() {
                   </h2>
 
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">Description :</h3>
+                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">
+                      Description :
+                    </h3>
                     <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
                       {taskDetailsModal.task?.description ||
                         "No description provided"}
                     </p>
                   </div>
-                  <h6 class="text-sm font-medium dark:text-gray-200 ">Properties : </h6>
+                  <h6 class="text-sm font-medium dark:text-gray-200 ">
+                    Properties :{" "}
+                  </h6>
                   <div className="mb-4 flex gap-8 mt-3">
                     <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       Status
@@ -511,7 +530,7 @@ export default function AllTasks() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
+              <div className="flex justify-end pt-3 pb-3 gap-2 mt-6">
                 <Button
                   onClick={() => {
                     setTaskDetailsModal({ show: false, task: null });
@@ -605,12 +624,12 @@ export default function AllTasks() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
+                                  className="bg-white border max-w-[350px] border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
                                 >
-                                  <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
+                                  <div className="flex justify-between  items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
                                       onClick={() => handleTaskClick(task)}
-                                      className="text-sm font-medium dark:text-gray-200"
+                                      className="text-sm font-medium dark:text-gray-200 truncate "
                                     >
                                       {task.title?.split(" ").length > 5
                                         ? task.title
@@ -639,7 +658,7 @@ export default function AllTasks() {
                                       </button>
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2">
+                                  <p className="text-xs text-gray-500 mb-2 truncate">
                                     {task.description?.split(" ").length > 5
                                       ? task.description
                                         .split(" ")
