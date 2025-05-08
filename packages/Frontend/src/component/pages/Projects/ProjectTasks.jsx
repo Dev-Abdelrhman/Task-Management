@@ -95,12 +95,29 @@ const ProjectTasks = () => {
     console.log("Socket connecting");
 
     const handleNewTask = (task) => {
+      console.log("tas-created:" , task)
+      queryClient.setQueryData(["projectTasks", user._id, projectId], old => {
+        console.log("tasksNow" , old?.doc)
+        if (!old?.doc) return { doc: [task] }
+        const tempTask = old.doc.find(t => t._id.startsWith("temp-") && t.title === task.title)
+        if(tempTask) {
+          return {
+            ...old,
+            doc: old.doc.map(t => (t._id === tempTask._id ? task : t))
+        }
+      }
+        const exists = old.doc.some(t => t._id === task._id)
+        return exists ? old : { ...old, doc: [...old.doc, task] }
+      })
+    }
+
       queryClient.setQueryData(["projectTasks", user._id, projectId], (old) => {
         if (!old?.doc) return { doc: [task] };
         const exists = old.doc.some((t) => t._id === task._id);
         return exists ? old : { ...old, doc: [...old.doc, task] };
       });
     };
+
 
     const handleTaskUpdate = (updatedTask) => {
       queryClient.setQueryData(["projectTasks", user._id, projectId], (old) => {
