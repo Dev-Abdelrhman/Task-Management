@@ -45,14 +45,14 @@ export default function Setting() {
     setTheme(savedTheme);
   }, []);
 
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  // useEffect(() => {
+  //   if (theme === "dark") {
+  //     document.documentElement.classList.add("dark");
+  //   } else {
+  //     document.documentElement.classList.remove("dark");
+  //   }
+  //   localStorage.setItem("theme", theme);
+  // }, [theme]);
 
 
   const handleInputChange = (e) => {

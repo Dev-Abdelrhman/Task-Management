@@ -356,7 +356,7 @@ function AddProjectBtn({
                 </label>
                 <input
                   type="text"
-                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Type project name"
                   id="projectName"
                   name="name"
@@ -385,11 +385,11 @@ function AddProjectBtn({
                   onChange={handleInputs}
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
-                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                 >
-                  <option value="">Select a category</option>
+                  <option className="dark:text-gray-300" value="">Select a category</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>
+                    <option key={category} className="dark:text-gray-300" value={category}>
                       {category}
                     </option>
                   ))}
@@ -406,7 +406,7 @@ function AddProjectBtn({
                 </label>
                 <textarea
                   rows="3"
-                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Write Project description"
                   id="projectDescription"
                   name="description"
@@ -431,7 +431,7 @@ function AddProjectBtn({
                 </label>
                 <input
                   type="date"
-                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Select due date"
                   id="dueDate"
                   name="dueDate"
