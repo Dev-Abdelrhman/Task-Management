@@ -336,7 +336,7 @@ const ProjectTasks = () => {
 
   return (
     <>
-      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#121212] flex justify-between items-center ">
+      <div className=" px-5 pb-5 pt-0 bg-white flex justify-between items-center ">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0  flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
@@ -356,7 +356,7 @@ const ProjectTasks = () => {
           Add Task
         </Button>
       </div>
-      <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#121212] min-h-screen ">
+      <div className="px-4 pb-4 pt-4 bg-gray-100 min-h-screen rounded-[30px]">
         {showModal && (
           <AddProjectTask
             closeModal={() => setShowModal(false)}
@@ -372,7 +372,7 @@ const ProjectTasks = () => {
 
         {DetailsModal.show && DetailsModal.task && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white dark:bg-[#1E1E1E] w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
+            <div className="bg-white w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
               <div className="flex justify-end items-center mb-4">
                 <button
                   onClick={() => setDetailsModal({ show: false, task: null })}
@@ -396,20 +396,20 @@ const ProjectTasks = () => {
 
               <div className="">
                 <div>
-                  <h2 className="text-xl dark:text-white font-bold mb-4">
+                  <h2 className="text-xl font-bold mb-4">
                     {DetailsModal.task.title}
                   </h2>
 
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">Description :</h3>
-                    <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
+                    <h3 className="text-sm font-medium  mb-1">Description :</h3>
+                    <p className="text-gray-700 whitespace-pre-line">
                       {DetailsModal.task.description ||
                         "No description provided"}
                     </p>
                   </div>
-                  <h6 class="text-sm font-medium dark:text-gray-200">Properties : </h6>
+                  <h6 class="text-sm font-medium">Properties : </h6>
                   <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Status
                     </h3>
                     <div className="flex items-center">
@@ -429,7 +429,7 @@ const ProjectTasks = () => {
                     </div>
                   </div>
                   <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
                       priority
                     </h3>
                     <div className="flex items-center"></div>
@@ -438,10 +438,10 @@ const ProjectTasks = () => {
 
                 <div>
                   <div className="mb-4 flex gap-6">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
                       Due Date
                     </h3>
-                    <div className="flex items-center text-gray-700 dark:text-[#a0a0a0]">
+                    <div className="flex items-center text-gray-700">
                       <Calendar className="mr-2" size={16} />
                       {DetailsModal.task.dueDate
                         ? new Date(
@@ -457,7 +457,7 @@ const ProjectTasks = () => {
 
                   {DetailsModal.task.completedAt && (
                     <div className="mb-4 ">
-                      <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">
                         Completed At
                       </h3>
                       <div className="flex items-center text-gray-700">
@@ -506,10 +506,10 @@ const ProjectTasks = () => {
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {board.columns.map((column) => (
               <div key={column.id} className="flex-shrink-0 w-[23%]">
-                <div className="rounded-[15px] bg-white dark:bg-[#1E1E1E] shadow-sm">
+                <div className="rounded-[15px] bg-white shadow-sm">
                   <div className="p-3 flex justify-between items-center border-b">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium dark:text-white text-sm">
+                      <span className="font-medium text-sm">
                         {column.title}
                       </span>
                       <span
@@ -528,7 +528,7 @@ const ProjectTasks = () => {
                     </div>
                     <button
                       onClick={() => openAddTaskModal(column.id)}
-                      className="w-6 dark:text-white h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
+                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
                     >
                       <Plus size={16} />
                     </button>
@@ -539,7 +539,7 @@ const ProjectTasks = () => {
                       <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className="flex  flex-col p-2 min-h-[200px] space-y-2"
+                        className="flex flex-col p-2 min-h-[200px] space-y-2"
                       >
                         {column.tasks.length > 0 ? (
                           column.tasks.map((task, index) => (
@@ -553,11 +553,11 @@ const ProjectTasks = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border dark:bg-[#2D2D2D] dark:border-gray-700 border-gray-200 rounded-[12px] p-3 shadow-sm max-w-[350px]"
+                                  className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm max-w-[350px]"
                                 >
                                   <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
-                                      className="text-sm dark:text-gray-200 font-medium truncate"
+                                      className="text-sm font-medium truncate"
                                       onClick={() => handleclickTask(task)}
                                     >
                                       {task.title.split(" ").length > 5
@@ -626,13 +626,13 @@ const ProjectTasks = () => {
         </DragDropContext>
 
         {deleteModal.show && (
-          <div className="fixed inset-0 bg-black  bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white w-[426px] dark:bg-[#1E1E1E] rounded-[10px] shadow-lg p-6  flex flex-col justify-center items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6  flex flex-col justify-center items-center">
               <CircleAlert size={40} color="#f8bb86" />
-              <h2 className="text-gray-500 dark:text-gray-300 text-4xl font-medium mt-4 mb-4">
+              <h2 className="text-gray-500 text-4xl font-medium mt-4 mb-4">
                 Delete Task
               </h2>
-              <div className="text-gray-600 dark:text-gray-400 mb-[24px]">
+              <div className=" mb-[24px]">
                 Are you sure you want to delete this task?
               </div>
               <div className="flex justify-end gap-4">
