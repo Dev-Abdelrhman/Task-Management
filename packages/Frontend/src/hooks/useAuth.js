@@ -1,11 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signIn, signUp, logout, forgotPassword , googleAuth, resetPassword } from "../api/auth"; 
-import { useAuthStore } from "../stores/authStore"; 
+import { useMutation } from "@tanstack/react-query";
+import {
+  signIn,
+  signUp,
+  logout,
+  forgotPassword,
+  googleAuth,
+  resetPassword,
+  ContinueSignUpWithGoogle,
+  handleGoogleCallback,
+  getUser,
+} from "../api/auth";
+import { useAuthStore } from "../stores/authStore";
 import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const { user, setUser, logout: logoutFromStore } = useAuthStore();
-  const queryClient = useQueryClient();
 
   // Common error handler
   const handleError = (error) => {
@@ -22,10 +31,14 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
+<<<<<<< HEAD
       setUser(data.user); // Corrected from data.user ➔ data.user
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("userID", data.user._id);
       useAuthStore.getState().setAccessToken(data.accessToken);
+=======
+      setUser(data.user);
+>>>>>>> c2c8748593ac7df30792de57fe5a5b65c7401486
     },
     onError: (error) => {
       console.error("Sign-in error:", handleError(error));
@@ -39,9 +52,7 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.user); // Corrected from data.user ➔ data.user
-      localStorage.setItem("accessToken", data.accessToken);
-      useAuthStore.getState().setAccessToken(data.accessToken);
+      setUser(data.user);
     },
     onError: (error) => {
       console.error("Sign-up error:", handleError(error));
@@ -51,22 +62,15 @@ export const useAuth = () => {
   // Sign-out mutation
   const signOutMutation = useMutation({
     mutationFn: async () => {
-      await logout();
+      logout();
     },
     onSuccess: () => {
       logoutFromStore();
-      // Clear localStorage properly
-      localStorage.clear();
-      // Clear sessionStorage
-      sessionStorage.clear();
-      // Invalidate queries
-      queryClient.setQueryData(["user"], null);
     },
     onError: (error) => {
       console.error("Sign-out error:", handleError(error));
     },
   });
-
   // Forgot password mutation
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email) => {
@@ -75,58 +79,117 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       console.log("Forgot password success:", data);
-      toast.success("Password reset instructions have been sent to your email.");
+      toast.success(
+        "Password reset instructions have been sent to your email."
+      );
     },
     onError: (error) => {
       console.error("Forgot password error:", handleError(error));
       toast.error(
-        handleError(error) || "Error sending reset password email. Please try again."
+        handleError(error) ||
+          "Error sending reset password email. Please try again."
       );
     },
   });
 
+  // Reset password mutation
   const resetPasswordMutation = useMutation({
-    mutationFn: async ({token , password , passwordConfirmation}) => {
-      const response = await resetPassword(token, password , passwordConfirmation);
+    mutationFn: async ({ token, password, passwordConfirmation }) => {
+      const response = await resetPassword(
+        token,
+        password,
+        passwordConfirmation
+      );
       return response.data;
     },
     onSuccess: () => {
       toast.success("Password reset successful!");
     },
     onError: (error) => {
-      console.error("Reset password error:" ,handleError(error));
-      toast.error(handleError(error) || "Error resetting password. Please try again.");
-    }
-  })
+      console.error("Reset password error:", handleError(error));
+      toast.error(
+        handleError(error) || "Error resetting password. Please try again."
+      );
+    },
+  });
 
-  // In useAuth.js, add the mutation
-const googleSignInMutation = useMutation({
-  mutationFn: async () => {
-    await googleAuth();
-  },
-  onSuccess: () => {
-    toast.success("Signed in with Google successfully");
-  },
-  onError: (error) => {
-    console.error("Google sign-in error:", handleError(error));
-    toast.error("Google sign-in failed. Please try again.");
-  },
-});
-  
+  // Google SignIn Mutatuin
+  const googleSignInMutation = useMutation({
+    mutationFn: async () => {
+      await googleAuth();
+    },
+    onError: (error) => {
+      console.error("Google sign-in error:", handleError(error));
+      toast.error("Google sign-in failed. Please try again.");
+    },
+  });
+
+  const handleGoogleCallbackMutation = useMutation({
+    mutationFn: async () => {
+      await handleGoogleCallback();
+      const response = await getUser();
+      if (!response || !response.user) {
+        throw new Error("User data is missing from response");
+      }
+      return response;
+    },
+    onSuccess: async (data) => {
+      useAuthStore.getState().setUser(data.user);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // window.location.reload();
+    },
+    onError: (error) => {
+      console.error("Google callback failed:", error);
+      toast.error("Google sign-in failed. Please try again.");
+    },
+  });
+
+  // After
+  const continueWithGoogleMutation = useMutation({
+    mutationFn: async ({ token, username, password, passwordConfirmation }) => {
+      const response = await ContinueSignUpWithGoogle(
+        token,
+        username,
+        password,
+        passwordConfirmation
+      );
+      return response;
+    },
+    onSuccess: (data) => {
+      setUser(data.user);
+      toast.success("Account setup complete!");
+    },
+    onError: (error) => {
+      console.error("Continue with Google error", handleError(error));
+      toast.error("Continue with Google failed. Please try again.");
+    },
+  });
+
   return {
     user,
     isAuthenticated: !!user,
     signIn: signInMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
+    // getUser: getUserMutation.mutateAsync,
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
     googleSignIn: googleSignInMutation.mutateAsync,
+    handleGoogleCallback: handleGoogleCallbackMutation.mutateAsync,
+    continueWithGoogle: continueWithGoogleMutation.mutateAsync,
     isLoading:
-      signInMutation.isPending || signUpMutation.isPending || signOutMutation.isPending || forgotPasswordMutation.isPending,
+      signInMutation.isPending ||
+      signUpMutation.isPending ||
+      signOutMutation.isPending ||
+      forgotPasswordMutation.isPending ||
+      continueWithGoogleMutation.isPending ||
+      handleGoogleCallbackMutation.isPending,
+
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,
     signOutError: signOutMutation.error,
+    forgotPasswordError: forgotPasswordMutation.error,
     resetPasswordError: resetPasswordMutation.error,
+    googleSignInError: googleSignInMutation.error,
   };
 };

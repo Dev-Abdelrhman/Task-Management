@@ -1,86 +1,101 @@
-import React , {useEffect , useState} from 'react'
+import React, { useState } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
-import bg from '../../../assets/bg_img.png'
-import {toast} from 'react-toastify'
-import { assets ,cursors } from '../../../assets/assets';
+import { toast } from 'react-toastify';
+import { assets } from '../../../assets/assets';
 import { useNavigate } from "react-router-dom";
+import { Button, TextField, Card, CardContent } from '@mui/material';
+import { Mail, ArrowLeft } from 'lucide-react';
+import {bg} from '../../../assets/assets';
 
-
-const Forgetpassword = () => {
+const ForgetPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-
-  
-  const {
-    forgotPassword,
-    isLoading,
-  } = useAuth();
+  const { forgotPassword, isLoading } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await forgotPassword(email);
-      setIsSubmitted(true)
+      setIsSubmitted(true);
       setEmail("");
-      // toast.success("Password reset instructions have been sent to your email.");
     } catch (error) {
-      console.error("Forgot password failed:", error);
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setSuccess(false);
+      toast.error(error.message || "Something went wrong. Please try again.");
     }
   };
 
-  return ( 
-    
-    <div className="d-md-flex align-items-center justify-content-center flex-column"  style={{ background: `url(${bg})`, height: "100vh" }}>
-    <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
-    <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "600px" }}>
-      <h2 className="fs-2 fw-semibold py-2">Forgot Password</h2>
-      {!isSubmitted ? (<>
-      <p className='fw-light fs-5 text-secondary'>Enter your email address and we'll send you a link to reset your password</p>
-      <section className="form-signin w-100 m-auto">
-        <form onSubmit={handleSubmit}
-          className="grid gap-4 needs-validation" 
-          noValidate
-          >
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bg})` }}>
+      <a href="/" className="absolute top-3 left-3">
+        <img src={assets.logo} alt="logo" className="h-12 w-auto" />
+      </a>
+
+      <Card className="w-full max-w-md border-0 shadow-xl">
+        <CardContent className="space-y-4">
+          <h2 className="text-3xl font-bold text-center text-blue-700">Forgot Password</h2>
+          
+          {!isSubmitted ? (
             <>
-              <div className="form-floating mb-2">
-                <input
+              <p className="text-gray-600 text-center mb-4">
+                Enter your email address and we'll send you a link to reset your password
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <TextField
+                  fullWidth
+                  label={
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-gray-400" />
+                      <span>Email Address</span>
+                    </div>
+                  }
                   type="email"
-                  className="form-control"
-                  id="floatingInput"
-                  name="email"
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
+                  
+                  className="pl-10"
                 />
-                <label htmlFor="floatingInput"><img src={assets.mail_icon} className="mb-1" /> Email address</label>
-              </div>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isLoading}
+                  className="!bg-blue-600 text-white !py-3 !rounded-xl hover:!bg-blue-700"
+                >
+                  Send Reset Link
+                </Button>
+
+                <div className="text-center pt-4">
+                  <a 
+                    onClick={() => navigate('/login')} 
+                    className="text-blue-600 hover:underline font-medium cursor-pointer flex items-center justify-center gap-1"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Return to login
+                  </a>
+                </div>
+              </form>
             </>
-           <button className="btn btn-primary w-100 py-2 my-2" type="submit" disabled={isLoading}>
-            Send Reset Link
-          </button>
-          <a onClick={() => navigate('/login')} style={cursors} className="text-left border-0 text-black text-decoration-none py-2" ><img src={assets.left_Arrow} width={"15px"} /> return to login</a>
-
-        </form>
-      </section>
-      </>):(
-        <>
-          <p className='text-secondary py-2 mb-5'>
-            A reset link has been sent to your email {email}. Please check your email you will receive a password reset link shortly
-          </p>
-        </>
-      )}
-     
+          ) : (
+            <div className="text-center p-6">
+              <p className="text-gray-600 mb-4">
+                A reset link has been sent to your email {email}. Please check your inbox - you'll receive a password reset link shortly.
+              </p>
+              <Button
+                onClick={() => navigate('/login')}
+                variant="outlined"
+                className="w-full !border-gray-300 !text-gray-700 hover:!bg-gray-50"
+              >
+                Back to Login
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
-  </div>
-  )
+  );
+};
 
-}
-
-export default Forgetpassword;
+export default ForgetPassword;

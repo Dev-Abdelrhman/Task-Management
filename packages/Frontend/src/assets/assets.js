@@ -10,10 +10,15 @@ import eye_closed_icon from './open-eye.png'
 import x from './x.png'
 import check_icon from './check.png'
 import left_Arrow from './left-arrow.png'
+import signIn from './sign_in.jpg'
+import google from './google.png'
+import bg from './bg_img.png'
 
 export const cursors = {
     cursor: 'pointer',
-  }
+}
+
+export  {bg} ;
 
 export const assets = {
     arrow_icon,
@@ -27,5 +32,7 @@ export const assets = {
     eye_closed_icon,
     x,
     check_icon,
-    left_Arrow
+    left_Arrow,
+    signIn,
+    google
 }

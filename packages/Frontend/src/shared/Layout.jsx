@@ -4,28 +4,25 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 
 function Layout() {
-    return (
-        <>
+  return (
+    <div className="min-h-screen w-full flex">
+      {/* Fixed Sidebar */}
+      <div className="fixed top-0 left-0 bottom-0 z-20">
+        <Sidebar />
+      </div>
+
+      {/* Main Content Area */}
+      <div className="ml-64 flex-1">
+        {/* Fixed Navbar */}
+        <Navbar />
         
-            <div className="container-fluid ps-0">
-
-                <div className="row">
-                    <div className="col-lg-2">
-                        <div className="sidebar text-center position-fixed top-0 start-0 bottom-0">
-                            <Sidebar />
-                        </div>
-                    </div>
-                    <div className="col-lg-10">
-                        <Navbar />
-                        <Outlet />
-
-                    </div>
-                </div>
-            </div>
-
-
-        </>
-    );
+        {/* Page Content */}
+        <main className="p-6 pt-20">  {/* pt-20 accounts for navbar height */}
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default Layout;

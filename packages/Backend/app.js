@@ -15,6 +15,7 @@ import AppError from "./utils/appError.js";
 import GlobalErrorHandler from "./controllers/errorControllers.js";
 import UserRoutes from "./routes/userRoute.js";
 import InviteRoutes from "./routes/inviteRoute.js";
+import TaskRoutes from "./routes/tasksRoute.js";
 
 /*______________________________________________________*/
 const app = express();
@@ -56,7 +57,7 @@ if (process.env.NODE_ENV === "development") {
 
 /* ______________ Rate Limiting ______________ */
 const limiter = rateLimit({
-  max: 100, // Max requests per 15 minutes
+  max: 100,
   windowMs: 15 * 60 * 1000,
   message: "Too many requests from this IP, please try again later.",
 });
@@ -80,14 +81,11 @@ app.use((req, res, next) => {
   if (req.body) {
     for (let key in req.body) {
       if (typeof req.body[key] === "string") {
-        // Remove hidden Unicode characters
         req.body[key] = req.body[key].replace(/[\u202A\u202C\u200F]/g, "");
-        // Sanitize input using `xss`
         req.body[key] = xss(req.body[key]);
-        // Additional sanitization with `sanitize-html`
         req.body[key] = sanitizeHtml(req.body[key], {
-          allowedTags: [], // No HTML tags allowed
-          allowedAttributes: {}, // No attributes allowed
+          allowedTags: [],
+          allowedAttributes: {},
         });
       }
     }
@@ -104,6 +102,7 @@ app.use((req, res, next) => {
 /* ______________ Routes ______________ */
 app.use("/depiV1/users", UserRoutes);
 app.use("/depiV1/invite", InviteRoutes);
+app.use("/depiV1/tasks", TaskRoutes);
 
 /* ______________ Handle Undefined Routes ______________ */
 app.all("*", (req, res, next) => {

@@ -12,30 +12,24 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
-        console.log("🔍 Google Profile:", profile);
-
         let user = await User.findOne({ email: profile.emails?.[0]?.value });
-
         if (user) {
-          console.log("✅ Existing user, logging in...");
           return cb(null, user);
         }
-
-        console.log("🚀 New user, generating tempToken...");
-
+        
         const tempToken = jwt.sign(
           {
             googleID: profile.id,
             email: profile.emails?.[0]?.value,
             name: profile.displayName,
+            image: profile.photos?.[0]?.value,
           },
           process.env.JWT_TEMP_SECRET,
-          { expiresIn: "10m" }
+          { expiresIn: process.env.JWT_TEMP_TOKEN_EXPIRES_IN }
         );
 
         return cb(null, { tempToken });
-      } catch (error) {
-        console.error("❌ Google OAuth Error:", error);
+      } catch (error) {;
         return cb(error, null);
       }
     }

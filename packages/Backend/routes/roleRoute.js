@@ -13,7 +13,7 @@ router.use(RC.isMine);
 router
   .route("/:id")
   .get(RC.getRoleById)
-  .put(RC.updateRole)
+  .patch(RC.updateRole)
   .delete(RC.deleteRole);
 
 export default router;

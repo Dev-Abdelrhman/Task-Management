@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'react-toastify';
-import { assets, cursors } from '../../../assets/assets';
-import bg from '../../../assets/bg_img.png';
+import { assets } from '../../../assets/assets';
 import PasswordStrengthMeter from './PasswordMeter';
+import { Button, TextField, Card, CardContent } from '@mui/material';
+import { Lock } from 'lucide-react';
 
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
-  const [passwordConfirmation, setpasswordConfirmation] = useState('');
-  const { resetPassword } = useAuth(); 
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const { resetPassword } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await resetPassword({ token, password , passwordConfirmation });
+      await resetPassword({ token, password, passwordConfirmation });
       navigate('/login');
     } catch (error) {
       toast.error(error.message || "Password reset failed");
@@ -29,46 +30,69 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="d-md-flex align-items-center justify-content-center flex-column" style={{ background: `url(${bg})`, height: "100vh" }}>
-      <a href="/"><img src={assets.logo} className="position-absolute" alt="logo" style={{ top: "10px", left: "10px" }} /></a>
-      <div className="text-center bg-dark-subtle p-5 rounded-3" style={{ width: "600px" }}>
-        <h2 className="fs-2 fw-semibold py-2">Reset Password</h2>
-        <section className="form-signin w-100 m-auto">
-          <form onSubmit={handleSubmit} className="grid gap-4 needs-validation" noValidate>
-            <div className="form-floating mb-2">
-              <input
-                type="password"
-                className="form-control"
-                id="newPassword"
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <label htmlFor="newPassword"><img src={assets.lock_icon} className="mb-1" /> New Password</label>
-            </div>
-            <div className="form-floating mb-2">
-              <input
-                type="password"
-                className="form-control"
-                id="passwordConfirmation"
-                placeholder="Confirm Password"
-                value={passwordConfirmation}
-                onChange={(e) => setpasswordConfirmation(e.target.value)}
-                required
-              />
-              <label htmlFor="passwordConfirmation"><img src={assets.lock_icon} className="mb-1" /> Confirm Password</label>
-            </div>
-            <button className="btn btn-primary w-100 py-2 my-2" type="submit">
+    <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${assets.bg})` }}>
+      <a href="/" className="absolute top-3 left-3">
+        <img src={assets.logo} alt="logo" className="h-12 w-auto" />
+      </a>
+
+      <Card className="w-full max-w-md border-0 shadow-xl">
+        <CardContent className="space-y-4">
+          <h2 className="text-3xl font-bold text-center text-blue-700">Reset Password</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <TextField
+              fullWidth
+              label={
+                <div className="flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                  <span>New Password</span>
+                </div>
+              }
+              type="password"
+              placeholder="New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-10"
+            />
+
+            <TextField
+              fullWidth
+              label={
+                <div className="flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                  <span>Confirm Password</span>
+                </div>
+              }
+              type="password"
+              placeholder="Confirm Password"
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              className="pl-10"
+            />
+
+            {password && <PasswordStrengthMeter password={password} />}
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className="!bg-blue-600 text-white !py-3 !rounded-xl hover:!bg-blue-700"
+            >
               Reset Password
-            </button>
-            <PasswordStrengthMeter password={password} />
-            <a onClick={() => navigate('/login')} style={cursors} className="text-left border-0 text-black text-decoration-none py-2">
-              <img src={assets.left_Arrow} width="15px" /> Return to login
-            </a>
+            </Button>
+
+            <div className="text-center pt-4">
+              <a 
+                onClick={() => navigate('/login')} 
+                className="!text-blue-600 hover:underline font-medium cursor-pointer flex items-center justify-center gap-1"
+              >
+                <img src={assets.left_Arrow} alt="back" className="h-4 w-auto" />
+                Return to login
+              </a>
+            </div>
           </form>
-        </section>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -9,6 +9,6 @@ router.route("/:id").get(IC.getOneInvite).delete(IC.deleteInvite);
 
 router.route("/sendInvite").post(IC.sendInvite);
 
-router.route("/acceptOrDeclineInvite").put(IC.acceptOrDeclineInvite);
+router.route("/acceptOrDeclineInvite").patch(IC.acceptOrDeclineInvite);
 
 export default router;
