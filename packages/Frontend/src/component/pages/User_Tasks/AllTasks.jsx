@@ -381,14 +381,14 @@ export default function AllTasks() {
                     alt="Task"
                     className="w-full h-auto rounded-xl"
                   /> */}
-                   <img
-    src={
-      taskDetailsModal.task?.image?.[0]?.url ||
-      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
-    }
-    alt="Task"
-    className="w-full h-auto rounded-xl"
-  />
+                  <img
+                    src={
+                      taskDetailsModal.task?.image?.[0]?.url ||
+                      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                    }
+                    alt="Task"
+                    className="w-full h-auto rounded-xl"
+                  />
                 </div>
               )}
 
@@ -417,12 +417,12 @@ export default function AllTasks() {
                     <div className="flex items-center">
                       <span
                         className={`px-3 py-1 rounded text-xs font-medium ${taskDetailsModal.task?.status === "Completed"
-                            ? "bg-green-100 text-green-800"
-                            : taskDetailsModal.task?.status === "In Progress"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : taskDetailsModal.task?.status === "Todo"
-                                ? "bg-blue-100 text-blue-800"
-                                : "bg-gray-100 text-gray-800"
+                          ? "bg-green-100 text-green-800"
+                          : taskDetailsModal.task?.status === "In Progress"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : taskDetailsModal.task?.status === "Todo"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-gray-100 text-gray-800"
                           }`}
                       >
                         {taskDetailsModal.task?.status}
@@ -530,7 +530,7 @@ export default function AllTasks() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
+              <div className="flex justify-end pt-3 pb-3 gap-2 mt-6">
                 <Button
                   onClick={() => {
                     setTaskDetailsModal({ show: false, task: null });
@@ -586,12 +586,12 @@ export default function AllTasks() {
                       </span>
                       <span
                         className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo"
-                            ? "bg-[#65aaee]"
-                            : column.id === "in-progress"
-                              ? "bg-[#e5e747]"
-                              : column.id === "done"
-                                ? "bg-red-500"
-                                : "bg-[#66d475]"
+                          ? "bg-[#65aaee]"
+                          : column.id === "in-progress"
+                            ? "bg-[#e5e747]"
+                            : column.id === "done"
+                              ? "bg-red-500"
+                              : "bg-[#66d475]"
                           }`}
                       >
                         {column.count}
