@@ -202,8 +202,8 @@ function Projects() {
   const dataLength = filteredProjects.length;
   return (
     <>
-      <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">
-        <div className="relative w-1/2">
+      <div className="bg-white dark:bg-[#121212] flex flex-col md:flex-row md:justify-between items-start md:items-center px-4 sm:px-6 pt-4 pb-6 gap-4">
+        <div className="relative w-full md:w-1/2">
           <span className="absolute inset-y-0 left-[2px] flex items-center pl-3 ">
             <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
@@ -215,7 +215,7 @@ function Projects() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex justify-end gap-4 items-center mr-1">
+  <div className="flex flex-wrap justify-start md:justify-end gap-4 items-center w-full md:w-auto">
           <AddProjectBtn />
           <Button
             variant="outlined"
