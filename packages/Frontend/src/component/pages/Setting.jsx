@@ -139,7 +139,7 @@ export default function Setting() {
 
       {activeTab === "general" && (
         <div className="bg-white dark:bg-[#121212] dark:text-[#a0a0a0] rounded-lg shadow p-6 space-y-8 ">
-          <div className="flex gap-8">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             <section className="w-full lg:w-1/2">
               <h3 className="text-lg font-medium text-gray-800 dark:text-gray-400 mb-4">
                 🛠️ Account Settings
