@@ -20,7 +20,7 @@ function Sidebar() {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-4 right-3 z-50">
         <button
           onClick={toggleSidebar}
           className="bg-gray-800 text-white p-2 rounded-lg shadow-md hover:bg-gray-700 transition-colors"
