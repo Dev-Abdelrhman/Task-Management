@@ -27,6 +27,11 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       // required: true,
     },
+    priority: {
+      type: String,
+      enum: ["Urgent", "High", "Medium", "Low", "Normal"],
+      default: "Normal",
+    },
     status: {
       type: String,
       enum: ["Pending", "Todo", "In Progress", "Completed"],
@@ -45,6 +50,10 @@ const taskSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    developerNote: {
+      type: String,
+      default: "Please write your notes after completing the task.",
+    },
   },
   {
     toJSON: { virtuals: true },

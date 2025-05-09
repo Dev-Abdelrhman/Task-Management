@@ -10,8 +10,8 @@ const hpp = require("hpp");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 /*______________________________________________________*/
-const AppError = require("./utils/appError.js");
-const GlobalErrorHandler = require("./controllers/error.Controller.js");
+const AppError = require("./app/utils/appError.js");
+const GlobalErrorHandler = require("./app/controllers/error.Controller.js");
 const UserRoutes = require("./routes/user.Route.js");
 const InviteRoutes = require("./routes/invite.Route.js");
 const TaskRoutes = require("./routes/tasks.Route.js");
@@ -49,18 +49,14 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 /* ______________ Rate Limiting ______________ */
-const limiter = rateLimit({
-  max: 100,
-  windowMs: 15 * 60 * 1000,
-  message: "Too many requests from this IP, please try again later.",
-});
-app.use("/depiV1", limiter);
+// const limiter = rateLimit({
+//   max: 100,
+//   windowMs: 15 * 60 * 1000,
+//   message: "Too many requests from this IP, please try again later.",
+// });
+// app.use("/depiV1", limiter);
 /* ______________ JSON Body Parser with Size Limit ______________ */
-app.use(
-  express.json({
-    limit: "10kb",
-  })
-);
+app.use(express.json({ limit: "50mb" }));
 /* ______________ NoSQL Injection Protection ______________ */
 app.use(mongoSanitize());
 /* ______________ HTTP Parameter Pollution Protection ______________ */

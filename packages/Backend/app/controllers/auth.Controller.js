@@ -104,7 +104,6 @@ const signup = catchAsync(async (req, res, next) => {
 
   createSendToken(newUser, 201, res);
 });
-
 //______________________________________________________________________________
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],

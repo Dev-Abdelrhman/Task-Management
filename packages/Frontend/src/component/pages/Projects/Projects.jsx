@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import "./ProjectsStyle.css";
 import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
@@ -12,6 +11,8 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -25,14 +26,90 @@ import {
   ChevronRight,
   Clock,
   Search,
+  Ban,
+  CircleCheck,
 } from "lucide-react";
-// import { differenceInDays, differenceInHours, parseISO } from "date-fns";
-// import { format, utcToZonedTime } from "date-fns-tz";
+import { DateTime } from "luxon";
 
 function Projects() {
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
+
+  const categories = [
+    "UI/UX",
+    "Development",
+    "Marketing",
+    "Product Management",
+    "Business Strategy",
+    "Operations",
+    "Sales",
+    "Customer Support",
+    "Finance",
+    "Legal",
+    "Human Resources",
+    "IT Support",
+    "Research & Development",
+    "Data Science",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Cybersecurity",
+    "Blockchain",
+    "E-commerce",
+    "Supply Chain",
+    "Logistics",
+    "Event Management",
+    "Healthcare",
+    "Real Estate",
+    "Education",
+    "Non-Profit",
+    "Construction",
+    "Retail",
+    "Entertainment",
+    "Media & Publishing",
+    "Public Relations",
+    "Government",
+    "Telecommunications",
+    "Design",
+    "Consulting",
+    "Travel & Hospitality",
+    "Frontend Development",
+    "Backend Development",
+    "Fullstack Development",
+    "Quality Assurance",
+    "Testing",
+    "Bug Fixing",
+    "DevOps",
+    "Continuous Integration",
+    "Deployment",
+    "Cloud Computing",
+    "AWS",
+    "Google Cloud",
+    "Azure",
+    "Augmented Reality",
+    "Virtual Reality",
+    "AR/VR Development",
+    "Internet of Things",
+    "IoT Development",
+    "Smart Devices",
+    "Automation",
+    "Robotic Process Automation (RPA)",
+    "CRM Development",
+    "Customer Insights",
+    "CRM Integration",
+    "ERP Development",
+    "Enterprise Solutions",
+    "Business Systems",
+    "Game Development",
+    "Unity Development",
+    "Unreal Engine",
+    "AI Ethics",
+    "Ethical AI",
+    "AI Regulations",
+  ];
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["projects"],
@@ -40,49 +117,95 @@ function Projects() {
       return await getUserProjects(user._id);
     },
   });
+
   console.log(data, "data");
 
   const handleClick = (projectId) => {
-    navigate(`/ProjectDetails/${projectId}`);
+    navigate(`/projects/ProjectDetails/${projectId}`);
+  };
+
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => {
+      if (prev === null) return "asc";
+      if (prev === "asc") return "desc";
+      return null;
+    });
   };
 
   const filteredProjects = useMemo(() => {
     if (!data?.doc) return [];
-    return data.doc.filter((project) =>
-      project.name.toLowerCase().includes(searchQuery.toLowerCase())
+    let projects = data.doc.filter((project) => {
+      const matchesSearch = project.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory
+        ? project.category === selectedCategory
+        : true;
+      return matchesSearch && matchesCategory;
+    });
+
+    // Sort by deadline
+    if (sortOrder) {
+      projects = [...projects].sort((a, b) => {
+        const aDate = a.dueDate
+          ? DateTime.fromISO(a.dueDate).toMillis()
+          : Infinity;
+        const bDate = b.dueDate
+          ? DateTime.fromISO(b.dueDate).toMillis()
+          : Infinity;
+
+        // Handle projects without due dates
+        if (aDate === Infinity && bDate === Infinity) return 0;
+        if (aDate === Infinity) return 1;
+        if (bDate === Infinity) return -1;
+
+        return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
+      });
+    }
+
+    return projects;
+  }, [data, searchQuery, selectedCategory, sortOrder]);
+
+  const calculateDaysLeft = (dueDateString) => {
+    if (!dueDateString) return "Error";
+
+    const now = DateTime.local();
+    const dueDate = DateTime.fromISO(dueDateString).setZone("local");
+
+    if (dueDate < now) {
+      return (
+        <>
+          <Ban className="w-6 h-6 text-red-500" />
+          <span className="text-red-500 ">Overdue</span>
+        </>
+      );
+    }
+
+    const diff = dueDate.diff(now, ["days", "hours"]);
+
+    if (diff.days < 1) {
+      return (
+        <>
+          <Clock className="w-6 h-6 text-gray-500" />
+          <span>{Math.ceil(diff.hours)} Hours Left</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Clock className="w-6 h-6 text-gray-500" />
+        <span>{Math.ceil(diff.days)} Days Left</span>
+      </>
     );
-  }, [data, searchQuery]);
-
-  // const calculateDaysLeft = (dueDateString) => {
-  //   if (!dueDateString) {
-  //     console.error("Due date string is undefined or null");
-  //     return "Error";
-  //   }
-
-  //   const currentDate = new Date();
-  //   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  //   // Interpret dueDate in the target timezone
-  //   const dueDate = utcToZonedTime(dueDateString, timeZone);
-
-  //   const timeDifference = dueDate - currentDate;
-
-  //   const hoursLeft = Math.ceil(timeDifference / (1000 * 60 * 60));
-  //   const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-  //   if (timeDifference < 24 * 60 * 60 * 1000) {
-  //     return hoursLeft; // Return hours if within the same day
-  //   }
-  //   return daysLeft; // Otherwise, return days
-  // };
-
+  };
   const dataLength = filteredProjects.length;
   return (
     <>
-      <div className="bg-white flex justify-between items-center px-6 pt-2 pb-8 ">
-        <div className="relative w-1/2">
-          <span className="absolute inset-y-0 right-6 flex items-center pl-3">
-            <Search className="h-5 w-5 text-[#8E92BC]" />
+      <div className="bg-white dark:bg-[#121212] flex flex-col md:flex-row md:justify-between items-start md:items-center px-4 sm:px-6 pt-4 pb-6 gap-4">
+        <div className="relative w-full md:w-1/2">
+          <span className="absolute inset-y-0 left-[2px] flex items-center pl-3 ">
+            <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
           <input
             type="search"
@@ -92,22 +215,55 @@ function Projects() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex justify-end gap-4 items-center mr-1">
+  <div className="flex flex-wrap justify-start md:justify-end gap-4 items-center w-full md:w-auto">
           <AddProjectBtn />
           <Button
             variant="outlined"
             startIcon={<ChartBarStacked className="w-6 h-6 !text-[#8E92BC]" />}
-            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] !py-3 !px-6  hover:!bg-gray-50 !capitalize"
+            className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] dark:hover:!bg-[#353535] dark:!text-[#a0a0a0] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            onClick={(e) => setAnchorEl(e.currentTarget)}
           >
-            Category
+            {selectedCategory || "Category"}
           </Button>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+            PaperProps={{ style: { maxHeight: 200, overflow: "auto" } }}
+          >
+            <MenuItem
+              onClick={() => {
+                setSelectedCategory(null);
+                setAnchorEl(null);
+              }}
+            >
+              All Categories
+            </MenuItem>
+            {categories.map((cat) => (
+              <MenuItem
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setAnchorEl(null);
+                }}
+              >
+                {cat}
+              </MenuItem>
+            ))}
+          </Menu>
 
           <Button
             variant="outlined"
             startIcon={<FilterListIcon className="!w-6 !h-6 !text-[#8E92BC]" />}
-            className="!border-gray-200 !text-gray-700 !rounded-[10px] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            className="!border-gray-200 !text-gray-700 !rounded-[10px] dark:!text-[#a0a0a0] dark:hover:!bg-[#353535] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+            onClick={toggleSortOrder}
           >
-            Sort By : Deadline
+            {sortOrder === "asc"
+              ? "Deadline (Asc)"
+              : sortOrder === "desc"
+              ? "Deadline (Desc)"
+              : "Sort By : Deadline"}
           </Button>
         </div>
       </div>
@@ -126,7 +282,9 @@ function Projects() {
               <div className="w-full">
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-medium">All Projects</h2>
+                    <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">
+                      All Projects
+                    </h2>
                     <div className="flex gap-2">
                       <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
                         <ChevronLeft className="!w-6 !h-6" />
@@ -136,7 +294,6 @@ function Projects() {
                       </IconButton>
                     </div>
                   </div>
-
                   <Swiper
                     modules={[Navigation]}
                     spaceBetween={16}
@@ -162,7 +319,7 @@ function Projects() {
                       <SwiperSlide className="!w-full sm:!w-auto">
                         <div
                           key={index}
-                          className="bg-white p-4 mb-1 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                          className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
                         >
                           <div
                             className="my-1"
@@ -171,7 +328,8 @@ function Projects() {
                             <Box
                               component="img"
                               src={
-                                "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                                project?.image?.[0]?.url ||
+                                "https://fakeimg.pl/1280x720?text=No+Image"
                               }
                               alt={project.title}
                               sx={{
@@ -181,12 +339,13 @@ function Projects() {
                                 borderRadius: 2,
                                 mb: 1.5,
                               }}
+                              className="cursor-pointer select-none"
                             />
                           </div>
                           <div>
-                            <div className="flex justify-between p-0 m-0">
+                            <div className="flex  justify-between p-0 m-0">
                               <h3
-                                className="font-medium text-lg !m-0 !p-0"
+                                className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
                                 onClick={() => handleClick(project._id)}
                               >
                                 {project.name}
@@ -196,8 +355,8 @@ function Projects() {
                                 projectData={project}
                               />
                             </div>
-                            <p className="text-sm text-gray-500 mb-2">
-                              {project.description}
+                            <p className="text-sm text-gray-500 dark:text-[#a0a0a0] mb-2">
+                              {project.category}
                             </p>
 
                             <Box className="mb-4">
@@ -229,25 +388,32 @@ function Projects() {
 
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <Clock className="w-6 h-6 text-gray-500" />
-                                <span>
-                                  {/* {console.log(project)}
-                                  {calculateDaysLeft(project.dueDate)} Days Left */}
-                                  Days Left
-                                </span>
+                                {project.progress === 100 ? (
+                                  <>
+                                    <CircleCheck className="w-6 h-6 text-green-500" />
+                                    <span className="text-green-500">
+                                      Completed
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>{calculateDaysLeft(project.dueDate)}</>
+                                )}
                               </div>
                               <div className="flex -space-x-2">
-                                {[1, 2, 3, 4, 5].map((i) => (
+                                {project.members.map((pro) => (
                                   <div
-                                    key={i}
+                                    key={pro._id}
                                     className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                   >
                                     <img
-                                      src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                      src={
+                                        pro.user.image[0]?.url ||
+                                        "https://fakeimg.pl/600x800?text=No+Image"
+                                      } // default image
                                       alt="Team member"
                                       width={24}
                                       height={24}
-                                      className="object-cover"
+                                      className="object-cover select-none"
                                     />
                                   </div>
                                 ))}
@@ -310,18 +476,19 @@ function Projects() {
                       }}
                       className="upcoming-task-swiper"
                     >
-                      {data.doc.map((project, index) => (
+                      {filteredProjects.map((project, index) => (
                         <SwiperSlide className="!w-full sm:!w-auto">
                           <div
                             key={index}
-                            className="bg-white p-4 mb-5 rounded-xl border border-gray-200 transition-shadow duration-300 hover:shadow-[0_15px_40px_8px_rgba(209,213,219,0.7)]"
+                            className="bg-white p-4 rounded-xl border border-gray-200 transition-shadow duration-300 hover:hover:!shadow-lg ml-2 mb-4"
                             onClick={() => handleClick(project._id)}
                           >
                             <div className="my-1">
                               <Box
                                 component="img"
                                 src={
-                                  "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                                  project?.image?.[0]?.url ||
+                                  "https://fakeimg.pl/1280x720?text=No+Image"
                                 }
                                 alt={project.title}
                                 sx={{
@@ -331,20 +498,26 @@ function Projects() {
                                   borderRadius: 2,
                                   mb: 1.5,
                                 }}
+                                className="cursor-pointer"
                               />
                             </div>
                             <div>
                               <div className="flex justify-between p-0 m-0">
-                                <h3 className="font-medium text-lg !m-0 !p-0">
-                                  {project.name}
-                                </h3>
-                                <ProjectOptionsMenu
-                                  projectId={project._id}
-                                  projectData={project}
-                                />
+                                <div className="flex  justify-between p-0 m-0">
+                                  <h3
+                                    className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
+                                    onClick={() => handleClick(project._id)}
+                                  >
+                                    {project.name}
+                                  </h3>
+                                  <ProjectOptionsMenu
+                                    projectId={project._id}
+                                    projectData={project}
+                                  />
+                                </div>
                               </div>
                               <p className="text-sm text-gray-500 mb-2">
-                                {project.description}
+                                {project.category}
                               </p>
 
                               <Box className="mb-4">
@@ -356,12 +529,12 @@ function Projects() {
                                     variant="body2"
                                     className="text-indigo-500 text-sm"
                                   >
-                                    30%
+                                    {project.progress}%
                                   </Typography>
                                 </Box>
                                 <LinearProgress
                                   variant="determinate"
-                                  value="30"
+                                  value={project.progress}
                                   className="!h-2 rounded-full"
                                   sx={{
                                     backgroundColor: "#f3f4f6",
@@ -376,20 +549,19 @@ function Projects() {
 
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                  <Clock className="w-6 h-6 text-gray-500" />
-                                  <span>
-                                    {/* {calculateDaysLeft(project.dueDate)} Days */}
-                                    Days Left
-                                  </span>
+                                  {calculateDaysLeft(project.dueDate)}
                                 </div>
                                 <div className="flex -space-x-2">
-                                  {[1, 2, 3, 4, 5].map((i) => (
+                                  {project.members.map((pro) => (
                                     <div
-                                      key={i}
+                                      key={pro._id}
                                       className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                                     >
                                       <img
-                                        src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                        src={
+                                          pro.user.image[0]?.url ||
+                                          "https://fakeimg.pl/600x800?text=No+Image"
+                                        } // default image
                                         alt="Team member"
                                         width={24}
                                         height={24}

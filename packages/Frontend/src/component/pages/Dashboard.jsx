@@ -34,6 +34,7 @@ import { getUserProjects } from "../../api/project";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllUserTasks } from "../../api/user_tasks";
+import ProjectOptionsMenu from "./Projects/ProjectOptionsMenu";
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useAuthStore();
@@ -63,6 +64,10 @@ export default function TaskordDashboard() {
     queryFn: getAllUserTasks,
   });
 
+  console.log(tasksData, "TaskData");
+  console.log(ProjectData, "ProjectData");
+  console.log(user, "UserData");
+
   const totalTasks = tasksData?.results || 0;
   const doneTasks =
     tasksData?.doc?.filter((task) => task.status === "Completed")?.length || 0;
@@ -70,11 +75,6 @@ export default function TaskordDashboard() {
   const persentage = Math.floor(
     totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0
   );
-
-  console.log("doneTasks", doneTasks);
-  console.log("ramainingTasks", ramainingTasks);
-
-  console.log("tasksData", tasksData);
 
   const handleLogout = async () => {
     try {
@@ -104,7 +104,8 @@ export default function TaskordDashboard() {
     const today = new Date();
     const days = [];
     const start = new Date(today);
-    start.setDate(today.getDate() - 3);
+    start.setDate(today.getDate() - today.getDay()); // Start from Sunday
+
     for (let i = 0; i < 7; i++) {
       const date = new Date(start);
       date.setDate(start.getDate() + i);
@@ -145,15 +146,17 @@ export default function TaskordDashboard() {
 
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA]">
+      <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#121212]">
         <Sidebar />
         {/* Main Content */}
         <div className="md:ml-[16rem] flex-1 h-full w-full p-8 2xl:pr-[490px]">
           {/* Nav */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl">Hi, {user.username}</h1>
-              <p className="text-gray-600">Let's finish your task today!</p>
+              <h1 className="text-3xl dark:text-white">Hi, {user.name}</h1>
+              <p className="text-gray-600 dark:text-[#a0a0a0]">
+                Let's finish your task today!
+              </p>
             </div>
             <div className="flex items-center gap-4 ">
               <IconButton
@@ -182,7 +185,7 @@ export default function TaskordDashboard() {
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
-                      className="!w-12 !h-12"
+                      className="!w-12 !h-12 select-none"
                       src={
                         user.image.length
                           ? hostGoogleImage(user.image[0].url)
@@ -337,13 +340,15 @@ export default function TaskordDashboard() {
           ) : ProjectData?.doc?.length > 0 ? (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-medium">Latest Project</h2>
+                <h2 className="text-xl font-medium dark:text-white">
+                  Latest Project
+                </h2>
                 <div className="flex gap-2">
                   <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-5 h-5 dark:text-gray-500" />
                   </IconButton>
                   <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5 dark:text-gray-500" />
                   </IconButton>
                 </div>
               </div>
@@ -370,18 +375,24 @@ export default function TaskordDashboard() {
               >
                 {ProjectData?.doc?.slice(0, 4).map((project, index) => (
                   <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
-                    <div className="bg-white p-4 rounded-xl border border-gray-200">
+                    <div className="bg-white max-w-[350px] p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4 }}
                         className="flex flex-col gap-4"
                       >
-                        <div className="mb-3">
+                        <div
+                          className="mb-1"
+                          onClick={() =>
+                            navigate(`/projects/ProjectDetails/${project._id}`)
+                          }
+                        >
                           <Box
                             component="img"
                             src={
-                              "https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                              project?.image?.[0]?.url ||
+                              "https://fakeimg.pl/1280x720?text=No+Image"
                             }
                             alt={project.title}
                             sx={{
@@ -391,14 +402,26 @@ export default function TaskordDashboard() {
                               borderRadius: 2,
                               mb: 1.5,
                             }}
+                            className="select-none cursor-pointer"
                           />
                         </div>
                       </motion.div>
 
                       <div>
-                        <h3 className="font-medium text-lg ">{project.name}</h3>
+                        <div className="flex  justify-between p-0 m-0">
+                          <h3
+                            className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
+                            onClick={() => handleClick(project._id)}
+                          >
+                            {project.name}
+                          </h3>
+                          <ProjectOptionsMenu
+                            projectId={project._id}
+                            projectData={project}
+                          />
+                        </div>
                         <p className="text-sm text-gray-500 mb-2">
-                          {project.description}
+                          {project.category}
                         </p>
 
                         <Box className="mb-3">
@@ -434,17 +457,20 @@ export default function TaskordDashboard() {
                             <span>{project.daysLeft} Days Left</span>
                           </div>
                           <div className="flex -space-x-2">
-                            {[1, 2, 3, 4, 5].map((i) => (
+                            {project.members.map((pro) => (
                               <div
-                                key={i}
+                                key={pro._id}
                                 className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                               >
                                 <img
-                                  src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                  src={
+                                    pro.user.image[0]?.url ||
+                                    "https://fakeimg.pl/600x800?text=No+Image"
+                                  } // default image
                                   alt="Team member"
                                   width={24}
                                   height={24}
-                                  className="object-cover"
+                                  className="object-cover select-none"
                                 />
                               </div>
                             ))}
@@ -508,9 +534,8 @@ export default function TaskordDashboard() {
                           isCurrentDay ? "text-white" : "text-[#141522]"
                         }`}
                       >
-                        {["S", "M", "T", "W", "T", "F", "S"][index]}
+                        {["S", "M", "T", "W", "T", "F", "S"][date.getDay()]}
                       </span>
-
                       <span
                         className={`text-sm px-[11px] py-[7px] rounded-full ${
                           isCurrentDay
@@ -549,7 +574,10 @@ export default function TaskordDashboard() {
                     <div className="mb-3">
                       <Box
                         component="img"
-                        src="https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png"
+                        src={
+                          ProjectData?.doc[0]?.image?.[0]?.url ||
+                          "https://fakeimg.pl/1280x720?text=No+Image"
+                        }
                         alt="Albex 360 Mockup"
                         sx={{
                           width: "100%",
@@ -558,16 +586,17 @@ export default function TaskordDashboard() {
                           borderRadius: 2,
                           mb: 1.5,
                         }}
+                        className="select-none"
                       />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-1">
+                      <h3 className="font-semibold text-lg mb-1 truncate">
                         {ProjectData.doc[0].name}
                       </h3>
                       <p className="text-sm text-gray-500 mb-3">
-                        {ProjectData.doc[0].description}
+                        {ProjectData.doc[0].category}
                       </p>
-
+                      {/* {console.log(ProjectData)} */}
                       <Box className="mb-3">
                         <Box className="flex justify-between mb-1">
                           <Typography variant="body2 !text-lg ">
@@ -601,17 +630,20 @@ export default function TaskordDashboard() {
                           <span className="text-sm">1 Hour</span>
                         </div>
                         <div className="flex -space-x-2">
-                          {[1, 2, 3, 4, 5].map((i) => (
+                          {ProjectData.doc[0].members.map((pro) => (
                             <div
-                              key={i}
+                              key={pro._id}
                               className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                             >
                               <img
-                                src={`https://thealbexgroup.com/wp-content/uploads/2020/07/app-builder-smaller.png?height=24&width=24&text=${i}`}
+                                src={
+                                  pro.user.image[0]?.url ||
+                                  "https://fakeimg.pl/600x800?text=No+Image"
+                                } // default image
                                 alt="Team member"
                                 width={24}
                                 height={24}
-                                className="object-cover"
+                                className="object-cover select-none"
                               />
                             </div>
                           ))}
@@ -623,28 +655,32 @@ export default function TaskordDashboard() {
                   {/* Detail Task */}
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <h2 className="text-lg font-medium">Detail Task</h2>
-                      <span className="text-sm text-gray-500">
-                        UI/UX Designer
+                      <h2 className="text-lg font-medium">Project Task</h2>
+                      <span className="text-md text-gray-500">
+                        {ProjectData.doc[0].category}
                       </span>
                     </div>
+                    {/* {console.log(ProjectData.doc[0].tasks)} */}
 
                     <div className="space-y-4 mb-8">
-                      {[
-                        "Understanding the tools in Figma",
-                        "Understand the basics of making designs",
-                        "Design a mobile application with Figma",
-                      ].map((task, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="w-9 h-9 flex items-center justify-center !rounded-xl !bg-[#F5F5F7] text-sm">
+                      {ProjectData?.doc[0]?.tasks.slice(0, 3).map((task, i) => (
+                        <div key={task._id} className="flex items-center gap-2">
+                          <div className="w-9 h-9 flex items-center justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
                             {i + 1}
                           </div>
-                          <div className="text-sm ">{task}</div>
+                          <div className="text-sm truncate">{task.title}</div>
                         </div>
                       ))}
                     </div>
 
-                    <Button className="w-full !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl">
+                    <Button
+                      className="w-full !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl"
+                      onClick={() =>
+                        navigate(
+                          `/projects/ProjectDetails/${ProjectData.doc[0]._id}`
+                        )
+                      }
+                    >
                       Go To Project
                     </Button>
                   </div>
