@@ -78,9 +78,9 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         !open && "hidden"
       }`}
     >
-      <div className="bg-white rounded-xl p-6 w-[500px] max-h-[80vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#121212] rounded-xl p-6 w-[500px] max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-medium">Invite Members</h2>
+          <h2 className="text-xl font-medium dark:text-gray-400">Invite Members</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -90,14 +90,14 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         </div>
 
         <div className="mb-4 w-full">
-          <label className="text-base font-medium">Search Users</label>
+          <label className="text-base dark:text-gray-400 font-medium">Search Users</label>
           <div className="flex items-center gap-3 mt-2">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Enter username"
-              className="flex-1 pl-4 pr-4 py-2 border border-gray-200 !rounded-[10px] text-lg !font-light focus:outline-none"
+              className="flex-1 pl-4 pr-4 py-2 border border-gray-200 dark:bg-[#2D2D2D] !rounded-[10px] text-lg !font-light focus:outline-none"
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <Button
@@ -174,7 +174,7 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
               resetForm();
             }}
             variant="outlined"
-            className="!text-sm !rounded-xl !capitalize !border-gray-300 !text-gray-700"
+            className="!text-sm dark:text-gray-400 !rounded-xl !capitalize !border-gray-300 !text-gray-700"
           >
             Cancel
           </Button>

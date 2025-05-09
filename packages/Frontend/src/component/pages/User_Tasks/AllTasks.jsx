@@ -193,11 +193,18 @@ export default function AllTasks() {
     }
     return {
       columns: statusColumns.map((col) => {
+        // const tasks = data.doc.filter(
+        //   (task) =>
+        //     task.status === col.status &&
+        //     task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        // );
         const tasks = data.doc.filter(
           (task) =>
             task.status === col.status &&
+            task.title &&
             task.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
+
         return { ...col, tasks, count: tasks.length };
       }),
     };
@@ -355,9 +362,11 @@ export default function AllTasks() {
       <div className="px-4 pb-4 pt-3 bg-gray-100 dark:bg-[#121212] min-h-screen ">
         {taskDetailsModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white w-[480px] rounded-[10px] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
+            <div className="bg-white w-[480px] rounded-[10px] dark:bg-[#1E1E1E] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
+              
               <div className="flex justify-end items-center ">
-                <button className="mb-3"
+                <button
+                  className="mb-3 dark:text-red-50"
                   onClick={() =>
                     setTaskDetailsModal({ show: false, task: null })
                   }
@@ -368,9 +377,16 @@ export default function AllTasks() {
 
               {taskDetailsModal.task?.image && (
                 <div className="mb-6  ">
+                  {/* <img
+                    src={taskDetailsModal?.task?.image?.[0].url || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                    alt="Task"
+                    className="w-full h-auto rounded-xl"
+                  /> */}
                   <img
-                    src="https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
-                    // src={taskDetailsModal.task?.image || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
+                    src={
+                      taskDetailsModal.task?.image?.[0]?.url ||
+                      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                    }
                     alt="Task"
                     className="w-full h-auto rounded-xl"
                   />
@@ -379,59 +395,61 @@ export default function AllTasks() {
 
               <div className="">
                 <div>
-                  <h2 className="text-xl font-bold mb-4">
+                  <h2 className="text-xl dark:text-white font-bold mb-4">
                     {taskDetailsModal.task?.title}
                   </h2>
 
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium  mb-1">Description :</h3>
-                    <p className="text-gray-700 whitespace-pre-line">
+                    <h3 className="text-sm font-medium dark:text-gray-200  mb-1">
+                      Description :
+                    </h3>
+                    <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
                       {taskDetailsModal.task?.description ||
                         "No description provided"}
                     </p>
                   </div>
-                  <h6 class="text-sm font-medium">Properties : </h6>
+                  <h6 class="text-sm font-medium dark:text-gray-200 ">
+                    Properties :{" "}
+                  </h6>
                   <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       Status
                     </h3>
                     <div className="flex items-center">
                       <span
-                        className={`px-3 py-1 rounded text-xs font-medium ${
-                          taskDetailsModal.task?.status === "Completed"
-                            ? "bg-green-100 text-green-800"
-                            : taskDetailsModal.task?.status === "In Progress"
+                        className={`px-3 py-1 rounded text-xs font-medium ${taskDetailsModal.task?.status === "Completed"
+                          ? "bg-green-100 text-green-800"
+                          : taskDetailsModal.task?.status === "In Progress"
                             ? "bg-yellow-100 text-yellow-800"
                             : taskDetailsModal.task?.status === "Todo"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                       >
                         {taskDetailsModal.task?.status}
                       </span>
                     </div>
                   </div>
                   <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       priority
                     </h3>
                     <div className="flex items-center">
                       {taskDetailsModal.task?.priority && (
                         <span
                           className={`flex items-center px-3 py-1 rounded text-xs font-medium
-                        ${
-                          taskDetailsModal.task.priority === "Urgent"
-                            ? "bg-red-600/20 text-red-500 border-red-600"
-                            : taskDetailsModal.task.priority === "High"
-                            ? "bg-orange-500/20 text-orange-500 border-orange-500"
-                            : taskDetailsModal.task.priority === "Medium"
-                            ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
-                            : taskDetailsModal.task.priority === "Low"
-                            ? "bg-blue-500 text-blue-300 border-blue-300"
-                            : taskDetailsModal.task.priority === "Normal"
-                            ? "bg-gray-500 text-gray-200 border-gray-300"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
+                        ${taskDetailsModal.task.priority === "Urgent"
+                              ? "bg-red-600/20 text-red-500 border-red-600"
+                              : taskDetailsModal.task.priority === "High"
+                                ? "bg-orange-500/20 text-orange-500 border-orange-500"
+                                : taskDetailsModal.task.priority === "Medium"
+                                  ? "bg-yellow-500/20 text-yellow-500 border-yellow-500"
+                                  : taskDetailsModal.task.priority === "Low"
+                                    ? "bg-blue-500 text-blue-300 border-blue-300"
+                                    : taskDetailsModal.task.priority === "Normal"
+                                      ? "bg-gray-500 text-gray-200 border-gray-300"
+                                      : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {
                             {
@@ -476,26 +494,26 @@ export default function AllTasks() {
 
                 <div>
                   <div className="mb-4 flex gap-6">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       Due Date
                     </h3>
-                    <div className="flex items-center text-gray-700">
+                    <div className="flex items-center text-gray-700 dark:text-[#a0a0a0]">
                       <Calendar className="mr-2" size={16} />
                       {taskDetailsModal.task?.dueDate
                         ? new Date(
-                            taskDetailsModal.task.dueDate
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
+                          taskDetailsModal.task.dueDate
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
                         : "No due date"}
                     </div>
                   </div>
 
                   {taskDetailsModal.task?.completedAt && (
                     <div className="mb-4 ">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                         Completed At
                       </h3>
                       <div className="flex items-center text-gray-700">
@@ -513,7 +531,7 @@ export default function AllTasks() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 mt-6">
+              <div className="flex justify-end pt-3 pb-3 gap-2 mt-6">
                 <Button
                   onClick={() => {
                     setTaskDetailsModal({ show: false, task: null });
@@ -533,7 +551,7 @@ export default function AllTasks() {
                   }}
                   className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
 
-                  // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
+                // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
                 >
                   Delete
                 </Button>
@@ -560,30 +578,29 @@ export default function AllTasks() {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {boardState.columns.map((column) => (
-              <div key={column.id} className="flex-shrink-0 w-[23%]">
-                <div className="rounded-[15px] bg-white shadow-sm">
+             <div key={column.id} className="flex-shrink-0 w-[85vw] sm:w-[48%] md:w-[31%] lg:w-[23%]">
+                <div className="rounded-[15px] bg-white  dark:bg-[#1E1E1E] shadow-sm">
                   <div className="p-3 flex justify-between items-center border-b">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm cursor-pointer">
+                      <span className="font-medium dark:text-white text-sm cursor-pointer">
                         {column.title}
                       </span>
                       <span
-                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${
-                          column.id === "todo"
-                            ? "bg-[#65aaee]"
-                            : column.id === "in-progress"
+                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo"
+                          ? "bg-[#65aaee]"
+                          : column.id === "in-progress"
                             ? "bg-[#e5e747]"
                             : column.id === "done"
-                            ? "bg-red-500"
-                            : "bg-[#66d475]"
-                        }`}
+                              ? "bg-red-500"
+                              : "bg-[#66d475]"
+                          }`}
                       >
                         {column.count}
                       </span>
                     </div>
                     <button
                       onClick={() => openAddTaskModal(column.id)}
-                      className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
+                      className="w-6 dark:text-white h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
                     >
                       <Plus size={16} />
                     </button>
@@ -608,18 +625,18 @@ export default function AllTasks() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border border-gray-200 rounded-[12px] p-3 shadow-sm"
+                                  className="bg-white border max-w-[350px] border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
                                 >
-                                  <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
+                                  <div className="flex justify-between  items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
                                       onClick={() => handleTaskClick(task)}
-                                      className="text-sm font-medium"
+                                      className="text-sm font-medium dark:text-gray-200 truncate "
                                     >
-                                      {task.title.split(" ").length > 5
+                                      {task.title?.split(" ").length > 5
                                         ? task.title
-                                            .split(" ")
-                                            .slice(0, 5)
-                                            .join(" ") + "..."
+                                          .split(" ")
+                                          .slice(0, 5)
+                                          .join(" ") + "..."
                                         : task.title}
                                     </h3>
                                     <div className="flex">
@@ -642,12 +659,12 @@ export default function AllTasks() {
                                       </button>
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2">
-                                    {task.description.split(" ").length > 5
+                                  <p className="text-xs text-gray-500 mb-2 truncate">
+                                    {task.description?.split(" ").length > 5
                                       ? task.description
-                                          .split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") + "..."
+                                        .split(" ")
+                                        .slice(0, 5)
+                                        .join(" ") + "..."
                                       : task.description}
                                   </p>
                                   <div className="flex items-center justify-between">
@@ -656,8 +673,8 @@ export default function AllTasks() {
                                       <span>
                                         {task.dueDate
                                           ? new Date(
-                                              task.dueDate
-                                            ).toLocaleDateString()
+                                            task.dueDate
+                                          ).toLocaleDateString()
                                           : "No date"}
                                       </span>
                                     </div>
@@ -686,12 +703,12 @@ export default function AllTasks() {
 
         {deleteModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6  flex flex-col justify-center items-center">
+            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#1E1E1E] flex flex-col justify-center items-center">
               <CircleAlert size={40} color="#f8bb86" />
-              <h2 className="text-gray-500 text-4xl font-medium mt-4 mb-4">
+              <h2 className="text-gray-500 dark:text-gray-300 text-4xl font-medium mt-4 mb-4">
                 Delete Task
               </h2>
-              <div className=" mb-[24px]">
+              <div className="text-gray-600 dark:text-gray-400 mb-[24px]">
                 Are you sure you want to delete this task?
               </div>
               <div className="flex justify-end gap-4">

@@ -10,6 +10,9 @@ import { Button, CircularProgress } from "@mui/material";
 import { Plus, Upload, Trash } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+const MAX_NAME_LENGTH = 100;
+const MAX_DESCRIPTION_LENGTH = 400;
+
 const categories = [
   "UI/UX",
   "Development",
@@ -105,8 +108,9 @@ function AddProjectBtn({
   useEffect(() => {
     if (isEditMode) {
       setNewProject({
-        name: projectToEdit.name || "",
-        description: projectToEdit.description || "",
+        name: projectToEdit.name.slice(0, MAX_NAME_LENGTH) || "",
+        description:
+          projectToEdit.description.slice(0, MAX_DESCRIPTION_LENGTH) || "",
         dueDate: projectToEdit.dueDate || "",
         category: projectToEdit.category || "",
         imageFile: null,
@@ -124,6 +128,14 @@ function AddProjectBtn({
       : () => addProject(user._id, createFormData()),
     onSuccess: () => {
       queryClient.invalidateQueries(["projects"]);
+      setNewProject({
+        name: "",
+        description: "",
+        dueDate: "",
+        category: "",
+        imageFile: null,
+        existingImage: [],
+      });
       toast.success(
         isEditMode
           ? "Project updated successfully"
@@ -205,6 +217,8 @@ function AddProjectBtn({
 
   const handleInputs = (e) => {
     const { name, value } = e.target;
+    if (name === "name" && value.length > MAX_NAME_LENGTH) return;
+    if (name === "description" && value.length > MAX_DESCRIPTION_LENGTH) return;
     setNewProject({ ...newProject, [name]: value });
   };
 
@@ -226,22 +240,22 @@ function AddProjectBtn({
           onClick={handleClose}
         >
           <div
-            className="bg-white !rounded-xl shadow-md p-6 w-full max-w-md"
+            className="bg-white dark:bg-[#121212] !rounded-xl shadow-md p-6 w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between text-center items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-400">
                 {isEditMode ? "Updating Project" : "Create New Project"}
               </h3>
-             <div>
-             <button
-                onClick={handleClose}
-                className="text-gray-400 hover:text-gray-900"
-                disabled={isLoading || isDeletingImage}
-              >
-                ✖
-              </button>
-             </div>
+              <div>
+                <button
+                  onClick={handleClose}
+                  className="text-gray-400 hover:text-gray-900"
+                  disabled={isLoading || isDeletingImage}
+                >
+                  ✖
+                </button>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 mt-6">
@@ -282,9 +296,7 @@ function AddProjectBtn({
                               );
                             }
                             toast.success("Image removed successfully");
-                            setImagePreview(
-                              "https://fakeimg.pl/1280x720?text=No+Image"
-                            );
+                            setImagePreview(null);
                             setNewProject((prev) => ({
                               ...prev,
                               imageFile: null,
@@ -312,12 +324,14 @@ function AddProjectBtn({
                     )}
                   </div>
                 ) : null}
+
                 <label
                   htmlFor="projectImage"
-                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${isLoading || isDeletingImage
+                  className={`flex gap-2 p-2 justify-center cursor-pointer border border-dashed border-gray-400 px-4 py-3 rounded-[10px] bg-[#f8f8f8] mb-1 text-border font-medium ${
+                    isLoading || isDeletingImage
                       ? "text-gray-400 cursor-not-allowed"
                       : "text-gray-700"
-                    }`}
+                  }`}
                 >
                   Upload image
                   <Upload />
@@ -336,13 +350,13 @@ function AddProjectBtn({
               <div>
                 <label
                   htmlFor="projectName"
-                  className="block mb-1 text-border font-medium text-gray-700"
+                  className="block mb-1 text-border dark:text-gray-400 font-medium text-gray-700"
                 >
                   Name
                 </label>
                 <input
                   type="text"
-                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Type project name"
                   id="projectName"
                   name="name"
@@ -351,13 +365,16 @@ function AddProjectBtn({
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
                 />
+                <span className="block text-xs text-gray-500 mt-1">
+                  Characters left: {MAX_NAME_LENGTH - newProject.name.length}
+                </span>
               </div>
 
               {/* Category Select Input */}
               <div>
                 <label
                   htmlFor="projectCategory"
-                  className="block mb-1 text-border font-medium text-gray-700"
+                  className="block dark:text-gray-400 mb-1 text-border font-medium text-gray-700"
                 >
                   Category
                 </label>
@@ -368,11 +385,11 @@ function AddProjectBtn({
                   onChange={handleInputs}
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
-                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400 bg-white"
+                  className="w-full dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                 >
-                  <option value="">Select a category</option>
+                  <option className="dark:text-gray-300" value="">Select a category</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>
+                    <option key={category} className="dark:text-gray-300" value={category}>
                       {category}
                     </option>
                   ))}
@@ -383,13 +400,13 @@ function AddProjectBtn({
               <div>
                 <label
                   htmlFor="projectDescription"
-                  className="block mb-1 text-border font-medium text-gray-700"
+                  className="block dark:text-gray-400 mb-1 text-border font-medium text-gray-700"
                 >
                   Description
                 </label>
                 <textarea
                   rows="3"
-                  className="w-full p-2 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Write Project description"
                   id="projectDescription"
                   name="description"
@@ -398,19 +415,23 @@ function AddProjectBtn({
                   required={!isEditMode}
                   disabled={isLoading || isDeletingImage}
                 ></textarea>
+                <span className="block text-xs text-gray-500 mt-1">
+                  Characters left:{" "}
+                  {MAX_DESCRIPTION_LENGTH - newProject.description.length}
+                </span>
               </div>
 
               {/* Existing due date input */}
               <div>
                 <label
                   htmlFor="dueDate"
-                  className="block mb-1 text-border font-medium text-gray-700"
+                  className="block dark:text-gray-400 mb-1 text-border font-medium text-gray-700"
                 >
                   Due Date
                 </label>
                 <input
                   type="date"
-                  className="w-full p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
+                  className="w-full dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-400 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                   placeholder="Select due date"
                   id="dueDate"
                   name="dueDate"

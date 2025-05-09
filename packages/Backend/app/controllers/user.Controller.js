@@ -60,15 +60,33 @@ const updateMe = catchAsync(async (req, res, next) => {
     data: updatedUser,
   });
 });
+
 const updatePassword = catchAsync(async (req, res, next) => {
+  const { passwordCurrent, password, passwordConfirmation } = req.body;
+  if (!passwordCurrent || !password || !passwordConfirmation) {
+    return next(
+      new AppError(
+        "Please provide current, new, and confirmation passwords.",
+        400
+      )
+    );
+  }
   const user = await User.findById(req.user.id).select("+password");
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+  if (!user) {
+    return next(new AppError("User not found.", 404));
+  }
+  const isCorrect = await user.correctPassword(passwordCurrent, user.password);
+  if (!isCorrect) {
     return next(new AppError("Your current password is wrong.", 401));
   }
-  user.password = req.body.password;
-  user.passwordConfirmation = req.body.passwordConfirmation;
+  user.password = password;
+  user.passwordConfirmation = passwordConfirmation;
   await user.save();
-  createSendToken(user, 200, res);
+  res.status(200).json({
+    status: "success",
+    message: "Password updated successfully.",
+    data: user,
+  });
 });
 
 const deleteMe = catchAsync(async (req, res, next) => {
