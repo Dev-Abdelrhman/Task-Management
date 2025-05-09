@@ -363,7 +363,6 @@ export default function AllTasks() {
         {taskDetailsModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
             <div className="bg-white w-[480px] rounded-[10px] dark:bg-[#1E1E1E] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
-              
               <div className="flex justify-end items-center ">
                 <button
                   className="mb-3 dark:text-red-50"
@@ -578,7 +577,7 @@ export default function AllTasks() {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {boardState.columns.map((column) => (
-             <div key={column.id} className="flex-shrink-0 w-[85vw] sm:w-[48%] md:w-[31%] lg:w-[23%]">
+              <div key={column.id} className="flex-shrink-0 w-[23%]">
                 <div className="rounded-[15px] bg-white  dark:bg-[#1E1E1E] shadow-sm">
                   <div className="p-3 flex justify-between items-center border-b">
                     <div className="flex items-center gap-2">
