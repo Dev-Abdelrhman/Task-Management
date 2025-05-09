@@ -69,14 +69,20 @@ const InviteManagement = () => {
         />
       </ListItemAvatar>
       <ListItemText
+        className=""
         primary={
-          type === "sent"
-            ? `To: ${invite.receiver?.username}`
-            : `From: ${invite.sender?.username}`
+          <span>
+            <span className="dark:text-gray-400">
+              {type === "sent" ? "To:" : "From:"}
+            </span>{" "}
+            <span className="dark:text-gray-300">
+              {type === "sent" ? invite.receiver?.username : invite.sender?.username}
+            </span>
+          </span>
         }
         secondary={
           <>
-            <Typography component="span" variant="body2" color="text.primary">
+            <Typography className="dark:text-white" component="span" variant="body2" color="text.primary">
               {invite.project?.name} - {invite.role?.name}
             </Typography>
             <br />

@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import "./ProjectsStyle.css";
 import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
@@ -166,6 +165,7 @@ function Projects() {
 
     return projects;
   }, [data, searchQuery, selectedCategory, sortOrder]);
+
   const calculateDaysLeft = (dueDateString) => {
     if (!dueDateString) return "Error";
 
@@ -204,7 +204,7 @@ function Projects() {
     <>
       <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">
         <div className="relative w-1/2">
-          <span className="absolute inset-y-0 right-6 flex items-center pl-3 ">
+          <span className="absolute inset-y-0 left-[2px] flex items-center pl-3 ">
             <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
           <input
@@ -345,7 +345,7 @@ function Projects() {
                           <div>
                             <div className="flex  justify-between p-0 m-0">
                               <h3
-                                className="font-medium text-lg dark:text-[#e2e2e2] !m-0 !p-0 cursor-pointer"
+                                className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
                                 onClick={() => handleClick(project._id)}
                               >
                                 {project.name}
@@ -503,13 +503,18 @@ function Projects() {
                             </div>
                             <div>
                               <div className="flex justify-between p-0 m-0">
-                                <h3 className="font-medium text-lg !m-0 !p-0 cursor-pointer">
-                                  {project.name}
-                                </h3>
-                                <ProjectOptionsMenu
-                                  projectId={project._id}
-                                  projectData={project}
-                                />
+                                <div className="flex  justify-between p-0 m-0">
+                                  <h3
+                                    className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
+                                    onClick={() => handleClick(project._id)}
+                                  >
+                                    {project.name}
+                                  </h3>
+                                  <ProjectOptionsMenu
+                                    projectId={project._id}
+                                    projectData={project}
+                                  />
+                                </div>
                               </div>
                               <p className="text-sm text-gray-500 mb-2">
                                 {project.category}

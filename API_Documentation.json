@@ -62,7 +62,7 @@
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/google/user"
     },
-    "Get User Information for the profile ": {
+    "Get User Information for the profile ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/me"
     },
@@ -76,7 +76,7 @@
         "image": "you will upload it"
       }
     },
-    "Update User Password": {
+    "Update User Password ✅": {
       "method": "PATCH",
       "url": "http://localhost:9999/depiV1/users/updateMyPassword",
       "body": {
