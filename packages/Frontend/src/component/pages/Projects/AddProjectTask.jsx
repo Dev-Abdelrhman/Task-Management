@@ -63,7 +63,7 @@ const AddProjectTask = ({ closeModal, onAddTask, editTask }) => {
                             value={taskName}
                             onChange={(e) => setTaskName(e.target.value)}
                             placeholder="Task Name"
-                            className="w-full p-2 dark:bg-[#2D2D2D] border border-gray-300 rounded"
+                            className="w-full p-2 dark:bg-[#2D2D2D] dark:text-gray-300 border border-gray-300 rounded"
                             required
                         />
                     </div>
@@ -73,7 +73,7 @@ const AddProjectTask = ({ closeModal, onAddTask, editTask }) => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Task Description"
-                            className="w-full p-2 dark:bg-[#2D2D2D] border border-gray-300 rounded"
+                            className="w-full p-2 dark:bg-[#2D2D2D] dark:text-gray-300 border border-gray-300 rounded"
                             rows="4"
                         />
                     </div>
@@ -82,7 +82,7 @@ const AddProjectTask = ({ closeModal, onAddTask, editTask }) => {
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
-                            className="w-full p-2 dark:bg-[#2D2D2D] border border-gray-300 rounded"
+                            className="w-full p-2 dark:bg-[#2D2D2D] border dark:text-gray-300 border-gray-300 rounded"
                         >
                             <option className="dark:text-gray-400" value="Pending">Pending</option>
                             <option className="dark:text-gray-400" value="Todo">Todo</option>
@@ -100,7 +100,7 @@ const AddProjectTask = ({ closeModal, onAddTask, editTask }) => {
                                 id="status-select"
                                 value={priority}
                                 label="Priority"
-                                className="dark:bg-[#2D2D2D] dark:border-gray-500"
+                                className="dark:bg-[#2D2D2D] dark:border-gray-500 "
                                 onChange={(e) => setPriority(e.target.value)}
                                 // disabled={disableStatus}
                                 renderValue={(value) => {
@@ -145,7 +145,7 @@ const AddProjectTask = ({ closeModal, onAddTask, editTask }) => {
                             type="date"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            className="w-full p-2 dark:bg-[#2D2D2D] border border-gray-300 rounded"
+                            className="w-full p-2 dark:text-gray-300 dark:bg-[#2D2D2D] border border-gray-300 rounded"
                         />
                     </div>
                     <div className="flex justify-end mt-4">
