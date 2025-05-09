@@ -516,7 +516,8 @@ const ProjectTasks = () => {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {board.columns.map((column) => (
-              <div key={column.id} className="flex-shrink-0 w-[23%]">
+              // <div key={column.id} className="flex-shrink-0 w-[23%]">
+                             <div key={column.id} className="flex-shrink-0 w-[85vw] sm:w-[48%] md:w-[31%] lg:w-[23%]">
                 <div className="rounded-[15px] dark:bg-[#1E1E1E] bg-white shadow-sm">
                   <div className="p-3 flex justify-between items-center border-b">
                     <div className="flex items-center gap-2">
