@@ -154,20 +154,8 @@ projectSchema.virtual("type").get(function () {
   return this.memberCount > 1 ? "Public" : "Private";
 });
 
-projectSchema.virtual("roles", {
-  ref: "Role",
-  localField: "_id",
-  foreignField: "project",
-});
-
 projectSchema.virtual("tasks", {
   ref: "Task",
-  localField: "_id",
-  foreignField: "project",
-});
-
-projectSchema.virtual("comments", {
-  ref: "Comment",
   localField: "_id",
   foreignField: "project",
 });
