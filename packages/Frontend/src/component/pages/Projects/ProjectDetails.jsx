@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Button, Chip, Avatar } from "@mui/material";
+import { Box, CircularProgress, Button, Chip, Avatar, TextField, Menu, MenuItem } from "@mui/material";
 import {
   Clock,
   Users,
@@ -8,8 +8,10 @@ import {
   ReceiptText,
   CircleCheck,
   Ban,
+  Send,
+  MoreVertical,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery , useMutation,useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "../../../api/project";
 import { useState } from "react";
@@ -18,6 +20,7 @@ import { useRoles } from "../../../hooks/useRoles";
 import { getRoles } from "../../../api/roles";
 import InviteModal from "../Invite/InviteModal";
 import { DateTime } from "luxon";
+import { getComments, createComment, updateComment, deleteComment } from "../../../api/commentsApi";
 
 function ProjectDetails() {
   const { user } = useAuth();
@@ -40,8 +43,14 @@ function ProjectDetails() {
   });
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [commentText, setCommentText] = useState("")
+  const [showComments, setShowComments] = useState(false)
+  const [editingCommentId, setEditingCommentId] = useState(null)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedCommentId, setSelectedCommentId] = useState(null)
 
   // Querys
+  const queryClient = useQueryClient()
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["project", projectId],
     queryFn: async () => {
@@ -60,6 +69,41 @@ function ProjectDetails() {
       return await getRoles(user._id, projectId);
     },
   });
+  const {data: commentsData , isLoading: commentsLoading} = useQuery({
+    queryKey: ["comments" , projectId],
+    queryFn: async () =>{
+      return await getComments(user._id, projectId)
+    },
+    enabled: showComments,
+  })
+  const createCommentMutation = useMutation({
+    mutationFn: (commentData) => createComment(user._id, projectId,commentData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", projectId]);
+      setCommentText("");
+    },
+  })
+
+  const updateCommentMutation = useMutation({
+    mutationFn: ({ commentId, commentData }) =>
+      updateComment(user._id, projectId, commentId, commentData),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", projectId]);
+      setCommentText("");
+      setEditingCommentId(null);
+    },
+
+  })
+  const deleteCommentMutation = useMutation({
+    mutationFn: (commentId) => deleteComment(user._id, projectId, commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", projectId]);
+    },
+  })
+
+
+
+
   const project = data?.doc;
   const projectMembers = data?.doc?.members;
 
@@ -137,6 +181,40 @@ function ProjectDetails() {
       </>
     );
   };
+
+  const handleCommentSubmit = (e) =>{
+    e.preventDefault()
+    if(!commentText.trim()) return
+    if (editingCommentId) {
+      updateCommentMutation.mutate({
+        commentId: editingCommentId,
+        commentData: { comment: commentText },
+      });
+    } else {
+      createCommentMutation.mutate({ comment: commentText });
+    }
+
+  }
+  const handleMenuOpen = (event, commentId) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedCommentId(commentId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedCommentId(null);
+  };
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(selectedCommentId);
+    setCommentText(comment.comment);
+    handleMenuClose();
+  };
+
+  const handleDeleteComment = () => {
+    deleteCommentMutation.mutate(selectedCommentId);
+    handleMenuClose();
+  }
 
   if (isLoading || rolesLoading) {
     return (
@@ -217,6 +295,115 @@ function ProjectDetails() {
                 your imagination and inspiration.
               </p>
             </div>
+
+            <div className="ml-16 pt-4">
+            <Button
+                onClick={() => setShowComments(!showComments)}
+                className="!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !px-4 !py-2"
+              >
+                {showComments ? "Hide Comments" : "+ Comment"}
+              </Button>
+              {showComments && (
+                <div className="mt-4">
+                  <form onSubmit={handleCommentSubmit} className="mb-4">
+                    <div className="flex items-center gap-2">
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Add a comment..."
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                        className="!rounded-xl"
+                      />
+                      <Button
+                        type="submit"
+                        disabled={
+                          !commentText.trim() ||
+                          createCommentMutation.isLoading ||
+                          updateCommentMutation.isLoading
+                        }
+                        className="!bg-[#546FFF] !text-white !rounded-xl !p-2"
+                      >
+                        <Send className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </form>
+                  {commentsLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <div className="space-y-4">
+                      {commentsData?.doc?.map((comment) => (
+                        <div
+                          key={comment._id}
+                          className="flex gap-3 p-3 bg-gray-100 rounded-xl"
+                        >
+                          <Avatar
+                            className="!w-10 !h-10"
+                            src={
+                              comment.user?.image?.length
+                                ? hostGoogleImage(comment.user.image[0].url)
+                                : undefined
+                            }
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium">
+                                {comment.user?.name}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                {DateTime.fromISO(comment.createdAt).toRelative()}
+                              </span>
+                            </div>
+                            <p className="text-gray-800">{comment.comment}</p>
+                            {comment.user._id === user._id && (
+                              <div className="flex-1 relative gap-2 mt-2">
+                                <Button
+                                   onClick={(e) => handleMenuOpen(e,comment._id)}
+                                  className="!absolute !right-2 !text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
+                                >
+                                     <MoreVertical className="w-5 h-5" />
+                               </Button>
+                                <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl) && selectedCommentId === comment._id}
+                                onClose={handleMenuClose}
+                                PaperProps={{
+                                  sx: {
+                                    borderRadius: "8px",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                                  },
+                                }}
+                              >
+                                <MenuItem
+                                  onClick={() => handleEditComment(comment)}
+                                  sx={{ color: "#546FFF", fontSize: "14px", padding: "8px 16px" }}
+                                >
+                                  Edit
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={handleDeleteComment}
+                                  sx={{ color: "#DC2626", fontSize: "14px", padding: "8px 16px" }}
+                                  disabled={deleteCommentMutation.isLoading}
+                                >
+                                  Delete
+                                </MenuItem>
+                              </Menu>
+
+                  
+                              </div>
+                            )}
+                          </div>
+                        </div>  
+                         ))} 
+                    </div>
+                  )}    
+
+                </div>  
+              )}    
+
+
+            </div>
+    
           </div>
         </div>
         {detailsModalOpen && (
