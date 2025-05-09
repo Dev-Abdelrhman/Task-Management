@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@mui/material";
 import {
   CheckCircle,
   Clock,
@@ -10,9 +8,9 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,22 +22,26 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
-        <div className="container flex h-16 !items-center justify-between">
-          <div className="flex !items-center gap-5">
-            <div className="flex !items-center  gap-2">
+        <div className="container mx-auto px-4 flex h-16 items-center justify-between">
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
               <ListTodo className="h-6 w-6 text-[#3D53DB]" />
-              <span className="!text-2xl !font-bold text-[#3D53DB]">
+              <span className="text-2xl font-bold text-[#3D53DB]">
                 TaskFlow
               </span>
             </div>
             <nav className="hidden md:flex items-center gap-6">
               <a
                 href="#features"
-                className="!text-sm !font-medium text-blue-900 hover:text-[#3D53DB]"
+                className="text-sm font-medium text-blue-900 hover:text-[#3D53DB]"
               >
                 Features
               </a>
@@ -52,89 +54,140 @@ export default function Home() {
             </nav>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => navigate("/login")}
-              variant="outline"
-              className="border-[#3D53DB] text-[#546FFF] hover:bg-blue-50 !px-5 !py-3 !rounded-full "
+          <div className="md:flex items-center gap-2 hidden">
+            <button
+              onClick={() => handleNavigate("/login")}
+              className="border border-[#3D53DB] text-[#546FFF] hover:bg-blue-50 px-5 py-2 rounded-full"
             >
               Sign In
-            </Button>
-            <Button
-              className="!bg-[#546FFF] !text-white hover:!shadow-lg hover:!shadow-[#98ABFF] !px-7 !py-3 !rounded-full"
-              onClick={() => navigate("/sign-up")}
+            </button>
+            <button
+              className="bg-[#546FFF] text-white hover:shadow-lg hover:shadow-[#98ABFF] px-7 py-2 rounded-full"
+              onClick={() => handleNavigate("/sign-up")}
             >
               Sign Up
-            </Button>
+            </button>
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-900">
+              {isMenuOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white p-4 border-t border-gray-100">
+            <nav className="flex flex-col gap-4">
+              <a
+                href="#features"
+                className="text-sm font-medium text-blue-900 hover:text-[#3D53DB]"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Features
+              </a>
+              <a
+                href="#testimonials"
+                className="text-sm font-medium text-blue-900 hover:text-[#3D53DB]"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Testimonials
+              </a>
+              <div className="flex flex-col gap-2 mt-4">
+                <button
+                  onClick={() => handleNavigate("/login")}
+                  className="border border-[#3D53DB] text-[#546FFF] hover:bg-blue-50 px-4 py-2 rounded-full w-full"
+                >
+                  Sign In
+                </button>
+                <button
+                  className="bg-[#546FFF] text-white hover:shadow-lg px-4 py-2 rounded-full w-full"
+                  onClick={() => handleNavigate("/sign-up")}
+                >
+                  Sign Up
+                </button>
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="container py-20 md:py-32">
+      <section className="container mx-auto px-4 py-12 md:py-20 lg:py-32">
         <div className="grid gap-8 md:grid-cols-2 md:gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col gap-4"
+          <div
+            className="flex flex-col gap-4 opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'translateY(0px)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
-            <div className="!inline-flex !items-center !px-3 !py-1 text-sm text-[#3D53DB]">
-              <span className="!font-medium">New Features Available</span>
+            <div className="inline-flex items-center px-3 py-1 text-sm text-[#3D53DB] bg-blue-50 rounded-full">
+              <span className="font-medium">New Features Available</span>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-blue-900 md:text-5xl lg:text-6xl">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-blue-900">
               Manage tasks with <span className="text-[#3D53DB]">ease</span> and{" "}
               <span className="text-[#3D53DB]">efficiency</span>
             </h1>
-            <p className="text-lg text-blue-700/80">
+            <p className="text-base md:text-lg text-blue-700/80">
               Streamline your workflow, collaborate seamlessly, and accomplish
               more with our intuitive task management platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Button
-                onClick={() => navigate("/sign-up")}
-                className="!bg-[#546FFF] !text-white hover:!shadow-lg hover:!shadow-[#98ABFF] !px-5 !py-3"
+              <button
+                onClick={() => handleNavigate("/sign-up")}
+                className="bg-[#546FFF] text-white hover:shadow-lg hover:shadow-[#98ABFF] px-5 py-3 rounded-lg"
               >
                 Get Started Free
-              </Button>
-              <Button
-                variant="outline"
-                sx={{ border: 1 }}
-                className="!border !border-[#3D53DB] !text-[#3D53DB] !px-5 !py-2"
+              </button>
+              <button
+                className="border border-[#3D53DB] text-[#3D53DB] px-5 py-3 rounded-lg"
               >
                 Watch Demo
-              </Button>
+              </button>
             </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative"
+          </div>
+          <div
+            className="relative opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'scale(1)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
-            <div className="relative h-[400px] w-full overflow-hidden rounded-xl border border-blue-200 bg-white shadow-xl">
-              <motion.div
-                animate={{
-                  y: scrollY * 0.1,
-                  rotate: scrollY * 0.02,
-                }}
+            <div className="relative h-[300px] md:h-[400px] w-full overflow-hidden rounded-xl border border-blue-200 bg-white shadow-xl">
+              <div
                 className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-blue-400/20"
-              />
-              <motion.div
-                animate={{
-                  y: scrollY * -0.1,
-                  rotate: scrollY * -0.02,
+                style={{
+                  transform: `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.02}deg)`,
                 }}
+              />
+              <div
                 className="absolute -left-12 -bottom-12 h-40 w-40 rounded-full bg-[#3D53DB]/20"
+                style={{
+                  transform: `translateY(${scrollY * -0.1}px) rotate(${scrollY * -0.02}deg)`,
+                }}
               />
 
               {/* Task Cards Animation */}
               <div className="relative h-full w-full p-6">
-                <motion.div
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                  className="absolute top-8 left-4 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md"
+                <div
+                  className="absolute top-8 left-4 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md opacity-100"
+                  style={{
+                    transform: 'translateY(0px)',
+                    transition: 'opacity 0.5s, transform 0.5s',
+                    opacity: 1
+                  }}
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-medium text-blue-900">
@@ -146,13 +199,15 @@ export default function Home() {
                     <div className="h-2 w-3/4 rounded-full bg-[#3D53DB]" />
                   </div>
                   <p className="mt-2 text-xs text-blue-700">Due in 2 days</p>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                  className="absolute top-40 left-12 w-64 rounded-lg border border-green-100 bg-white p-4 shadow-md"
+                <div
+                  className="absolute top-40 left-12 w-64 rounded-lg border border-green-100 bg-white p-4 shadow-md opacity-100"
+                  style={{
+                    transform: 'translateY(0px)',
+                    transition: 'opacity 0.5s, transform 0.5s',
+                    opacity: 1
+                  }}
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-medium text-blue-900">
@@ -164,13 +219,15 @@ export default function Home() {
                     <div className="h-2 w-full rounded-full bg-green-600" />
                   </div>
                   <p className="mt-2 text-xs text-green-700">Completed</p>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8, duration: 0.5 }}
-                  className="absolute top-72 left-6 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md"
+                <div
+                  className="absolute top-72 left-6 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md opacity-100"
+                  style={{
+                    transform: 'translateY(0px)',
+                    transition: 'opacity 0.5s, transform 0.5s',
+                    opacity: 1
+                  }}
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-medium text-blue-900">
@@ -186,86 +243,92 @@ export default function Home() {
                       Marketing
                     </span>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Stats Section */}
       <section className="bg-[#3D53DB] py-12 text-white">
-        <div className="container">
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center"
+            <div
+              className="flex flex-col items-center opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
-              <span className="text-3xl font-bold">10k+</span>
-              <span className="text-blue-100">Active Users</span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center"
+              <span className="text-2xl md:text-3xl font-bold">10k+</span>
+              <span className="text-blue-100 text-sm md:text-base text-center">Active Users</span>
+            </div>
+            <div
+              className="flex flex-col items-center opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
-              <span className="text-3xl font-bold">1M+</span>
-              <span className="text-blue-100">Tasks Completed</span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center"
+              <span className="text-2xl md:text-3xl font-bold">1M+</span>
+              <span className="text-blue-100 text-sm md:text-base text-center">Tasks Completed</span>
+            </div>
+            <div
+              className="flex flex-col items-center opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
-              <span className="text-3xl font-bold">99.9%</span>
-              <span className="text-blue-100">Uptime</span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center"
+              <span className="text-2xl md:text-3xl font-bold">99.9%</span>
+              <span className="text-blue-100 text-sm md:text-base text-center">Uptime</span>
+            </div>
+            <div
+              className="flex flex-col items-center opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
-              <span className="text-3xl font-bold">24/7</span>
-              <span className="text-blue-100">Support</span>
-            </motion.div>
+              <span className="text-2xl md:text-3xl font-bold">24/7</span>
+              <span className="text-blue-100 text-sm md:text-base text-center">Support</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
+      <section id="features" className="container mx-auto px-4 py-16 md:py-20">
+        <div
+          className="text-center mb-12 opacity-100"
+          style={{
+            opacity: 1,
+            transform: 'translateY(0px)',
+            transition: 'opacity 0.5s, transform 0.5s'
+          }}
         >
-          <h2 className="text-3xl font-bold text-blue-900 md:text-4xl">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-900">
             Powerful Features
           </h2>
-          <p className="mt-4 text-lg text-blue-700/80 max-w-2xl mx-auto">
+          <p className="mt-4 text-base md:text-lg text-blue-700/80 max-w-2xl mx-auto">
             Everything you need to manage your tasks efficiently and boost
             productivity
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'translateY(0px)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
               <ListTodo className="h-6 w-6 text-[#546FFF]" />
@@ -277,14 +340,15 @@ export default function Home() {
               Create, organize, and prioritize tasks with our intuitive
               drag-and-drop interface.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+          <div
+            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'translateY(0px)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
               <Clock className="h-6 w-6 text-[#546FFF]" />
@@ -296,14 +360,15 @@ export default function Home() {
               Track time spent on tasks and analyze productivity patterns to
               optimize your workflow.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+          <div
+            className="rounded-xl border border-blue-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'translateY(0px)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
               <TrendingUp className="h-6 w-6 text-[#546FFF]" />
@@ -315,36 +380,38 @@ export default function Home() {
               Visualize your progress with detailed charts and reports to stay
               on track with your goals.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="bg-blue-50 py-20">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
+      <section id="testimonials" className="bg-blue-50 py-16 md:py-20">
+        <div className="container mx-auto px-4">
+          <div
+            className="text-center mb-12 opacity-100"
+            style={{
+              opacity: 1,
+              transform: 'translateY(0px)',
+              transition: 'opacity 0.5s, transform 0.5s'
+            }}
           >
-            <h2 className="text-3xl font-bold text-blue-900 md:text-4xl">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-900">
               What Our Users Say
             </h2>
-            <p className="mt-4 text-lg text-blue-700/80 max-w-2xl mx-auto">
+            <p className="mt-4 text-base md:text-lg text-blue-700/80 max-w-2xl mx-auto">
               Join thousands of satisfied users who have transformed their
               productivity
             </p>
-          </motion.div>
+          </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="rounded-xl bg-white p-6 shadow-sm"
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div
+              className="rounded-xl bg-white p-6 shadow-sm opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
               <div className="mb-4 flex">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -368,14 +435,15 @@ export default function Home() {
                   <p className="text-sm text-blue-700/80">Product Manager</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="rounded-xl bg-white p-6 shadow-sm"
+            <div
+              className="rounded-xl bg-white p-6 shadow-sm opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
               <div className="mb-4 flex">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -399,14 +467,15 @@ export default function Home() {
                   <p className="text-sm text-blue-700/80">Freelance Designer</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="rounded-xl bg-white p-6 shadow-sm"
+            <div
+              className="rounded-xl bg-white p-6 shadow-sm opacity-100"
+              style={{
+                opacity: 1,
+                transform: 'translateY(0px)',
+                transition: 'opacity 0.5s, transform 0.5s'
+              }}
             >
               <div className="mb-4 flex">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -430,50 +499,47 @@ export default function Home() {
                   <p className="text-sm text-blue-700/80">Team Lead</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="container py-20">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="rounded-2xl bg-[#3D53DB] p-8 md:p-12 text-center text-white"
+      <section className="container mx-auto px-4 py-16 md:py-20">
+        <div
+          className="rounded-2xl bg-[#3D53DB] p-6 md:p-12 text-center text-white opacity-100"
+          style={{
+            opacity: 1,
+            transform: 'scale(1)',
+            transition: 'opacity 0.5s, transform 0.5s'
+          }}
         >
-          <h2 className="!text-3xl !font-bold md:!text-4xl">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">
             Ready to boost your productivity?
           </h2>
-          <p className="!mt-4 !text-lg !text-blue-100 !max-w-2xl mx-auto">
+          <p className="mt-4 text-base md:text-lg text-blue-100 max-w-2xl mx-auto">
             Join thousands of users who have transformed their task management
             experience
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-                onClick={() => navigate("/sign-up")}
-              size="lg"
-              className="!bg-white !text-[#3D53DB] !hover:bg-blue-50 !px-5 !py-3 "
+            <button
+              onClick={() => handleNavigate("/sign-up")}
+              className="bg-white text-[#3D53DB] hover:bg-blue-50 px-5 py-3 rounded-lg"
             >
               Get Started Free
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              sx={{ border: 1 }}
-              className="!border-white !text-white !py-3 !px-5"
+            </button>
+            <button
+              className="border border-white text-white py-3 px-5 rounded-lg"
             >
               Schedule a Demo
-            </Button>
+            </button>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t bg-white py-12">
-        <div className="container">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between gap-8">
             <div className="mb-6 md:mb-0">
               <div className="flex items-center gap-2">
