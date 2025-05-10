@@ -9,13 +9,19 @@ const getComments = FC.getAll(Comment, "project", ["project", "user"]);
 
 const getCommentById = FC.getOne(Comment, "commentId", ["project", "user"]);
 
-const createComment = FC.createOne(Comment, "image", "user", "project");
+const createComment = FC.createOne(
+  Comment,
+  "comments_images",
+  "image",
+  "user",
+  "project"
+);
 
 const isMine = (req, res, next) => {
   return FC.isOwner(Comment, "user")(req, res, next);
 };
 
-const updateComment = FC.updateOne(Comment, "image");
+const updateComment = FC.updateOne(Comment, "comments_images", "image");
 
 const deleteComment = FC.deleteOne(Comment);
 
