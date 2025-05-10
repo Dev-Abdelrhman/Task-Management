@@ -58,10 +58,6 @@
         "passwordConfirmation": "password"
       }
     },
-    "Get user info for auth": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/google/user"
-    },
     "Get User Information for the profile ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/me"
@@ -183,7 +179,9 @@
         "dueDate ✅": "Date",
         "members ✅": "will set automatically after add the invite logic to the project (soon)",
         "tasks ✅": "already added automatically",
-        "image ✅": "you will upload it"
+        "image ✅": "you will upload it",
+        "type ": "Private or Public",
+        "status": "Completed or In Progress or Overdue"
       }
     },
     "Update Project ✅": {
