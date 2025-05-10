@@ -154,21 +154,28 @@ projectSchema.virtual("type").get(function () {
   return this.memberCount > 1 ? "Public" : "Private";
 });
 
+<<<<<<< HEAD
 projectSchema.virtual("roles", {
   ref: "Role",
   localField: "_id",
   foreignField: "project",
 });
+=======
+>>>>>>> 50380cf196428159eca0e269299f81889938b86d
 projectSchema.virtual("tasks", {
   ref: "Task",
   localField: "_id",
   foreignField: "project",
 });
+<<<<<<< HEAD
 projectSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "project",
 });
+=======
+
+>>>>>>> 50380cf196428159eca0e269299f81889938b86d
 projectSchema.virtual("progress").get(function () {
   if (!this.tasks || !this.tasks.length) return 0;
   const totalTasks = this.tasks.length;
