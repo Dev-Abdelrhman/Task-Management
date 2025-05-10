@@ -13,8 +13,13 @@ const getProjectById = FC.getOne(Project, [
   "tasks",
 ]);
 
-const createProject = FC.createOne(Project, "image", "members.user");
-const updateProject = FC.updateOne(Project, "image");
+const createProject = FC.createOne(
+  Project,
+  "projects_images",
+  "image",
+  "members.user"
+);
+const updateProject = FC.updateOne(Project, "projects_images", "image");
 const deleteProject = FC.deleteOne(Project);
 
 const getProjectMembers = catchAsync(async (req, res, next) => {
