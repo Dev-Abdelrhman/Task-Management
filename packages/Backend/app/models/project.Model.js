@@ -160,22 +160,31 @@ projectSchema.virtual("roles", {
   localField: "_id",
   foreignField: "project",
 });
+<<<<<<< HEAD
 =======
 >>>>>>> 50380cf196428159eca0e269299f81889938b86d
+=======
+>>>>>>> 41758b9f4a8c6bc717ee919bece03fc5cb4ec4a0
 projectSchema.virtual("tasks", {
   ref: "Task",
   localField: "_id",
   foreignField: "project",
 });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 41758b9f4a8c6bc717ee919bece03fc5cb4ec4a0
 projectSchema.virtual("comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "project",
 });
+<<<<<<< HEAD
 =======
 
 >>>>>>> 50380cf196428159eca0e269299f81889938b86d
+=======
+>>>>>>> 41758b9f4a8c6bc717ee919bece03fc5cb4ec4a0
 projectSchema.virtual("progress").get(function () {
   if (!this.tasks || !this.tasks.length) return 0;
   const totalTasks = this.tasks.length;
