@@ -341,8 +341,7 @@ function ProjectDetails() {
                             }
                           />
                           <div className="flex-1">
-                            <div className="flex items-center justify-between ">
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2">
                               <span className="font-medium">
                                 {comment.user?.name}
                               </span>
@@ -352,15 +351,13 @@ function ProjectDetails() {
                             </div>
                             <p className="text-gray-800">{comment.comment}</p>
                             {comment.user._id === user._id && (
+                              <div className="flex-1 relative gap-2 mt-2">
                                 <Button
                                    onClick={(e) => handleMenuOpen(e,comment._id)}
-                                  className=" !text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
+                                  className="!absolute !right-2 !text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
                                 >
                                      <MoreVertical className="w-5 h-5" />
                                </Button>
-                            )}
-                            </div>
-                            {comment.user._id === user._id && (
                                 <Menu
                                 anchorEl={anchorEl}
                                 open={Boolean(anchorEl) && selectedCommentId === comment._id}
@@ -387,11 +384,11 @@ function ProjectDetails() {
                                 </MenuItem>
                               </Menu>
 
-                              )}
+                  
                               </div>
-                          
+                            )}
                           </div>
-                      
+                        </div>  
                          ))} 
                     </div>
                   )}    

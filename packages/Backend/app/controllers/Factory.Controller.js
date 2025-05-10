@@ -38,12 +38,13 @@ const deleteOne = (Model, filterField) =>
     });
   });
 //________________________________________________________________________
-const updateOne = (Model, fieldName) =>
+const updateOne = (Model, folderName = "", fieldName) =>
   catchAsync(async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map((file) =>
         cloudinary.uploader.upload(file.path, {
           resource_type: "auto",
+          folder: folderName,
         })
       );
       const uploadedImages = await Promise.all(uploadPromises);
@@ -77,7 +78,7 @@ const updateOne = (Model, fieldName) =>
     });
   });
 //________________________________________________________________________
-const createOne = (Model, fieldName, idField, idField2) =>
+const createOne = (Model, folderName = "", fieldName, idField, idField2) =>
   catchAsync(async (req, res, next) => {
     if (idField) {
       if (!get(req.body, idField)) {
@@ -94,6 +95,7 @@ const createOne = (Model, fieldName, idField, idField2) =>
         req.files.map((file) =>
           cloudinary.uploader.upload(file.path, {
             resource_type: "auto",
+            folder: folderName,
           })
         )
       );
