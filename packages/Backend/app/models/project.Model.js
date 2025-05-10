@@ -169,6 +169,16 @@ projectSchema.virtual("progress").get(function () {
   return Math.round((completedTasks / totalTasks) * 100);
 });
 
+projectSchema.virtual("status").get(function () {
+  if (this.progress === 100) {
+    return "Completed";
+  } else if (this.progress < 100) {
+    return "In Progress";
+  } else if (this.dueDate < Date.now()) {
+    return "Overdue";
+  }
+});
+
 projectSchema.pre(
   "deleteOne",
   { document: true, query: false },
