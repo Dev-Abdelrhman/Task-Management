@@ -58,10 +58,6 @@
         "passwordConfirmation": "password"
       }
     },
-    "Get user info for auth": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/google/user"
-    },
     "Get User Information for the profile ✅": {
       "method": "GET",
       "url": "http://localhost:9999/depiV1/users/me"

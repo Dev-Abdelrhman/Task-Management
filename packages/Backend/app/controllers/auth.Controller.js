@@ -139,11 +139,6 @@ const googleAuthCallback = (req, res, next) => {
           .status(401)
           .json({ status: "error", message: "Authentication failed" });
       }
-      // if (!frontendUrl) {
-      //   return res
-      //     .status(400)
-      //     .json({ status: "error", message: "Frontend URL missing" });
-      // }
       if (user.tempToken) {
         return res.redirect(
           `http://localhost:5174/google-signup?token=${user.tempToken}`
@@ -256,11 +251,9 @@ const logout = (req, res) => {
     return res.status(400).json({ message: "You are not logged in" });
   }
 
-  // Add tokens to the blacklist
   blacklist.add(token);
   blacklist.add(rToken);
 
-  // Clear cookies
   res.cookie("accessToken", "", {
     expires: new Date(0),
     httpOnly: true,
