@@ -183,7 +183,9 @@
         "dueDate ✅": "Date",
         "members ✅": "will set automatically after add the invite logic to the project (soon)",
         "tasks ✅": "already added automatically",
-        "image ✅": "you will upload it"
+        "image ✅": "you will upload it",
+        "type ": "Private or Public",
+        "status": "Completed or In Progress or Overdue"
       }
     },
     "Update Project ✅": {
