@@ -64,8 +64,6 @@ export default function TaskordDashboard() {
     queryFn: getAllUserTasks,
   });
 
-  console.log(tasksData, "TaskData");
-  console.log(ProjectData, "ProjectData");
   console.log(user, "UserData");
 
   const totalTasks = tasksData?.results || 0;
@@ -468,9 +466,7 @@ export default function TaskordDashboard() {
                                     "https://fakeimg.pl/600x800?text=No+Image"
                                   } // default image
                                   alt="Team member"
-                                  width={24}
-                                  height={24}
-                                  className="object-cover select-none"
+                                  className="object-cover select-none w-5 h-5"
                                 />
                               </div>
                             ))}
@@ -641,9 +637,7 @@ export default function TaskordDashboard() {
                                   "https://fakeimg.pl/600x800?text=No+Image"
                                 } // default image
                                 alt="Team member"
-                                width={24}
-                                height={24}
-                                className="object-cover select-none"
+                                className="object-cover select-none h-5  w-5 "
                               />
                             </div>
                           ))}
