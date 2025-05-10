@@ -360,7 +360,7 @@ useEffect(() => {
             <div className="ml-16 pt-4">
             <Button
                 onClick={() => setShowComments(!showComments)}
-                className="!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !px-4 !py-2"
+                className="!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !mt-2 !mb-4 !px-6 !py-3"
               >
                 {showComments ? "Hide Comments" : "+ Comment"}
               </Button>
