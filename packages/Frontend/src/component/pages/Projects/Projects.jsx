@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { DateTime } from "luxon";
 
+
 function Projects() {
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState("");
