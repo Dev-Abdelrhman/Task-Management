@@ -38,13 +38,13 @@ const deleteOne = (Model, filterField) =>
     });
   });
 //________________________________________________________________________
-const updateOne = (Model, foledrName, fieldName) =>
+const updateOne = (Model, folderName = "", fieldName) =>
   catchAsync(async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map((file) =>
         cloudinary.uploader.upload(file.path, {
           resource_type: "auto",
-          folder: foledrName,
+          folder: folderName,
         })
       );
       const uploadedImages = await Promise.all(uploadPromises);
