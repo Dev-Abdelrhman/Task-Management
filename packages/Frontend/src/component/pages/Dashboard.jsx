@@ -35,12 +35,74 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllUserTasks } from "../../api/user_tasks";
 import ProjectOptionsMenu from "./Projects/ProjectOptionsMenu";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useAuthStore();
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-900 text-white px-2 py-1 rounded text-xs">
+          {`${payload[0].value} Task${payload[0].value !== 1 ? "s" : ""}`}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Dynamic data for Activity chart
+  const [activityData, setActivityData] = useState([
+    { day: "S", tasks: 0 },
+    { day: "M", tasks: 0 },
+    { day: "T", tasks: 0 },
+    { day: "W", tasks: 0 },
+    { day: "Th", tasks: 0 },
+    { day: "F", tasks: 0 },
+    { day: "Sa", tasks: 0 },
+  ]);
+
+  const { data: tasksData, isLoading: isTasksLoading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getAllUserTasks,
+  });
+
+  useEffect(() => {
+    if (!tasksData?.doc) return;
+    const dayMap = ["S", "M", "T", "W", "Th", "F", "Sa"];
+    const counts = { S: 0, M: 0, T: 0, W: 0, Th: 0, F: 0, Sa: 0 };
+
+    tasksData.doc.forEach((task) => {
+      if (task.status === "Completed" && task.updatedAt) {
+        const date = new Date(task.updatedAt);
+        const day = dayMap[date.getDay()];
+        counts[day]++;
+      }
+    });
+
+    setActivityData([
+      { day: "S", tasks: counts.S },
+      { day: "M", tasks: counts.M },
+      { day: "T", tasks: counts.T },
+      { day: "W", tasks: counts.W },
+      { day: "Th", tasks: counts.Th },
+      { day: "F", tasks: counts.F },
+      { day: "Sa", tasks: counts.Sa },
+    ]);
+  }, [tasksData]);
 
   const {
     data: ProjectData,
@@ -54,15 +116,15 @@ export default function TaskordDashboard() {
     },
   });
 
-  const {
-    data: tasksData,
-    isLoading: isTasksLoading,
-    isError: isTasksError,
-    error: tasksError,
-  } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getAllUserTasks,
-  });
+  // const {
+  //   data: tasksData,
+  //   isLoading: isTasksLoading,
+  //   isError: isTasksError,
+  //   error: tasksError,
+  // } = useQuery({
+  //   queryKey: ["tasks"],
+  //   queryFn: getAllUserTasks,
+  // });
 
   console.log(user, "UserData");
 
@@ -272,54 +334,61 @@ export default function TaskordDashboard() {
               </div>
 
               {/* Activity */}
-              <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200">
+              <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-medium">Activity</h2>
-                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md">
+                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md cursor-pointer">
                     <span>This Week</span>
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
                 <div className="relative h-[calc(100%-60px)]">
-                  {/* Activity Chart */}
-                  <div className="absolute top-1/4 left-1/4 bg-blue-500 w-3 h-3 rounded-full z-10"></div>
-                  <div className="absolute top-1/4 left-1/4 bg-blue-100 w-5 h-5 rounded-full"></div>
-                  <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-full bg-gray-900 text-white px-2 py-1 rounded text-xs">
-                    2 Task
-                  </div>
-
-                  <svg
-                    className="w-full h-full"
-                    viewBox="0 0 300 100"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="1"
-                    />
-                    <path
-                      d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
-                      fill="none"
-                      stroke="#111827"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <div>S</div>
-                    <div>M</div>
-                    <div>T</div>
-                    <div>W</div>
-                    <div>T</div>
-                    <div>F</div>
-                    <div>S</div>
-                  </div>
-                  <div className="absolute left-0 top-0 grid grid-rows-3 h-full text-xs text-gray-500">
-                    <div>3</div>
-                    <div>2</div>
-                    <div>1</div>
-                  </div>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={activityData}
+                      margin={{ top: 20, right: 10, left: -20, bottom: 10 }}
+                    >
+                      <XAxis
+                        dataKey="day"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[1, 3]}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        dx={-10}
+                      />
+                      <RechartsTooltip
+                        content={<CustomTooltip />}
+                        cursor={false}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="tasks"
+                        stroke="#111827"
+                        strokeWidth={3}
+                        dot={{
+                          r: 6,
+                          fill: "#fff",
+                          stroke: "#4F46E5",
+                          strokeWidth: 3,
+                          filter: "drop-shadow(0 2px 6px #4F46E533)",
+                        }}
+                        activeDot={{
+                          r: 8,
+                          fill: "#4F46E5",
+                          stroke: "#fff",
+                          strokeWidth: 3,
+                          filter: "drop-shadow(0 2px 6px #4F46E533)",
+                        }}
+                        style={{ filter: "drop-shadow(0 2px 8px #11182733)" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -333,7 +402,7 @@ export default function TaskordDashboard() {
             </div>
           ) : isProjectsError ? (
             <div className="text-center text-red-500">
-              Error: {error.message}
+              Error: {projectsError.message}
             </div>
           ) : ProjectData?.doc?.length > 0 ? (
             <div className="mb-8">
