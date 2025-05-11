@@ -29,39 +29,96 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProjects } from "../../api/project";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllUserTasks } from "../../api/user_tasks";
 import ProjectOptionsMenu from "./Projects/ProjectOptionsMenu";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+import socket from "../../utils/socket";
+
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useAuthStore();
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
+  const queryClient = useQueryClient();
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-900 text-white px-2 py-1 rounded text-xs">
+          {`${payload[0].value} Task${payload[0].value !== 1 ? "s" : ""}`}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Dynamic data for Activity chart
+  const [activityData, setActivityData] = useState([
+    { day: "S", tasks: 0 },
+    { day: "M", tasks: 0 },
+    { day: "T", tasks: 0 },
+    { day: "W", tasks: 0 },
+    { day: "Th", tasks: 0 },
+    { day: "F", tasks: 0 },
+    { day: "Sa", tasks: 0 },
+  ]);
+
+  const { data: tasksData, isLoading: isTasksLoading } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getAllUserTasks,
+  });
+
+  useEffect(() => {
+    if (!tasksData?.doc) return;
+    const dayMap = ["S", "M", "T", "W", "Th", "F", "Sa"];
+    const counts = { S: 0, M: 0, T: 0, W: 0, Th: 0, F: 0, Sa: 0 };
+
+    tasksData.doc.forEach((task) => {
+      if (task.status === "Completed" && task.updatedAt) {
+        const date = new Date(task.updatedAt);
+        const day = dayMap[date.getDay()];
+        counts[day]++;
+      }
+    });
+
+    setActivityData([
+      { day: "S", tasks: counts.S },
+      { day: "M", tasks: counts.M },
+      { day: "T", tasks: counts.T },
+      { day: "W", tasks: counts.W },
+      { day: "Th", tasks: counts.Th },
+      { day: "F", tasks: counts.F },
+      { day: "Sa", tasks: counts.Sa },
+    ]);
+  }, [tasksData]);
 
   const {
     data: ProjectData,
-    isLoading: porjectLoding,
+    isLoading: projectLoading,
     isError: isProjectsError,
     error: projectsError,
   } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
+      if (!user?._id) return { doc: [] };
       return await getUserProjects(user._id);
     },
-  });
-
-  const {
-    data: tasksData,
-    isLoading: isTasksLoading,
-    isError: isTasksError,
-    error: tasksError,
-  } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getAllUserTasks,
+    enabled: !!user?._id,
+    initialData: { doc: [] }, // Initialize with empty array
   });
 
   console.log(user, "UserData");
@@ -142,6 +199,58 @@ export default function TaskordDashboard() {
     return () => clearInterval(animation); // Cleanup on unmount
   }, [persentage, totalTasks]);
 
+  useEffect(() => {
+    if (!user) return;
+
+    const handleProjectCreated = (newProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return { doc: [newProject] };
+        const tempProject = old.doc.find(p => p._id.startsWith("temp-") && p.name === newProject.name);
+        if (tempProject) {
+          return {
+            ...old,
+            doc: old.doc.map(p => (p._id === tempProject._id ? newProject : p))
+          };
+        }
+        const exists = old.doc.some(p => p._id === newProject._id);
+        return exists ? old : { ...old, doc: [...old.doc, newProject] };
+      });
+    };
+
+    const handleProjectUpdated = (updatedProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.map((project) =>
+            project._id === updatedProject._id ? updatedProject : project
+          ),
+        };
+      });
+    };
+
+    const handleProjectDeleted = (deletedId) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.filter((project) => project._id !== deletedId),
+        };
+      });
+    };
+
+    socket.on("connect", () => console.log("socket connected"));
+    socket.on("project-created", handleProjectCreated);
+    socket.on("project-updated", handleProjectUpdated);
+    socket.on("project-deleted", handleProjectDeleted);
+
+    return () => {
+      socket.off("project-created", handleProjectCreated);
+      socket.off("project-updated", handleProjectUpdated);
+      socket.off("project-deleted", handleProjectDeleted);
+    };
+  }, [user, queryClient]);
+
   return (
     <>
       <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#121212]">
@@ -211,7 +320,7 @@ export default function TaskordDashboard() {
                   <MenuItem
                     key="logout"
                     onClick={handleLogout}
-                    disabled={porjectLoding}
+                    disabled={projectLoading}
                   >
                     <Typography sx={{ textAlign: "center" }}>Logout</Typography>
                   </MenuItem>
@@ -272,54 +381,61 @@ export default function TaskordDashboard() {
               </div>
 
               {/* Activity */}
-              <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200">
+              <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-medium">Activity</h2>
-                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md">
+                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md cursor-pointer">
                     <span>This Week</span>
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
                 <div className="relative h-[calc(100%-60px)]">
-                  {/* Activity Chart */}
-                  <div className="absolute top-1/4 left-1/4 bg-blue-500 w-3 h-3 rounded-full z-10"></div>
-                  <div className="absolute top-1/4 left-1/4 bg-blue-100 w-5 h-5 rounded-full"></div>
-                  <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-full bg-gray-900 text-white px-2 py-1 rounded text-xs">
-                    2 Task
-                  </div>
-
-                  <svg
-                    className="w-full h-full"
-                    viewBox="0 0 300 100"
-                    preserveAspectRatio="none"
-                  >
-                    <path
-                      d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="1"
-                    />
-                    <path
-                      d="M0,50 C20,30 40,70 60,30 C80,10 100,50 120,60 C140,70 160,40 180,50 C200,60 220,50 240,55 C260,60 280,55 300,55"
-                      fill="none"
-                      stroke="#111827"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <div>S</div>
-                    <div>M</div>
-                    <div>T</div>
-                    <div>W</div>
-                    <div>T</div>
-                    <div>F</div>
-                    <div>S</div>
-                  </div>
-                  <div className="absolute left-0 top-0 grid grid-rows-3 h-full text-xs text-gray-500">
-                    <div>3</div>
-                    <div>2</div>
-                    <div>1</div>
-                  </div>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={activityData}
+                      margin={{ top: 20, right: 10, left: -20, bottom: 10 }}
+                    >
+                      <XAxis
+                        dataKey="day"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        dy={10}
+                      />
+                      <YAxis
+                        domain={[1, 3]}
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        dx={-10}
+                      />
+                      <RechartsTooltip
+                        content={<CustomTooltip />}
+                        cursor={false}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="tasks"
+                        stroke="#111827"
+                        strokeWidth={3}
+                        dot={{
+                          r: 6,
+                          fill: "#fff",
+                          stroke: "#4F46E5",
+                          strokeWidth: 3,
+                          filter: "drop-shadow(0 2px 6px #4F46E533)",
+                        }}
+                        activeDot={{
+                          r: 8,
+                          fill: "#4F46E5",
+                          stroke: "#fff",
+                          strokeWidth: 3,
+                          filter: "drop-shadow(0 2px 6px #4F46E533)",
+                        }}
+                        style={{ filter: "drop-shadow(0 2px 8px #11182733)" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -327,15 +443,15 @@ export default function TaskordDashboard() {
 
           {/* Latest Project */}
 
-          {porjectLoding ? (
+          {projectLoading ? (
             <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
               <CircularProgress />
             </div>
           ) : isProjectsError ? (
             <div className="text-center text-red-500">
-              Error: {error.message}
+              Error: {projectsError.message}
             </div>
-          ) : ProjectData?.doc?.length > 0 ? (
+          ) : ProjectData?.doc && Array.isArray(ProjectData.doc) && ProjectData.doc.length > 0 ? (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-medium dark:text-white">
@@ -371,8 +487,8 @@ export default function TaskordDashboard() {
                 }}
                 className="latest-project-swiper"
               >
-                {ProjectData?.doc?.slice(0, 4).map((project, index) => (
-                  <SwiperSlide key={project.id} className="!w-full sm:!w-auto">
+                {(ProjectData.doc || []).slice(0, 4).map((project, index) => (
+                  <SwiperSlide key={project._id} className="!w-full sm:!w-auto">
                     <div className="bg-white max-w-[350px] p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
@@ -406,10 +522,10 @@ export default function TaskordDashboard() {
                       </motion.div>
 
                       <div>
-                        <div className="flex  justify-between p-0 m-0">
+                        <div className="flex justify-between p-0 m-0">
                           <h3
                             className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
-                            onClick={() => handleClick(project._id)}
+                            onClick={() => navigate(`/projects/ProjectDetails/${project._id}`)}
                           >
                             {project.name}
                           </h3>
@@ -455,16 +571,16 @@ export default function TaskordDashboard() {
                             <span>{project.daysLeft} Days Left</span>
                           </div>
                           <div className="flex -space-x-2">
-                            {project.members.map((pro) => (
+                            {project.members?.map((pro) => (
                               <div
                                 key={pro._id}
                                 className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                               >
                                 <img
                                   src={
-                                    pro.user.image[0]?.url ||
+                                    pro.user?.image?.[0]?.url ||
                                     "https://fakeimg.pl/600x800?text=No+Image"
-                                  } // default image
+                                  }
                                   alt="Team member"
                                   className="object-cover select-none w-5 h-5"
                                 />
@@ -548,7 +664,7 @@ export default function TaskordDashboard() {
             </div>
 
             {/* Task Today */}
-            {porjectLoding ? (
+            {projectLoading ? (
               <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
                 <CircularProgress />
               </div>
@@ -557,7 +673,7 @@ export default function TaskordDashboard() {
                 Error: {projectsError.message}
               </div>
             ) : (
-              ProjectData?.doc?.length > 0 && (
+              ProjectData?.doc && ProjectData.doc.length > 0 && (
                 <div className="bg-[#FFFFFF] p-4 rounded-xl">
                   <div className="flex justify-between items-center mb-3">
                     <h2 className="text-lg font-medium">Latest Project</h2>
@@ -657,7 +773,7 @@ export default function TaskordDashboard() {
                     {/* {console.log(ProjectData.doc[0].tasks)} */}
 
                     <div className="space-y-4 mb-8">
-                      {ProjectData?.doc[0]?.tasks.slice(0, 3).map((task, i) => (
+                      {ProjectData?.doc[0]?.tasks?.slice(0, 3).map((task, i) => (
                         <div key={task._id} className="flex items-center gap-2">
                           <div className="w-9 h-9 flex items-center justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
                             {i + 1}

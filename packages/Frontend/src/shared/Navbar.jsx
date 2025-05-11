@@ -21,8 +21,6 @@ function Navbar() {
   const { user } = useAuthStore();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  console.log(user, "user");
-
   const handleLogout = async () => {
     try {
       await signOut();

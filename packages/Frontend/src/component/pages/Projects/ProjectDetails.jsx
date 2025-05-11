@@ -14,13 +14,17 @@ import {
 import { useQuery , useMutation,useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "../../../api/project";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useRoles } from "../../../hooks/useRoles";
 import { getRoles } from "../../../api/roles";
 import InviteModal from "../Invite/InviteModal";
 import { DateTime } from "luxon";
 import { getComments, createComment, updateComment, deleteComment } from "../../../api/commentsApi";
+import { io } from "socket.io-client";
+import { toast } from "react-toastify";
+
+const socket = io("http://localhost:9999");
 
 function ProjectDetails() {
   const { user } = useAuth();
@@ -48,6 +52,28 @@ function ProjectDetails() {
   const [editingCommentId, setEditingCommentId] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCommentId, setSelectedCommentId] = useState(null)
+
+
+  const [replies, setReplies] = useState(() => {
+  const savedReplies = localStorage.getItem(`replies_${projectId}`);
+  if (!savedReplies) return {};
+  try {
+    return JSON.parse(savedReplies);
+  } catch (error) {
+    console.error("Error parsing replies from localStorage:", error);
+    return {};
+  }
+})
+  const [replyText, setReplyText] = useState("")
+  const [replyingToCommentId, setReplyingToCommentId] = useState(null)
+
+  const [showPermissionWarning, setShowPermissionWarning] = useState(false);
+  const [pendingPermissionChange, setPendingPermissionChange] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem(`replies_${projectId}`, JSON.stringify(replies));
+  }, [replies, projectId]);
+
 
   // Querys
   const queryClient = useQueryClient()
@@ -116,6 +142,64 @@ function ProjectDetails() {
     }));
   };
 
+  const handlePermissionChange = (perm) => {
+    // Check if this is the current user's role
+    const isCurrentUserRole = rolesData?.doc.find(
+      (role) => role._id === editingRoleId
+    )?.members?.some((member) => member.user._id === user._id);
+
+    // If this is the current user's role and we're trying to remove the last permission
+    if (isCurrentUserRole && newRole.permissions.length === 1 && newRole.permissions.includes(perm)) {
+      setPendingPermissionChange(perm);
+      setShowPermissionWarning(true);
+      return;
+    }
+
+    const perms = newRole.permissions.includes(perm)
+      ? newRole.permissions.filter((p) => p !== perm)
+      : [...newRole.permissions, perm];
+    setnewRole({ ...newRole, permissions: perms });
+  };
+
+  const handleConfirmPermissionChange = async () => {
+    if (!pendingPermissionChange) return;
+
+    const perms = newRole.permissions.filter((p) => p !== pendingPermissionChange);
+    setnewRole({ ...newRole, permissions: perms });
+    setShowPermissionWarning(false);
+    setPendingPermissionChange(null);
+
+    try {
+      await updateRole({
+        userId: user._id,
+        projectId,
+        roleId: editingRoleId,
+        roleData: { ...newRole, permissions: perms },
+      });
+      
+      // After successful update, redirect to projects page
+      toast.warning("You no longer have permissions in this project. Redirecting...");
+      setTimeout(() => {
+        navigate('/projects');
+      }, 2000);
+    } catch (error) {
+      // Handle the permission error
+      if (error.message === "You don't have permission to perform this action") {
+        toast.error("You don't have permission to modify this role");
+        // Reset the role permissions to their previous state
+        const currentRole = rolesData?.doc.find(role => role._id === editingRoleId);
+        if (currentRole) {
+          setnewRole({
+            ...newRole,
+            permissions: currentRole.permissions
+          });
+        }
+      } else {
+        toast.error("Failed to update role permissions");
+      }
+    }
+  };
+
   const handleRoleDetails = async (userId, projectId, roleId) => {
     setDetailsModalOpen(true); // Open modal immediately
     setSelectedRole(null); // Clear previous data
@@ -181,20 +265,24 @@ function ProjectDetails() {
       </>
     );
   };
-
+  
   const handleCommentSubmit = (e) =>{
     e.preventDefault()
-    if(!commentText.trim()) return
+    if(!commentText.trim() && !replyText.trim()) return
     if (editingCommentId) {
       updateCommentMutation.mutate({
         commentId: editingCommentId,
         commentData: { comment: commentText },
-      });
+      })
+    }else if(replyingToCommentId){
+      handleReplySubmit(replyingToCommentId)
     } else {
       createCommentMutation.mutate({ comment: commentText });
     }
 
   }
+  
+
   const handleMenuOpen = (event, commentId) => {
     setAnchorEl(event.currentTarget);
     setSelectedCommentId(commentId);
@@ -215,6 +303,66 @@ function ProjectDetails() {
     deleteCommentMutation.mutate(selectedCommentId);
     handleMenuClose();
   }
+
+
+  const handleReplySubmit = (commentId) => {
+  if (!replyText.trim()) return
+  const newReply = {
+    user: { name: user.name, image: user.image || [] },
+    comment: replyText,
+    createdAt: new Date().toISOString(),
+  }
+  setReplies((prevReplies) => ({
+    ...prevReplies,
+    [commentId]: [...(prevReplies[commentId] || []), newReply],
+  }))
+  setReplyText("");
+  setReplyingToCommentId(null)
+}
+
+useEffect(() => {
+  if (!user || !projectId) return;
+  socket.on("comment-created", (newComment) => {
+    queryClient.invalidateQueries(["comments", projectId])
+    console.log("New comment received:", newComment)
+  })
+  socket.on("comment-updated", (updatedComment) => {
+    queryClient.invalidateQueries(["comments", projectId])
+    console.log("Comment updated:", updatedComment)
+  })
+  socket.on("comment-deleted", (commentId) => {
+    queryClient.invalidateQueries(["comments", projectId])
+    console.log("Comment deleted:", commentId);
+  })
+
+  // Add role-related socket events
+  socket.on("role-created", (newRole) => {
+    queryClient.invalidateQueries(["roles", projectId]);
+    console.log("New role created:", newRole);
+  });
+
+  socket.on("role-updated", (updatedRole) => {
+    queryClient.invalidateQueries(["roles", projectId]);
+    console.log("Role updated:", updatedRole);
+  });
+
+  socket.on("role-deleted", (roleId) => {
+    queryClient.invalidateQueries(["roles", projectId]);
+    console.log("Role deleted:", roleId);
+  });
+
+  return () => {
+    socket.off("comment-created");
+    socket.off("comment-updated");
+    socket.off("comment-deleted");
+    // Clean up role-related socket events
+    socket.off("role-created");
+    socket.off("role-updated");
+    socket.off("role-deleted");
+  };
+}, [user, projectId, queryClient])
+
+
 
   if (isLoading || rolesLoading) {
     return (
@@ -294,7 +442,7 @@ function ProjectDetails() {
             <div className="ml-16 pt-4">
             <Button
                 onClick={() => setShowComments(!showComments)}
-                className="!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !px-4 !py-2"
+                className="!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !mt-2 !mb-4 !px-6 !py-3"
               >
                 {showComments ? "Hide Comments" : "+ Comment"}
               </Button>
@@ -305,15 +453,19 @@ function ProjectDetails() {
                       <TextField
                         fullWidth
                         variant="outlined"
-                        placeholder="Add a comment..."
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
+                        placeholder={
+                          replyingToCommentId
+                          ? `reply to the comment...`
+                            : "Add a comment..."
+                          }
+                        value={replyingToCommentId ? replyText : commentText}
+                        onChange={(e) => replyingToCommentId ? setReplyText(e.target.value) : setCommentText(e.target.value)}
                         className="!rounded-xl"
                       />
                       <Button
                         type="submit"
                         disabled={
-                          !commentText.trim() ||
+                          (!commentText.trim() && !replyText.trim()) ||
                           createCommentMutation.isLoading ||
                           updateCommentMutation.isLoading
                         }
@@ -330,7 +482,7 @@ function ProjectDetails() {
                       {commentsData?.doc?.map((comment) => (
                         <div
                           key={comment._id}
-                          className="flex gap-3 p-3 bg-gray-100 rounded-xl"
+                          className="flex gap-3 items-start"
                         >
                           <Avatar
                             className="!w-10 !h-10"
@@ -342,19 +494,17 @@ function ProjectDetails() {
                           />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium">
-                                {comment.user?.name}
+                              <span className="font-medium text-gray-800">
+                                @{comment.user?.name.toLowerCase().replace(/\s+/g, "")}
                               </span>
                               <span className="text-sm text-gray-500">
                                 {DateTime.fromISO(comment.createdAt).toRelative()}
                               </span>
-                            </div>
-                            <p className="text-gray-800">{comment.comment}</p>
                             {comment.user._id === user._id && (
-                              <div className="flex-1 relative gap-2 mt-2">
+                              <div className="ml-auto">
                                 <Button
                                    onClick={(e) => handleMenuOpen(e,comment._id)}
-                                  className="!absolute !right-2 !text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
+                                  className="!text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
                                 >
                                      <MoreVertical className="w-5 h-5" />
                                </Button>
@@ -383,10 +533,52 @@ function ProjectDetails() {
                                   Delete
                                 </MenuItem>
                               </Menu>
-
-                  
                               </div>
                             )}
+                          </div>
+                            <p className="text-gray-800 text-sm mt-1">{comment.comment}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <button
+                                 onClick={() => {setReplyingToCommentId(comment._id)
+                                                setReplyText("")} } 
+                                  className="text-gray-500 text-sm hover:text-[#546FFF]"
+                                >
+                                  Reply
+                                </button>
+                                {replies[comment._id]?.length > 0 && (
+                                 <span className="text-[#546FFF] text-sm cursor-pointer">
+                                 {replies[comment._id].length} Replies
+                                 </span>
+                                )}
+                            </div>
+                            {replies[comment._id] && replies[comment._id].length > 0 && (
+                               <div className="ml-6 mt-2 space-y-2">
+                                 {replies[comment._id].map((reply, index) => (
+                                   <div key={index} className="flex gap-3 items-start">
+                                      <Avatar
+                                         className="!w-8 !h-8"
+                                          src={
+                                           reply.user?.image?.length
+                                          ? hostGoogleImage(reply.user.image[0].url)
+                                           : undefined
+                                          }
+                                       />
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-medium text-gray-800 text-sm">
+                                          @{reply.user?.name.toLowerCase().replace(/\s+/g, "")}
+                                       </span>
+                                       <span className="text-xs text-gray-500">
+                                        {DateTime.fromISO(reply.createdAt).toRelative()}
+                                       </span>
+                                      </div>
+                                      <p className="text-gray-800 text-sm mt-1">{reply.comment}</p>
+                                  </div>
+                                  </div>
+                                 ))}
+                                 </div>    
+                            )}
+
                           </div>
                         </div>  
                          ))} 
@@ -610,17 +802,8 @@ function ProjectDetails() {
                             </div>
                           </div>
                           <button
-                            type="button" // Add this attribute
-                            onClick={() => {
-                              const perms = newRole.permissions.includes(
-                                perm.value
-                              )
-                                ? newRole.permissions.filter(
-                                    (p) => p !== perm.value
-                                  )
-                                : [...newRole.permissions, perm.value];
-                              setnewRole({ ...newRole, permissions: perms });
-                            }}
+                            type="button"
+                            onClick={() => handlePermissionChange(perm.value)}
                             className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-600 ${
                               newRole.permissions.includes(perm.value)
                                 ? "bg-[#546FFF]"
@@ -707,6 +890,34 @@ function ProjectDetails() {
                   ) : (
                     "Delete"
                   )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showPermissionWarning && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white !rounded-xl p-6 w-[400px]">
+              <h2 className="text-xl font-medium mb-4">Warning: Removing Last Permission</h2>
+              <p className="mb-6 text-gray-600">
+                You are about to remove your last permission from this role. This will remove your access to this project.
+                Are you sure you want to continue?
+              </p>
+              <div className="flex justify-end gap-3">
+                <Button
+                  onClick={() => {
+                    setShowPermissionWarning(false);
+                    setPendingPermissionChange(null);
+                  }}
+                  className="!text-sm !capitalize !bg-gray-100 !text-gray-700 hover:!bg-gray-200 !h-9 !px-4 !rounded-[7px]"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleConfirmPermissionChange}
+                  className="!text-sm !capitalize !bg-red-600 hover:shadow-lg hover:shadow-red-500 hover:!bg-red-500 !text-white !h-9 !px-4 !rounded-[7px]"
+                >
+                  Continue
                 </Button>
               </div>
             </div>

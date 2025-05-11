@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
 import {
   Box,
@@ -30,6 +30,7 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { DateTime } from "luxon";
+import socket from "../../../utils/socket";
 
 function Projects() {
   const { user } = useAuthStore();
@@ -38,6 +39,7 @@ function Projects() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const queryClient = useQueryClient();
 
   const categories = [
     "UI/UX",
@@ -368,7 +370,52 @@ function Projects() {
     )
   }
 
-  
+  useEffect(() => {
+    if (!user) return;
+
+    const handleProjectCreated = (newProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return { doc: [newProject] };
+        return {
+          ...old,
+          doc: [...old.doc, newProject],
+        };
+      });
+    };
+
+    const handleProjectUpdated = (updatedProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.map((project) =>
+            project._id === updatedProject._id ? updatedProject : project
+          ),
+        };
+      });
+    };
+
+    const handleProjectDeleted = (deletedId) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.filter((project) => project._id !== deletedId),
+        };
+      });
+    };
+
+    socket.on("project-created", handleProjectCreated);
+    socket.on("project-updated", handleProjectUpdated);
+    socket.on("project-deleted", handleProjectDeleted);
+
+    return () => {
+      socket.off("project-created", handleProjectCreated);
+      socket.off("project-updated", handleProjectUpdated);
+      socket.off("project-deleted", handleProjectDeleted);
+    };
+  }, [user, queryClient]);
+
   return (
     <>
       <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">

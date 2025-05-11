@@ -20,8 +20,9 @@ API.interceptors.response.use(
   (error) => {
     const originalRequest = error.config;
 
+    // Handle 401 Unauthorized (session expired)
     if (
-      (error.response?.status === 401 || error.response?.status === 403) &&
+      error.response?.status === 401 &&
       !originalRequest._retry &&
       !originalRequest.url.includes("/signin") &&
       !originalRequest.url.includes("/signup")
@@ -30,6 +31,18 @@ API.interceptors.response.use(
       localStorage.removeItem("user");
       window.location.href = "/login";
       return Promise.reject("Session expired, please log in again.");
+    }
+
+    // Handle 403 Forbidden (permission denied)
+    if (
+      error.response?.status === 403 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/signin") &&
+      !originalRequest.url.includes("/signup")
+    ) {
+      originalRequest._retry = true;
+      // Instead of logging out, just reject with a permission error
+      return Promise.reject("You don't have permission to perform this action");
     }
 
     return Promise.reject(error);
