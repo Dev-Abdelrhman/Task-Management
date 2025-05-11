@@ -23,7 +23,7 @@
     },
     "verify-otp": {
       "method": "POST",
-      "url": "http://localhost:9999/depiV1/users/verify-otp",
+      "url": "http://localhost:9999/depiV1/users/verifyotp",
       "body": {
         "otp": "123456"
       }
