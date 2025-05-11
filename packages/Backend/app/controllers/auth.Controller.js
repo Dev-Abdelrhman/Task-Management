@@ -5,7 +5,6 @@ const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
 const passport = require("../strategies/google_Strategy.js");
-//______________________________________________________________________________
 const generateAccessToken = function (id) {
   return jwt.sign(
     {
@@ -17,7 +16,6 @@ const generateAccessToken = function (id) {
     }
   );
 };
-//______________________________________________________________________________
 const generateRefreshToken = function (id) {
   return jwt.sign(
     {
@@ -29,7 +27,6 @@ const generateRefreshToken = function (id) {
     }
   );
 };
-//______________________________________________________________________________
 const createSendToken = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -53,7 +50,6 @@ const createSendToken = (user, statusCode, res) => {
     user,
   });
 };
-//______________________________________________________________________________
 const signin = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -67,7 +63,8 @@ const signin = catchAsync(async (req, res, next) => {
   }
   createSendToken(user, 200, res);
 });
-//______________________________________________________________________________
+const tempUsers = new Map(); // email -> { name, username, passwordHash, image, otp, expiresAt }
+
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, password, passwordConfirmation } = req.body;
 
@@ -76,39 +73,77 @@ const signup = catchAsync(async (req, res, next) => {
     return next(new AppError("Email already exists", 400));
   }
 
-  if (req.files && req.files.length > 0) {
-    const uploadResults = await Promise.all(
-      req.files.map((file) =>
-        cloudinary.uploader.upload(file.path, {
-          resource_type: "auto",
-        })
-      )
-    );
+  if (password !== passwordConfirmation) {
+    return next(new AppError("Passwords do not match", 400));
+  }
 
-    req.body.image = uploadResults.map((result) => ({
-      public_id: result.public_id,
-      url: result.secure_url,
-      original_filename: result.original_filename,
-      format: result.format,
-    }));
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = Date.now() + 10 * 60 * 1000;
+
+  tempUsers.set(email, {
+    name,
+    username,
+    passwordHash,
+    image: req.files
+      ? req.files.map((file) => ({
+          public_id: file.public_id,
+          url: file.secure_url,
+          original_filename: file.original_filename,
+          format: file.format,
+        }))
+      : [],
+    otp,
+    expiresAt,
+  });
+  try {
+    await sendEmail({
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP is ${otp}. It expires in 10 minutes.`,
+    });
+
+    res
+      .status(200)
+      .json({ message: "OTP sent. Please verify to complete signup." });
+  } catch (error) {
+    tempUsers.delete(email);
+    return next(new AppError("Failed to send OTP", 500));
+  }
+});
+const verifyOTP = catchAsync(async (req, res, next) => {
+  const { otp } = req.body;
+  const email = tempUsers.email;
+  console.log(email);
+
+  const record = tempUsers.get(email);
+
+  if (!record) return next(new AppError("No OTP found for this email", 400));
+  if (Date.now() > record.expiresAt) {
+    tempUsers.delete(email);
+    return next(new AppError("OTP expired", 400));
+  }
+
+  if (record.otp !== otp) {
+    return next(new AppError("Invalid OTP", 400));
   }
 
   const newUser = await User.create({
-    name,
-    username,
+    name: record.name,
+    username: record.username,
     email,
-    password,
-    passwordConfirmation,
-    image: req.body.image,
+    password: record.passwordHash,
+    image: record.image,
   });
+
+  tempUsers.delete(email);
 
   createSendToken(newUser, 201, res);
 });
-//______________________________________________________________________________
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
-//______________________________________________________________________________
 const createSendToken_V2 = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -128,7 +163,6 @@ const createSendToken_V2 = (user, statusCode, res) => {
 
   res.redirect("http://localhost:5174/google-signin");
 };
-//______________________________________________________________________________
 const googleAuthCallback = (req, res, next) => {
   passport.authenticate(
     "google",
@@ -148,7 +182,6 @@ const googleAuthCallback = (req, res, next) => {
     }
   )(req, res, next);
 };
-//______________________________________________________________________________
 const completeGoogleSignup = catchAsync(async (req, res, next) => {
   const { token, username, password, passwordConfirmation } = req.body;
   if (!token) {
@@ -185,7 +218,6 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
 
   createSendToken(newUser, 201, res);
 });
-//______________________________________________________________________________
 const forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -216,7 +248,6 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
-//______________________________________________________________________________
 const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash("sha256")
@@ -240,9 +271,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken("", 200, res);
 });
-//______________________________________________________________________________
 const blacklist = new Set();
-//______________________________________________________________________________
 const logout = (req, res) => {
   const token = req.cookies.accessToken;
   const rToken = req.cookies.refreshToken;
@@ -267,7 +296,6 @@ const logout = (req, res) => {
 
   res.status(200).json({ message: "Logged out successfully" });
 };
-//______________________________________________________________________________
 const protect = catchAsync(async (req, res, next) => {
   let accessToken = req.cookies.accessToken;
   let refreshToken = req.cookies.refreshToken;
@@ -331,7 +359,6 @@ const protect = catchAsync(async (req, res, next) => {
     }
   );
 });
-//______________________________________________________________________________
 module.exports = {
   signin,
   signup,
@@ -342,4 +369,5 @@ module.exports = {
   logout,
   forgotPassword,
   resetPassword,
+  verifyOTP,
 };
