@@ -11,6 +11,7 @@ router.get("/google", generalLimiter, AC.googleAuth);
 router.get("/google/callback", generalLimiter, AC.googleAuthCallback);
 router.post("/continueSignUpWithGoogle", AC.completeGoogleSignup);
 router.post("/signup", authLimiter, AC.signup);
+router.post("/verifyotp", AC.verifyOTP);
 router.post("/signin", authLimiter, AC.signin);
 router.post("/forgotPassword", authLimiter, AC.forgotPassword);
 router.patch("/resetPassword/:token", authLimiter, AC.resetPassword);

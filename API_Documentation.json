@@ -21,6 +21,13 @@
         "image": "you will upload it"
       }
     },
+    "verify-otp": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/verify-otp",
+      "body": {
+        "otp": "123456"
+      }
+    },
     "LogOut": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/logout"
