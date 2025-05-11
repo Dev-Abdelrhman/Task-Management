@@ -5,11 +5,11 @@ const AppError = require("../utils/appError.js");
 const APIFeatures = require("../utils/apiFeatures.js");
 const upload = require("../utils/multer.js");
 const { emitEvent } = require("../utils/eventLogger.js");
-//________________________________________________________________________
+
 const uploader = (fieldName, maxCount) => {
   return upload.array(fieldName, maxCount);
 };
-//________________________________________________________________________
+
 const deleteOne = (Model, filterField) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findById(req.params.id);
@@ -37,13 +37,14 @@ const deleteOne = (Model, filterField) =>
       message: `Document deleted successfully.`,
     });
   });
-//________________________________________________________________________
-const updateOne = (Model, fieldName) =>
+
+const updateOne = (Model, folderName = "", fieldName) =>
   catchAsync(async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map((file) =>
         cloudinary.uploader.upload(file.path, {
           resource_type: "auto",
+          folder: folderName,
         })
       );
       const uploadedImages = await Promise.all(uploadPromises);
@@ -58,6 +59,7 @@ const updateOne = (Model, fieldName) =>
 
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
+      runValidators: true,
     });
 
     if (!doc) {
@@ -76,8 +78,8 @@ const updateOne = (Model, fieldName) =>
       doc,
     });
   });
-//________________________________________________________________________
-const createOne = (Model, fieldName, idField, idField2) =>
+
+const createOne = (Model, folderName = "", fieldName, idField, idField2) =>
   catchAsync(async (req, res, next) => {
     if (idField) {
       if (!get(req.body, idField)) {
@@ -94,6 +96,7 @@ const createOne = (Model, fieldName, idField, idField2) =>
         req.files.map((file) =>
           cloudinary.uploader.upload(file.path, {
             resource_type: "auto",
+            folder: folderName,
           })
         )
       );
@@ -119,7 +122,7 @@ const createOne = (Model, fieldName, idField, idField2) =>
       doc,
     });
   });
-//________________________________________________________________________
+
 const getOne = (Model, popOptions = []) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -141,7 +144,7 @@ const getOne = (Model, popOptions = []) =>
       doc,
     });
   });
-//________________________________________________________________________
+
 const getAll = (Model, filterField, popOptions = [], additionalFilter = {}) =>
   catchAsync(async (req, res, next) => {
     const filterValue = req.params.id || req.user?.id;
@@ -173,7 +176,7 @@ const getAll = (Model, filterField, popOptions = [], additionalFilter = {}) =>
       doc,
     });
   });
-//________________________________________________________________________
+
 const isOwner = (Model, ownerField) =>
   catchAsync(async (req, res, next) => {
     const resourceId = req.params.id;
@@ -188,7 +191,7 @@ const isOwner = (Model, ownerField) =>
 
     next(new AppError("You are not authorized to access this resource", 403));
   });
-//________________________________________________________________________
+
 const removeFile = (Model, fieldName) =>
   catchAsync(async (req, res, next) => {
     const publicId = req.body.public_id;
@@ -220,7 +223,7 @@ const removeFile = (Model, fieldName) =>
       data: { document },
     });
   });
-//________________________________________________________________________
+
 module.exports = {
   deleteOne,
   updateOne,

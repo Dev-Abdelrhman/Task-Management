@@ -14,9 +14,15 @@ const GetUserTasks = FC.getAll(Task, "owner", [], {
 
 const GetTasks = FC.getAll(Task, "project");
 const GetOneTask = FC.getOne(Task, { path: "comments" });
-const CreateTask = FC.createOne(Task, "image", "owner", "project");
+const CreateTask = FC.createOne(
+  Task,
+  "tasks_images",
+  "image",
+  "owner",
+  "project"
+);
 const DeleteTask = FC.deleteOne(Task);
-const UpdateTask = FC.updateOne(Task, "image");
+const UpdateTask = FC.updateOne(Task, "tasks_images", "image");
 
 module.exports = {
   isMine,

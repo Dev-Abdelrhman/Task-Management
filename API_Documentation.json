@@ -21,6 +21,13 @@
         "image": "you will upload it"
       }
     },
+    "verify-otp": {
+      "method": "POST",
+      "url": "http://localhost:9999/depiV1/users/verifyotp",
+      "body": {
+        "otp": "123456"
+      }
+    },
     "LogOut": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/logout"
@@ -57,10 +64,6 @@
         "password": "password",
         "passwordConfirmation": "password"
       }
-    },
-    "Get user info for auth": {
-      "method": "GET",
-      "url": "http://localhost:9999/depiV1/users/google/user"
     },
     "Get User Information for the profile ✅": {
       "method": "GET",
@@ -183,7 +186,9 @@
         "dueDate ✅": "Date",
         "members ✅": "will set automatically after add the invite logic to the project (soon)",
         "tasks ✅": "already added automatically",
-        "image ✅": "you will upload it"
+        "image ✅": "you will upload it",
+        "type ": "Private or Public",
+        "status": "Completed or In Progress or Overdue"
       }
     },
     "Update Project ✅": {
@@ -493,17 +498,17 @@
     "link": "https://dev-5353.postman.co/workspace/Task-Management~a3a42719-bae0-4214-ab6f-ca6de6f9100c/collection/34054185-f5df8a17-e015-4d2d-beac-a95a6b877b37?action=share&creator=34054185&active-environment=34054185-dc50f3d6-ff0d-4e16-b78c-456ee5b36bd7"
   },
   "Socket Events": {
-    "comment": {
+    "comment ✅": {
       "comment-deleted": "",
       "comment-updated": "",
       "comment-created": ""
     },
-    "role": {
+    "role ✅": {
       "role-deleted": "",
       "role-updated": "",
       "role-created": ""
     },
-    "task": {
+    "task ✅": {
       "task-deleted": "",
       "task-updated": "",
       "task-created": ""

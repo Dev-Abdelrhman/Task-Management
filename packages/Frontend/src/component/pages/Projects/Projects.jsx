@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import AddProjectBtn from "./AddProjectBtn";
 import ProjectOptionsMenu from "./ProjectOptionsMenu";
 import { useAuthStore } from "../../../stores/authStore";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserProjects } from "../../../api/project";
 import {
   Box,
@@ -30,6 +30,7 @@ import {
   CircleCheck,
 } from "lucide-react";
 import { DateTime } from "luxon";
+import socket from "../../../utils/socket";
 
 function Projects() {
   const { user } = useAuthStore();
@@ -38,6 +39,7 @@ function Projects() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const queryClient = useQueryClient();
 
   const categories = [
     "UI/UX",
@@ -166,6 +168,25 @@ function Projects() {
     return projects;
   }, [data, searchQuery, selectedCategory, sortOrder]);
 
+
+  const privateProjects = filteredProjects.filter(
+    (project) => project.memberCount <= 1 && project.progress < 100 
+  )
+  const publicProjects = filteredProjects.filter(
+    (project) => project.memberCount > 1 && project.progress < 100
+  )
+  const overdueProjects = filteredProjects.filter(
+    (project) =>
+      project.dueDate &&
+      DateTime.fromISO(project.dueDate) < DateTime.local() &&
+      project.progress < 100
+  )
+  const doneProjects = filteredProjects.filter(
+    (project) => project.progress === 100
+  )
+
+  
+
   const calculateDaysLeft = (dueDateString) => {
     if (!dueDateString) return "Error";
 
@@ -199,11 +220,206 @@ function Projects() {
       </>
     );
   };
+
   const dataLength = filteredProjects.length;
+
+  const renderProjectSection = (title, projects, swiperClass) => {
+    if (projects.length === 0) return null;
+    return (
+      <div className="bg-light d-flex align-items-center">
+        <div className="px-6 py-4">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">
+              {title}
+            </h2>
+            <div className="flex gap-2">
+              <IconButton
+                className={`${swiperClass}-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full`}
+              >
+                <ChevronLeft className="!w-6 !h-6" />
+              </IconButton>
+              <IconButton
+                className={`${swiperClass}-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full`}
+              >
+                <ChevronRight className="!w-6 !h-6" />
+              </IconButton>
+            </div>
+          </div>
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={16}
+            slidesPerView="auto"
+            navigation={{
+              prevEl: `.${swiperClass}-prev`,
+              nextEl: `.${swiperClass}-next`,
+            }}
+            breakpoints={{
+              640: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 2 },
+            }}
+            className="upcoming-task-swiper"
+          >
+          {projects.map((project, index) => (
+              <SwiperSlide key={index} className="!w-full sm:!w-auto">
+                <div
+                  className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
+                >
+                  <div
+                    className="my-1"
+                    onClick={() => handleClick(project._id)}
+                  >
+                    <Box
+                      component="img"
+                      src={
+                        project?.image?.[0]?.url ||
+                        "https://fakeimg.pl/1280x720?text=No+Image"
+                      }
+                      alt={project.title}
+                      sx={{
+                        width: "320px",
+                        height: 160,
+                        objectFit: "cover",
+                        borderRadius: 2,
+                        mb: 1.5,
+                      }}
+                      className="cursor-pointer select-none"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex justify-between p-0 m-0">
+                      <h3
+                        className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
+                        onClick={() => handleClick(project._id)}
+                      >
+                        {project.name}
+                      </h3>
+                      <ProjectOptionsMenu
+                        projectId={project._id}
+                        projectData={project}
+                      />
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-[#a0a0a0] mb-2">
+                      {project.category}
+                    </p>
+                    <Box className="mb-4">
+                      <Box className="flex justify-between mb-1">
+                        <Typography variant="body2 text-lg !mb-1">
+                          Progress
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          className="text-indigo-500 text-sm"
+                        >
+                          {project.progress}%
+                        </Typography>
+                      </Box>
+                      <LinearProgress
+                        variant="determinate"
+                        value={project.progress}
+                        className="!h-2 rounded-full"
+                        sx={{
+                          backgroundColor: "#f3f4f6",
+                          "& .MuiLinearProgress-bar": {
+                            backgroundImage:
+                              "linear-gradient(to right, #818cf8, #546FFF)",
+                            borderRadius: "9999px",
+                          },
+                        }}
+                      />
+                    </Box>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        {project.progress === 100 ? (
+                          <>
+                            <CircleCheck className="w-6 h-6 text-green-500" />
+                            <span className="text-green-500">Completed</span>
+                          </>
+                        ) : (
+                          <>{calculateDaysLeft(project.dueDate)}</>
+                        )}
+                      </div>
+                      <div className="flex -space-x-2">
+                        {project.members.map((pro) => (
+                          <div
+                            key={pro._id}
+                            className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                          >
+                            <img
+                              src={
+                                pro.user.image[0]?.url ||
+                                "https://fakeimg.pl/600x800?text=No+Image"
+                              }
+                              alt="Team member"
+                              width={24}
+                              height={24}
+                              className="object-cover select-none"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </div>  
+
+    )
+  }
+
+  useEffect(() => {
+    if (!user) return;
+
+    const handleProjectCreated = (newProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return { doc: [newProject] };
+        return {
+          ...old,
+          doc: [...old.doc, newProject],
+        };
+      });
+    };
+
+    const handleProjectUpdated = (updatedProject) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.map((project) =>
+            project._id === updatedProject._id ? updatedProject : project
+          ),
+        };
+      });
+    };
+
+    const handleProjectDeleted = (deletedId) => {
+      queryClient.setQueryData(["projects"], (old) => {
+        if (!old?.doc) return old;
+        return {
+          ...old,
+          doc: old.doc.filter((project) => project._id !== deletedId),
+        };
+      });
+    };
+
+    socket.on("project-created", handleProjectCreated);
+    socket.on("project-updated", handleProjectUpdated);
+    socket.on("project-deleted", handleProjectDeleted);
+
+    return () => {
+      socket.off("project-created", handleProjectCreated);
+      socket.off("project-updated", handleProjectUpdated);
+      socket.off("project-deleted", handleProjectDeleted);
+    };
+  }, [user, queryClient]);
+
   return (
     <>
-      <div className="bg-white dark:bg-[#121212] flex flex-col md:flex-row md:justify-between items-start md:items-center px-4 sm:px-6 pt-4 pb-6 gap-4">
-        <div className="relative w-full md:w-1/2">
+      <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">
+        <div className="relative w-1/2">
           <span className="absolute inset-y-0 left-[2px] flex items-center pl-3 ">
             <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
@@ -215,7 +431,7 @@ function Projects() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-  <div className="flex flex-wrap justify-start md:justify-end gap-4 items-center w-full md:w-auto">
+        <div className="flex justify-end gap-4 items-center mr-1">
           <AddProjectBtn />
           <Button
             variant="outlined"
@@ -274,315 +490,16 @@ function Projects() {
         </div>
       ) : isError ? (
         <div className="text-center text-red-500">Error: {error.message}</div>
-      ) : dataLength > 0 ? (
+      ): filteredProjects.length > 0 ?(
         <>
-          <div className="bg-light  d-flex align-items-center">
-            <div className="px-6 py-4">
-              <div className="d-flex justify-content-between align-items-center mt-3"></div>
-              <div className="w-full">
-                <div>
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">
-                      All Projects
-                    </h2>
-                    <div className="flex gap-2">
-                      <IconButton className="fslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                        <ChevronLeft className="!w-6 !h-6" />
-                      </IconButton>
-                      <IconButton className="fslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                        <ChevronRight className="!w-6 !h-6" />
-                      </IconButton>
-                    </div>
-                  </div>
-                  <Swiper
-                    modules={[Navigation]}
-                    spaceBetween={16}
-                    slidesPerView="auto"
-                    navigation={{
-                      prevEl: ".fslider-prev",
-                      nextEl: ".fslider-next",
-                    }}
-                    breakpoints={{
-                      640: {
-                        slidesPerView: 1,
-                      },
-                      768: {
-                        slidesPerView: 2,
-                      },
-                      1024: {
-                        slidesPerView: 2,
-                      },
-                    }}
-                    className="upcoming-task-swiper"
-                  >
-                    {filteredProjects.map((project, index) => (
-                      <SwiperSlide className="!w-full sm:!w-auto">
-                        <div
-                          key={index}
-                          className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
-                        >
-                          <div
-                            className="my-1"
-                            onClick={() => handleClick(project._id)}
-                          >
-                            <Box
-                              component="img"
-                              src={
-                                project?.image?.[0]?.url ||
-                                "https://fakeimg.pl/1280x720?text=No+Image"
-                              }
-                              alt={project.title}
-                              sx={{
-                                width: "320px",
-                                height: 160,
-                                objectFit: "cover",
-                                borderRadius: 2,
-                                mb: 1.5,
-                              }}
-                              className="cursor-pointer select-none"
-                            />
-                          </div>
-                          <div>
-                            <div className="flex  justify-between p-0 m-0">
-                              <h3
-                                className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
-                                onClick={() => handleClick(project._id)}
-                              >
-                                {project.name}
-                              </h3>
-                              <ProjectOptionsMenu
-                                projectId={project._id}
-                                projectData={project}
-                              />
-                            </div>
-                            <p className="text-sm text-gray-500 dark:text-[#a0a0a0] mb-2">
-                              {project.category}
-                            </p>
-
-                            <Box className="mb-4">
-                              <Box className="flex justify-between mb-1">
-                                <Typography variant="body2 text-lg !mb-1">
-                                  Progress
-                                </Typography>
-                                <Typography
-                                  variant="body2"
-                                  className="text-indigo-500 text-sm"
-                                >
-                                  {project.progress}%
-                                </Typography>
-                              </Box>
-                              <LinearProgress
-                                variant="determinate"
-                                value={project.progress}
-                                className="!h-2 rounded-full"
-                                sx={{
-                                  backgroundColor: "#f3f4f6",
-                                  "& .MuiLinearProgress-bar": {
-                                    backgroundImage:
-                                      "linear-gradient(to right, #818cf8, #546FFF)",
-                                    borderRadius: "9999px",
-                                  },
-                                }}
-                              />
-                            </Box>
-
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center gap-2">
-                                {project.progress === 100 ? (
-                                  <>
-                                    <CircleCheck className="w-6 h-6 text-green-500" />
-                                    <span className="text-green-500">
-                                      Completed
-                                    </span>
-                                  </>
-                                ) : (
-                                  <>{calculateDaysLeft(project.dueDate)}</>
-                                )}
-                              </div>
-                              <div className="flex -space-x-2">
-                                {project.members.map((pro) => (
-                                  <div
-                                    key={pro._id}
-                                    className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
-                                  >
-                                    <img
-                                      src={
-                                        pro.user.image[0]?.url ||
-                                        "https://fakeimg.pl/600x800?text=No+Image"
-                                      } // default image
-                                      alt="Team member"
-                                      width={24}
-                                      height={24}
-                                      className="object-cover select-none"
-                                    />
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-light d-flex align-items-center !pb-2">
-            <div className="px-6">
-              <div className="d-flex justify-content-between align-items-center mt-3"></div>
-              <div className="w-full">
-                {isLoading ? (
-                  <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
-                    <CircularProgress />
-                  </div>
-                ) : isError ? (
-                  <div className="text-center text-red-500">
-                    Error: {error.message}
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl font-medium">All Projects</h2>
-                      <div className="flex gap-2">
-                        <IconButton className="sslider-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                          <ChevronLeft className="!w-6 !h-6" />
-                        </IconButton>
-                        <IconButton className="sslider-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full">
-                          <ChevronRight className="!w-6 !h-6" />
-                        </IconButton>
-                      </div>
-                    </div>
-
-                    <Swiper
-                      modules={[Navigation]}
-                      spaceBetween={16}
-                      slidesPerView="auto"
-                      navigation={{
-                        prevEl: ".sslider-prev",
-                        nextEl: ".sslider-next",
-                      }}
-                      breakpoints={{
-                        640: {
-                          slidesPerView: 1,
-                        },
-                        768: {
-                          slidesPerView: 2,
-                        },
-                        1024: {
-                          slidesPerView: 2,
-                        },
-                      }}
-                      className="upcoming-task-swiper"
-                    >
-                      {filteredProjects.map((project, index) => (
-                        <SwiperSlide className="!w-full sm:!w-auto">
-                          <div
-                            key={index}
-                            className="bg-white p-4 rounded-xl border border-gray-200 transition-shadow duration-300 hover:hover:!shadow-lg ml-2 mb-4"
-                            onClick={() => handleClick(project._id)}
-                          >
-                            <div className="my-1">
-                              <Box
-                                component="img"
-                                src={
-                                  project?.image?.[0]?.url ||
-                                  "https://fakeimg.pl/1280x720?text=No+Image"
-                                }
-                                alt={project.title}
-                                sx={{
-                                  width: "320px",
-                                  height: 160,
-                                  objectFit: "cover",
-                                  borderRadius: 2,
-                                  mb: 1.5,
-                                }}
-                                className="cursor-pointer"
-                              />
-                            </div>
-                            <div>
-                              <div className="flex justify-between p-0 m-0">
-                                <div className="flex  justify-between p-0 m-0">
-                                  <h3
-                                    className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
-                                    onClick={() => handleClick(project._id)}
-                                  >
-                                    {project.name}
-                                  </h3>
-                                  <ProjectOptionsMenu
-                                    projectId={project._id}
-                                    projectData={project}
-                                  />
-                                </div>
-                              </div>
-                              <p className="text-sm text-gray-500 mb-2">
-                                {project.category}
-                              </p>
-
-                              <Box className="mb-4">
-                                <Box className="flex justify-between mb-1">
-                                  <Typography variant="body2 text-lg !mb-1">
-                                    Progress
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    className="text-indigo-500 text-sm"
-                                  >
-                                    {project.progress}%
-                                  </Typography>
-                                </Box>
-                                <LinearProgress
-                                  variant="determinate"
-                                  value={project.progress}
-                                  className="!h-2 rounded-full"
-                                  sx={{
-                                    backgroundColor: "#f3f4f6",
-                                    "& .MuiLinearProgress-bar": {
-                                      backgroundImage:
-                                        "linear-gradient(to right, #818cf8, #546FFF)",
-                                      borderRadius: "9999px",
-                                    },
-                                  }}
-                                />
-                              </Box>
-
-                              <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                  {calculateDaysLeft(project.dueDate)}
-                                </div>
-                                <div className="flex -space-x-2">
-                                  {project.members.map((pro) => (
-                                    <div
-                                      key={pro._id}
-                                      className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
-                                    >
-                                      <img
-                                        src={
-                                          pro.user.image[0]?.url ||
-                                          "https://fakeimg.pl/600x800?text=No+Image"
-                                        } // default image
-                                        alt="Team member"
-                                        width={24}
-                                        height={24}
-                                        className="object-cover"
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          {renderProjectSection("Private Projects", privateProjects, "private-swiper")}
+          {renderProjectSection("Public Projects", publicProjects, "public-swiper")}
+          {renderProjectSection("Overdue Projects", overdueProjects, "overdue-swiper")}
+          {renderProjectSection("Done Projects", doneProjects, "done-swiper")}
         </>
-      ) : (
+
+      ): (
+      
         <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
           <div className="flex justify-center items-center flex-col gap-7">
             <h2 className="text-6xl font-medium text-gray-500">

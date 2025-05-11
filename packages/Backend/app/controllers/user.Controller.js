@@ -1,3 +1,4 @@
+const cloudinary = require("../utils/cloudinary.js");
 const User = require("../models/user.Model.js");
 const FC = require("./Factory.Controller.js");
 const AppError = require("../utils/appError.js");
@@ -5,16 +6,6 @@ const catchAsync = require("../utils/catchAsync.js");
 
 const uploader = FC.uploader("image", 1);
 const removeImages = FC.removeFile(User, "image");
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) {
-      newObj[el] = obj[el];
-    }
-  });
-  return newObj;
-};
 
 const getMe = (req, res, next) => {
   req.params.id = req.user.id;
@@ -33,30 +24,46 @@ const getUser = catchAsync(async (req, res, next) => {
 
 const updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
-    return next(new AppError("You cannot update password here", 400));
+    return next(new AppError("Password update not allowed here", 400));
   }
 
-  const filteredBody = filterObj(req.body, "name", "username", "email");
-
-  if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "auto",
-    });
-
-    filteredBody.image = {
-      public_id: result.public_id,
-      url: result.secure_url,
-      original_filename: result.original_filename,
-      format: result.format,
-    };
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return next(new AppError("User not found", 404));
   }
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+  if (req.files && req.files.length > 0) {
+    if (user.image && Array.isArray(user.image)) {
+      const deletionPromises = user.image.map((img) =>
+        cloudinary.uploader.destroy(img.public_id)
+      );
+      await Promise.all(deletionPromises);
+    }
+
+    const uploadPromises = req.files.map((file) =>
+      cloudinary.uploader.upload(file.path, {
+        resource_type: "auto",
+        folder: "user_images",
+      })
+    );
+    const uploadedImages = await Promise.all(uploadPromises);
+
+    req.body.image = uploadedImages.map((img) => ({
+      url: img.secure_url,
+      public_id: img.public_id,
+      original_filename: img.original_filename,
+      format: img.format,
+    }));
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
+    runValidators: true,
   });
 
   res.status(200).json({
     status: "success",
+    message: "Profile updated successfully",
     data: updatedUser,
   });
 });

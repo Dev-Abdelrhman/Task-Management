@@ -1,12 +1,23 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
-import { useEffect } from "react";
-import { toast } from "react-toastify"
-import { getUserInfoForProfile, updateUserInfo, updateUserPassword } from "../../api/updateUserData";
+import React, { useState, useRef, useEffect } from "react";
+import { toast } from "react-toastify";
+import { CircularProgress, Button } from "@mui/material";
+import { Trash, Upload, X } from "lucide-react";
+import { useUser } from "../../hooks/useUserInfo";
+import { useAuthStore } from "../../stores/authStore";
 
 export default function Setting() {
+  const {
+    updateUser,
+    removeImage,
+    isRemovingImage,
+    useProfileUser,
+    isUpdating: isUserUpdating,
+    updatePassword: updateUserPassword,
+  } = useUser();
+  const { user } = useAuthStore();
+
+  const { data: userProfile } = useProfileUser();
   const [activeTab, setActiveTab] = useState("general");
-  const [timeFormat, setTimeFormat] = useState("24hours");
   const [theme, setTheme] = useState("light");
   const [passwordData, setPasswordData] = useState({
     passwordCurrent: "",
@@ -14,46 +25,87 @@ export default function Setting() {
     passwordConfirmation: "",
   });
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    username: ''
+    name: "",
+    email: "",
+    username: "",
+    image: [],
   });
-
+  const [imagePreview, setImagePreview] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await getUserInfoForProfile();
-        setUserData({
-          name: data.name,
-          email: data.email,
-          username: data.username,
-        });
-        console.log(data);
-
-      } catch (err) {
-        toast.error("Failed to fetch user info");
+    if (user) {
+      setUserData({
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        image: user.image || [],
+      });
+      if (user.image?.[0]?.url) {
+        setImagePreview(user.image[0].url);
+      } else {
+        setImagePreview(null);
       }
-    };
-
-    fetchUserData();
-  }, []);
-
+    }
+  }, [user]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
   }, []);
 
-  // useEffect(() => {
-  //   if (theme === "dark") {
-  //     document.documentElement.classList.add("dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //   }
-  //   localStorage.setItem("theme", theme);
-  // }, [theme]);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleRemoveImage = async () => {
+    if (!userData.image?.[0]?.public_id) return;
+
+    try {
+      await removeImage({
+        userID: user?._id,
+        public_id: userData.image[0].public_id,
+      });
+      setImagePreview(null);
+      setUserData((prev) => ({ ...prev, image: [] }));
+      toast.success("Profile image removed");
+      setShowImageModal(false);
+    } catch (err) {
+      toast.error("Failed to remove image");
+    }
+  };
+
+  const handleUpdateImage = async () => {
+    const formData = new FormData();
+    formData.append("name", userData.name);
+    formData.append("email", userData.email);
+    formData.append("username", userData.username);
+
+    if (fileInputRef.current?.files?.[0]) {
+      formData.append("image", fileInputRef.current.files[0]);
+    } else if (!imagePreview) {
+      toast.error("Please select an image first");
+      return;
+    }
+
+    try {
+      await updateUser(formData);
+      toast.success("Profile image updated successfully");
+      setShowImageModal(false);
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message || "Failed to update profile image"
+      );
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -77,60 +129,140 @@ export default function Setting() {
         password,
         passwordConfirmation,
       });
-
       toast.success("Password updated successfully");
-
-      // Clear fields
       setPasswordData({
         passwordCurrent: "",
         password: "",
         passwordConfirmation: "",
       });
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to update password";
-      toast.error(message);
+      toast.error(err?.response?.data?.message || "Failed to update password");
     }
   };
 
   const handleUpdateUserInfo = async () => {
     try {
-      await updateUserInfo(userData);
+      await updateUser({
+        name: userData.name,
+        email: userData.email,
+        username: userData.username,
+      });
       toast.success("Profile updated successfully");
     } catch (err) {
-      const message = err?.response?.data?.message || "Failed to update profile";
-      toast.error(message);
+      toast.error(err?.response?.data?.message || "Failed to update profile");
     }
   };
 
-
-
-
   return (
-    <div>
-      <div className="flex border-b mb-6 ">
+    <div className="bg-white dark:bg-[#121212]">
+      {/* Image Update Modal */}
+      {showImageModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-[#2D2D2D] rounded-lg shadow-md p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold dark:text-gray-200">
+                Update Profile Picture
+              </h3>
+              <button
+                onClick={() => setShowImageModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 mb-6">
+              <div className="w-32 h-32 rounded-full overflow-hidden relative border-2 border-gray-200 dark:border-gray-600">
+                <img
+                  src={
+                    imagePreview ||
+                    "https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
+                  }
+                  alt="Profile preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <input
+                type="file"
+                hidden
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+              />
+              <Button
+                onClick={() => fileInputRef.current.click()}
+                className="w-full !capitalize !text-base !text-white !py-2 hover- !bg-[#546FFF] hover:!shadow-lg hover:!shadow-[#546FFF]"
+                startIcon={<Upload className="w-4 h-4 !text-base" />}
+              >
+                Select Image
+              </Button>
+
+              {userData.image?.length > 0 && (
+                <Button
+                  onClick={handleRemoveImage}
+                  className="w-full !capitalize !text-base !text-white !py-2 !bg-red-600 hover:!bg-red-500 hover:!shadow-lg hover:!shadow-red-400"
+                  startIcon={<Trash className="w-4 h-4" />}
+                  disabled={isRemovingImage}
+                >
+                  {isRemovingImage ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    "Remove Image"
+                  )}
+                </Button>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button
+                onClick={() => setShowImageModal(false)}
+                variant="outlined"
+                className="dark:text-gray-200"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateImage}
+                variant="contained"
+                className="!bg-[#546FFF]"
+                disabled={isRemovingImage || !imagePreview}
+              >
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div className="flex border-b mb-6 bg-white dark:bg-[#121212]">
         <button
-          className={`px-4 py-3 text-sm font-medium relative ${activeTab === "general"
-            ? "text-indigo-600 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600"
-            : "text-gray-500"
-            }`}
+          className={`px-4 py-3 text-sm font-medium relative ${
+            activeTab === "general"
+              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+              : "text-gray-500 dark:text-gray-400"
+          }`}
           onClick={() => setActiveTab("general")}
         >
           General
         </button>
         <button
-          className={`px-4 py-3 text-sm font-medium relative ${activeTab === "notifications"
-            ? "text-indigo-600 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600"
-            : "text-gray-500"
-            }`}
+          className={`px-4 py-3 text-sm font-medium relative ${
+            activeTab === "notifications"
+              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+              : "text-gray-500 dark:text-gray-400"
+          }`}
           onClick={() => setActiveTab("notifications")}
         >
           Notification
         </button>
         <button
-          className={`px-4 py-3 text-sm font-medium relative ${activeTab === "security"
-            ? "text-indigo-600 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600"
-            : "text-gray-500"
-            }`}
+          className={`px-4 py-3 text-sm font-medium relative ${
+            activeTab === "security"
+              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+              : "text-gray-500 dark:text-gray-400"
+          }`}
           onClick={() => setActiveTab("security")}
         >
           Security & Privacy
@@ -138,17 +270,17 @@ export default function Setting() {
       </div>
 
       {activeTab === "general" && (
-        <div className="bg-white dark:bg-[#121212] dark:text-[#a0a0a0] rounded-lg shadow p-6 space-y-8 ">
+        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6 space-y-8">
           <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             <section className="w-full lg:w-1/2">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-400 mb-4">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
                 🛠️ Account Settings
               </h3>
               <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+                    className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
                   >
                     Change name
                   </label>
@@ -156,14 +288,16 @@ export default function Setting() {
                     type="text"
                     id="name"
                     value={userData.name || ""}
-                    onChange={(e) => setUserData({ ...userData, name: e.target.value })}
-                    className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-500 rounded border-gray-300  text-sm"
+                    onChange={(e) =>
+                      setUserData({ ...userData, name: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded border-gray-300 text-sm"
                   />
                 </div>
                 <div>
                   <label
                     htmlFor="username"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+                    className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
                   >
                     Change User Name
                   </label>
@@ -171,39 +305,50 @@ export default function Setting() {
                     type="text"
                     id="username"
                     value={userData.username || ""}
-                    onChange={(e) => setUserData({ ...userData, username: e.target.value })}
-                    className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-500 rounded border-gray-300  text-sm"
+                    onChange={(e) =>
+                      setUserData({ ...userData, username: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded border-gray-300 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
-                    Update profile picture
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    Profile Picture
                   </label>
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden">
+                    <div
+                      className="w-16 h-16 rounded-full overflow-hidden relative cursor-pointer border-2 border-gray-200 dark:border-gray-600"
+                      onClick={() => setShowImageModal(true)}
+                    >
                       <img
-                        src="https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
+                        src={
+                          imagePreview ||
+                          "https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
+                        }
                         alt="Profile"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <button className="px-4 py-2 border border-gray-300 rounded-md text-sm">
-                      Upload
-                    </button>
+                    <Button
+                      onClick={() => setShowImageModal(true)}
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:text-white"
+                    >
+                      Change Photo
+                    </Button>
                   </div>
                 </div>
               </div>
             </section>
 
             <section className="w-full lg:w-1/2">
-              <h3 className="text-lg font-medium text-gray-800 mb-4 dark:text-gray-400">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
                 Preferences
               </h3>
               <div className="space-y-4">
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+                    className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
                   >
                     Change email
                   </label>
@@ -211,16 +356,18 @@ export default function Setting() {
                     type="email"
                     id="email"
                     value={userData.email || ""}
-                    onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
+                    onChange={(e) =>
+                      setUserData({ ...userData, email: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1">
+                  <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
                     Theme
                   </label>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-600  dark:text-[#a0a0a0]">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                       Light
                     </span>
                     <label className="relative inline-block w-11 h-6">
@@ -228,14 +375,20 @@ export default function Setting() {
                         type="checkbox"
                         className="sr-only peer"
                         checked={theme === "dark"}
-                        onChange={() =>
-                          setTheme(theme === "light" ? "dark" : "light")
-                        }
+                        onChange={() => {
+                          const newTheme = theme === "light" ? "dark" : "light";
+                          setTheme(newTheme);
+                          localStorage.setItem("theme", newTheme);
+                          document.documentElement.classList.toggle(
+                            "dark",
+                            newTheme === "dark"
+                          );
+                        }}
                       />
                       <div className="peer-checked:bg-indigo-600 bg-gray-300 rounded-full w-11 h-6 transition-all"></div>
                       <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
                     </label>
-                    <span className="text-sm text-gray-600  dark:text-[#a0a0a0]">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
                       Dark
                     </span>
                   </div>
@@ -243,38 +396,46 @@ export default function Setting() {
               </div>
             </section>
           </div>
-          <div className="flex justify-end ">
-            <Button onClick={handleUpdateUserInfo} className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
-              Save Changes
+          <div className="flex justify-end">
+            <Button
+              onClick={handleUpdateUserInfo}
+              className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              disabled={isUserUpdating}
+            >
+              {isUserUpdating ? (
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </div>
         </div>
       )}
 
       {activeTab === "notifications" && (
-        <div className="bg-white dark:bg-[#121212] rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-400 mb-2">
+        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Notification Settings
           </h3>
-          <p className="text-sm text-gray-600 dark:text-[#a0a0a0]">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             Configure your notification preferences here.
           </p>
         </div>
       )}
-      {/* DONE */}
+
       {activeTab === "security" && (
-        <div className="bg-white dark:bg-[#121212] rounded-lg shadow p-6">
-          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-400 mb-2">
+        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6">
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Security Settings
           </h3>
-          <p className="text-sm text-gray-600 dark:text-[#a0a0a0]">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             Configure your security settings here.
           </p>
 
           <div className="mt-4">
             <label
-              htmlFor="password"
-              className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+              htmlFor="passwordCurrent"
+              className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
             >
               Current password
             </label>
@@ -283,58 +444,49 @@ export default function Setting() {
               name="passwordCurrent"
               value={passwordData.passwordCurrent}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border  border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 dark:focus:border-red-500 rounded text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded text-sm"
             />
           </div>
           <div className="mt-4">
             <label
               htmlFor="password"
-              className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+              className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
             >
-              Password
+              New Password
             </label>
             <input
               type="password"
               name="password"
               value={passwordData.password}
               onChange={handleInputChange}
-
-              className="w-full px-3 py-2 border  border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 dark:focus:border-red-500 rounded text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded text-sm"
             />
           </div>
           <div className="mt-4">
             <label
-              htmlFor="password"
-              className="block text-sm text-gray-600  dark:text-[#a0a0a0] mb-1"
+              htmlFor="passwordConfirmation"
+              className="block text-sm text-gray-600 dark:text-gray-300 mb-1"
             >
-              Password Confirmation
+              Confirm New Password
             </label>
             <input
               type="password"
               name="passwordConfirmation"
               value={passwordData.passwordConfirmation}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-500 rounded text-sm"
+              className="w-full px-3 py-2 border border-gray-300 dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded text-sm"
             />
           </div>
-          {/* </div> */}
           <div className="flex justify-end mt-4">
-            <Button onClick={handleUpdatePassword} className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl">
+            <Button
+              onClick={handleUpdatePassword}
+              className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+            >
               Save Changes
             </Button>
-
           </div>
-
-
-
-
-
-
-
-
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }

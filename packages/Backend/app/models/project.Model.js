@@ -102,12 +102,10 @@ const projectSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      // required: true,
       trim: true,
     },
     dueDate: {
       type: Date,
-      // required: true,
     },
     members: [
       {
@@ -154,20 +152,8 @@ projectSchema.virtual("type").get(function () {
   return this.memberCount > 1 ? "Public" : "Private";
 });
 
-projectSchema.virtual("roles", {
-  ref: "Role",
-  localField: "_id",
-  foreignField: "project",
-});
-
 projectSchema.virtual("tasks", {
   ref: "Task",
-  localField: "_id",
-  foreignField: "project",
-});
-
-projectSchema.virtual("comments", {
-  ref: "Comment",
   localField: "_id",
   foreignField: "project",
 });
@@ -179,6 +165,16 @@ projectSchema.virtual("progress").get(function () {
     (task) => task.status === "Completed"
   ).length;
   return Math.round((completedTasks / totalTasks) * 100);
+});
+
+projectSchema.virtual("status").get(function () {
+  if (this.progress === 100) {
+    return "Completed";
+  } else if (this.progress < 100) {
+    return "In Progress";
+  } else if (this.dueDate < Date.now()) {
+    return "Overdue";
+  }
 });
 
 projectSchema.pre(
