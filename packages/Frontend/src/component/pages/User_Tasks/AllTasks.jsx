@@ -24,10 +24,7 @@ import {
 } from "../../../api/user_tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
 import { Button } from "@mui/material";
-
-const socket = io("http://localhost:9999");
 
 const statusMap = {
   backlog: "Pending",
@@ -49,55 +46,11 @@ export default function AllTasks() {
   const [deleteModal, setDeleteModal] = useState({ show: false, taskId: null });
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [editingTask, setEditingTask] = useState(null); // New state for editing
+  const [editingTask, setEditingTask] = useState(null);
   const [taskDetailsModal, setTaskDetailsModal] = useState({
     show: false,
     task: null,
   });
-
-  useEffect(() => {
-    if (!data) return;
-
-    const handleNewTask = (task) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return { doc: [task] };
-        const exists = old.doc.some((t) => t._id === task._id);
-        return exists ? old : { ...old, doc: [...old.doc, task] };
-      });
-    };
-
-    const handleTaskUpdate = (updatedTask) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.map((task) =>
-            task._id === updatedTask._id ? updatedTask : task
-          ),
-        };
-      });
-    };
-
-    const handleTaskDeleted = (deletedId) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.filter((task) => task._id !== deletedId),
-        };
-      });
-    };
-
-    socket.on("taskCreated", handleNewTask);
-    socket.on("taskUpdated", handleTaskUpdate);
-    socket.on("taskDeleted", handleTaskDeleted);
-
-    return () => {
-      socket.off("taskCreated", handleNewTask);
-      socket.off("taskUpdated", handleTaskUpdate);
-      socket.off("taskDeleted", handleTaskDeleted);
-    };
-  }, [data, queryClient]);
 
   const mutation = useMutation({
     mutationFn: createTask,
@@ -125,7 +78,6 @@ export default function AllTasks() {
     },
     onSuccess: (data) => {
       toast.success("Task created successfully!");
-      socket.emit("taskCreated", data.doc);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (err, _, context) => {
@@ -138,7 +90,6 @@ export default function AllTasks() {
     mutationFn: deleteTask,
     onSuccess: (_, taskId) => {
       toast.success("Task deleted successfully!");
-      socket.emit("taskDeleted", taskId);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: () => toast.error("Failed to delete task!"),
@@ -147,8 +98,6 @@ export default function AllTasks() {
   const updateMutation = useMutation({
     mutationFn: ({ id, updates }) => updateTask(id, updates),
     onSuccess: (data) => {
-      // toast.success("Task updated successfully!");
-      socket.emit("taskUpdated", data.doc);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (err) => {
@@ -156,6 +105,7 @@ export default function AllTasks() {
       toast.error("Failed to update task!");
     },
   });
+
   const handleTaskClick = (task) => {
     if (task.title && task.description) {
       setTaskDetailsModal({ show: true, task });
@@ -163,6 +113,7 @@ export default function AllTasks() {
       fetchTaskDetails.mutate(task._id);
     }
   };
+
   const fetchTaskDetails = useMutation({
     mutationFn: (id) => getTaskById(id),
     onSuccess: (data) => {
@@ -195,18 +146,12 @@ export default function AllTasks() {
     }
     return {
       columns: statusColumns.map((col) => {
-        // const tasks = data.doc.filter(
-        //   (task) =>
-        //     task.status === col.status &&
-        //     task.title.toLowerCase().includes(searchTerm.toLowerCase())
-        // );
         const tasks = data.doc.filter(
           (task) =>
             task.status === col.status &&
             task.title &&
             task.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
         return { ...col, tasks, count: tasks.length };
       }),
     };
@@ -242,7 +187,6 @@ export default function AllTasks() {
     const [movedTask] = sourceTasks.splice(source.index, 1);
 
     if (sourceCol.id === destCol.id) {
-      // Reordering within same column
       sourceTasks.splice(destination.index, 0, movedTask);
 
       setBoardState((prev) => ({
@@ -255,7 +199,6 @@ export default function AllTasks() {
         }),
       }));
     } else {
-      // Moving to another column
       movedTask.status = statusMap[destination.droppableId];
       destTasks.splice(destination.index, 0, movedTask);
 
@@ -285,7 +228,7 @@ export default function AllTasks() {
 
   const openAddTaskModal = (columnId) => {
     setSelectedColumn(columnId);
-    setEditingTask(null); // Reset editing task when adding new
+    setEditingTask(null);
     setShowModal(true);
   };
 
@@ -304,13 +247,11 @@ export default function AllTasks() {
       }
 
       if (editingTask) {
-        // Update existing task
         await updateMutation.mutateAsync({
           id: editingTask._id,
           updates: taskData,
         });
       } else {
-        // Create new task
         await mutation.mutateAsync(taskData);
       }
 
@@ -378,11 +319,6 @@ export default function AllTasks() {
 
               {taskDetailsModal.task?.image && (
                 <div className="mb-6  ">
-                  {/* <img
-                    src={taskDetailsModal?.task?.image?.[0].url || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
-                    alt="Task"
-                    className="w-full h-auto rounded-xl"
-                  /> */}
                   <img
                     src={
                       taskDetailsModal.task?.image?.[0]?.url ||
@@ -553,8 +489,6 @@ export default function AllTasks() {
                     });
                   }}
                   className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
-
-                  // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
                 >
                   Delete
                 </Button>
