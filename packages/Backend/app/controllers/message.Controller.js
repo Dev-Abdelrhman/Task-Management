@@ -6,14 +6,13 @@ const FC = require("./Factory.Controller.js");
 const uploader = FC.uploader("images", 5);
 const mongoose = require("mongoose");
 
-// Helper function to upload images to Cloudinary
 const uploadImage = async (file) => {
   try {
     const result = await cloudinary.uploader.upload(file.path, {
       resource_type: "auto",
     });
 
-    fs.unlinkSync(file.path); // Cleanup
+    fs.unlinkSync(file.path);
 
     return {
       public_id: result.public_id,
@@ -23,17 +22,15 @@ const uploadImage = async (file) => {
     };
   } catch (error) {
     console.error("Cloudinary upload error:", error);
-    fs.unlinkSync(file.path); // Ensure cleanup on error
+    fs.unlinkSync(file.path);
     throw new Error("Failed to upload image");
   }
 };
 
-// Handle private message
 const handlePrivateMessage = async (io, userSocketMap, data) => {
   const { from, to, text, replyTo = null } = data;
   const images = data.images || [];
 
-  // Validate ObjectIds
   if (
     !mongoose.Types.ObjectId.isValid(from) ||
     !mongoose.Types.ObjectId.isValid(to)
@@ -43,7 +40,6 @@ const handlePrivateMessage = async (io, userSocketMap, data) => {
   }
 
   try {
-    // Validate image count
     if (images.length > 5) {
       throw new Error("Maximum 5 images allowed");
     }
@@ -57,13 +53,11 @@ const handlePrivateMessage = async (io, userSocketMap, data) => {
       throw new Error("Sender or receiver not found");
     }
 
-    // Upload images
     let imageData = [];
     if (images.length > 0) {
       imageData = await Promise.all(images.map(uploadImage));
     }
 
-    // Create message
     const message = await Message.create({
       from,
       to,
@@ -72,13 +66,11 @@ const handlePrivateMessage = async (io, userSocketMap, data) => {
       replyTo,
     });
 
-    // Populate message
     const populatedMessage = await Message.populate(message, {
       path: "from to replyTo",
-      populate: { path: "replyTo", populate: { path: "from to" } }, // Nested populate
+      populate: { path: "replyTo", populate: { path: "from to" } },
     });
 
-    // Emit to participants
     [userSocketMap[to], userSocketMap[from]].forEach((socketId) => {
       if (socketId) io.to(socketId).emit("messageReceived", populatedMessage);
     });
