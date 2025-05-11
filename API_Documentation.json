@@ -24,7 +24,9 @@
     "verify-otp": {
       "method": "POST",
       "url": "http://localhost:9999/depiV1/users/verify-otp",
-      "body": {}
+      "body": {
+        "otp": "123456"
+      }
     },
     "LogOut": {
       "method": "POST",

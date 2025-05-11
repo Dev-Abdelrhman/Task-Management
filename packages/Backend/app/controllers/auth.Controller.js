@@ -5,6 +5,7 @@ const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
 const passport = require("../strategies/google_Strategy.js");
+
 const generateAccessToken = function (id) {
   return jwt.sign(
     {
@@ -16,6 +17,7 @@ const generateAccessToken = function (id) {
     }
   );
 };
+
 const generateRefreshToken = function (id) {
   return jwt.sign(
     {
@@ -27,6 +29,7 @@ const generateRefreshToken = function (id) {
     }
   );
 };
+
 const createSendToken = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -50,6 +53,7 @@ const createSendToken = (user, statusCode, res) => {
     user,
   });
 };
+
 const signin = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -63,7 +67,8 @@ const signin = catchAsync(async (req, res, next) => {
   }
   createSendToken(user, 200, res);
 });
-const tempUsers = new Map(); // email -> { name, username, passwordHash, image, otp, expiresAt }
+const tempUsers = new Map();
+const otpToEmail = new Map();
 
 const signup = catchAsync(async (req, res, next) => {
   const { name, username, email, password, passwordConfirmation } = req.body;
@@ -77,15 +82,13 @@ const signup = catchAsync(async (req, res, next) => {
     return next(new AppError("Passwords do not match", 400));
   }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = Date.now() + 10 * 60 * 1000;
 
   tempUsers.set(email, {
     name,
     username,
-    passwordHash,
+    password,
     image: req.files
       ? req.files.map((file) => ({
           public_id: file.public_id,
@@ -94,9 +97,18 @@ const signup = catchAsync(async (req, res, next) => {
           format: file.format,
         }))
       : [],
+    passwordConfirmation,
     otp,
     expiresAt,
   });
+
+  otpToEmail.set(otp, email);
+
+  setTimeout(() => {
+    tempUsers.delete(email);
+    otpToEmail.delete(otp);
+  }, 10 * 60 * 1000);
+
   try {
     await sendEmail({
       to: email,
@@ -109,19 +121,23 @@ const signup = catchAsync(async (req, res, next) => {
       .json({ message: "OTP sent. Please verify to complete signup." });
   } catch (error) {
     tempUsers.delete(email);
+    otpToEmail.delete(otp);
     return next(new AppError("Failed to send OTP", 500));
   }
 });
+
 const verifyOTP = catchAsync(async (req, res, next) => {
   const { otp } = req.body;
-  const email = tempUsers.email;
-  console.log(email);
+
+  const email = otpToEmail.get(otp);
+  if (!email) return next(new AppError("Invalid OTP", 400));
 
   const record = tempUsers.get(email);
-
   if (!record) return next(new AppError("No OTP found for this email", 400));
+
   if (Date.now() > record.expiresAt) {
     tempUsers.delete(email);
+    otpToEmail.delete(otp);
     return next(new AppError("OTP expired", 400));
   }
 
@@ -133,17 +149,21 @@ const verifyOTP = catchAsync(async (req, res, next) => {
     name: record.name,
     username: record.username,
     email,
-    password: record.passwordHash,
+    password: record.password,
+    passwordConfirmation: record.passwordConfirmation,
     image: record.image,
   });
 
   tempUsers.delete(email);
+  otpToEmail.delete(otp);
 
   createSendToken(newUser, 201, res);
 });
+
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
+
 const createSendToken_V2 = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -163,6 +183,7 @@ const createSendToken_V2 = (user, statusCode, res) => {
 
   res.redirect("http://localhost:5174/google-signin");
 };
+
 const googleAuthCallback = (req, res, next) => {
   passport.authenticate(
     "google",
@@ -182,6 +203,7 @@ const googleAuthCallback = (req, res, next) => {
     }
   )(req, res, next);
 };
+
 const completeGoogleSignup = catchAsync(async (req, res, next) => {
   const { token, username, password, passwordConfirmation } = req.body;
   if (!token) {
@@ -218,6 +240,7 @@ const completeGoogleSignup = catchAsync(async (req, res, next) => {
 
   createSendToken(newUser, 201, res);
 });
+
 const forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -248,6 +271,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
+
 const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash("sha256")
@@ -271,7 +295,9 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken("", 200, res);
 });
+
 const blacklist = new Set();
+
 const logout = (req, res) => {
   const token = req.cookies.accessToken;
   const rToken = req.cookies.refreshToken;
@@ -296,6 +322,7 @@ const logout = (req, res) => {
 
   res.status(200).json({ message: "Logged out successfully" });
 };
+
 const protect = catchAsync(async (req, res, next) => {
   let accessToken = req.cookies.accessToken;
   let refreshToken = req.cookies.refreshToken;
@@ -359,6 +386,7 @@ const protect = catchAsync(async (req, res, next) => {
     }
   );
 });
+
 module.exports = {
   signin,
   signup,
