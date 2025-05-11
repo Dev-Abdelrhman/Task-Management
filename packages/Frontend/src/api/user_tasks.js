@@ -1,92 +1,34 @@
 import API from "./auth";
-const BASE_URL = "http://localhost:9999/depiV1";
+const BASE_URL = "http://localhost:9999/depiV1/tasks";
 
 // Get all user tasks
 export const getAllUserTasks = async () => {
-  try {
-    const res = await API.get(`${BASE_URL}/tasks/userTasks`, {
-      withCredentials: true,
-    });
-    return res.data;
-  } catch (error) {
-    console.error(
-      "Error fetching user tasks:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
+  const res = await API.get(`${BASE_URL}/userTasks`, { withCredentials: true });
+  return res.data;
 };
 
 // Create a new task
 export const createTask = async (taskData) => {
-  try {
-    console.log("Creating task:", taskData);
-
-    const res = await API.post(`${BASE_URL}/tasks`, taskData, {
-      withCredentials: true,
-    });
-    console.log("Task created successfully:", res.data);
-    return res.data;
-  } catch (error) {
-    console.error(
-      "Error creating task:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
+  const res = await API.post(`${BASE_URL}`, taskData, { withCredentials: true });
+  return res.data;
 };
 
 // Update a task
 export const updateTask = async (id, taskData) => {
-  try {
-    console.log("Updating task:", id, taskData);
-
-    const res = await API.patch(`${BASE_URL}/tasks/${id}`, taskData, {
-      withCredentials: true,
-    });
-    console.log("Task updated successfully:", res.data);
-    return res.data;
-  } catch (error) {
-    console.error(
-      "Error updating task:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
+  const res = await API.patch(`${BASE_URL}/${id}`, taskData, { withCredentials: true });
+  return res.data;
 };
-// http://localhost:9999/depiV1/tasks/:taskID
+
+// Get task by ID
 export const getTaskById = async (id) => {
-  try {
-    console.log("Fetching task by ID:", id);
-
-    const res = await API.get(`${BASE_URL}/tasks/${id}`, {
-      withCredentials: true,
-    });
-    console.log("Task fetched successfully:", res.data);
-    return res.data;
-  } catch (error) {
-    console.error(
-      "Error fetching task by ID:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
+  const res = await API.get(`${BASE_URL}/${id}`, { withCredentials: true });
+  return res.data;
 };
+
 // Delete a task
 export const deleteTask = async (id) => {
-  try {
-    console.log("Deleting task:", id);
-
-    const res = await API.delete(`${BASE_URL}/tasks/${id}`, {
-      withCredentials: true,
-    });
-    console.log("Task deleted successfully");
-    return res.data || {};
-  } catch (error) {
-    console.error(
-      "Error deleting task:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
+  const res = await API.delete(`${BASE_URL}/${id}`, { withCredentials: true });
+  return res.data;
 };
+
+export default API;
