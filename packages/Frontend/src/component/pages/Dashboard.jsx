@@ -332,7 +332,7 @@ export default function TaskordDashboard() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 "
           >
             <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 mb-8">
               {/* Running Task */}
@@ -616,16 +616,16 @@ export default function TaskordDashboard() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 dark:bg-[#252525] bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-4 "
           >
             {/* Calendar */}
-            <div className="bg-[#FFFFFF] p-4 rounded-xl">
-              <div className="flex justify-center items-center mb-2">
+            <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#535353] dark:text-gray-200">
+              <div className="flex justify-center items-center mb-2 ">
                 <h2 className="text-lg mb-2">{formatMonth(currentDate)}</h2>
               </div>
 
@@ -674,7 +674,7 @@ export default function TaskordDashboard() {
               </div>
             ) : (
               ProjectData?.doc && ProjectData.doc.length > 0 && (
-                <div className="bg-[#FFFFFF] p-4 rounded-xl">
+                <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#535353] dark:text-gray-200">
                   <div className="flex justify-between items-center mb-3">
                     <h2 className="text-lg font-medium">Latest Project</h2>
                     <button>
@@ -705,7 +705,7 @@ export default function TaskordDashboard() {
                       <h3 className="font-semibold text-lg mb-1 truncate">
                         {ProjectData.doc[0].name}
                       </h3>
-                      <p className="text-sm text-gray-500 mb-3">
+                      <p className="text-sm text-gray-500 dark:text-[#e5e7ebbb] mb-3">
                         {ProjectData.doc[0].category}
                       </p>
                       {/* {console.log(ProjectData)} */}
@@ -766,7 +766,7 @@ export default function TaskordDashboard() {
                   <div>
                     <div className="flex justify-between items-center mb-3">
                       <h2 className="text-lg font-medium">Project Task</h2>
-                      <span className="text-md text-gray-500">
+                      <span className="text-md text-gray-500 dark:text-[#e5e7ebbb]">
                         {ProjectData.doc[0].category}
                       </span>
                     </div>
@@ -775,7 +775,7 @@ export default function TaskordDashboard() {
                     <div className="space-y-4 mb-8">
                       {ProjectData?.doc[0]?.tasks?.slice(0, 3).map((task, i) => (
                         <div key={task._id} className="flex items-center gap-2">
-                          <div className="w-9 h-9 flex items-center justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
+                          <div className="w-9 h-9 flex items-center dark:text-[#546FFF] justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
                             {i + 1}
                           </div>
                           <div className="text-sm truncate">{task.title}</div>

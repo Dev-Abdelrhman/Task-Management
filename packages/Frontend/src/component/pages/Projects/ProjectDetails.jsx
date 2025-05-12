@@ -923,8 +923,8 @@ useEffect(() => {
             </div>
           </div>
         )}
-        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
-          <div className="bg-white w-[370px] rounded-xl mt-[70px] h-full p-5 flex-col gap-4 overflow-y-auto bottom-0">
+        <div className="hidden 2xl:flex dark:bg-[#252525] fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+          <div className="bg-white  w-[370px] rounded-xl dark:bg-[#252525] mt-[70px] h-full p-5 flex-col gap-4 overflow-y-auto bottom-0">
             <div className="flex justify-between items-center mb-4 gap-3">
               <div className="relative ">
                 <span className="absolute inset-y-0 right-6 flex items-center ">
@@ -947,7 +947,7 @@ useEffect(() => {
             </div>
             <div className="flex gap-1 flex-wrap">
               {rolesData?.doc.map((role) => (
-                <div
+                <div  
                   key={role._id}
                   className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer"
                 >
@@ -958,9 +958,9 @@ useEffect(() => {
                     ></div>
                     <p className="text-gray-800 cursor-pointer">{role.name}</p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center  gap-1">
                     <Pencil
-                      className="w-3 h-3 cursor-pointer"
+                      className="w-3 h-3 cursor-pointer  "
                       onClick={(e) => {
                         e.stopPropagation();
                         setnewRole({
@@ -991,12 +991,12 @@ useEffect(() => {
               ))}
             </div>
             <div className="mt-5 font-semibold text-2xl">
-              <h2 className="mb-4">Members - {project.memberCount}</h2>
+              <h2 className="mb-4 dark:text-gray-300">Members - {project.memberCount}</h2>
               <div className="flex-col gap-3">
                 {projectMembers.map((mem) => (
                   <div
                     key={mem.id}
-                    className="flex gap-2 mb-2 items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2"
+                    className="flex gap-2 mb-2 items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2 transition-all duration-300 hover:bg-gray-300 hover:translate-x-2"
                   >
                     <Avatar
                       className="!w-10 !h-10"
