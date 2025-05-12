@@ -24,10 +24,7 @@ import {
 } from "../../../api/user_tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
 import { Button } from "@mui/material";
-
-const socket = io("http://localhost:9999");
 
 const statusMap = {
   backlog: "Pending",
@@ -49,55 +46,11 @@ export default function AllTasks() {
   const [deleteModal, setDeleteModal] = useState({ show: false, taskId: null });
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [editingTask, setEditingTask] = useState(null); // New state for editing
+  const [editingTask, setEditingTask] = useState(null);
   const [taskDetailsModal, setTaskDetailsModal] = useState({
     show: false,
     task: null,
   });
-
-  useEffect(() => {
-    if (!data) return;
-
-    const handleNewTask = (task) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return { doc: [task] };
-        const exists = old.doc.some((t) => t._id === task._id);
-        return exists ? old : { ...old, doc: [...old.doc, task] };
-      });
-    };
-
-    const handleTaskUpdate = (updatedTask) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.map((task) =>
-            task._id === updatedTask._id ? updatedTask : task
-          ),
-        };
-      });
-    };
-
-    const handleTaskDeleted = (deletedId) => {
-      queryClient.setQueryData(["tasks"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.filter((task) => task._id !== deletedId),
-        };
-      });
-    };
-
-    socket.on("taskCreated", handleNewTask);
-    socket.on("taskUpdated", handleTaskUpdate);
-    socket.on("taskDeleted", handleTaskDeleted);
-
-    return () => {
-      socket.off("taskCreated", handleNewTask);
-      socket.off("taskUpdated", handleTaskUpdate);
-      socket.off("taskDeleted", handleTaskDeleted);
-    };
-  }, [data, queryClient]);
 
   const mutation = useMutation({
     mutationFn: createTask,
@@ -125,7 +78,6 @@ export default function AllTasks() {
     },
     onSuccess: (data) => {
       toast.success("Task created successfully!");
-      socket.emit("taskCreated", data.doc);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (err, _, context) => {
@@ -138,7 +90,6 @@ export default function AllTasks() {
     mutationFn: deleteTask,
     onSuccess: (_, taskId) => {
       toast.success("Task deleted successfully!");
-      socket.emit("taskDeleted", taskId);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: () => toast.error("Failed to delete task!"),
@@ -147,8 +98,6 @@ export default function AllTasks() {
   const updateMutation = useMutation({
     mutationFn: ({ id, updates }) => updateTask(id, updates),
     onSuccess: (data) => {
-      // toast.success("Task updated successfully!");
-      socket.emit("taskUpdated", data.doc);
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (err) => {
@@ -156,6 +105,7 @@ export default function AllTasks() {
       toast.error("Failed to update task!");
     },
   });
+
   const handleTaskClick = (task) => {
     if (task.title && task.description) {
       setTaskDetailsModal({ show: true, task });
@@ -163,6 +113,7 @@ export default function AllTasks() {
       fetchTaskDetails.mutate(task._id);
     }
   };
+
   const fetchTaskDetails = useMutation({
     mutationFn: (id) => getTaskById(id),
     onSuccess: (data) => {
@@ -195,18 +146,12 @@ export default function AllTasks() {
     }
     return {
       columns: statusColumns.map((col) => {
-        // const tasks = data.doc.filter(
-        //   (task) =>
-        //     task.status === col.status &&
-        //     task.title.toLowerCase().includes(searchTerm.toLowerCase())
-        // );
         const tasks = data.doc.filter(
           (task) =>
             task.status === col.status &&
             task.title &&
             task.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
-
         return { ...col, tasks, count: tasks.length };
       }),
     };
@@ -242,7 +187,6 @@ export default function AllTasks() {
     const [movedTask] = sourceTasks.splice(source.index, 1);
 
     if (sourceCol.id === destCol.id) {
-      // Reordering within same column
       sourceTasks.splice(destination.index, 0, movedTask);
 
       setBoardState((prev) => ({
@@ -255,7 +199,6 @@ export default function AllTasks() {
         }),
       }));
     } else {
-      // Moving to another column
       movedTask.status = statusMap[destination.droppableId];
       destTasks.splice(destination.index, 0, movedTask);
 
@@ -285,7 +228,7 @@ export default function AllTasks() {
 
   const openAddTaskModal = (columnId) => {
     setSelectedColumn(columnId);
-    setEditingTask(null); // Reset editing task when adding new
+    setEditingTask(null);
     setShowModal(true);
   };
 
@@ -304,13 +247,11 @@ export default function AllTasks() {
       }
 
       if (editingTask) {
-        // Update existing task
         await updateMutation.mutateAsync({
           id: editingTask._id,
           updates: taskData,
         });
       } else {
-        // Create new task
         await mutation.mutateAsync(taskData);
       }
 
@@ -340,14 +281,14 @@ export default function AllTasks() {
   return (
     <>
       {/* Nav */}
-      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#121212]  flex justify-between items-center">
+      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#080808]  flex justify-between items-center">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0  flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
           </span>
           <input
             type="search"
-            className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+            className="w-full pl-10 dark:text-white pr-4 py-4 dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search Project"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -361,10 +302,10 @@ export default function AllTasks() {
         </Button>
       </div>
       {/* Content */}
-      <div className="px-4 pb-4 pt-3 bg-gray-100 dark:bg-[#121212] min-h-screen ">
+      <div className="px-4 pb-4 pt-3 bg-gray-100 dark:bg-[#080808] min-h-screen ">
         {taskDetailsModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white w-[480px] rounded-[10px] dark:bg-[#1E1E1E] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
+            <div className="bg-white w-[480px] rounded-[10px] dark:!bg-[#1a1a1a] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
               <div className="flex justify-end items-center ">
                 <button
                   className="mb-3 dark:text-red-50"
@@ -378,15 +319,10 @@ export default function AllTasks() {
 
               {taskDetailsModal.task?.image && (
                 <div className="mb-6  ">
-                  {/* <img
-                    src={taskDetailsModal?.task?.image?.[0].url || "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"}
-                    alt="Task"
-                    className="w-full h-auto rounded-xl"
-                  /> */}
                   <img
                     src={
                       taskDetailsModal.task?.image?.[0]?.url ||
-                      "https://i.pinimg.com/736x/17/7c/3a/177c3ae33d13e79d79ac25d66b978a44.jpg"
+                      "https://fakeimg.pl/1280x720?text=No+Image"
                     }
                     alt="Task"
                     className="w-full h-auto rounded-xl"
@@ -553,8 +489,6 @@ export default function AllTasks() {
                     });
                   }}
                   className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
-
-                  // className="!text-base !capitalize !bg-red-500 !font-bold !text-white !py-2 !px-4 !rounded-lg"
                 >
                   Delete
                 </Button>
@@ -582,8 +516,8 @@ export default function AllTasks() {
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {boardState.columns.map((column) => (
               <div key={column.id} className="flex-shrink-0 w-[23%]">
-                <div className="rounded-[15px] bg-white  dark:bg-[#1E1E1E] shadow-sm">
-                  <div className="p-3 flex justify-between items-center border-b">
+                <div className="rounded-[15px] bg-white  dark:bg-[#1a1a1a] shadow-sm">
+                  <div className="p-3 flex justify-between items-center border-b dark:border-0">
                     <div className="flex items-center gap-2">
                       <span className="font-medium dark:text-white text-sm cursor-pointer">
                         {column.title}
@@ -595,8 +529,8 @@ export default function AllTasks() {
                             : column.id === "in-progress"
                             ? "bg-[#e5e747]"
                             : column.id === "done"
-                            ? "bg-red-500"
-                            : "bg-[#66d475]"
+                            ? "bg-[#66d475]"
+                            : "bg-red-500"
                         }`}
                       >
                         {column.count}
@@ -604,7 +538,7 @@ export default function AllTasks() {
                     </div>
                     <button
                       onClick={() => openAddTaskModal(column.id)}
-                      className="w-6 dark:text-white h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
+                      className="w-6 dark:text-white dark:border-0 dark:hover:bg-[#1a1a1a] h-6 flex items-center justify-center rounded-full hover:bg-gray-100 border"
                     >
                       <Plus size={16} />
                     </button>
@@ -629,7 +563,7 @@ export default function AllTasks() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border max-w-[350px] border-gray-200 dark:bg-[#2D2D2D] dark:border-gray-700 rounded-[12px] p-3 shadow-sm"
+                                  className="bg-white border max-w-[350px] border-gray-200 dark:bg-[#2D2D2D] dark:border-0 rounded-[12px] p-3 shadow-sm"
                                 >
                                   <div className="flex justify-between  items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
@@ -663,7 +597,7 @@ export default function AllTasks() {
                                       </button>
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2 truncate">
+                                  <p className="text-xs text-gray-500 dark:!text-gray-400 mb-2 truncate">
                                     {task.description?.split(" ").length > 5
                                       ? task.description
                                           .split(" ")
@@ -707,7 +641,7 @@ export default function AllTasks() {
 
         {deleteModal.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#1E1E1E] flex flex-col justify-center items-center">
+            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#080808] flex flex-col justify-center items-center">
               <CircleAlert size={40} color="#f8bb86" />
               <h2 className="text-gray-500 dark:text-gray-300 text-4xl font-medium mt-4 mb-4">
                 Delete Task

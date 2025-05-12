@@ -120,8 +120,6 @@ function Projects() {
     },
   });
 
-  console.log(data, "data");
-
   const handleClick = (projectId) => {
     navigate(`/projects/ProjectDetails/${projectId}`);
   };
@@ -168,24 +166,21 @@ function Projects() {
     return projects;
   }, [data, searchQuery, selectedCategory, sortOrder]);
 
-
   const privateProjects = filteredProjects.filter(
-    (project) => project.memberCount <= 1 && project.progress < 100 
-  )
+    (project) => project.memberCount <= 1 && project.progress < 100
+  );
   const publicProjects = filteredProjects.filter(
     (project) => project.memberCount > 1 && project.progress < 100
-  )
+  );
   const overdueProjects = filteredProjects.filter(
     (project) =>
       project.dueDate &&
       DateTime.fromISO(project.dueDate) < DateTime.local() &&
       project.progress < 100
-  )
+  );
   const doneProjects = filteredProjects.filter(
     (project) => project.progress === 100
-  )
-
-  
+  );
 
   const calculateDaysLeft = (dueDateString) => {
     if (!dueDateString) return "Error";
@@ -207,7 +202,7 @@ function Projects() {
     if (diff.days < 1) {
       return (
         <>
-          <Clock className="w-6 h-6 text-gray-500" />
+          <Clock className="w-6 h-6 text-gray-500 dark:!text-white" />
           <span>{Math.ceil(diff.hours)} Hours Left</span>
         </>
       );
@@ -215,7 +210,7 @@ function Projects() {
 
     return (
       <>
-        <Clock className="w-6 h-6 text-gray-500" />
+        <Clock className="w-6 h-6 text-gray-500 dark:!text-white" />
         <span>{Math.ceil(diff.days)} Days Left</span>
       </>
     );
@@ -226,7 +221,7 @@ function Projects() {
   const renderProjectSection = (title, projects, swiperClass) => {
     if (projects.length === 0) return null;
     return (
-      <div className="bg-light d-flex align-items-center">
+      <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
         <div className="px-6 py-4">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">
@@ -236,12 +231,12 @@ function Projects() {
               <IconButton
                 className={`${swiperClass}-prev !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full`}
               >
-                <ChevronLeft className="!w-6 !h-6" />
+                <ChevronLeft className="!w-6 !h-6 dark:!text-[#ffff]" />
               </IconButton>
               <IconButton
                 className={`${swiperClass}-next !w-10 !h-10 !border !border-[#F5F5F7] !rounded-full`}
               >
-                <ChevronRight className="!w-6 !h-6" />
+                <ChevronRight className="!w-6 !h-6 dark:!text-[#ffff]" />
               </IconButton>
             </div>
           </div>
@@ -260,11 +255,9 @@ function Projects() {
             }}
             className="upcoming-task-swiper"
           >
-          {projects.map((project, index) => (
+            {projects.map((project, index) => (
               <SwiperSlide key={index} className="!w-full sm:!w-auto">
-                <div
-                  className="bg-white p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4"
-                >
+                <div className="bg-white p-4 dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
                   <div
                     className="my-1"
                     onClick={() => handleClick(project._id)}
@@ -317,7 +310,7 @@ function Projects() {
                       <LinearProgress
                         variant="determinate"
                         value={project.progress}
-                        className="!h-2 rounded-full"
+                        className="!h-2 rounded-full dark:bg-[#3a3a3a]"
                         sx={{
                           backgroundColor: "#f3f4f6",
                           "& .MuiLinearProgress-bar": {
@@ -347,8 +340,11 @@ function Projects() {
                           >
                             <img
                               src={
-                                pro.user.image[0]?.url ||
-                                "https://fakeimg.pl/600x800?text=No+Image"
+                                Array.isArray(pro.user.image) &&
+                                pro.user.image.length > 0 &&
+                                pro.user.image[0]?.url
+                                  ? pro.user.image[0].url
+                                  : "https://fakeimg.pl/600x800?text=No+Image"
                               }
                               alt="Team member"
                               width={24}
@@ -365,10 +361,9 @@ function Projects() {
             ))}
           </Swiper>
         </div>
-      </div>  
-
-    )
-  }
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -418,14 +413,14 @@ function Projects() {
 
   return (
     <>
-      <div className="bg-white dark:bg-[#121212] flex justify-between items-center px-6 pt-2 pb-8 ">
+      <div className="bg-white dark:bg-[#080808] flex justify-between items-center px-6 pt-2 pb-8 ">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0 left-[2px] flex items-center pl-3 ">
             <Search className="h-5 w-5 text-[#8E92BC] " />
           </span>
           <input
             type="search"
-            className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+            className="w-full pl-10 pr-4 py-4 dark:text-white dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search Project"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -490,17 +485,27 @@ function Projects() {
         </div>
       ) : isError ? (
         <div className="text-center text-red-500">Error: {error.message}</div>
-      ): filteredProjects.length > 0 ?(
+      ) : data && filteredProjects?.length > 0 ? (
         <>
-          {renderProjectSection("Private Projects", privateProjects, "private-swiper")}
-          {renderProjectSection("Public Projects", publicProjects, "public-swiper")}
-          {renderProjectSection("Overdue Projects", overdueProjects, "overdue-swiper")}
+          {renderProjectSection(
+            "Private Projects",
+            privateProjects,
+            "private-swiper"
+          )}
+          {renderProjectSection(
+            "Public Projects",
+            publicProjects,
+            "public-swiper"
+          )}
+          {renderProjectSection(
+            "Overdue Projects",
+            overdueProjects,
+            "overdue-swiper"
+          )}
           {renderProjectSection("Done Projects", doneProjects, "done-swiper")}
         </>
-
-      ): (
-      
-        <div className="flex gap-5 flex-col w-full !mt-24 justify-center items-center">
+      ) : (
+        <div className="flex gap-5 dark:bg-[#080808] flex-col w-full !mt-24 justify-center items-center">
           <div className="flex justify-center items-center flex-col gap-7">
             <h2 className="text-6xl font-medium text-gray-500">
               No projects found

@@ -56,6 +56,7 @@ export const getUser = async () => {
   return { user };
 };
 export const signUp = (userData) => API.post("/signup", userData);
+export const vrifyEmail = async (otp) => API.post("/verifyotp", { otp }); // Verify email
 export const signIn = (credentials) => API.post("/signin", credentials);
 export const logout = () => API.post("/logout");
 export const forgotPassword = async (email) => {
