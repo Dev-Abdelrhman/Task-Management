@@ -381,9 +381,9 @@ export default function TaskordDashboard() {
               </div>
 
               {/* Activity */}
-              <div className="h-[250px] bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="h-[250px] bg-white dark:border-[#1c2841] dark:bg-[#1c2841] p-6 rounded-xl border border-gray-200 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-medium">Activity</h2>
+                  <h2 className="text-lg font-medium dark:text-white">Activity</h2>
                   <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md cursor-pointer">
                     <span>This Week</span>
                     <ChevronRight className="w-4 h-4" />
