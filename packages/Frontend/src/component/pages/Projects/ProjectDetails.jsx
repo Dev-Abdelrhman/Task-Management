@@ -460,7 +460,7 @@ useEffect(() => {
                           }
                         value={replyingToCommentId ? replyText : commentText}
                         onChange={(e) => replyingToCommentId ? setReplyText(e.target.value) : setCommentText(e.target.value)}
-                        className="!rounded-xl"
+                        className="rounded-xl dark:bg-gray-500 dark:text-red-300 "
                       />
                       <Button
                         type="submit"
@@ -469,7 +469,7 @@ useEffect(() => {
                           createCommentMutation.isLoading ||
                           updateCommentMutation.isLoading
                         }
-                        className="!bg-[#546FFF] !text-white !rounded-xl !p-2"
+                        className="!bg-[#546FFF] !p-4 !text-white !rounded-xl "
                       >
                         <Send className="w-5 h-5" />
                       </Button>
@@ -494,7 +494,7 @@ useEffect(() => {
                           />
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-800">
+                              <span className=" text-gray-800 font-semibold dark:text-[#a0a0a0] text-sm">
                                 @{comment.user?.name.toLowerCase().replace(/\s+/g, "")}
                               </span>
                               <span className="text-sm text-gray-500">
@@ -506,7 +506,7 @@ useEffect(() => {
                                    onClick={(e) => handleMenuOpen(e,comment._id)}
                                   className="!text-black !text-lg  !rounded-full  !p-2  !hover:bg-gray-200"
                                 >
-                                     <MoreVertical className="w-5 h-5" />
+                                     <MoreVertical className="w-5 h-5 dark:text-gray-400" />
                                </Button>
                                 <Menu
                                 anchorEl={anchorEl}
@@ -536,7 +536,7 @@ useEffect(() => {
                               </div>
                             )}
                           </div>
-                            <p className="text-gray-800 text-sm mt-1">{comment.comment}</p>
+                            <p className="text-gray-800 dark:text-gray-300 text-sm mt-1">{comment.comment}</p>
                             <div className="flex items-center gap-2 mt-1">
                               <button
                                  onClick={() => {setReplyingToCommentId(comment._id)
@@ -606,7 +606,7 @@ useEffect(() => {
                 selectedRole && (
                   <>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium mb-2 text-gray-700">
+                      <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-2 text-gray-700">
                         Role Name
                       </label>
                       <p className="text-gray-900 p-2 bg-gray-50 rounded-xl">
@@ -615,7 +615,7 @@ useEffect(() => {
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-sm font-medium mb-2 text-gray-700">
+                      <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-2 text-gray-700">
                         Role Color
                       </label>
                       <div className="flex items-center gap-2">
@@ -630,7 +630,7 @@ useEffect(() => {
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-sm font-medium mb-2 text-gray-700">
+                      <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-2 text-gray-700">
                         Permissions
                       </label>
                       <div className="flex flex-wrap items-center gap-2">
@@ -664,9 +664,9 @@ useEffect(() => {
           </div>
         )}
         {openModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white !rounded-xl p-6 w-[500px]">
-              <h2 className="text-2xl text-center font-medium mb-6">
+          <div className=" fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className=" dark:bg-[#121212] bg-white !rounded-xl p-6 w-[500px]">
+              <h2 className="text-2xl dark:text-gray-400 text-center font-medium mb-6">
                 {isEditing ? "Edit Role" : "Create Role"}
               </h2>
 
@@ -699,7 +699,7 @@ useEffect(() => {
                 }}
               >
                 <div className="mb-6">
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-2 text-gray-700">
                     ROLE NAME
                   </label>
                   <input
@@ -708,13 +708,13 @@ useEffect(() => {
                     value={newRole.name}
                     onChange={(e) => handleInputChange(e, setnewRole)}
                     placeholder="Enter role name"
-                    className="w-full p-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 w-full p-2 border rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
                 </div>
                 {/* Role Name Input */}
                 <div className="mb-6">
-                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                  <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-2 text-gray-700">
                     ROLE COLOR
                   </label>
                   <div className="flex items-center gap-3">
@@ -723,14 +723,14 @@ useEffect(() => {
                       name="color"
                       value={newRole.color}
                       onChange={handleInputChange}
-                      className="w-9 h-9 cursor-pointer "
+                      className="w-9 h-9 cursor-pointer dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 "
                     />
                     <input
                       type="text"
                       name="color"
                       value={newRole.color}
                       onChange={handleInputChange}
-                      className="w-32 p-2 border rounded-xl text-sm"
+                      className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 w-32 p-2 border rounded-xl text-sm"
                       placeholder="Hex color code"
                     />
                   </div>
@@ -739,7 +739,7 @@ useEffect(() => {
                 {/* Permissions Section */}
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-sm font-semibold text-gray-900">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-400">
                       PERMISSIONS
                     </h3>
                     <button
@@ -747,7 +747,7 @@ useEffect(() => {
                       onClick={() =>
                         setnewRole({ ...newRole, permissions: [] })
                       }
-                      className="text-xs text-blue-600 hover:text-blue-800"
+                      className="text-xs text-blue-600 dark:text-gray-400 hover:text-blue-800"
                     >
                       Clear permissions
                     </button>
@@ -755,7 +755,7 @@ useEffect(() => {
 
                   {/* Permissions List */}
                   <div className="space-y-4 max-h-64 overflow-y-auto">
-                    <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="bg-gray-50 dark:bg-[#2D2D2D] p-3 rounded-lg">
                       <h4 className="text-xs font-semibold text-gray-500 mb-2">
                         SERVER PERMISSIONS
                       </h4>
@@ -791,13 +791,13 @@ useEffect(() => {
                       ].map((perm) => (
                         <div
                           key={perm.value}
-                          className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md"
+                          className="flex items-center justify-between p-2 hover:bg-gray-100  dark:hover:bg-gray-700   rounded-md"
                         >
                           <div className="flex-1 mr-4">
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="dark:text-gray-500 text-sm font-medium text-gray-900">
                               {perm.label}
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
                               {perm.description}
                             </div>
                           </div>
@@ -837,7 +837,9 @@ useEffect(() => {
                       });
                     }}
                     variant="outlined"
-                    className="!text-base !py-2 !capitalize !border-gray-500  !font-medium !text-black !rounded-[10px]"
+                    className="!text-base !py-2 !capitalize !bg-[#f83131] hover:shadow-lg hover:shadow-red-700 !font-medium !text-white !rounded-[10px]"
+
+                    // className="!text-base !py-2 !capitalize !border-gray-500 dark:bg-red-700  dark:!text-white !font-medium !text-black !rounded-[10px]"
                   >
                     Cancel
                   </Button>
@@ -932,7 +934,7 @@ useEffect(() => {
                 </span>
                 <input
                   type="search"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 !rounded-[10px] focus:outline-none"
+                  className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 w-full pl-10 pr-4 py-2 border border-gray-200 !rounded-[10px] focus:outline-none"
                   placeholder="Search Members"
                   // value={searchQuery}
                   // onChange={(e) => setSearchQuery(e.target.value)}
