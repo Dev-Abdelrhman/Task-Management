@@ -27,16 +27,16 @@ import { Button } from "@mui/material";
 const socket = io("http://localhost:9999");
 
 const statusMap = {
-  pending: "Pending",
+  backlog: "Pending",
   todo: "Todo",
-  inprogress: "In Progress",
+  "in-progress": "In Progress",
   done: "Completed",
 };
 
 const statusColumns = [
-  { id: "pending", title: "PENDING", status: statusMap.pending },
+  { id: "backlog", title: "BACKLOG", status: statusMap.backlog },
   { id: "todo", title: "TODO", status: statusMap.todo },
-  { id: "in-progress", title: "IN PROGRESS", status: statusMap.inprogress },
+  { id: "in-progress", title: "IN PROGRESS", status: statusMap["in-progress"] },
   { id: "done", title: "DONE", status: statusMap.done },
 ];
 
@@ -95,24 +95,23 @@ const ProjectTasks = () => {
     console.log("Socket connecting");
 
     const handleNewTask = (task) => {
-      console.log("tas-created:", task)
-      queryClient.setQueryData(["projectTasks", user._id, projectId], old => {
-        console.log("tasksNow", old?.doc)
-        if (!old?.doc) return { doc: [task] }
-        const tempTask = old.doc.find(t => t._id.startsWith("temp-") && t.title === task.title)
+      console.log("tas-created:", task);
+      queryClient.setQueryData(["projectTasks", user._id, projectId], (old) => {
+        console.log("tasksNow", old?.doc);
+        if (!old?.doc) return { doc: [task] };
+        const tempTask = old.doc.find(
+          (t) => t._id.startsWith("temp-") && t.title === task.title
+        );
         if (tempTask) {
           return {
             ...old,
-            doc: old.doc.map(t => (t._id === tempTask._id ? task : t))
-          }
+            doc: old.doc.map((t) => (t._id === tempTask._id ? task : t)),
+          };
         }
-        const exists = old.doc.some(t => t._id === task._id)
-        return exists ? old : { ...old, doc: [...old.doc, task] }
+        const exists = old.doc.some((t) => t._id === task._id);
+        return exists ? old : { ...old, doc: [...old.doc, task] };
       });
     };
-
-
-
 
     const handleTaskUpdate = (updatedTask) => {
       queryClient.setQueryData(["projectTasks", user._id, projectId], (old) => {
@@ -348,14 +347,14 @@ const ProjectTasks = () => {
 
   return (
     <>
-      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#121212] flex justify-between items-center ">
+      <div className=" px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex justify-between items-center ">
         <div className="relative w-1/2">
           <span className="absolute inset-y-0  flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
           </span>
           <input
             type="search"
-            className="w-full pl-10 pr-4 py-4 border border-gray-200 !rounded-[10px] focus:outline-none"
+            className="w-full pl-10 dark:text-white pr-4 py-4 dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search tasks by title"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -368,7 +367,7 @@ const ProjectTasks = () => {
           Add Task
         </Button>
       </div>
-      <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#121212] min-h-screen rounded-[30px]">
+      <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px]">
         {showModal && (
           <AddProjectTask
             closeModal={() => setShowModal(false)}
@@ -384,7 +383,7 @@ const ProjectTasks = () => {
 
         {DetailsModal.show && DetailsModal.task && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white dark:bg-[#1E1E1E] w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
+            <div className="bg-white dark:bg-[#080808] w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
               <div className="flex justify-end items-center mb-4">
                 <button
                   onClick={() => setDetailsModal({ show: false, task: null })}
@@ -413,27 +412,32 @@ const ProjectTasks = () => {
                   </h2>
 
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium dark:text-gray-200 mb-1">Description :</h3>
+                    <h3 className="text-sm font-medium dark:text-gray-200 mb-1">
+                      Description :
+                    </h3>
                     <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
                       {DetailsModal.task.description ||
                         "No description provided"}
                     </p>
                   </div>
-                  <h6 class="text-sm font-medium dark:text-gray-200">Properties : </h6>
+                  <h6 class="text-sm font-medium dark:text-gray-200">
+                    Properties :{" "}
+                  </h6>
                   <div className="mb-4 flex gap-8 mt-3">
                     <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
                       Status
                     </h3>
                     <div className="flex items-center">
                       <span
-                        className={`px-3 py-1 rounded text-xs font-medium ${DetailsModal.task?.status === "Completed"
-                          ? "bg-green-100 text-green-800"
-                          : DetailsModal.task?.status === "In Progress"
+                        className={`px-3 py-1 rounded text-xs font-medium ${
+                          DetailsModal.task?.status === "Completed"
+                            ? "bg-green-100 text-green-800"
+                            : DetailsModal.task?.status === "In Progress"
                             ? "bg-yellow-100 text-yellow-800"
                             : DetailsModal.task?.status === "Todo"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
                       >
                         {DetailsModal.task.status}
                       </span>
@@ -456,12 +460,12 @@ const ProjectTasks = () => {
                       <Calendar className="mr-2" size={16} />
                       {DetailsModal.task.dueDate
                         ? new Date(
-                          DetailsModal.task.dueDate
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
+                            DetailsModal.task.dueDate
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
                         : "No due date"}
                     </div>
                   </div>
@@ -517,28 +521,29 @@ const ProjectTasks = () => {
           <div className="flex gap-8 overflow-x-auto pb-4 px-4">
             {board.columns.map((column) => (
               <div key={column.id} className="flex-shrink-0 w-[23%]">
-                <div className="rounded-[15px] dark:bg-[#1E1E1E] bg-white shadow-sm">
-                  <div className="p-3 flex justify-between items-center border-b">
+                <div className="rounded-[15px] dark:bg-[#1a1a1a] bg-white shadow-sm">
+                  <div className="p-3 flex justify-between items-center border-b dark:border-0">
                     <div className="flex items-center gap-2">
                       <span className="font-medium dark:text-white text-sm">
                         {column.title}
                       </span>
                       <span
-                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${column.id === "todo"
-                          ? "bg-[#65aaee]"
-                          : column.id === "in-progress"
+                        className={`text-white rounded-full w-6 h-6 flex items-center justify-center text-xs ${
+                          column.id === "todo"
+                            ? "bg-[#65aaee]"
+                            : column.id === "in-progress"
                             ? "bg-[#e5e747]"
                             : column.id === "done"
-                              ? "bg-red-500"
-                              : "bg-[#66d475]"
-                          }`}
+                            ? "bg-[#66d475]"
+                            : "bg-red-500"
+                        }`}
                       >
                         {column.count}
                       </span>
                     </div>
                     <button
                       onClick={() => openAddTaskModal(column.id)}
-                      className="w-6 h-6 dark:text-white flex items-center justify-center rounded-full hover:bg-gray-100 border"
+                      className="w-6 h-6 dark:text-white dark:border-0 dark:hover:bg-[#1a1a1a] flex items-center justify-center rounded-full hover:bg-gray-100 border"
                     >
                       <Plus size={16} />
                     </button>
@@ -563,7 +568,7 @@ const ProjectTasks = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white border dark:bg-[#2D2D2D] border-gray-200 rounded-[12px] p-3 shadow-sm max-w-[350px]"
+                                  className="bg-white border dark:bg-[#2D2D2D] dark:border-0 border-gray-200 rounded-[12px] p-3 shadow-sm max-w-[350px]"
                                 >
                                   <div className="flex justify-between items-start mb-3 border-b border-gray-200 pb-2">
                                     <h3
@@ -572,9 +577,9 @@ const ProjectTasks = () => {
                                     >
                                       {task.title.split(" ").length > 5
                                         ? task.title
-                                          .split(" ")
-                                          .slice(0, 5)
-                                          .join(" ") + "..."
+                                            .split(" ")
+                                            .slice(0, 5)
+                                            .join(" ") + "..."
                                         : task.title}
                                     </h3>
                                     <div className="flex">
@@ -597,13 +602,13 @@ const ProjectTasks = () => {
                                       </button>
                                     </div>
                                   </div>
-                                  <p className="text-xs text-gray-500 mb-2 truncate">
+                                  <p className="text-xs text-gray-500 dark:!text-gray-400 mb-2 truncate">
                                     {" "}
                                     {task.description?.split(" ").length > 5
                                       ? task.description
-                                        .split(" ")
-                                        .slice(0, 5)
-                                        .join(" ") + "..."
+                                          .split(" ")
+                                          .slice(0, 5)
+                                          .join(" ") + "..."
                                       : task.description}
                                   </p>
                                   <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -611,8 +616,8 @@ const ProjectTasks = () => {
                                     <span>
                                       {task.dueDate
                                         ? new Date(
-                                          task.dueDate
-                                        ).toLocaleDateString()
+                                            task.dueDate
+                                          ).toLocaleDateString()
                                         : "No date"}
                                     </span>
                                   </div>
@@ -636,8 +641,8 @@ const ProjectTasks = () => {
         </DragDropContext>
 
         {deleteModal.show && (
-          <div className="fixed inset-0 bg-black dark:bg-[#1E1E1E] bg-opacity-50 z-50 flex items-center justify-center">
-            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6  flex flex-col justify-center items-center">
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#080808]">
               <CircleAlert size={40} color="#f8bb86" />
               <h2 className="text-gray-500 text-4xl dark:text-gray-300 font-medium mt-4 mb-4">
                 Delete Task

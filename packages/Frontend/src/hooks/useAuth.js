@@ -9,6 +9,7 @@ import {
   ContinueSignUpWithGoogle,
   handleGoogleCallback,
   getUser,
+  vrifyEmail,
 } from "../api/auth";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "react-toastify";
@@ -49,6 +50,20 @@ export const useAuth = () => {
     },
     onError: (error) => {
       toast.error(handleError(error) || "Sign-up failed. Please try again.");
+    },
+  });
+
+  // Verify email mutation
+  const verifyEmailMutation = useMutation({
+    mutationFn: async (otp) => {
+      const response = await vrifyEmail(otp);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setUser(data.user);
+    },
+    onError: (error) => {
+      toast.error(handleError(error) || "Email verification failed.");
     },
   });
 
@@ -138,7 +153,8 @@ export const useAuth = () => {
     },
     onError: (error) => {
       toast.error(
-        handleError(error) || "Error completing Google signup. Please try again."
+        handleError(error) ||
+          "Error completing Google signup. Please try again."
       );
     },
   });
@@ -148,6 +164,7 @@ export const useAuth = () => {
     isAuthenticated: !!user,
     signIn: signInMutation.mutateAsync,
     signUp: signUpMutation.mutateAsync,
+    verifyEmail: verifyEmailMutation.mutateAsync,
     signOut: signOutMutation.mutateAsync,
     forgotPassword: forgotPasswordMutation.mutateAsync,
     resetPassword: resetPasswordMutation.mutateAsync,
@@ -160,10 +177,14 @@ export const useAuth = () => {
       signOutMutation.isPending ||
       forgotPasswordMutation.isPending ||
       continueWithGoogleMutation.isPending ||
-      handleGoogleCallbackMutation.isPending,
+      handleGoogleCallbackMutation.isPending ||
+      resetPasswordMutation.isPending ||
+      verifyEmailMutation.isPending ||
+      googleSignInMutation.isPending,
 
     signInError: signInMutation.error,
     signUpError: signUpMutation.error,
+    verifyEmailError: verifyEmailMutation.error,
     signOutError: signOutMutation.error,
     forgotPasswordError: forgotPasswordMutation.error,
     resetPasswordError: resetPasswordMutation.error,

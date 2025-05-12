@@ -240,7 +240,7 @@ function AddProjectBtn({
           onClick={handleClose}
         >
           <div
-            className="bg-white dark:bg-[#121212] !rounded-xl shadow-md p-6 w-full max-w-md"
+            className="bg-white dark:bg-[#080808] !rounded-xl shadow-md p-6 w-full max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between text-center items-center mb-4">
@@ -387,9 +387,15 @@ function AddProjectBtn({
                   disabled={isLoading || isDeletingImage}
                   className="w-full dark:text-gray-400 dark:bg-[#2D2D2D] dark:border-gray-500 p-2 py-3 border !rounded-[5px] text-sm focus:outline-gray-400"
                 >
-                  <option className="dark:text-gray-300" value="">Select a category</option>
+                  <option className="dark:text-gray-300" value="">
+                    Select a category
+                  </option>
                   {categories.map((category) => (
-                    <option key={category} className="dark:text-gray-300" value={category}>
+                    <option
+                      key={category}
+                      className="dark:text-gray-300"
+                      value={category}
+                    >
                       {category}
                     </option>
                   ))}

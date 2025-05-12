@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Avatar } from "@mui/material";
 import { Trash, Upload, X } from "lucide-react";
 import { useUser } from "../../hooks/useUserInfo";
 import { useAuthStore } from "../../stores/authStore";
@@ -154,11 +154,11 @@ export default function Setting() {
   };
 
   return (
-    <div className="bg-white dark:bg-[#121212]">
+    <div className="bg-white dark:bg-[#080808]">
       {/* Image Update Modal */}
       {showImageModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-[#2D2D2D] rounded-lg shadow-md p-6 w-full max-w-md">
+          <div className="bg-white dark:bg-[#080808] rounded-lg shadow-md p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold dark:text-gray-200">
                 Update Profile Picture
@@ -173,13 +173,10 @@ export default function Setting() {
 
             <div className="flex flex-col items-center gap-4 mb-6">
               <div className="w-32 h-32 rounded-full overflow-hidden relative border-2 border-gray-200 dark:border-gray-600">
-                <img
-                  src={
-                    imagePreview ||
-                    "https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
-                  }
+                <Avatar
+                  src={imagePreview}
                   alt="Profile preview"
-                  className="w-full h-full object-cover"
+                  className="!w-full !h-full object-cover"
                 />
               </div>
 
@@ -236,7 +233,7 @@ export default function Setting() {
       )}
 
       {/* Main Content */}
-      <div className="flex border-b mb-6 bg-white dark:bg-[#121212]">
+      <div className="flex border-b dark:border-0 ml-2 mb-6 bg-white dark:bg-[#080808]">
         <button
           className={`px-4 py-3 text-sm font-medium relative ${
             activeTab === "general"
@@ -270,7 +267,7 @@ export default function Setting() {
       </div>
 
       {activeTab === "general" && (
-        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6 space-y-8">
+        <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6 space-y-8">
           <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             <section className="w-full lg:w-1/2">
               <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
@@ -320,13 +317,10 @@ export default function Setting() {
                       className="w-16 h-16 rounded-full overflow-hidden relative cursor-pointer border-2 border-gray-200 dark:border-gray-600"
                       onClick={() => setShowImageModal(true)}
                     >
-                      <img
-                        src={
-                          imagePreview ||
-                          "https://i.pinimg.com/736x/dc/ad/ef/dcadef86f8c41981f097080463089bb9.jpg"
-                        }
+                      <Avatar
+                        src={imagePreview}
                         alt="Profile"
-                        className="w-full h-full object-cover"
+                        className="!w-full !h-full object-cover"
                       />
                     </div>
                     <Button
@@ -413,7 +407,7 @@ export default function Setting() {
       )}
 
       {activeTab === "notifications" && (
-        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Notification Settings
           </h3>
@@ -424,7 +418,7 @@ export default function Setting() {
       )}
 
       {activeTab === "security" && (
-        <div className="bg-white dark:bg-[#121212] dark:text-[#e0e0e0] rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6">
           <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Security Settings
           </h3>

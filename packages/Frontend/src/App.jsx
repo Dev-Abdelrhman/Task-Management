@@ -17,6 +17,7 @@ import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import AllTasks from "./component/pages/User_Tasks/AllTasks";
 import Settings from "./component/pages/Setting";
 import InviteManagement from "./component/pages/Invite/InviteManagement";
+import VerifyEmail from "./component/pages/auth/verifyEmail";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/sign-up/continue" element={<VerifyEmail />} />
           <Route path="/google-signup" element={<CompleteSigninGoogle />} />
           <Route path="/forget-password" element={<Forgetpassword />} />
           <Route path="/resetPassword/:token" element={<ResetPassword />} />

@@ -20,6 +20,16 @@ const SignUp = () => {
     passwordConfirmation: "",
   });
 
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
+  const usernameRegex =
+    /^(?=.{3,30}$)(?!.*[.]{2})[a-zA-Z0-9](?:[a-zA-Z0-9.]*[a-zA-Z0-9])?$/;
+
+  const getPasswordRequirements = () =>
+    "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character (@$!%?&).";
+  const getUsernameRequirements = () =>
+    "Username must be 3-30 characters, letters, numbers, dots (no consecutive dots, cannot start/end with dot).";
+
   //useAuth
   const { user, signUp, googleSignIn } = useAuth();
 
@@ -38,14 +48,23 @@ const SignUp = () => {
   const handleSubmit = async (e, action) => {
     e.preventDefault();
 
+    if (!usernameRegex.test(signUpData.username)) {
+      toast.error(getUsernameRequirements());
+      return;
+    }
+
+    if (!passwordRegex.test(signUpData.password)) {
+      toast.error(getPasswordRequirements());
+      return;
+    }
+
     if (signUpData.password !== signUpData.passwordConfirmation) {
       toast.error("Passwords do not match!");
       return;
     }
 
     await signUp(signUpData);
-    // console.log(`${action} successful:`, response);
-    navigate("/");
+    navigate("/sign-up/continue");
   };
   const handleGoogleSignIn = async () => {
     try {
