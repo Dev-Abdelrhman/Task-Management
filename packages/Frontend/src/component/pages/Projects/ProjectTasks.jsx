@@ -20,6 +20,7 @@ import {
   deleteTaskStatus,
 } from "../../../api/projectTasks";
 import AddProjectTask from "./AddProjectTask";
+import ProjectTasksDetails from "./ProjectTasksDetails";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 import { Button } from "@mui/material";
@@ -332,6 +333,17 @@ const ProjectTasks = () => {
     }
   };
 
+  const handleEditTask = (task) => {
+    setDetailsModal({ show: false, task: null });
+    setEditTask(task);
+    setShowModal(true);
+  };
+
+  const handleDeleteTask = (task) => {
+    setDetailsModal({ show: false, task: null });
+    setDeleteModal({ show: true, taskId: task._id });
+  };
+
   if (!user)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -355,7 +367,7 @@ const ProjectTasks = () => {
           <input
             type="search"
             className="w-full pl-10 dark:text-white pr-4 py-4 dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
-            placeholder="Search tasks by title"
+            placeholder="Search Project"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -368,153 +380,24 @@ const ProjectTasks = () => {
         </Button>
       </div>
       <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px]">
-        {showModal && (
-          <AddProjectTask
-            closeModal={() => setShowModal(false)}
-            onAddTask={handleAddTask}
-            editTask={editTask}
-            initialStatus={
-              selectedColumn
-                ? board.columns.find((col) => col.id === selectedColumn)?.status
-                : "Pending"
-            }
+        {DetailsModal.show && (
+          <ProjectTasksDetails
+            task={DetailsModal.task}
+            onClose={() => setDetailsModal({ show: false, task: null })}
+            onEdit={() => handleEditTask(DetailsModal.task)}
+            onDelete={() => handleDeleteTask(DetailsModal.task)}
           />
         )}
 
-        {DetailsModal.show && DetailsModal.task && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-            <div className="bg-white dark:bg-[#080808] w-[1000px] rounded-[10px] h-screen shadow-lg p-6 overflow-y-auto">
-              <div className="flex justify-end items-center mb-4">
-                <button
-                  onClick={() => setDetailsModal({ show: false, task: null })}
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              {DetailsModal.task.image && (
-                <div className="mb-4   ">
-                  <img
-                    src={
-                      DetailsModal.task.image ||
-                      "https://fakeimg.pl/1280x720?text=No+Image"
-                    }
-                    alt="Task"
-                    className="max-w-full h-auto rounded"
-                  />
-                </div>
-              )}
-
-              <div className="">
-                <div>
-                  <h2 className="text-xl dark:text-white font-bold mb-4">
-                    {DetailsModal.task.title}
-                  </h2>
-
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium dark:text-gray-200 mb-1">
-                      Description :
-                    </h3>
-                    <p className="text-gray-700 dark:text-[#a0a0a0] whitespace-pre-line">
-                      {DetailsModal.task.description ||
-                        "No description provided"}
-                    </p>
-                  </div>
-                  <h6 class="text-sm font-medium dark:text-gray-200">
-                    Properties :{" "}
-                  </h6>
-                  <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
-                      Status
-                    </h3>
-                    <div className="flex items-center">
-                      <span
-                        className={`px-3 py-1 rounded text-xs font-medium ${
-                          DetailsModal.task?.status === "Completed"
-                            ? "bg-green-100 text-green-800"
-                            : DetailsModal.task?.status === "In Progress"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : DetailsModal.task?.status === "Todo"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {DetailsModal.task.status}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mb-4 flex gap-8 mt-3">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
-                      priority
-                    </h3>
-                    <div className="flex items-center"></div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-4 flex gap-6">
-                    <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
-                      Due Date
-                    </h3>
-                    <div className="flex items-center text-gray-700 dark:text-[#a0a0a0]">
-                      <Calendar className="mr-2" size={16} />
-                      {DetailsModal.task.dueDate
-                        ? new Date(
-                            DetailsModal.task.dueDate
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
-                        : "No due date"}
-                    </div>
-                  </div>
-
-                  {DetailsModal.task.completedAt && (
-                    <div className="mb-4 ">
-                      <h3 className="text-sm font-medium dark:text-gray-200 text-gray-500 mb-1">
-                        Completed At
-                      </h3>
-                      <div className="flex items-center text-gray-700">
-                        <Calendar className="mr-2" size={16} />
-                        {new Date(
-                          DetailsModal.task.completedAt
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-2 mt-6">
-                <Button
-                  onClick={() => {
-                    setDetailsModal({ show: false, task: null });
-                    openModal(DetailsModal.task);
-                  }}
-                  className="!flex items-center justify-center gap-2 !text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
-                >
-                  Edit
-                </Button>
-                <Button
-                  onClick={() => {
-                    setDetailsModal({ show: false, task: null });
-                    setDeleteModal({
-                      show: true,
-                      taskId: DetailsModal.task._id,
-                    });
-                  }}
-                  className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </div>
+        {showModal && (
+          <AddProjectTask
+            closeModal={() => {
+              setShowModal(false);
+              setEditTask(null);
+            }}
+            onAddTask={handleAddTask}
+            editTask={editTask}
+          />
         )}
 
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -575,7 +458,7 @@ const ProjectTasks = () => {
                                       className="text-sm dark:text-gray-200 font-medium truncate"
                                       onClick={() => handleclickTask(task)}
                                     >
-                                      {task.title.split(" ").length > 5
+                                      {task.title?.split(" ").length > 5
                                         ? task.title
                                             .split(" ")
                                             .slice(0, 5)
@@ -657,14 +540,6 @@ const ProjectTasks = () => {
                 >
                   Cancel
                 </Button>
-                {/* <Button
-                onClick={() => {
-                  deleteMutation.mutate(deleteModal.taskId);
-                  setDeleteModal({ show: false, taskId: null });
-                }}
-                className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl">
-                Delete
-              </Button> */}
                 <Button
                   onClick={() => {
                     setIsDeleting(true);
