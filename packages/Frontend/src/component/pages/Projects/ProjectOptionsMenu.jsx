@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteProject } from "../../../api/project";
 import AddProjectBtn from "./AddProjectBtn";
 import ReactDOM from "react-dom";
-import { X } from "lucide-react";
+import { X, Ellipsis } from "lucide-react";
 import { useAuthStore } from "../../../stores/authStore";
 function ProjectOptionsMenu({ projectId, projectData }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -37,26 +37,26 @@ function ProjectOptionsMenu({ projectId, projectData }) {
     <div className="flex">
       <Button
         onClick={() => setShowMenu(!showMenu)}
-        className="!absolute !right-0 !text-black !text-lg  !rounded-full !w-1 !p-0 !mx-1 !hover:bg-gray-200"
+        className="!absolute !right-0 !text-black dark:!text-white !text-lg  !rounded-full !w-1 !p-0 !mx-1 !hover:bg-gray-200"
       >
-        •••
+        <Ellipsis />
       </Button>
 
       {showMenu && (
-        <div className="!absolute !right-0 !mx-3 !mt-8 !z-10 !w-31 !bg-white !shadow-md !rounded-[10px]">
+        <div className="!absolute !right-0 !mx-3 !mt-8 !z-10 !w-31 !bg-white dark:!bg-[#222222] !shadow-md !rounded-[10px]">
           <Button
             onClick={() => {
               setIsEditMode(true);
               setShowMenu(false);
             }}
-            className="block w-full px-3 py-2 text-sm !text-gray-700 hover:bg-gray-100"
+            className="block w-full px-3 py-2 text-sm dark:!text-white !text-gray-700 dark:hover:bg-[#222222] hover:bg-gray-100"
           >
             Edit
           </Button>
           <hr />
           <Button
             onClick={() => setShowForm(true)}
-            className="block w-full py-2 text-sm !text-red-500 hover:bg-gray-100"
+            className="block w-full py-2 text-sm !text-red-500 dark:hover:bg-[#222222] hover:bg-gray-100"
           >
             Delete
           </Button>

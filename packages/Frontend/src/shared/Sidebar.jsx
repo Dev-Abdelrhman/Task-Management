@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -37,12 +36,13 @@ function Sidebar() {
       )}
 
       <div
-        className={`w-64 fixed h-full bg-[#FFFFFF] dark:bg-[#252525] pt-4 z-40 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:block`}
+        className={`w-64 fixed h-full bg-[#FFFFFF] dark:bg-[#080808] pt-4 z-40 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:block`}
       >
         <div className="flex items-center justify-center gap-2 pt-4 mb-8">
           <img src={logo} alt="Logo" className="h-9 w-auto select-none" />
-          <h1 className="text-4xl select-none">Taskord</h1>
+          <h1 className="text-4xl select-none dark:text-white">Taskord</h1>
         </div>
 
         <nav className="h-full !flex justify-center gap-4 mx-4">
@@ -51,9 +51,10 @@ function Sidebar() {
               to="/home"
               end
               className={({ isActive }) =>
-                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -64,9 +65,10 @@ function Sidebar() {
             <NavLink
               to="/projects"
               className={({ isActive }) =>
-                `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -77,9 +79,10 @@ function Sidebar() {
             <NavLink
               to="/user-tasks"
               className={({ isActive }) =>
-                `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -90,9 +93,10 @@ function Sidebar() {
             <NavLink
               to="/invites"
               className={({ isActive }) =>
-                `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -103,9 +107,10 @@ function Sidebar() {
             <NavLink
               to="/tasks"
               className={({ isActive }) =>
-                `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -116,9 +121,10 @@ function Sidebar() {
             <NavLink
               to="/settings"
               className={({ isActive }) =>
-                `flex items-center pl-[20px] p-[10px] rounded-lg transition-colors  ${isActive
-                  ? "bg-gray-100 hover:text-[#141522] rounded-xl"
-                  : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl"
+                `flex items-center px-[20px] p-[10px] !pr-11  rounded-lg transition-colors  ${
+                  isActive
+                    ? "bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#1a1a1a] dark:text-white"
+                    : "text-[#8E92BC] hover:bg-gray-100 hover:text-[#141522] rounded-xl dark:bg-[#080808] dark:text-[#8E92BC] dark:hover:text-white dark:hover:bg-[#1a1a1a]"
                 }`
               }
             >
@@ -133,7 +139,7 @@ function Sidebar() {
                 <div className="w-10 h-10 bg-white flex items-center justify-center !rounded-full">
                   <HelpRoundedIcon
                     fontSize="large"
-                    className=" text-[#141522] !rounded-full"
+                    className=" text-[#141522] !rounded-full !w-16 !h-10 "
                   />
                 </div>
               </div>
@@ -141,9 +147,10 @@ function Sidebar() {
                 Help Center
               </h2>
               <p className="text-xs text-white mb-10">
-                Having Trouble in Learning. Please contact us for more questions.
+                Having Trouble in Learning. Please contact us for more
+                questions.
               </p>
-              <Button className=" !capitalize !py-3 !px-4  !w-full !shadow-sm !shadow-white !bg-white !text-gray-900 !rounded-xl">
+              <Button className=" !capitalize !py-3 !px-4 !w-full !shadow-sm !shadow-white !bg-white !text-gray-900 !rounded-xl">
                 Go To Help Center
               </Button>
             </div>

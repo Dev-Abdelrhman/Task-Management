@@ -7,6 +7,8 @@ import {
   MoreHorizontal,
   Mail,
   ChevronLeft,
+  Ban, // Added Ban icon
+  CircleCheck,
 } from "lucide-react";
 import {
   Button,
@@ -35,6 +37,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllUserTasks } from "../../api/user_tasks";
 import ProjectOptionsMenu from "./Projects/ProjectOptionsMenu";
+
 import {
   LineChart,
   Line,
@@ -46,6 +49,7 @@ import {
   Bar,
 } from "recharts";
 import socket from "../../utils/socket";
+import { DateTime } from "luxon"; // Added DateTime
 
 export default function TaskordDashboard() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -54,6 +58,41 @@ export default function TaskordDashboard() {
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const queryClient = useQueryClient();
+
+  // Add calculateDaysLeft function
+  const calculateDaysLeft = (dueDateString) => {
+    if (!dueDateString) return "Error";
+
+    const now = DateTime.local();
+    const dueDate = DateTime.fromISO(dueDateString).setZone("local");
+
+    if (dueDate < now) {
+      return (
+        <>
+          <Ban className="w-6 h-6 text-red-500" />
+          <span className="text-red-500">Overdue</span>
+        </>
+      );
+    }
+
+    const diff = dueDate.diff(now, ["days", "hours"]);
+
+    if (diff.days < 1) {
+      return (
+        <>
+          <Clock className="w-6 h-6 text-gray-500" />
+          <span>{Math.ceil(diff.hours)} Hours Left</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Clock className="w-6 h-6 text-gray-500" />
+        <span>{Math.ceil(diff.days)} Days Left</span>
+      </>
+    );
+  };
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -118,10 +157,7 @@ export default function TaskordDashboard() {
       return await getUserProjects(user._id);
     },
     enabled: !!user?._id,
-    initialData: { doc: [] }, // Initialize with empty array
   });
-
-  console.log(user, "UserData");
 
   const totalTasks = tasksData?.results || 0;
   const doneTasks =
@@ -154,6 +190,14 @@ export default function TaskordDashboard() {
   };
 
   const [currentDate, setCurrentDate] = React.useState(new Date());
+  const isDarkMode =
+    typeof window !== "undefined"
+      ? document.documentElement.classList.contains("dark")
+      : false;
+  const axisColor = isDarkMode ? "#ffffff" : "#9CA3AF"; // Light gray vs default
+  const chartBg = isDarkMode ? "#222222" : "#fff";
+  const lineColor = isDarkMode ? "#a5b4fc" : "#111827";
+  const dotFill = isDarkMode ? "#1c2841" : "#fff";
 
   const getWeekDays = () => {
     const today = new Date();
@@ -205,14 +249,18 @@ export default function TaskordDashboard() {
     const handleProjectCreated = (newProject) => {
       queryClient.setQueryData(["projects"], (old) => {
         if (!old?.doc) return { doc: [newProject] };
-        const tempProject = old.doc.find(p => p._id.startsWith("temp-") && p.name === newProject.name);
+        const tempProject = old.doc.find(
+          (p) => p._id.startsWith("temp-") && p.name === newProject.name
+        );
         if (tempProject) {
           return {
             ...old,
-            doc: old.doc.map(p => (p._id === tempProject._id ? newProject : p))
+            doc: old.doc.map((p) =>
+              p._id === tempProject._id ? newProject : p
+            ),
           };
         }
-        const exists = old.doc.some(p => p._id === newProject._id);
+        const exists = old.doc.some((p) => p._id === newProject._id);
         return exists ? old : { ...old, doc: [...old.doc, newProject] };
       });
     };
@@ -239,7 +287,6 @@ export default function TaskordDashboard() {
       });
     };
 
-    socket.on("connect", () => console.log("socket connected"));
     socket.on("project-created", handleProjectCreated);
     socket.on("project-updated", handleProjectUpdated);
     socket.on("project-deleted", handleProjectDeleted);
@@ -253,7 +300,7 @@ export default function TaskordDashboard() {
 
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#121212]">
+      <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#080808]">
         <Sidebar />
         {/* Main Content */}
         <div className="md:ml-[16rem] flex-1 h-full w-full p-8 2xl:pr-[490px]">
@@ -272,7 +319,7 @@ export default function TaskordDashboard() {
                 }}
                 size="large"
                 color="inherit"
-                className="w-12 h-12 !border !border-[#F5F5F7]"
+                className="w-12 h-12 !border !border-[#F5F5F7] dark:!border-0"
               >
                 <Badge badgeContent={1} color="error">
                   <Mail className="text-[#8E92BC]" />
@@ -282,7 +329,7 @@ export default function TaskordDashboard() {
                 sx={{
                   border: 1,
                 }}
-                className="relative w-12 h-12 !border !border-[#F5F5F7] !rounded-full"
+                className="relative w-12 h-12 !border !border-[#F5F5F7] dark:!border-0 !rounded-full"
               >
                 <Badge badgeContent={1} color="error">
                   <Bell className="text-[#8E92BC]" />
@@ -294,7 +341,7 @@ export default function TaskordDashboard() {
                     <Avatar
                       className="!w-12 !h-12 select-none"
                       src={
-                        user.image.length
+                        user.image?.length
                           ? hostGoogleImage(user.image[0].url)
                           : undefined
                       }
@@ -381,12 +428,13 @@ export default function TaskordDashboard() {
               </div>
 
               {/* Activity */}
-              <div className="h-[250px] bg-white dark:border-[#1c2841] dark:bg-[#1c2841] p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="h-[250px] bg-white dark:border-[#222222] dark:bg-[#222222] p-6 rounded-xl border border-gray-200 shadow-sm">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-lg font-medium dark:text-white">Activity</h2>
-                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-md cursor-pointer">
+                  <h2 className="text-lg font-medium dark:text-white">
+                    Activity
+                  </h2>
+                  <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-xl select-none">
                     <span>This Week</span>
-                    <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
                 <div className="relative h-[calc(100%-60px)]">
@@ -394,19 +442,23 @@ export default function TaskordDashboard() {
                     <LineChart
                       data={activityData}
                       margin={{ top: 20, right: 10, left: -20, bottom: 10 }}
+                      style={{
+                        background: chartBg,
+                        borderRadius: "12px",
+                      }}
                     >
                       <XAxis
                         dataKey="day"
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        tick={{ fontSize: 12, fill: axisColor }}
                         dy={10}
                       />
                       <YAxis
                         domain={[1, 3]}
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fontSize: 12, fill: "#9CA3AF" }}
+                        tick={{ fontSize: 12, fill: axisColor }}
                         dx={-10}
                       />
                       <RechartsTooltip
@@ -416,11 +468,11 @@ export default function TaskordDashboard() {
                       <Line
                         type="monotone"
                         dataKey="tasks"
-                        stroke="#111827"
+                        stroke={lineColor}
                         strokeWidth={3}
                         dot={{
                           r: 6,
-                          fill: "#fff",
+                          fill: dotFill,
                           stroke: "#4F46E5",
                           strokeWidth: 3,
                           filter: "drop-shadow(0 2px 6px #4F46E533)",
@@ -428,7 +480,7 @@ export default function TaskordDashboard() {
                         activeDot={{
                           r: 8,
                           fill: "#4F46E5",
-                          stroke: "#fff",
+                          stroke: dotFill,
                           strokeWidth: 3,
                           filter: "drop-shadow(0 2px 6px #4F46E533)",
                         }}
@@ -444,14 +496,14 @@ export default function TaskordDashboard() {
           {/* Latest Project */}
 
           {projectLoading ? (
-            <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
+            <div className="flex justify-center items-center h-96">
               <CircularProgress />
             </div>
           ) : isProjectsError ? (
             <div className="text-center text-red-500">
               Error: {projectsError.message}
             </div>
-          ) : ProjectData?.doc && Array.isArray(ProjectData.doc) && ProjectData.doc.length > 0 ? (
+          ) : ProjectData?.doc && ProjectData.doc.length > 0 ? (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-medium dark:text-white">
@@ -459,10 +511,10 @@ export default function TaskordDashboard() {
                 </h2>
                 <div className="flex gap-2">
                   <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronLeft className="w-5 h-5 dark:text-gray-500" />
+                    <ChevronLeft className="w-5 h-5 dark:!text-[#ffff]" />
                   </IconButton>
                   <IconButton className="slider-next !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
-                    <ChevronRight className="w-5 h-5 dark:text-gray-500" />
+                    <ChevronRight className="w-5 h-5 dark:!text-[#ffff]" />
                   </IconButton>
                 </div>
               </div>
@@ -489,7 +541,7 @@ export default function TaskordDashboard() {
               >
                 {(ProjectData.doc || []).slice(0, 4).map((project, index) => (
                   <SwiperSlide key={project._id} className="!w-full sm:!w-auto">
-                    <div className="bg-white max-w-[350px] p-4 dark:bg-[#1E1E1E] dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
+                    <div className="bg-white max-w-[350px] p-4 dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg ml-2 mb-4">
                       <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -525,7 +577,11 @@ export default function TaskordDashboard() {
                         <div className="flex justify-between p-0 m-0">
                           <h3
                             className="font-medium text-lg cursor-pointer max-w-[280px] truncate"
-                            onClick={() => navigate(`/projects/ProjectDetails/${project._id}`)}
+                            onClick={() =>
+                              navigate(
+                                `/projects/ProjectDetails/${project._id}`
+                              )
+                            }
                           >
                             {project.name}
                           </h3>
@@ -553,7 +609,7 @@ export default function TaskordDashboard() {
                           <LinearProgress
                             variant="determinate"
                             value={project.progress}
-                            className="!h-2 rounded-full"
+                            className="!h-2 rounded-full dark:bg-[#3a3a3a]"
                             sx={{
                               backgroundColor: "#f3f4f6",
                               "& .MuiLinearProgress-bar": {
@@ -567,8 +623,16 @@ export default function TaskordDashboard() {
 
                         <div className="flex justify-between items-center">
                           <div className="flex items-center gap-2">
-                            <Clock className="w-6 h-6 text-gray-500" />
-                            <span>{project.daysLeft} Days Left</span>
+                            {project.progress === 100 ? (
+                              <>
+                                <CircleCheck className="w-6 h-6 text-green-500" />
+                                <span className="text-green-500">
+                                  Completed
+                                </span>
+                              </>
+                            ) : (
+                              calculateDaysLeft(project.dueDate)
+                            )}
                           </div>
                           <div className="flex -space-x-2">
                             {project.members?.map((pro) => (
@@ -616,7 +680,8 @@ export default function TaskordDashboard() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 dark:bg-[#252525] bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+        <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 dark:bg-[#080808] dark:border-0 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+          {" "}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -624,11 +689,11 @@ export default function TaskordDashboard() {
             className="flex flex-col gap-4 "
           >
             {/* Calendar */}
-            <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#535353] dark:text-gray-200">
+            <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#1a1a1a] dark:text-gray-200">
+              {" "}
               <div className="flex justify-center items-center mb-2 ">
                 <h2 className="text-lg mb-2">{formatMonth(currentDate)}</h2>
               </div>
-
               <div className="grid grid-cols-7 gap-2 text-center">
                 {getWeekDays().map((date, index) => {
                   const isCurrentDay = isToday(date);
@@ -637,13 +702,15 @@ export default function TaskordDashboard() {
                       key={index}
                       className={`relative flex flex-col gap-3 items-center justify-center w-11 h-full rounded-full p-2 ${
                         isCurrentDay
-                          ? "bg-[#141522] text-white"
-                          : "text-[#141522]"
+                          ? "bg-[#000000] text-white"
+                          : "text-[#141522] dark:!text-white"
                       }`}
                     >
                       <span
                         className={`text-sm font-medium ${
-                          isCurrentDay ? "text-white" : "text-[#141522]"
+                          isCurrentDay
+                            ? "text-white"
+                            : "text-[#141522] dark:text-white"
                         }`}
                       >
                         {["S", "M", "T", "W", "T", "F", "S"][date.getDay()]}
@@ -665,7 +732,7 @@ export default function TaskordDashboard() {
 
             {/* Task Today */}
             {projectLoading ? (
-              <div className="flex fixed top-0 left-0 w-full h-full justify-center items-center">
+              <div className="flex !justify-center !items-center">
                 <CircularProgress />
               </div>
             ) : isProjectsError ? (
@@ -673,15 +740,13 @@ export default function TaskordDashboard() {
                 Error: {projectsError.message}
               </div>
             ) : (
-              ProjectData?.doc && ProjectData.doc.length > 0 && (
-                <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#535353] dark:text-gray-200">
+              ProjectData?.doc &&
+              ProjectData.doc.length > 0 && (
+                <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#1a1a1a] dark:text-gray-200">
+                  {" "}
                   <div className="flex justify-between items-center mb-3">
                     <h2 className="text-lg font-medium">Latest Project</h2>
-                    <button>
-                      <MoreHorizontal className="w-5 h-5 text-[#141522]" />
-                    </button>
                   </div>
-
                   <div className="rounded-xl overflow-hidden mb-4">
                     <div className="mb-3">
                       <Box
@@ -708,10 +773,9 @@ export default function TaskordDashboard() {
                       <p className="text-sm text-gray-500 dark:text-[#e5e7ebbb] mb-3">
                         {ProjectData.doc[0].category}
                       </p>
-                      {/* {console.log(ProjectData)} */}
                       <Box className="mb-3">
                         <Box className="flex justify-between mb-1">
-                          <Typography variant="body2 !text-lg ">
+                          <Typography variant="body2 !text-lg !mb-1">
                             Progress
                           </Typography>
                           <Typography
@@ -724,7 +788,7 @@ export default function TaskordDashboard() {
                         <LinearProgress
                           variant="determinate"
                           value={ProjectData.doc[0].progress}
-                          className="!h-2 rounded-full"
+                          className="!h-2 rounded-full dark:bg-[#3a3a3a]"
                           sx={{
                             backgroundColor: "#f3f4f6",
                             "& .MuiLinearProgress-bar": {
@@ -738,7 +802,7 @@ export default function TaskordDashboard() {
 
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-6 h-6 text-gray-500" />
+                          <Clock className="w-6 h-6 text-gray-500 dark:text-white" />
                           <span className="text-sm">1 Hour</span>
                         </div>
                         <div className="flex -space-x-2">
@@ -770,17 +834,21 @@ export default function TaskordDashboard() {
                         {ProjectData.doc[0].category}
                       </span>
                     </div>
-                    {/* {console.log(ProjectData.doc[0].tasks)} */}
 
                     <div className="space-y-4 mb-8">
-                      {ProjectData?.doc[0]?.tasks?.slice(0, 3).map((task, i) => (
-                        <div key={task._id} className="flex items-center gap-2">
-                          <div className="w-9 h-9 flex items-center dark:text-[#546FFF] justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
-                            {i + 1}
+                      {ProjectData?.doc[0]?.tasks
+                        ?.slice(0, 3)
+                        .map((task, i) => (
+                          <div
+                            key={task._id}
+                            className="flex items-center gap-2"
+                          >
+                            <div className="w-9 h-9 flex items-center dark:!bg-[#3a3a3a] dark:text-[#fffff] justify-center !rounded-xl min-w-9 !bg-[#F5F5F7] text-sm">
+                              {i + 1}
+                            </div>
+                            <div className="text-sm truncate">{task.title}</div>
                           </div>
-                          <div className="text-sm truncate">{task.title}</div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
 
                     <Button

@@ -78,9 +78,11 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         !open && "hidden"
       }`}
     >
-      <div className="bg-white dark:bg-[#121212] rounded-xl p-6 w-[500px] max-h-[80vh] overflow-y-auto">
+      <div className="bg-white dark:bg-[#080808] rounded-xl p-6 w-[500px] max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-medium dark:text-gray-400">Invite Members</h2>
+          <h2 className="text-xl font-medium dark:text-gray-400">
+            Invite Members
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -90,7 +92,9 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         </div>
 
         <div className="mb-4 w-full">
-          <label className="text-base dark:text-gray-400 font-medium">Search Users</label>
+          <label className="text-base dark:text-gray-400 font-medium">
+            Search Users
+          </label>
           <div className="flex items-center gap-3 mt-2">
             <input
               type="text"
