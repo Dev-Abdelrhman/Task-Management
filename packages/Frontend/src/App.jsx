@@ -1,6 +1,6 @@
 import PageNotFound from "./component/error404/PageNotFound";
 import { Routes, Route } from "react-router-dom";
-import Home from "./component/pages/Home";
+import Home from "./component/pages/Home/Home";
 import Login from "./component/pages/auth/Login";
 import SignUp from "./component/pages/auth/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
@@ -15,7 +15,7 @@ import ProjectTasks from "./component/pages/Projects/ProjectTasks";
 import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import AllTasks from "./component/pages/User_Tasks/AllTasks";
-import Settings from "./component/pages/Setting";
+import Settings from "./component/pages/Settings/Setting";
 import InviteManagement from "./component/pages/Invite/InviteManagement";
 import VerifyEmail from "./component/pages/auth/verifyEmail";
 
