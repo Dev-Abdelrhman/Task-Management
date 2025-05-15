@@ -7,8 +7,8 @@ import {
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useTheme } from "../../../hooks/useProjects";
-import { useTasks } from "../../../hooks/useProjects";
+import { useTheme } from "../../../hooks/useTheme";
+import { useTasks } from "../../../hooks/useTasks";
 import { CHART_COLORS, CHART_CONFIG } from "../../../constants/chart";
 
 const ActivityChart = () => {

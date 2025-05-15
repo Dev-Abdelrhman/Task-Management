@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { Lock, ArrowLeft, ListTodo } from "lucide-react";
 import PasswordStrengthMeter from "./PasswordMeter";
+import { motion } from "framer-motion";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -20,13 +21,16 @@ const ResetPassword = () => {
       return;
     }
 
-    try {
-      await resetPassword({ token, password, passwordConfirmation });
-      navigate("/login");
-    } catch (error) {
-      toast.error(error.message || "Password reset failed");
-    }
+    await resetPassword({ token, password, passwordConfirmation });
+
+    return true;
   };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (!validateForm()) return;
+  //   resetPassword({ token, ...resetData });
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">

@@ -1,11 +1,12 @@
 import React from "react";
 import { CircularProgress } from "@mui/material";
-import { useTaskStats } from "../../../hooks/useProjects";
+import { useTasks } from "../../../hooks/useTasks";
 import { useProgressAnimation } from "../../../hooks/useProgressAnimation";
 
 const RunningTask = () => {
-const { totalTasks, remainingTasks, percentage } = useTaskStats();
-const animatedPercentage = useProgressAnimation(percentage);
+  const { taskStats } = useTasks();
+  const { totalTasks, remainingTasks, percentage } = taskStats;
+  const animatedPercentage = useProgressAnimation(percentage);
   
     return (
       <div className="h-[250px] relative flex flex-col gap-4 bg-[#111827] text-white p-6 rounded-xl">

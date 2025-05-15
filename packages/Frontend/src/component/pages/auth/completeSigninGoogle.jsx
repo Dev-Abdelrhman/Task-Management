@@ -76,17 +76,12 @@ const CompleteSigninGoogle = () => {
       return;
     }
 
-    try {
-      await continueWithGoogle({
-        token,
-        username: formData.username,
-        password: formData.password,
-        passwordConfirmation: formData.passwordConfirmation,
-      });
-    } catch (error) {
-      console.error("Signup error:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || "Failed to complete signup");
-    }
+    await continueWithGoogle({
+      token,
+      username: formData.username,
+      password: formData.password,
+      passwordConfirmation: formData.passwordConfirmation,
+    });
   };
 
   if (!userData) return null;
