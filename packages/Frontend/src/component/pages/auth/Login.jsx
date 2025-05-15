@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { motion } from "framer-motion";
+
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -30,16 +31,15 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!signInData.email || !signInData.password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
     await signIn(signInData);
-    navigate("/home");
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      toast.error("Google sign in failed, please try again.");
-    }
+  const handleGoogleSignIn = () => {
+    googleSignIn();
   };
 
   return (
@@ -209,10 +209,11 @@ const Login = () => {
                 <Button
                   type="submit"
                   variant="contained"
+                  disabled={isLoading}
                   borderRadius="40px"
                   className="!bg-[#546FFF] hover:!shadow-lg hover:!shadow-[#98ABFF] text-white w-full !py-3 !rounded-xl"
                 >
-                  Sign In
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
 
                 <div className="text-center text-sm !text-opacity-65">

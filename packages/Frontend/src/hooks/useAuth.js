@@ -9,18 +9,30 @@ import {
   ContinueSignUpWithGoogle,
   handleGoogleCallback,
   getUser,
-  vrifyEmail,
+  verifyEmail,
 } from "../api/auth";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const useAuth = () => {
   const { user, setUser, logout: logoutFromStore } = useAuthStore();
+  const navigate = useNavigate();
 
   // Common error handler
   const handleError = (error) => {
+    if (error?.response?.status === 429) {
+      return "Too many attempts. Please try again later.";
+    }
+    if (error?.response?.status === 401) {
+      return "Your session has expired. Please log in again.";
+    }
+    if (error?.response?.status === 403) {
+      return "You don't have permission to perform this action.";
+    }
     return (
       error?.response?.data?.message ||
+      error?.message ||
       "Something went wrong. Please try again."
     );
   };
@@ -33,9 +45,10 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
+      toast.success("Successfully signed in!");
     },
     onError: (error) => {
-      toast.error(handleError(error) || "Sign-in failed. Please try again.");
+      toast.error(handleError(error));
     },
   });
 
@@ -47,38 +60,45 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setUser(data.user);
+      toast.info("Please verify your email to complete the sign-up process.");
+      navigate("/sign-up/continue");
     },
     onError: (error) => {
-      toast.error(handleError(error) || "Sign-up failed. Please try again.");
+      toast.error(handleError(error));
     },
   });
 
   // Verify email mutation
   const verifyEmailMutation = useMutation({
     mutationFn: async (otp) => {
-      const response = await vrifyEmail(otp);
+      const response = await verifyEmail(otp);
       return response.data;
     },
     onSuccess: (data) => {
       setUser(data.user);
+      toast.success("Email verified successfully!");
+      navigate("/home");
     },
     onError: (error) => {
-      toast.error(handleError(error) || "Email verification failed.");
+      toast.error(handleError(error));
     },
   });
 
   // Sign-out mutation
   const signOutMutation = useMutation({
     mutationFn: async () => {
-      logout();
+      await logout();
     },
     onSuccess: () => {
       logoutFromStore();
+      toast.success("Successfully signed out!");
+      navigate("/login");
     },
     onError: (error) => {
-      toast.error(handleError(error) || "Sign-out failed. Please try again.");
+      toast.error(handleError(error));
     },
   });
+
   // Forgot password mutation
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email) => {
@@ -90,10 +110,7 @@ export const useAuth = () => {
       );
     },
     onError: (error) => {
-      toast.error(
-        handleError(error) ||
-          "Error sending reset password email. Please try again."
-      );
+      toast.error(handleError(error));
     },
   });
 
@@ -104,39 +121,39 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       toast.success("Password reset successful!");
+      navigate("/login");
     },
     onError: (error) => {
-      toast.error(
-        handleError(error) || "Error resetting password. Please try again."
-      );
+      toast.error(handleError(error));
     },
   });
 
-  // Google SignIn Mutatuin
+  // Google SignIn Mutation
   const googleSignInMutation = useMutation({
     mutationFn: async () => {
-      await googleAuth();
+      googleAuth();
     },
     onError: (error) => {
-      toast.error("Google sign-in failed. Please try again.");
+      toast.error(handleError(error));
     },
   });
 
   const handleGoogleCallbackMutation = useMutation({
     mutationFn: async () => {
       await handleGoogleCallback();
-      const response = await getUser();
-      return response;
+      const userResponse = await getUser();
+      return userResponse.data;
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       setUser(data.user);
+      toast.success("Successfully signed in with Google!");
     },
     onError: (error) => {
-      toast.error("Google sign-in failed. Please try again.");
+      navigate("/login");
+      toast.error(handleError(error));
     },
   });
 
-  // After
   const continueWithGoogleMutation = useMutation({
     mutationFn: async ({ token, username, password, passwordConfirmation }) => {
       const response = await ContinueSignUpWithGoogle(
@@ -145,17 +162,14 @@ export const useAuth = () => {
         password,
         passwordConfirmation
       );
-      return response;
+      return response.data;
     },
     onSuccess: (data) => {
       setUser(data.user);
       toast.success("Account setup complete!");
     },
     onError: (error) => {
-      toast.error(
-        handleError(error) ||
-          "Error completing Google signup. Please try again."
-      );
+      toast.error(handleError(error));
     },
   });
 
@@ -181,13 +195,5 @@ export const useAuth = () => {
       resetPasswordMutation.isPending ||
       verifyEmailMutation.isPending ||
       googleSignInMutation.isPending,
-
-    signInError: signInMutation.error,
-    signUpError: signUpMutation.error,
-    verifyEmailError: verifyEmailMutation.error,
-    signOutError: signOutMutation.error,
-    forgotPasswordError: forgotPasswordMutation.error,
-    resetPasswordError: resetPasswordMutation.error,
-    googleSignInError: googleSignInMutation.error,
   };
 };

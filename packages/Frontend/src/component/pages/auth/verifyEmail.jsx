@@ -49,18 +49,11 @@ const VerifyEmail = () => {
       toast.error("Please enter the 6-digit OTP.");
       return;
     }
-    try {
-      await verifyEmail(code);
-      toast.success("Email verified!");
-      navigate("/home");
-    } catch (err) {
-      // Error handled in useAuth
-    }
+    await verifyEmail(code);
   };
 
   const handleResend = () => {
     toast.info("Resend OTP logic goes here.");
-    // Implement resend logic as needed
   };
 
   return (
@@ -110,6 +103,7 @@ const VerifyEmail = () => {
                 {otp.map((digit, idx) => (
                   <input
                     key={idx}
+                    aria-label={`Digit ${idx + 1} of 6`}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}

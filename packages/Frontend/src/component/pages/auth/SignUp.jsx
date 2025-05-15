@@ -24,55 +24,69 @@ const SignUp = () => {
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/;
   const usernameRegex =
     /^(?=.{3,30}$)(?!.*[.]{2})[a-zA-Z0-9](?:[a-zA-Z0-9.]*[a-zA-Z0-9])?$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const getPasswordRequirements = () =>
     "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character (@$!%?&).";
   const getUsernameRequirements = () =>
     "Username must be 3-30 characters, letters, numbers, dots (no consecutive dots, cannot start/end with dot).";
 
-  //useAuth
-  const { user, signUp, googleSignIn } = useAuth();
+  const { user, signUp, googleSignIn, isLoading } = useAuth();
 
-  //useEffect
   useEffect(() => {
     if (user) {
       navigate("/home", { replace: true });
     }
   }, [user, navigate]);
 
-  //handles functions
   const handleInputChange = (e, formSetter) => {
     const { name, value } = e.target;
     formSetter((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSubmit = async (e, action) => {
-    e.preventDefault();
+
+  const validateForm = () => {
+    if (
+      !signUpData.name ||
+      !signUpData.username ||
+      !signUpData.email ||
+      !signUpData.password ||
+      !signUpData.passwordConfirmation
+    ) {
+      toast.error("Please fill in all fields");
+      return false;
+    }
+
+    if (!emailRegex.test(signUpData.email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
 
     if (!usernameRegex.test(signUpData.username)) {
       toast.error(getUsernameRequirements());
-      return;
+      return false;
     }
 
     if (!passwordRegex.test(signUpData.password)) {
       toast.error(getPasswordRequirements());
-      return;
+      return false;
     }
 
     if (signUpData.password !== signUpData.passwordConfirmation) {
       toast.error("Passwords do not match!");
-      return;
+      return false;
     }
 
-    await signUp(signUpData);
-    navigate("/sign-up/continue");
+    return true;
   };
-  const handleGoogleSignIn = async () => {
-    try {
-      await googleSignIn();
-      navigate("/home");
-    } catch (error) {
-      console.error("Google sign-in failed:", error);
-    }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    await signUp(signUpData);
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn();
   };
 
   return (
@@ -303,10 +317,11 @@ const SignUp = () => {
                 <Button
                   type="submit"
                   variant="contained"
+                  disabled={isLoading}
                   borderRadius="40px"
                   className="!bg-[#546FFF] hover:!shadow-lg hover:!shadow-[#98ABFF] text-white w-full !py-3 !rounded-xl"
                 >
-                  Sign Up
+                  {isLoading ? "Creating Account..." : "Sign Up"}
                 </Button>
 
                 <div className="text-center text-sm">

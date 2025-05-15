@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-import { assets } from "../../../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { Mail, ArrowLeft, ListTodo } from "lucide-react";

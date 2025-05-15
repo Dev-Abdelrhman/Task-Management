@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Bell,
-  Mail
-} from "lucide-react";
+import { Bell, Mail } from "lucide-react";
 import {
   IconButton,
   Typography,
@@ -12,7 +9,7 @@ import {
   Avatar,
   Tooltip,
 } from "@mui/material";
-import { useUserMenu } from "../../../hooks/useProjects";
+import { useUserMenu } from "../../../hooks/useUserMenu";
 
 const DashboardNav = () => {
   const {
@@ -20,7 +17,7 @@ const DashboardNav = () => {
     handleLogout,
     handleOpenUserMenu,
     handleCloseUserMenu,
-    user
+    user,
   } = useUserMenu();
 
   const hostGoogleImage = (url) => {
@@ -89,10 +86,7 @@ const DashboardNav = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            <MenuItem
-              key="logout"
-              onClick={handleLogout}
-            >
+            <MenuItem key="logout" onClick={handleLogout}>
               <Typography sx={{ textAlign: "center" }}>Logout</Typography>
             </MenuItem>
           </Menu>
