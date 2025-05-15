@@ -6,7 +6,7 @@ import SignUp from "./component/pages/auth/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Forgetpassword from "./component/pages/auth/ForgetPassword";
 import ResetPassword from "./component/pages/auth/ResetPassword";
-import Dashboard from "./component/pages/Dashboard";
+import Dashboard from "./component/pages/dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
 import Projects from "./component/pages/Projects/Projects";
