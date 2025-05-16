@@ -22,19 +22,19 @@ import {
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { getProjectById } from "../../../api/project";
+import { getProjectById } from "../../../../api/project";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth";
-import { useRoles } from "../../../hooks/useRoles";
-import { getRoles } from "../../../api/roles";
-import InviteModal from "../Invite/InviteModal";
+import { useAuth } from "../../../../hooks/useAuth";
+import { useRoles } from "../../../../hooks/useRoles";
+import { getRoles } from "../../../../api/roles";
+import InviteModal from "../../Invite/InviteModal";
 import { DateTime } from "luxon";
 import {
   getComments,
   createComment,
   updateComment,
   deleteComment,
-} from "../../../api/commentsApi";
+} from "../../../../api/commentsApi";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
