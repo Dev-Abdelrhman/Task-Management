@@ -13,7 +13,7 @@ import { Navigation } from "swiper";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
-import ProjectOptionsMenu from "../Projects/ProjectOptionsMenu";
+import ProjectOptionsMenu from "../Projects/ProjectModals/ProjectOptionsMenu";
 import { useProjects } from "../../../hooks/useProjects";
 
 const DashboardProjectSection = () => {
