@@ -1,9 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
   deleteUser,
-  getUserInfoForAuth,
-  getUserInfoForProfile,
   removeUserImage,
   updateUserInfo,
   updateUserPassword,
@@ -21,57 +19,13 @@ export const useUser = () => {
     return null;
   };
 
-  // Helper function to extract and flatten user data from API response
-  const extractUserData = (response) => {
-    // If response has .data property, use that, otherwise use response directly
-    const responseData = response.data || response;
-    // If the data has a .user property, use that, otherwise use the data directly
-    return responseData.user || responseData;
-  };
-
-  // Queries
-  const useAuthUser = (options = {}) =>
-    useQuery({
-      queryKey: ["user", "auth"],
-      queryFn: async () => {
-        const response = await getUserInfoForAuth();
-        return extractUserData(response);
-      },
-      onSuccess: (data) => {
-        setUser(data);
-      },
-      onError: (err) => {
-        const message = handleError(err);
-        if (message) toast.error(`Auth failed: ${message}`);
-      },
-      ...options,
-    });
-
-  const useProfileUser = (options = {}) =>
-    useQuery({
-      queryKey: ["user", "profile"],
-      queryFn: async () => {
-        const response = await getUserInfoForProfile();
-        return extractUserData(response);
-      },
-      onSuccess: (data) => {
-        setUser(data);
-      },
-      onError: (err) => {
-        const message = handleError(err);
-        if (message) toast.error(`Profile fetch failed: ${message}`);
-      },
-      ...options,
-    });
-
   // Mutations
   const updateUserInfoMutation = useMutation({
     mutationFn: async (userInfo) => {
-      const response = await updateUserInfo(userInfo);
-      return extractUserData(response);
+      await updateUserInfo(userInfo);
     },
-    onSuccess: (data) => {
-      setUser(data);
+    onSuccess: (_, userInfo) => {
+      setUser({ ...user, ...userInfo });
       queryClient.invalidateQueries(["user", "profile"]);
       toast.success("User info updated successfully");
     },
@@ -83,8 +37,7 @@ export const useUser = () => {
 
   const updatePasswordMutation = useMutation({
     mutationFn: async (passwordData) => {
-      const response = await updateUserPassword(passwordData);
-      return extractUserData(response);
+      await updateUserPassword(passwordData);
     },
     onSuccess: () => {
       toast.success("Password updated successfully");
@@ -97,11 +50,10 @@ export const useUser = () => {
 
   const removeImageMutation = useMutation({
     mutationFn: async ({ userID, public_id }) => {
-      const response = await removeUserImage(userID, public_id);
-      return extractUserData(response);
+      await removeUserImage(userID, public_id);
     },
-    onSuccess: (data) => {
-      setUser(data);
+    onSuccess: () => {
+      setUser({ ...user, image: [] });
       queryClient.invalidateQueries(["user", "profile"]);
       toast.success("Image removed successfully");
     },
@@ -113,8 +65,7 @@ export const useUser = () => {
 
   const deleteUserMutation = useMutation({
     mutationFn: async () => {
-      const response = await deleteUser();
-      return extractUserData(response);
+      await deleteUser();
     },
     onSuccess: () => {
       queryClient.clear();
@@ -127,10 +78,6 @@ export const useUser = () => {
   });
 
   return {
-    // Queries
-    useAuthUser,
-    useProfileUser,
-
     // Mutations
     updateUser: updateUserInfoMutation.mutateAsync,
     updatePassword: updatePasswordMutation.mutateAsync,
