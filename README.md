@@ -80,6 +80,41 @@ Create `.env` files in:
 
 - `packages/Backend/.env`
 
+Example `.env` with placeholder values:
+
+```env
+NODE_ENV=development
+PORT=5000
+DATABASE=mongodb://localhost:27017/task-management
+DATABASE_PASSWORD=fake_password
+JWT_SECRET_ACCESS_TOKEN=fake_access_token_secret
+JWT_SECRET_REFRESH_TOKEN=fake_refresh_token_secret
+JWT_TEMP_SECRET=fake_temp_secret
+
+JWT_ACCESS_TOKEN_EXPIRES_IN=15m
+JWT_REFRESH_TOKEN_EXPIRES_IN=7d
+JWT_TEMP_TOKEN_EXPIRES_IN=5m
+
+JWT_COOKIE_EXPIRES_IN=1d
+
+SESSION_SECRET=fake_session_secret
+
+GOOGLE_CLIENT_ID=fake_google_client_id
+GOOGLE_CLIENT_SECRET=fake_google_client_secret
+GOOGLE_CALLBACK=http://localhost:5000/auth/google/callback
+
+SMTP_HOST=smtp.fakeemail.com
+SMTP_PORT=587
+SMTP_USERNAME=fake@example.com
+SMTP_PASSWORD=fake_email_password
+
+CLOUDINARY_CLOUD_NAME=fake_cloud_name
+CLOUDINARY_API_KEY=fake_cloud_api_key
+CLOUDINARY_API_SECRET=fake_cloud_api_secret
+```
+
+Replace the fake values with your actual configuration for each environment variable.
+
 ### 4. Run the App
 
 ```bash
