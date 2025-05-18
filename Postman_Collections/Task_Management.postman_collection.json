@@ -19,14 +19,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/68098450cc51d9ee9ec0dac0/comments",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/comments",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"68098450cc51d9ee9ec0dac0",
+								"681433a53e25c243b0dadf00",
 								"comments"
 							]
 						}
@@ -90,20 +90,19 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": [],
-									"disabled": true
+									"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-05-10 004601.png"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb/comments",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/comments",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"680ea8ddf2b860bb9664f5cb",
+								"681433a53e25c243b0dadf00",
 								"comments"
 							]
 						}
@@ -123,22 +122,22 @@
 							"formdata": [
 								{
 									"key": "comment",
-									"value": "I hope it works V2",
+									"value": "I hope it works V3",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/68098450cc51d9ee9ec0dac0/comments/68098ffa265f19b1195ee4f9",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/comments/681d3c9d5d17277a0cc94e50",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"68098450cc51d9ee9ec0dac0",
+								"681433a53e25c243b0dadf00",
 								"comments",
-								"68098ffa265f19b1195ee4f9"
+								"681d3c9d5d17277a0cc94e50"
 							]
 						}
 					},
@@ -192,16 +191,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/67ff9ca50fdbe984385cd77d/comments/67ffa99d564e4eefbcd80bc9",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/comments/681cfbf5f7a51ca1dc6de9d7",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"67ff9ca50fdbe984385cd77d",
+								"681433a53e25c243b0dadf00",
 								"comments",
-								"67ffa99d564e4eefbcd80bc9"
+								"681cfbf5f7a51ca1dc6de9d7"
 							]
 						}
 					},
@@ -254,14 +253,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/680ea8ddf2b860bb9664f5cb",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681ad8c6159508b1bc44eccb",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
 								"67fd51086586ec862e97d494",
 								"projects",
-								"680ea8ddf2b860bb9664f5cb"
+								"681ad8c6159508b1bc44eccb"
 							]
 						}
 					},
@@ -303,18 +302,18 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "El Z3bol",
+									"value": "Error",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "Sa3dola up",
+									"value": "comments error",
 									"type": "text"
 								},
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-03-14 043705.png"
+									"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-05-10 004601.png"
 								}
 							]
 						},
@@ -491,14 +490,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/roles",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/roles",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67e2130c58a46fa8c3e9a63d",
+								"681433a53e25c243b0dadf00",
 								"roles"
 							]
 						}
@@ -514,7 +513,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/67d0d6c733bac82eb9cd506c",
+							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/6815b5070c5e5e0589096166",
 							"host": [
 								"{{URL}}users"
 							],
@@ -523,7 +522,7 @@
 								"projects",
 								"67ce95c3d62889c409fb0ef1",
 								"roles",
-								"67d0d6c733bac82eb9cd506c"
+								"6815b5070c5e5e0589096166"
 							]
 						}
 					},
@@ -591,16 +590,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67ce95c3d62889c409fb0ef1/roles/67d0d6c733bac82eb9cd506c",
+							"raw": "{{URL}}users/67fd51086586ec862e97d494/projects/681433a53e25c243b0dadf00/roles/68158327141dbd2d30b46ed2",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
+								"67fd51086586ec862e97d494",
 								"projects",
-								"67ce95c3d62889c409fb0ef1",
+								"681433a53e25c243b0dadf00",
 								"roles",
-								"67d0d6c733bac82eb9cd506c"
+								"68158327141dbd2d30b46ed2"
 							]
 						}
 					},
@@ -647,13 +646,19 @@
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"title\":\"for test is it work ?\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "bsdhufgvbsdlkjgbsdlgvkj",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-03-12 120129.png"
 										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{URL}}tasks/",
@@ -825,7 +830,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks/67e29edb1905f5df4178aaa4",
+									"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/tasks/68098495cc51d9ee9ec0dad0",
 									"host": [
 										"{{URL}}users"
 									],
@@ -834,7 +839,7 @@
 										"projects",
 										"67e2130c58a46fa8c3e9a63d",
 										"tasks",
-										"67e29edb1905f5df4178aaa4"
+										"68098495cc51d9ee9ec0dad0"
 									]
 								}
 							},
@@ -905,27 +910,6 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "Get user info for auth",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}users/google/user",
-							"host": [
-								"{{URL}}users"
-							],
-							"path": [
-								"google",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get User Information for the profile",
 					"request": {
 						"auth": {
@@ -967,7 +951,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"test106@gmail.com\",\r\n    \"password\":\"Test@2025\"\r\n}",
+							"raw": "{\r\n    \"email\":\"test106@gmail.com\",\r\n    \"password\":\"Omar@2025\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1008,7 +992,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"test\",\r\n    \"username\":\"test\",\r\n    \"email\":\"test104@gmail.com\",\r\n    \"password\":\"Test@2025\",\r\n    \"passwordConfirmation\":\"Test@2025\"\r\n}",
+							"raw": "{\r\n    \"name\":\"test\",\r\n    \"username\":\"test\",\r\n    \"email\":\"abdelrhman13204@gmail.com\",\r\n    \"password\":\"Test@2025\",\r\n    \"passwordConfirmation\":\"Test@2025\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1022,6 +1006,35 @@
 							],
 							"path": [
 								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-otp",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\":\"842168\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}users/verifyotp",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								"verifyotp"
 							]
 						}
 					},
@@ -1131,13 +1144,14 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n        \"name\": \"Example\",\r\n        \"username\": \"Example_20\",\r\n        \"email\": \"user@example.com\",\r\n        \"image\": \"you will upload it\"\r\n      }",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Fawzy/Pictures/Screenshots/Screenshot 2025-03-14 043705.png"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{URL}}users/updateMe",
@@ -1329,14 +1343,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}users/67cd552eeb136fc473543ae1/projects/67e2130c58a46fa8c3e9a63d/invite/search?username=test",
+							"raw": "{{URL}}users/6804192faad15d59586b4290/invite/search?username=test",
 							"host": [
 								"{{URL}}users"
 							],
 							"path": [
-								"67cd552eeb136fc473543ae1",
-								"projects",
-								"67e2130c58a46fa8c3e9a63d",
+								"6804192faad15d59586b4290",
 								"invite",
 								"search"
 							],
@@ -1399,6 +1411,38 @@
 								"67c966028ad04d7ff9ea5fbf",
 								"invite",
 								"sender"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete invite",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}users/:userID/invite/:inviteID",
+							"host": [
+								"{{URL}}users"
+							],
+							"path": [
+								":userID",
+								"invite",
+								":inviteID"
+							],
+							"variable": [
+								{
+									"key": "userID",
+									"value": ""
+								},
+								{
+									"key": "inviteID",
+									"value": ""
+								}
 							]
 						}
 					},
