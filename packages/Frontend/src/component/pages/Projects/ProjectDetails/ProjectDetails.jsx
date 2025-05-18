@@ -37,6 +37,7 @@ import {
 } from "../../../../api/commentsApi";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
+import DueDateStatus from "../../../../shared/DueDateStatus";
 
 const socket = io("http://localhost:9999");
 
@@ -244,49 +245,6 @@ function ProjectDetails() {
     )}&w=200&h=200`;
   };
 
-  const calculateDueDateStatus = (dueDateString, progress) => {
-    if (progress === 100) {
-      return (
-        <>
-          <CircleCheck className="w-5 h-5 text-green-500" />
-          <span className="text-green-500">Completed</span>
-        </>
-      );
-    }
-
-    if (!dueDateString) return "No due date";
-
-    const now = DateTime.local();
-    const dueDate = DateTime.fromISO(dueDateString);
-
-    if (dueDate < now) {
-      return (
-        <>
-          <Ban className="w-5 h-5 text-red-500" />
-          <span className="text-red-500">Overdue</span>
-        </>
-      );
-    }
-
-    const diff = dueDate.diff(now, ["days", "hours"]);
-
-    if (diff.days < 1) {
-      return (
-        <>
-          <Clock className="w-5 h-5 text-gray-500" />
-          <span>{Math.ceil(diff.hours)} Hours Left</span>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <Clock className="w-5 h-5 text-gray-500" />
-        <span>{Math.ceil(diff.days)} Days Left</span>
-      </>
-    );
-  };
-
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     if (!commentText.trim() && !replyText.trim()) return;
@@ -446,7 +404,7 @@ function ProjectDetails() {
                 {data.doc.memberCount} Members Involved
               </p>
               <div className="flex items-center gap-2">
-                {calculateDueDateStatus(project?.dueDate, project?.progress)}
+                <DueDateStatus dueDate={project?.dueDate} progress={project?.progress} />
               </div>
             </div>
             {/* project description */}

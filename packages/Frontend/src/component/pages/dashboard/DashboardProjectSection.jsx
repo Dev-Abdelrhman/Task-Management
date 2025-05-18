@@ -15,44 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { DateTime } from "luxon";
 import ProjectOptionsMenu from "../Projects/ProjectModals/ProjectOptionsMenu";
 import { useProjects } from "../../../hooks/useProjects";
+import DueDateStatus from "../../../shared/DueDateStatus";
 
 const DashboardProjectSection = () => {
   const navigate = useNavigate();
   const { projects, isLoading: projectLoading, isError: isProjectsError, error: projectsError } = useProjects();
-
-  const calculateDaysLeft = (dueDateString) => {
-    if (!dueDateString) return "Error";
-
-    const now = DateTime.local();
-    const dueDate = DateTime.fromISO(dueDateString).setZone("local");
-
-    if (dueDate < now) {
-      return (
-        <>
-          <Ban className="w-6 h-6 text-red-500" />
-          <span className="text-red-500">Overdue</span>
-        </>
-      );
-    }
-
-    const diff = dueDate.diff(now, ["days", "hours"]);
-
-    if (diff.days < 1) {
-      return (
-        <>
-          <Clock className="w-6 h-6 text-gray-500" />
-          <span>{Math.ceil(diff.hours)} Hours Left</span>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <Clock className="w-6 h-6 text-gray-500" />
-        <span>{Math.ceil(diff.days)} Days Left</span>
-      </>
-    );
-  };
 
   if (projectLoading) {
     return (
@@ -210,7 +177,7 @@ const DashboardProjectSection = () => {
                         <span className="text-green-500">Completed</span>
                       </>
                     ) : (
-                      calculateDaysLeft(project.dueDate)
+                      <DueDateStatus dueDate={project.dueDate} progress={project.progress} />
                     )}
                   </div>
                   <div className="flex -space-x-2">

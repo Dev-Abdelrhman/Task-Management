@@ -69,7 +69,12 @@ export const googleAuth = () => {
 export const handleGoogleCallback = () =>
   axios.get(`${API}/auth/google/callback`);
 
-export const ContinueSignUpWithGoogle = (token, username, password, passwordConfirmation) =>
+export const ContinueSignUpWithGoogle = (
+  token,
+  username,
+  password,
+  passwordConfirmation
+) =>
   API.post("/continueSignUpWithGoogle", {
     token,
     username,

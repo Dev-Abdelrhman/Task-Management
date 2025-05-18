@@ -3,44 +3,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import { ChevronLeft, ChevronRight, CircleCheck, Clock, Ban } from "lucide-react";
 import ProjectOptionsMenu from "../ProjectModals/ProjectOptionsMenu";
-import { DateTime } from "luxon";
+import DueDateStatus from "../../../../shared/DueDateStatus";
 
 function ProjectSection({ title, projects, handleClick, swiperClass }) {
   if (projects.length === 0) return null;
 
-  const calculateDaysLeft = (dueDateString) => {
-    if (!dueDateString) return "Error";
 
-    const now = DateTime.local();
-    const dueDate = DateTime.fromISO(dueDateString).setZone("local");
-
-    if (dueDate < now) {
-      return (
-        <>
-          <Ban className="w-6 h-6 text-red-500" />
-          <span className="text-red-500">Overdue</span>
-        </>
-      );
-    }
-
-    const diff = dueDate.diff(now, ["days", "hours"]);
-
-    if (diff.days < 1) {
-      return (
-        <>
-          <Clock className="w-6 h-6 text-gray-500 dark:!text-white" />
-          <span>{Math.ceil(diff.hours)} Hours Left</span>
-        </>
-      );
-    }
-
-    return (
-      <>
-        <Clock className="w-6 h-6 text-gray-500 dark:!text-white" />
-        <span>{Math.ceil(diff.days)} Days Left</span>
-      </>
-    );
-  };
 
   return (
     <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
@@ -146,7 +114,7 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
                           <span className="text-green-500">Completed</span>
                         </>
                       ) : (
-                        calculateDaysLeft(project.dueDate)
+                        <DueDateStatus dueDate={project.dueDate} progress={project.progress} />
                       )}
                     </div>
                     <div className="flex -space-x-2">
