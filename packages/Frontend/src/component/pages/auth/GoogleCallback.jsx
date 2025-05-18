@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const GoogleCallback = () => {
   const { handleGoogleCallback } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const processCallback = async () => {

@@ -1,87 +1,68 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { DateTime } from "luxon";
+import { useProjectQuery } from "./useProjectQuery";
 
-import { getUserProjects } from "../api/project";
-import { useAuthStore } from "../stores/authStore";
-import { useEffect } from "react";
-import socket from "../utils/socket";
+export const useProjects = (filters = {}) => {
+  const { projects, isLoading, isError, error } = useProjectQuery();
+  const { searchQuery = "", selectedCategory = null, sortOrder = null } = filters;
 
-export const useProjects = () => {
-  const { user } = useAuthStore();
-  const queryClient = useQueryClient();
+  const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+    let filtered = projects.filter((project) => {
+      const matchesSearch = project.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory
+        ? project.category === selectedCategory
+        : true;
+      return matchesSearch && matchesCategory;
+    });
 
-  const {
-    data: projectData,
-    isLoading: projectLoading,
-    isError: isProjectsError,
-    error: projectsError,
-  } = useQuery({
-    queryKey: ["projects"],
-    queryFn: async () => {
-      if (!user?._id) return { doc: [] };
-      return await getUserProjects(user._id);
-    },
-    enabled: !!user?._id,
-  });
+    if (sortOrder) {
+      filtered = [...filtered].sort((a, b) => {
+        const aDate = a.dueDate
+          ? DateTime.fromISO(a.dueDate).toMillis()
+          : Infinity;
+        const bDate = b.dueDate
+          ? DateTime.fromISO(b.dueDate).toMillis()
+          : Infinity;
 
-  useEffect(() => {
-    if (!user) return;
+        if (aDate === Infinity && bDate === Infinity) return 0;
+        if (aDate === Infinity) return 1;
+        if (bDate === Infinity) return -1;
 
-    const handleProjectCreated = (newProject) => {
-      queryClient.setQueryData(["projects"], (old) => {
-        if (!old?.doc) return { doc: [newProject] };
-        const tempProject = old.doc.find(
-          (p) => p._id.startsWith("temp-") && p.name === newProject.name
-        );
-        if (tempProject) {
-          return {
-            ...old,
-            doc: old.doc.map((p) =>
-              p._id === tempProject._id ? newProject : p
-            ),
-          };
-        }
-        const exists = old.doc.some((p) => p._id === newProject._id);
-        return exists ? old : { ...old, doc: [...old.doc, newProject] };
+        return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
       });
-    };
+    }
 
-    const handleProjectUpdated = (updatedProject) => {
-      queryClient.setQueryData(["projects"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.map((project) =>
-            project._id === updatedProject._id ? updatedProject : project
-          ),
-        };
-      });
-    };
+    return filtered;
+  }, [projects, searchQuery, selectedCategory, sortOrder]);
 
-    const handleProjectDeleted = (deletedId) => {
-      queryClient.setQueryData(["projects"], (old) => {
-        if (!old?.doc) return old;
-        return {
-          ...old,
-          doc: old.doc.filter((project) => project._id !== deletedId),
-        };
-      });
-    };
-
-    socket.on("project-created", handleProjectCreated);
-    socket.on("project-updated", handleProjectUpdated);
-    socket.on("project-deleted", handleProjectDeleted);
-
-    return () => {
-      socket.off("project-created", handleProjectCreated);
-      socket.off("project-updated", handleProjectUpdated);
-      socket.off("project-deleted", handleProjectDeleted);
-    };
-  }, [user, queryClient]);
+  const privateProjects = filteredProjects.filter(
+    (project) => project.memberCount <= 1 && project.progress < 100
+  );
+  const publicProjects = filteredProjects.filter(
+    (project) => project.memberCount > 1 && project.progress < 100
+  );
+  const overdueProjects = filteredProjects.filter(
+    (project) =>
+      project.dueDate &&
+      DateTime.fromISO(project.dueDate) < DateTime.local() &&
+      project.progress < 100
+  );
+  const doneProjects = filteredProjects.filter(
+    (project) => project.progress === 100
+  );
 
   return {
-    projects: projectData?.doc || [],
-    isLoading: projectLoading,
-    isError: isProjectsError,
-    error: projectsError,
+    projects,
+    filteredProjects,
+    privateProjects,
+    publicProjects,
+    overdueProjects,
+    doneProjects,
+    isLoading,
+    isError,
+    error,
   };
 };

@@ -26,12 +26,6 @@ const ResetPassword = () => {
     return true;
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (!validateForm()) return;
-  //   resetPassword({ token, ...resetData });
-  // };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <header className="!fixed !top-0 !z-50 w-full border-b !bg-white/80 !backdrop-blur-sm">

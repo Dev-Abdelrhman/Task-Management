@@ -5,19 +5,6 @@ import { useProjecthStore } from "../stores/projectStore";
 import { daleteProjectImage } from "../api/project";
 
 export const useProject = () => {
-  const getPorjectMutation = useMutation({
-    mutationFn: async (user_id) => {
-      const response = await getUserProjects(user_id);
-      console.log(response);
-      return response;
-    },
-    onSuccess: (data) => {
-      setProject(data);
-    },
-    onError: (error) => {
-      console.error("Sign-up error:", handleError(error));
-    },
-  });
 
   const deleteImageMutation = useMutation({
     mutationFn: async () => {

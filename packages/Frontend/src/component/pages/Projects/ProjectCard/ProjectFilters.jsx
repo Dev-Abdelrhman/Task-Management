@@ -3,17 +3,15 @@ import { Search, ChartBarStacked } from "lucide-react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState } from "react";
 
-function ProjectFilters({
-  searchQuery,
-  setSearchQuery,
-  selectedCategory,
-  setSelectedCategory,
-  sortOrder,
-  toggleSortOrder,
-  categories,
+function ProjectFilters({ 
+  categories, 
   AddProjectBtn,
+  filters,
+  actions 
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { searchQuery, selectedCategory, sortOrder } = filters;
+  const { setSearchQuery, setSelectedCategory, toggleSortOrder } = actions;
 
   return (
     <div className="bg-white dark:bg-[#080808] flex justify-between items-center px-6 pt-2 pb-6">
