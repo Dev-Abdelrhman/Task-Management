@@ -1,27 +1,33 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
-  createTask,
-  deleteTask,
-  updateTask,
-  getTaskById,
+  createProjectTask,
+  deleteTaskStatus,
+  updateTaskStatus,
+  getOneTask,
 } from "../api/projectTasks";
 
 export const useTaskMutations = (userId, projectId) => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: (newTask) => createTask(userId, projectId, newTask),
+    mutationFn: (newTask) => createProjectTask(userId, projectId, newTask),
     onMutate: async (newTask) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["projectTasks", userId, projectId] });
-      
+      await queryClient.cancelQueries({
+        queryKey: ["projectTasks", userId, projectId],
+      });
+
       // Snapshot the previous value
-      const previousTasks = queryClient.getQueryData(["projectTasks", userId, projectId]);
-      
+      const previousTasks = queryClient.getQueryData([
+        "projectTasks",
+        userId,
+        projectId,
+      ]);
+
       // Create a temporary ID for optimistic update
       const tempId = `temp-${Date.now()}`;
-      
+
       // Optimistically update to the new value
       queryClient.setQueryData(["projectTasks", userId, projectId], (old) => {
         const tasks = old?.doc || [];
@@ -45,9 +51,11 @@ export const useTaskMutations = (userId, projectId) => {
         const tasks = old?.doc || [];
         return {
           ...old,
-          doc: tasks.map((task) =>
-            task._id === context.tempId ? data.doc : task
-          ).filter(task => task._id !== context.tempId || task._id === data.doc._id),
+          doc: tasks
+            .map((task) => (task._id === context.tempId ? data.doc : task))
+            .filter(
+              (task) => task._id !== context.tempId || task._id === data.doc._id
+            ),
         };
       });
       toast.success("Task created successfully!");
@@ -60,29 +68,37 @@ export const useTaskMutations = (userId, projectId) => {
           context.previousTasks
         );
       } else {
-        queryClient.invalidateQueries({ queryKey: ["projectTasks", userId, projectId] });
+        queryClient.invalidateQueries({
+          queryKey: ["projectTasks", userId, projectId],
+        });
       }
       toast.error("Failed to create task!");
     },
     onSettled: () => {
       // Always refetch after error or success to ensure cache is in sync
-      queryClient.invalidateQueries({ queryKey: ["projectTasks", userId, projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["projectTasks", userId, projectId],
+      });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteTask,
+    mutationFn: ({ taskId, status }) => deleteTaskStatus(userId, projectId, taskId, status),
     onSuccess: () => {
       toast.success("Task deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["projectTasks", userId, projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["projectTasks", userId, projectId],
+      });
     },
     onError: () => toast.error("Failed to delete task!"),
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ taskId, taskData }) => updateTask(taskId, taskData),
+    mutationFn: ({ taskId, taskData }) => updateTaskStatus(userId, projectId, taskId, taskData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projectTasks", userId, projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["projectTasks", userId, projectId],
+      });
     },
     onError: (err) => {
       console.error("Error updating task:", err.message);
@@ -91,7 +107,7 @@ export const useTaskMutations = (userId, projectId) => {
   });
 
   const fetchTaskDetails = useMutation({
-    mutationFn: (id) => getTaskById(id),
+    mutationFn: (taskId) => getOneTask(userId, projectId, taskId),
     onError: (err) => {
       console.error("Error retrieving task:", err.message);
       toast.error("Failed to retrieve task!");
@@ -104,4 +120,4 @@ export const useTaskMutations = (userId, projectId) => {
     updateMutation,
     fetchTaskDetails,
   };
-}; 
+};
