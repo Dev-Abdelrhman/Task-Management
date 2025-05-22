@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Box,
@@ -7,19 +6,23 @@ import {
   LinearProgress,
   CircularProgress,
 } from "@mui/material";
-import { ChevronLeft, ChevronRight, CircleCheck, Clock, Ban } from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { DateTime } from "luxon";
 import ProjectOptionsMenu from "../Projects/ProjectModals/ProjectOptionsMenu";
-import { useProjects } from "../../../hooks/useProjects";
+import { useProjects } from "../../../hooks/projects/useProjects";
 import DueDateStatus from "../../../shared/DueDateStatus";
 
 const DashboardProjectSection = () => {
   const navigate = useNavigate();
-  const { projects, isLoading: projectLoading, isError: isProjectsError, error: projectsError } = useProjects();
+  const {
+    projects,
+    isLoading: projectLoading,
+    isError: isProjectsError,
+    error: projectsError,
+  } = useProjects();
 
   if (projectLoading) {
     return (
@@ -177,7 +180,10 @@ const DashboardProjectSection = () => {
                         <span className="text-green-500">Completed</span>
                       </>
                     ) : (
-                      <DueDateStatus dueDate={project.dueDate} progress={project.progress} />
+                      <DueDateStatus
+                        dueDate={project.dueDate}
+                        progress={project.progress}
+                      />
                     )}
                   </div>
                   <div className="flex -space-x-2">

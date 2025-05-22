@@ -1,4 +1,3 @@
-import React from "react";
 import { DateTime } from "luxon";
 import { Clock, CircleCheck, Ban } from "lucide-react";
 
@@ -45,4 +44,4 @@ const DueDateStatus = ({ dueDate, progress }) => {
   );
 };
 
-export default DueDateStatus; 
+export default DueDateStatus;

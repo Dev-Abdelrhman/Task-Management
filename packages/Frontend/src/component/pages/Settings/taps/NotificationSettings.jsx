@@ -1,5 +1,3 @@
-import React from "react";
-
 const NotificationSettings = () => {
   return (
     <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6">
@@ -13,4 +11,4 @@ const NotificationSettings = () => {
   );
 };
 
-export default NotificationSettings; 
+export default NotificationSettings;

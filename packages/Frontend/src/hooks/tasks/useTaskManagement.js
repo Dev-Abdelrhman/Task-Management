@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { getAllProjectTasks } from "../api/projectTasks";
+import { getAllProjectTasks } from "../../api/projectTasks";
 import { useTaskSocket } from "./useTaskSocket";
 import { useTaskMutations } from "./useTaskMutations";
 
@@ -19,12 +19,8 @@ export const useTaskManagement = (userId, projectId) => {
     enabled: !!userId && !!projectId,
   });
 
-  const {
-    createMutation,
-    deleteMutation,
-    updateMutation,
-    fetchTaskDetails,
-  } = useTaskMutations(userId, projectId);
+  const { createMutation, deleteMutation, updateMutation, fetchTaskDetails } =
+    useTaskMutations(userId, projectId);
 
   useTaskSocket(userId, projectId, queryClient);
 
@@ -55,18 +51,15 @@ export const useTaskManagement = (userId, projectId) => {
   };
 
   const handleFetchTaskDetails = (taskId) => {
-    fetchTaskDetails.mutate(
-      taskId,
-      {
-        onSuccess: (data) => {
-          const task = data.doc || data;
-          if (!task) {
-            throw new Error("No task data returned from API");
-          }
-          setDetailsModal({ show: true, task });
-        },
-      }
-    );
+    fetchTaskDetails.mutate(taskId, {
+      onSuccess: (data) => {
+        const task = data.doc || data;
+        if (!task) {
+          throw new Error("No task data returned from API");
+        }
+        setDetailsModal({ show: true, task });
+      },
+    });
   };
 
   return {
@@ -87,4 +80,4 @@ export const useTaskManagement = (userId, projectId) => {
     handleFetchTaskDetails,
     updateMutation,
   };
-}; 
+};

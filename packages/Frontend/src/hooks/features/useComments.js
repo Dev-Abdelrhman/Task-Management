@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getComments, createComment, updateComment, deleteComment } from "../api/commentsApi";
+import {
+  getComments,
+  createComment,
+  updateComment,
+  deleteComment,
+} from "../../api/commentsApi";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
@@ -45,7 +50,10 @@ export const useComments = (userId, projectId, user) => {
     mutationFn: (commentData) => createComment(userId, projectId, commentData),
     onMutate: async (newCommentData) => {
       await queryClient.cancelQueries(["comments", projectId]);
-      const previousComments = queryClient.getQueryData(["comments", projectId]);
+      const previousComments = queryClient.getQueryData([
+        "comments",
+        projectId,
+      ]);
 
       const optimisticComment = {
         _id: "temp-" + Date.now(),
@@ -66,7 +74,10 @@ export const useComments = (userId, projectId, user) => {
       return { previousComments };
     },
     onError: (err, newCommentData, context) => {
-      queryClient.setQueryData(["comments", projectId], context.previousComments);
+      queryClient.setQueryData(
+        ["comments", projectId],
+        context.previousComments
+      );
       toast.error(handleError(err));
     },
     onSettled: () => {
@@ -83,7 +94,10 @@ export const useComments = (userId, projectId, user) => {
       updateComment(userId, projectId, commentId, commentData),
     onMutate: async ({ commentId, commentData }) => {
       await queryClient.cancelQueries(["comments", projectId]);
-      const previousComments = queryClient.getQueryData(["comments", projectId]);
+      const previousComments = queryClient.getQueryData([
+        "comments",
+        projectId,
+      ]);
 
       queryClient.setQueryData(["comments", projectId], (old) => ({
         ...old,
@@ -97,7 +111,10 @@ export const useComments = (userId, projectId, user) => {
       return { previousComments };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData(["comments", projectId], context.previousComments);
+      queryClient.setQueryData(
+        ["comments", projectId],
+        context.previousComments
+      );
       toast.error(handleError(err));
     },
     onSettled: () => {
@@ -114,7 +131,10 @@ export const useComments = (userId, projectId, user) => {
     mutationFn: (commentId) => deleteComment(userId, projectId, commentId),
     onMutate: async (commentId) => {
       await queryClient.cancelQueries(["comments", projectId]);
-      const previousComments = queryClient.getQueryData(["comments", projectId]);
+      const previousComments = queryClient.getQueryData([
+        "comments",
+        projectId,
+      ]);
 
       queryClient.setQueryData(["comments", projectId], (old) => ({
         ...old,
@@ -124,7 +144,10 @@ export const useComments = (userId, projectId, user) => {
       return { previousComments };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData(["comments", projectId], context.previousComments);
+      queryClient.setQueryData(
+        ["comments", projectId],
+        context.previousComments
+      );
       toast.error(handleError(err));
     },
     onSettled: () => {
@@ -238,4 +261,4 @@ export const useComments = (userId, projectId, user) => {
     handleEditComment,
     handleDeleteComment,
   };
-}; 
+};

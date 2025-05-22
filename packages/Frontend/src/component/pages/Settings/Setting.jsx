@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useUser } from "../../../hooks/useUserInfo";
+import { useUser } from "../../../hooks/users/useUserInfo";
 import { useAuthStore } from "../../../stores/authStore";
 import ImageUpdateModal from "./modals/ImageUpdateModal";
 import GeneralSettings from "./taps/GeneralSettings";

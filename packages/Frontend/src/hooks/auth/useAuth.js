@@ -10,8 +10,8 @@ import {
   handleGoogleCallback,
   getUser,
   verifyEmail,
-} from "../api/auth";
-import { useAuthStore } from "../stores/authStore";
+} from "../../api/auth";
+import { useAuthStore } from "../../stores/authStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

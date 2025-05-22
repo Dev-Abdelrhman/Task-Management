@@ -1,23 +1,18 @@
-import React from "react";
 import AddProjectBtn from "../ProjectModals/AddProjectBtn";
 import { useNavigate } from "react-router-dom";
 import { categories } from "../../../../constants/categories";
 import ProjectFilters from "./ProjectFilters";
 import ProjectSection from "./ProjectSection";
-import { useProjects } from "../../../../hooks/useProjects";
-import { useProjectFilters } from "../../../../hooks/useProjectFilters";
+import { useProjects } from "../../../../hooks/projects/useProjects";
+import { useProjectFilters } from "../../../../hooks/projects/useProjectFilters";
 import "swiper/css";
 import "swiper/css/navigation";
 
 function Projects() {
   const navigate = useNavigate();
   const { filters, actions } = useProjectFilters();
-  const {
-    privateProjects,
-    publicProjects,
-    overdueProjects,
-    doneProjects,
-  } = useProjects(filters);
+  const { privateProjects, publicProjects, overdueProjects, doneProjects } =
+    useProjects(filters);
 
   const handleClick = (projectId) => {
     navigate(`/projects/ProjectDetails/${projectId}`);

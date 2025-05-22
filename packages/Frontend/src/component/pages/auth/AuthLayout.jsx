@@ -1,7 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
-import { ListTodo } from "lucide-react";
-import Button from "@mui/material/Button";
+
 import { useNavigate } from "react-router-dom";
 
 const AuthLayout = ({ children, title, subtitle }) => {
@@ -115,13 +113,11 @@ const AuthLayout = ({ children, title, subtitle }) => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="w-full flex items-center justify-center"
         >
-          <div className="w-full max-w-md">
-            {children}
-          </div>
+          <div className="w-full max-w-md">{children}</div>
         </motion.div>
       </div>
     </div>
   );
 };
 
-export default AuthLayout; 
+export default AuthLayout;

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Ban,
   Calendar,
@@ -23,7 +22,10 @@ const ProjectTasksDetails = ({ task, onClose, onEdit, onDelete }) => {
         {task?.image && (
           <div className="mb-6">
             <img
-              src={task?.image?.[0]?.url || "https://fakeimg.pl/1280x720?text=No+Image"}
+              src={
+                task?.image?.[0]?.url ||
+                "https://fakeimg.pl/1280x720?text=No+Image"
+              }
               alt="Task"
               className="w-full h-auto rounded-xl"
             />
@@ -184,4 +186,4 @@ const ProjectTasksDetails = ({ task, onClose, onEdit, onDelete }) => {
   );
 };
 
-export default ProjectTasksDetails; 
+export default ProjectTasksDetails;

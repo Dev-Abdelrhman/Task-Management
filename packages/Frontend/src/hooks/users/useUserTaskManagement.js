@@ -7,7 +7,7 @@ import {
   deleteTask,
   updateTask,
   getTaskById,
-} from "../api/user_tasks";
+} from "../../api/user_tasks";
 
 export const useUserTaskManagement = () => {
   const queryClient = useQueryClient();
@@ -146,4 +146,4 @@ export const useUserTaskManagement = () => {
     handleDeleteTask,
     updateMutation,
   };
-}; 
+};

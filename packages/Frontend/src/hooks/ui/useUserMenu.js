@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { useAuthStore } from "../stores/authStore";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../../stores/authStore";
+import { useAuth } from "../auth/useAuth";
 import { toast } from "react-toastify";
 
 export const useUserMenu = () => {
@@ -29,6 +29,6 @@ export const useUserMenu = () => {
     handleLogout,
     handleOpenUserMenu,
     handleCloseUserMenu,
-    user
+    user,
   };
-}; 
+};

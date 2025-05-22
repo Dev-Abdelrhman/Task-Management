@@ -6,7 +6,7 @@ import {
   getRoleById,
   deleteRole,
   updateRole,
-} from "../api/roles";
+} from "../../api/roles";
 import { toast } from "react-toastify";
 import { io } from "socket.io-client";
 
@@ -204,7 +204,9 @@ export const useRoles = (userId, projectId) => {
         roleData: { ...newRole, permissions: perms },
       });
     } catch (error) {
-      if (error.message === "You don't have permission to perform this action") {
+      if (
+        error.message === "You don't have permission to perform this action"
+      ) {
         toast.error("You don't have permission to modify this role");
         const currentRole = rolesData?.doc.find(
           (role) => role._id === editingRoleId

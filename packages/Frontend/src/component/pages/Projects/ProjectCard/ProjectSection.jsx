@@ -1,14 +1,18 @@
-import { Box, IconButton, Typography, LinearProgress, CircularProgress } from "@mui/material";
+import { Box, IconButton, Typography, LinearProgress } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
-import { ChevronLeft, ChevronRight, CircleCheck, Clock, Ban } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CircleCheck,
+  Clock,
+  Ban,
+} from "lucide-react";
 import ProjectOptionsMenu from "../ProjectModals/ProjectOptionsMenu";
 import DueDateStatus from "../../../../shared/DueDateStatus";
 
 function ProjectSection({ title, projects, handleClick, swiperClass }) {
   if (projects.length === 0) return null;
-
-
 
   return (
     <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
@@ -114,7 +118,10 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
                           <span className="text-green-500">Completed</span>
                         </>
                       ) : (
-                        <DueDateStatus dueDate={project.dueDate} progress={project.progress} />
+                        <DueDateStatus
+                          dueDate={project.dueDate}
+                          progress={project.progress}
+                        />
                       )}
                     </div>
                     <div className="flex -space-x-2">
@@ -150,4 +157,4 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
   );
 }
 
-export default ProjectSection; 
+export default ProjectSection;

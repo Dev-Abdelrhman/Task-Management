@@ -1,11 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { getUserProjects } from "../api/project";
-import { toast } from "react-toastify";
-import { useProjecthStore } from "../stores/projectStore";
-import { daleteProjectImage } from "../api/project";
-
+import { daleteProjectImage } from "../../api/project";
 export const useProject = () => {
-
   const deleteImageMutation = useMutation({
     mutationFn: async () => {
       daleteProjectImage();

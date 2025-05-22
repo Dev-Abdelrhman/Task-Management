@@ -5,8 +5,8 @@ import {
   removeUserImage,
   updateUserInfo,
   updateUserPassword,
-} from "../api/updateUserData";
-import { useAuthStore } from "../stores/authStore";
+} from "../../api/updateUserData";
+import { useAuthStore } from "../../stores/authStore";
 
 export const useUser = () => {
   const queryClient = useQueryClient();

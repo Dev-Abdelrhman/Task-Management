@@ -1,5 +1,3 @@
-import React from "react";
-import { motion } from "framer-motion";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -104,4 +102,4 @@ const AuthForm = ({
   );
 };
 
-export default AuthForm; 
+export default AuthForm;

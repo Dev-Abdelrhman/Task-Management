@@ -1,4 +1,3 @@
-import React from "react";
 import {
   LineChart,
   Line,
@@ -7,8 +6,8 @@ import {
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useTheme } from "../../../hooks/useTheme";
-import { useTasks } from "../../../hooks/useTasks";
+import { useTheme } from "../../../hooks/ui/useTheme";
+import { useTasks } from "../../../hooks/tasks/useTasks";
 import { CHART_COLORS, CHART_CONFIG } from "../../../constants/chart";
 
 const ActivityChart = () => {

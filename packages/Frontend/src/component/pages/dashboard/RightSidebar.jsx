@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Box,
@@ -11,7 +11,7 @@ import { Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getAllUserTasks } from "../../../api/user_tasks";
-import { useProjects } from "../../../hooks/useProjects";
+import { useProjects } from "../../../hooks/projects/useProjects";
 
 const RightSidebar = () => {
   const [currentDate] = useState(new Date());
@@ -30,7 +30,7 @@ const RightSidebar = () => {
   const getWeekDays = () => {
     const days = [];
     const start = new Date(currentDate);
-    start.setDate(currentDate.getDate() - currentDate.getDay()); 
+    start.setDate(currentDate.getDate() - currentDate.getDay());
 
     for (let i = 0; i < 7; i++) {
       const date = new Date(start);
@@ -219,7 +219,10 @@ const RightSidebar = () => {
           </div>
         ) : (
           <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#1a1a1a] dark:text-gray-200">
-            <Typography variant="body2" className="text-gray-500 dark:text-gray-400">
+            <Typography
+              variant="body2"
+              className="text-gray-500 dark:text-gray-400"
+            >
               No projects found
             </Typography>
           </div>

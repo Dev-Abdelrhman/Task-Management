@@ -1,19 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllUserTasks } from "../api/user_tasks";
+import { getAllUserTasks } from "../../api/user_tasks";
 import { useMemo } from "react";
 
 export const useTasks = () => {
-  const { data: tasksData, isLoading, isError, error } = useQuery({
+  const {
+    data: tasksData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["tasks"],
     queryFn: getAllUserTasks,
   });
 
   const taskStats = useMemo(() => {
-    if (!tasksData?.doc) return { totalTasks: 0, doneTasks: 0, remainingTasks: 0, percentage: 0 };
+    if (!tasksData?.doc)
+      return { totalTasks: 0, doneTasks: 0, remainingTasks: 0, percentage: 0 };
     const totalTasks = tasksData.results || 0;
-    const doneTasks = tasksData.doc.filter(task => task.status === "Completed").length;
+    const doneTasks = tasksData.doc.filter(
+      (task) => task.status === "Completed"
+    ).length;
     const remainingTasks = totalTasks - doneTasks;
-    const percentage = Math.floor(totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0);
+    const percentage = Math.floor(
+      totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0
+    );
     return { totalTasks, doneTasks, remainingTasks, percentage };
   }, [tasksData]);
 
@@ -28,7 +38,7 @@ export const useTasks = () => {
         counts[day]++;
       }
     });
-    return dayMap.map(day => ({ day, tasks: counts[day] }));
+    return dayMap.map((day) => ({ day, tasks: counts[day] }));
   }, [tasksData]);
 
   return {
@@ -37,6 +47,6 @@ export const useTasks = () => {
     isError,
     error,
     taskStats,
-    activityData
+    activityData,
   };
-}; 
+};

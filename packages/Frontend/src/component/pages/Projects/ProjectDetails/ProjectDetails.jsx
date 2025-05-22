@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "../../../../api/project";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useRoles } from "../../../../hooks/useRoles";
+import { useAuth } from "../../../../hooks/auth/useAuth";
+import { useRoles } from "../../../../hooks/features/useRoles";
 import InviteModal from "../../Invite/InviteModal";
 import ProjectHeader from "./components/ProjectHeader";
 import ProjectInfo from "./components/ProjectInfo";
@@ -150,33 +150,33 @@ function ProjectDetails() {
         newRole={newRole}
         onInputChange={handleInputChange}
         onPermissionChange={handlePermissionChange}
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    if (isEditing) {
-                await updateRoleMutation.mutateAsync({
-                        roleId: editingRoleId,
-                        roleData: newRole,
-                      });
-                    } else {
-                await createRoleMutation.mutateAsync(newRole);
-              }
-                  } catch (error) {
-              console.error("Error saving role:", error);
+        onSubmit={async (e) => {
+          e.preventDefault();
+          try {
+            if (isEditing) {
+              await updateRoleMutation.mutateAsync({
+                roleId: editingRoleId,
+                roleData: newRole,
+              });
+            } else {
+              await createRoleMutation.mutateAsync(newRole);
             }
+          } catch (error) {
+            console.error("Error saving role:", error);
+          }
         }}
       />
 
       <DeleteRoleModal
         open={deleteModalOpen}
         onClose={() => {
-                    setDeleteModalOpen(false);
-                    setRoleToDelete(null);
-                  }}
+          setDeleteModalOpen(false);
+          setRoleToDelete(null);
+        }}
         onDelete={async () => {
           try {
             await deleteRoleMutation.mutateAsync(roleToDelete);
-                    } catch (error) {
+          } catch (error) {
             console.error("Error deleting role:", error);
           }
         }}
@@ -193,9 +193,9 @@ function ProjectDetails() {
       <PermissionWarningModal
         open={showPermissionWarning}
         onClose={() => {
-                    setShowPermissionWarning(false);
-                    setPendingPermissionChange(null);
-                  }}
+          setShowPermissionWarning(false);
+          setPendingPermissionChange(null);
+        }}
         onConfirm={handleConfirmPermissionChange}
       />
     </>
