@@ -39,7 +39,7 @@ const TaskColumn = ({
           </button>
         </div>
 
-        <Droppable droppableId={column.id} direction="vertical">
+        <Droppable droppableId={column.id} direction="vertical" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
           {(provided) => (
             <div
               ref={provided.innerRef}
