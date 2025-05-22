@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
-// import { useAuth } from "../hooks/useAuth";
+import React from "react";
 import { toast } from "react-toastify";
 import {
-  Button,
   Box,
   IconButton,
   Typography,
@@ -14,8 +12,7 @@ import {
 } from "@mui/material";
 import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
-import { useAuth } from "../hooks/useAuth";
-
+import { useAuth } from "../hooks/auth/useAuth";
 function Navbar() {
   const { signOut, isLoading } = useAuth();
   const { user } = useAuthStore();

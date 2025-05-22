@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/auth/useAuth";
 import { toast } from "react-toastify";
 import { User, Lock } from "lucide-react";
 import { Button, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import AuthLayout from "./AuthLayout";
 import AuthForm from "./AuthForm";
-
 
 const CompleteSigninGoogle = () => {
   const location = useLocation();
@@ -91,77 +90,77 @@ const CompleteSigninGoogle = () => {
 
   return (
     <AuthLayout>
-        <AuthForm
-          title="Complete Sign Up"
-          subtitle="Finish setting up your account"
-          onSubmit={handleSubmit}
-          submitText="Complete Sign Up"
-          isLoading={isLoading}
-          footerText="Already have an account?"
-          footerLinkText="Back to Login"
-          onFooterLinkClick={() => navigate("/login")}
-          showGoogleButton={false}
-        >
-          {userData.image && (
-            <div className="flex justify-center mb-4">
-              <img
-                src={hostGoogleImage(userData.image)}
-                alt="Profile"
-                className="w-32 h-32 rounded-full border-4 border-blue-100"
-              />
+      <AuthForm
+        title="Complete Sign Up"
+        subtitle="Finish setting up your account"
+        onSubmit={handleSubmit}
+        submitText="Complete Sign Up"
+        isLoading={isLoading}
+        footerText="Already have an account?"
+        footerLinkText="Back to Login"
+        onFooterLinkClick={() => navigate("/login")}
+        showGoogleButton={false}
+      >
+        {userData.image && (
+          <div className="flex justify-center mb-4">
+            <img
+              src={hostGoogleImage(userData.image)}
+              alt="Profile"
+              className="w-32 h-32 rounded-full border-4 border-blue-100"
+            />
+          </div>
+        )}
+        <h2 className="!text-2xl text-center mb-0 capitalize">
+          {userData.name}
+        </h2>
+        <h2 className="!text-xl text-center text-gray-500 !mb-2">
+          {userData.email}
+        </h2>
+        <TextField
+          fullWidth
+          label={
+            <div className="flex items-center gap-2">
+              <User className="h-5 w-5 text-gray-400" />
+              <span>Username</span>
             </div>
-          )}
-          <h2 className="!text-2xl text-center mb-0 capitalize">
-            {userData.name}
-          </h2>
-          <h2 className="!text-xl text-center text-gray-500 !mb-2">
-            {userData.email}
-          </h2>
-          <TextField
-            fullWidth
-            label={
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5 text-gray-400" />
-                <span>Username</span>
-              </div>
-            }
-            name="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            className="mb-4"
-            placeholder="Choose a username"
-          />
-          <TextField
-            fullWidth
-            type="password"
-            label={
-              <div className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-gray-400" />
-                <span>Password</span>
-              </div>
-            }
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            className="mb-4"
-            placeholder="Create a password"
-          />
-          <TextField
-            fullWidth
-            type="password"
-            label={
-              <div className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-gray-400" />
-                <span>Confirm Password</span>
-              </div>
-            }
-            name="passwordConfirmation"
-            value={formData.passwordConfirmation}
-            onChange={handleInputChange}
-            className="mb-4"
-            placeholder="Confirm your password"
-          />
-        </AuthForm>
+          }
+          name="username"
+          value={formData.username}
+          onChange={handleInputChange}
+          className="mb-4"
+          placeholder="Choose a username"
+        />
+        <TextField
+          fullWidth
+          type="password"
+          label={
+            <div className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-gray-400" />
+              <span>Password</span>
+            </div>
+          }
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          className="mb-4"
+          placeholder="Create a password"
+        />
+        <TextField
+          fullWidth
+          type="password"
+          label={
+            <div className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-gray-400" />
+              <span>Confirm Password</span>
+            </div>
+          }
+          name="passwordConfirmation"
+          value={formData.passwordConfirmation}
+          onChange={handleInputChange}
+          className="mb-4"
+          placeholder="Confirm your password"
+        />
+      </AuthForm>
     </AuthLayout>
   );
 };

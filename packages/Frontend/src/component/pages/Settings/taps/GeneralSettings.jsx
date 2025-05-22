@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Avatar, CircularProgress } from "@mui/material";
 
 const GeneralSettings = ({
@@ -30,7 +29,9 @@ const GeneralSettings = ({
                 type="text"
                 id="name"
                 value={userData.name || ""}
-                onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, name: e.target.value })
+                }
                 className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
               />
             </div>
@@ -45,7 +46,9 @@ const GeneralSettings = ({
                 type="text"
                 id="username"
                 value={userData.username || ""}
-                onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, username: e.target.value })
+                }
                 className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
               />
             </div>
@@ -91,14 +94,20 @@ const GeneralSettings = ({
                 type="email"
                 id="email"
                 value={userData.email || ""}
-                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, email: e.target.value })
+                }
                 className="w-full px-3 py-2 border dark:bg-[#2D2D2D] dark:border-gray-600 dark:text-white rounded border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-transparent transition-colors"
               />
             </div>
             <div className="flex-col items-center justify-between">
-              <label className="text-sm text-gray-600 dark:text-gray-300">Theme</label>
+              <label className="text-sm text-gray-600 dark:text-gray-300">
+                Theme
+              </label>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600 dark:text-gray-300">Light</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  Light
+                </span>
                 <label className="relative inline-block w-11 h-6">
                   <input
                     type="checkbox"
@@ -108,13 +117,18 @@ const GeneralSettings = ({
                       const newTheme = theme === "light" ? "dark" : "light";
                       setTheme(newTheme);
                       localStorage.setItem("theme", newTheme);
-                      document.documentElement.classList.toggle("dark", newTheme === "dark");
+                      document.documentElement.classList.toggle(
+                        "dark",
+                        newTheme === "dark"
+                      );
                     }}
                   />
                   <div className="peer-checked:bg-indigo-600 bg-gray-300 rounded-full w-11 h-6 transition-all"></div>
                   <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5"></div>
                 </label>
-                <span className="text-sm text-gray-600 dark:text-gray-300">Dark</span>
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  Dark
+                </span>
               </div>
             </div>
           </div>
@@ -137,4 +151,4 @@ const GeneralSettings = ({
   );
 };
 
-export default GeneralSettings; 
+export default GeneralSettings;

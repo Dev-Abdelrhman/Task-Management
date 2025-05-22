@@ -5,7 +5,7 @@ import {
   deleteTaskStatus,
   updateTaskStatus,
   getOneTask,
-} from "../api/projectTasks";
+} from "../../api/projectTasks";
 
 export const useTaskMutations = (userId, projectId) => {
   const queryClient = useQueryClient();
@@ -83,7 +83,8 @@ export const useTaskMutations = (userId, projectId) => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ taskId, status }) => deleteTaskStatus(userId, projectId, taskId, status),
+    mutationFn: ({ taskId, status }) =>
+      deleteTaskStatus(userId, projectId, taskId, status),
     onSuccess: () => {
       toast.success("Task deleted successfully!");
       queryClient.invalidateQueries({
@@ -94,7 +95,8 @@ export const useTaskMutations = (userId, projectId) => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ taskId, taskData }) => updateTaskStatus(userId, projectId, taskId, taskData),
+    mutationFn: ({ taskId, taskData }) =>
+      updateTaskStatus(userId, projectId, taskId, taskData),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["projectTasks", userId, projectId],

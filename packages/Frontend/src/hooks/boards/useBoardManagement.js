@@ -1,5 +1,5 @@
 import { useBoardState } from "./useBoardState";
-import { useDragAndDrop } from "./useDragAndDrop";
+import { useDragAndDrop } from "../utils/useDragAndDrop";
 
 const statusMap = {
   backlog: "Pending",
@@ -24,4 +24,4 @@ export const useBoardManagement = (data, searchTerm, onStatusUpdate) => {
     handleDragEnd,
     statusColumns,
   };
-}; 
+};

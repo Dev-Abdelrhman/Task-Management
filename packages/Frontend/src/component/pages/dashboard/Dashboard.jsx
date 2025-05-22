@@ -1,5 +1,4 @@
 import Sidebar from "../../../shared/Sidebar";
-import React from "react";
 import { motion } from "framer-motion";
 import RightSidebar from "./RightSidebar";
 import ActivityChart from "./ActivityChart";
@@ -8,8 +7,6 @@ import RunningTask from "./RunningTask";
 import DashboardNav from "./DashboardNav";
 
 export default function TaskordDashboard() {
-
-
   return (
     <>
       <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#080808]">
@@ -34,4 +31,4 @@ export default function TaskordDashboard() {
       </div>
     </>
   );
-} 
+}

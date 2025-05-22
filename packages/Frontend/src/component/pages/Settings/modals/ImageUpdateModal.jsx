@@ -1,4 +1,3 @@
-import React from "react";
 import { CircularProgress, Button, Avatar } from "@mui/material";
 import { Trash, Upload, X } from "lucide-react";
 
@@ -92,4 +91,4 @@ const ImageUpdateModal = ({
   );
 };
 
-export default ImageUpdateModal; 
+export default ImageUpdateModal;

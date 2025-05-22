@@ -1,4 +1,3 @@
-import React from "react";
 import { Bell, Mail } from "lucide-react";
 import {
   IconButton,
@@ -9,7 +8,7 @@ import {
   Avatar,
   Tooltip,
 } from "@mui/material";
-import { useUserMenu } from "../../../hooks/useUserMenu";
+import { useUserMenu } from "../../../hooks/ui/useUserMenu";
 
 const DashboardNav = () => {
   const {

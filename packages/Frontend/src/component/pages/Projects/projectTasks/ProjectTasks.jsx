@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Search } from "lucide-react";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/auth/useAuth";
 import { Button } from "@mui/material";
 import AddProjectTask from "../ProjectModals/AddProjectTask";
 import ProjectTasksDetails from "./ProjectTasksDetails";
 import TaskColumn from "./TaskColumn";
 import DeleteTaskModal from "../ProjectModals/DeleteTaskModal";
-import { useTaskManagement } from "../../../../hooks/useTaskManagement";
-import { useBoardManagement } from "../../../../hooks/useBoardManagement";
+import { useTaskManagement } from "../../../../hooks/tasks/useTaskManagement";
+import { useBoardManagement } from "../../../../hooks/boards/useBoardManagement";
 
 const ProjectTasks = () => {
   const { projectId } = useParams();

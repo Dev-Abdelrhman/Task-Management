@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Send, MoreVertical } from "lucide-react";
 import { DateTime } from "luxon";
-import { useComments } from "../../../../../hooks/useComments";
+import { useComments } from "../../../../../hooks/features/useComments";
 
 const hostGoogleImage = (url) => {
   return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`;
@@ -113,7 +113,10 @@ const Comments = ({ userId, projectId, user }) => {
                           </Button>
                           <Menu
                             anchorEl={anchorEl}
-                            open={Boolean(anchorEl) && selectedCommentId === comment._id}
+                            open={
+                              Boolean(anchorEl) &&
+                              selectedCommentId === comment._id
+                            }
                             onClose={handleMenuClose}
                             PaperProps={{
                               sx: {
@@ -166,35 +169,41 @@ const Comments = ({ userId, projectId, user }) => {
                         </span>
                       )}
                     </div>
-                    {replies[comment._id] && replies[comment._id].length > 0 && (
-                      <div className="ml-6 mt-2 space-y-2">
-                        {replies[comment._id].map((reply, index) => (
-                          <div key={index} className="flex gap-3 items-start">
-                            <Avatar
-                              className="!w-8 !h-8"
-                              src={
-                                reply.user?.image?.length
-                                  ? hostGoogleImage(reply.user.image[0].url)
-                                  : undefined
-                              }
-                            />
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-gray-800 text-sm">
-                                  @{reply.user?.name.toLowerCase().replace(/\s+/g, "")}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {DateTime.fromISO(reply.createdAt).toRelative()}
-                                </span>
+                    {replies[comment._id] &&
+                      replies[comment._id].length > 0 && (
+                        <div className="ml-6 mt-2 space-y-2">
+                          {replies[comment._id].map((reply, index) => (
+                            <div key={index} className="flex gap-3 items-start">
+                              <Avatar
+                                className="!w-8 !h-8"
+                                src={
+                                  reply.user?.image?.length
+                                    ? hostGoogleImage(reply.user.image[0].url)
+                                    : undefined
+                                }
+                              />
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-800 text-sm">
+                                    @
+                                    {reply.user?.name
+                                      .toLowerCase()
+                                      .replace(/\s+/g, "")}
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    {DateTime.fromISO(
+                                      reply.createdAt
+                                    ).toRelative()}
+                                  </span>
+                                </div>
+                                <p className="text-gray-800 text-sm mt-1">
+                                  {reply.comment}
+                                </p>
                               </div>
-                              <p className="text-gray-800 text-sm mt-1">
-                                {reply.comment}
-                              </p>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                          ))}
+                        </div>
+                      )}
                   </div>
                 </div>
               ))}
@@ -206,4 +215,4 @@ const Comments = ({ userId, projectId, user }) => {
   );
 };
 
-export default Comments; 
+export default Comments;

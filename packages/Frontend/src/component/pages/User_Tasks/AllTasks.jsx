@@ -1,35 +1,15 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
-  Ban,
-  Calendar,
-  CircleAlert,
-  MoreHorizontal,
-  Plus,
   Search,
-  SignalHigh,
-  SignalLow,
-  SignalMedium,
-  SquarePen,
-  Trash2,
-  X,
 } from "lucide-react";
 import AddTask from "./AddTask";
-import {
-  getAllUserTasks,
-  createTask,
-  deleteTask,
-  updateTask,
-  getTaskById,
-} from "../../../api/user_tasks";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import TaskColumn from "../Projects/projectTasks/TaskColumn";
 import DeleteTaskModal from "../Projects/ProjectModals/DeleteTaskModal";
 import ProjectTasksDetails from "../Projects/projectTasks/ProjectTasksDetails";
-import { useUserTaskManagement } from "../../../hooks/useUserTaskManagement";
-import { useUserBoardManagement } from "../../../hooks/useUserBoardManagement";
+import { useUserTaskManagement } from "../../../hooks/users/useUserTaskManagement";
+import { useUserBoardManagement } from "../../../hooks/boards/useUserBoardManagement";
 
 const statusMap = {
   backlog: "Pending",

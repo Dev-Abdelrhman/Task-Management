@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { getUserProjects } from "../api/project";
-import { useAuthStore } from "../stores/authStore";
-import socket from "../utils/socket";
+import { getUserProjects } from "../../api/project";
+import { useAuthStore } from "../../stores/authStore";
+import socket from "../../utils/socket";
 
 export const useProjectQuery = () => {
   const { user } = useAuthStore();
@@ -21,6 +21,8 @@ export const useProjectQuery = () => {
     },
     enabled: !!user?._id,
   });
+
+  console.log(projectData);
 
   useEffect(() => {
     if (!user) return;
@@ -83,4 +85,4 @@ export const useProjectQuery = () => {
     isError: isProjectsError,
     error: projectsError,
   };
-}; 
+};

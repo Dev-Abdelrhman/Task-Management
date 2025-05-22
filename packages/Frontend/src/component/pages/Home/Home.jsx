@@ -1,14 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@mui/material";
-import {
-  CheckCircle,
-  Clock,
-  ListTodo,
-  PlusCircle,
-  Star,
-  TrendingUp,
-} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./components/Hero";

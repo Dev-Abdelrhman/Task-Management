@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@mui/material";
 
 const SecuritySettings = ({
@@ -77,4 +76,4 @@ const SecuritySettings = ({
   );
 };
 
-export default SecuritySettings; 
+export default SecuritySettings;
