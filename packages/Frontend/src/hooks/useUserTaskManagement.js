@@ -93,11 +93,7 @@ export const useUserTaskManagement = () => {
   });
 
   const handleTaskClick = (task) => {
-    if (task.title && task.description) {
-      setTaskDetailsModal({ show: true, task });
-    } else {
-      fetchTaskDetails.mutate(task._id);
-    }
+    fetchTaskDetails.mutate(task._id);
   };
 
   const handleAddTask = async (taskData) => {

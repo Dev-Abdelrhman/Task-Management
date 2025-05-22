@@ -25,8 +25,9 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
-import TaskColumn from "../Projects/TaskColumn";
+import TaskColumn from "../Projects/projectTasks/TaskColumn";
 import DeleteTaskModal from "../Projects/ProjectModals/DeleteTaskModal";
+import ProjectTasksDetails from "../Projects/projectTasks/ProjectTasksDetails";
 import { useUserTaskManagement } from "../../../hooks/useUserTaskManagement";
 import { useUserBoardManagement } from "../../../hooks/useUserBoardManagement";
 
@@ -89,6 +90,16 @@ export default function AllTasks() {
     setShowModal(true);
   };
 
+  const handleEditTaskFromDetails = (task) => {
+    setTaskDetailsModal({ show: false, task: null });
+    openEditTaskModal(task);
+  };
+
+  const handleDeleteTaskFromDetails = (taskId) => {
+    setTaskDetailsModal({ show: false, task: null });
+    setDeleteModal({ show: true, taskId });
+  };
+
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -126,6 +137,15 @@ export default function AllTasks() {
       </div>
 
       <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px]">
+        {taskDetailsModal.show && (
+          <ProjectTasksDetails
+            task={taskDetailsModal.task}
+            onClose={() => setTaskDetailsModal({ show: false, task: null })}
+            onEdit={() => handleEditTaskFromDetails(taskDetailsModal.task)}
+            onDelete={() => handleDeleteTaskFromDetails(taskDetailsModal.task._id)}
+          />
+        )}
+
         {showModal && (
           <AddTask
             closeModal={() => {

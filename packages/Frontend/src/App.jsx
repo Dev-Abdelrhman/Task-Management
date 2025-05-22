@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
 import Projects from "./component/pages/Projects/ProjectCard/Projects";
 import ProjectDetails from "./component/pages/Projects/ProjectDetails/ProjectDetails";
-import ProjectTasks from "./component/pages/Projects/ProjectTasks";
+import ProjectTasks from "./component/pages/Projects/projectTasks/ProjectTasks";
 import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
 import GoogleCallback from "./component/pages/auth/GoogleCallback";
 import AllTasks from "./component/pages/User_Tasks/AllTasks";

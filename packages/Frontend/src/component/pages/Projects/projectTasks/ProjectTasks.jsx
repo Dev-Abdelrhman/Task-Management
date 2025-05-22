@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Search } from "lucide-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import { Button } from "@mui/material";
-import AddProjectTask from "./AddProjectTask";
+import AddProjectTask from "../ProjectModals/AddProjectTask";
 import ProjectTasksDetails from "./ProjectTasksDetails";
 import TaskColumn from "./TaskColumn";
-import DeleteTaskModal from "./ProjectModals/DeleteTaskModal";
-import { useTaskManagement } from "../../../hooks/useTaskManagement";
-import { useBoardManagement } from "../../../hooks/useBoardManagement";
+import DeleteTaskModal from "../ProjectModals/DeleteTaskModal";
+import { useTaskManagement } from "../../../../hooks/useTaskManagement";
+import { useBoardManagement } from "../../../../hooks/useBoardManagement";
 
 const ProjectTasks = () => {
   const { projectId } = useParams();
@@ -32,7 +32,7 @@ const ProjectTasks = () => {
     isDeleting,
     handleAddTask,
     handleDeleteTask,
-    fetchTaskDetails,
+    handleFetchTaskDetails,
     updateMutation,
   } = useTaskManagement(user?._id, projectId);
 
@@ -47,7 +47,7 @@ const ProjectTasks = () => {
   );
 
   const handleTaskClick = (task) => {
-    fetchTaskDetails.mutate({ taskId: task._id });
+    handleFetchTaskDetails(task._id);
   };
 
   const openAddTaskModal = (columnId) => {

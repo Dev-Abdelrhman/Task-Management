@@ -56,7 +56,7 @@ export const useTaskManagement = (userId, projectId) => {
 
   const handleFetchTaskDetails = (taskId) => {
     fetchTaskDetails.mutate(
-      { taskId },
+      taskId,
       {
         onSuccess: (data) => {
           const task = data.doc || data;
