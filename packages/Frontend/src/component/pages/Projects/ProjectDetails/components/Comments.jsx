@@ -38,7 +38,7 @@ const Comments = ({ userId, projectId, user }) => {
     handleMenuClose,
     handleEditComment,
     handleDeleteComment,
-  } = useComments(userId, projectId);
+  } = useComments(userId, projectId, user);
 
   return (
     <div className="ml-16 pt-4">
