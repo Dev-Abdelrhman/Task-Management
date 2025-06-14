@@ -64,7 +64,9 @@ const RoleModal = ({
               </h3>
               <button
                 type="button"
-                onClick={() => onInputChange({ target: { name: "permissions", value: [] } })}
+                onClick={() =>
+                  onInputChange({ target: { name: "permissions", value: [] } })
+                }
                 className="text-xs text-blue-600 dark:text-gray-400 hover:text-blue-800"
               >
                 Clear permissions
@@ -142,7 +144,6 @@ const RoleModal = ({
           <div className="flex justify-end gap-2 mt-6 border-t pt-4">
             <Button
               onClick={onClose}
-              variant="outlined"
               className="!text-base !py-2 !capitalize !bg-[#f83131] hover:shadow-lg hover:shadow-red-700 !font-medium !text-white !rounded-[10px]"
             >
               Cancel
@@ -160,4 +161,4 @@ const RoleModal = ({
   );
 };
 
-export default RoleModal; 
+export default RoleModal;

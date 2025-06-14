@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
 
-import { useNavigate } from "react-router-dom";
-
-const AuthLayout = ({ children, title, subtitle }) => {
-  const navigate = useNavigate();
-
+const AuthLayout = ({ children }) => {
   return (
     <div className="flex h-screen w-full">
       {/* Left side - Decorative background */}

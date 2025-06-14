@@ -13,72 +13,47 @@ export const useTaskMutations = (userId, projectId) => {
   const createMutation = useMutation({
     mutationFn: (newTask) => createProjectTask(userId, projectId, newTask),
     onMutate: async (newTask) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({
         queryKey: ["projectTasks", userId, projectId],
       });
-
-      // Snapshot the previous value
       const previousTasks = queryClient.getQueryData([
         "projectTasks",
         userId,
         projectId,
       ]);
-
-      // Create a temporary ID for optimistic update
       const tempId = `temp-${Date.now()}`;
 
-      // Optimistically update to the new value
       queryClient.setQueryData(["projectTasks", userId, projectId], (old) => {
-        const tasks = old?.doc || [];
-        const optimisticTask = {
-          ...newTask,
-          _id: tempId,
-          status: newTask.status || "Pending",
-          dueDate: newTask.dueDate || new Date().toISOString(),
-        };
+        if (!old?.doc) return { doc: [{ ...newTask, _id: tempId }] };
         return {
           ...old,
-          doc: [...tasks, optimisticTask],
+          doc: [
+            ...old.doc,
+            {
+              ...newTask,
+              _id: tempId,
+              status: newTask.status || "Pending",
+              dueDate: newTask.dueDate || new Date().toISOString(),
+            },
+          ],
         };
       });
-
       return { previousTasks, tempId };
     },
-    onSuccess: (data, variables, context) => {
-      // Update the cache with the real data, replacing the temporary task
-      queryClient.setQueryData(["projectTasks", userId, projectId], (old) => {
-        const tasks = old?.doc || [];
-        return {
-          ...old,
-          doc: tasks
-            .map((task) => (task._id === context.tempId ? data.doc : task))
-            .filter(
-              (task) => task._id !== context.tempId || task._id === data.doc._id
-            ),
-        };
-      });
+    onSuccess: () => {
       toast.success("Task created successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["projectTasks", userId, projectId],
+      });
     },
-    onError: (err, variables, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (err, _, context) => {
       if (context?.previousTasks) {
         queryClient.setQueryData(
           ["projectTasks", userId, projectId],
           context.previousTasks
         );
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: ["projectTasks", userId, projectId],
-        });
       }
       toast.error("Failed to create task!");
-    },
-    onSettled: () => {
-      // Always refetch after error or success to ensure cache is in sync
-      queryClient.invalidateQueries({
-        queryKey: ["projectTasks", userId, projectId],
-      });
     },
   });
 

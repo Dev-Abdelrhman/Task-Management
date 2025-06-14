@@ -15,7 +15,7 @@ const ActivityChart = () => {
   const { isDarkMode } = useTheme();
   const colors = isDarkMode ? CHART_COLORS.dark : CHART_COLORS.light;
 
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-gray-900 text-white px-2 py-1 rounded text-xs">

@@ -1,13 +1,7 @@
 import { Box, IconButton, Typography, LinearProgress } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
-import {
-  ChevronLeft,
-  ChevronRight,
-  CircleCheck,
-  Clock,
-  Ban,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
 import ProjectOptionsMenu from "../ProjectModals/ProjectOptionsMenu";
 import DueDateStatus from "../../../../shared/DueDateStatus";
 
@@ -43,13 +37,17 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
           breakpoints={{
             640: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
-            1024: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
           }}
-          className="upcoming-task-swiper"
+          className="upcoming-task-swiper !overflow-hidden max-w-[1600px]"
         >
           {projects.map((project, index) => (
-            <SwiperSlide key={index} className="!w-auto">
-              <div className="bg-white p-4 dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg mb-4">
+            <SwiperSlide
+              key={index}
+              className="!w-full sm:!w-auto  !flex-shrink-0"
+            >
+              <div className="bg-white p-4  dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg mb-4">
                 <div className="my-1" onClick={() => handleClick(project._id)}>
                   <Box
                     component="img"

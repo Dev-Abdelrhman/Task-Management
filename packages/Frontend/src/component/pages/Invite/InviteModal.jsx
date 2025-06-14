@@ -54,7 +54,7 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         projectId,
         inviteData: {
           username: selectedUser.username,
-          roleId: selectedRoleId, // Now using the role ID
+          roleId: selectedRoleId,
         },
       });
       onClose();

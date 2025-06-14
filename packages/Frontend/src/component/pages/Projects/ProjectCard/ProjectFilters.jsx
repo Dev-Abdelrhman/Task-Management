@@ -14,8 +14,8 @@ function ProjectFilters({
   const { setSearchQuery, setSelectedCategory, toggleSortOrder } = actions;
 
   return (
-    <div className="bg-white dark:bg-[#080808] flex justify-between items-center px-6 pt-2 pb-6">
-      <div className="relative w-1/2">
+    <div className="bg-white dark:bg-[#080808] flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 pt-2 pb-6 gap-4">
+      <div className="relative w-full sm:w-1/2">
         <span className="absolute inset-y-0 left-[2px] flex items-center pl-3">
           <Search className="h-5 w-5 text-[#8E92BC]" />
         </span>
@@ -27,11 +27,11 @@ function ProjectFilters({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <div className="flex justify-end gap-4 items-center mr-1">
+      <div className="flex flex-wrap justify-end gap-2 sm:gap-4 items-center w-full sm:w-auto">
         <Button
           variant="outlined"
           startIcon={<ChartBarStacked className="w-6 h-6 !text-[#8E92BC]" />}
-          className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] dark:hover:!bg-[#353535] dark:!text-[#a0a0a0] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+          className="!border-gray-200 !text-gray-700 !text-sm !rounded-[10px] dark:hover:!bg-[#353535] dark:!text-[#a0a0a0] !py-3 !px-4 sm:!px-6 hover:!bg-gray-50 !capitalize"
           onClick={(e) => setAnchorEl(e.currentTarget)}
         >
           {selectedCategory || "Category"}
@@ -67,7 +67,7 @@ function ProjectFilters({
         <Button
           variant="outlined"
           startIcon={<FilterListIcon className="!w-6 !h-6 !text-[#8E92BC]" />}
-          className="!border-gray-200 !text-gray-700 !rounded-[10px] dark:!text-[#a0a0a0] dark:hover:!bg-[#353535] !py-3 !px-6 hover:!bg-gray-50 !capitalize"
+          className="!border-gray-200 !text-gray-700 !rounded-[10px] dark:!text-[#a0a0a0] dark:hover:!bg-[#353535] !py-3 !px-4 sm:!px-6 hover:!bg-gray-50 !capitalize"
           onClick={toggleSortOrder}
         >
           {sortOrder === "asc"

@@ -33,7 +33,6 @@ const Comments = ({ userId, projectId, user }) => {
     updateCommentMutation,
     deleteCommentMutation,
     handleCommentSubmit,
-    handleReplySubmit,
     handleMenuOpen,
     handleMenuClose,
     handleEditComment,

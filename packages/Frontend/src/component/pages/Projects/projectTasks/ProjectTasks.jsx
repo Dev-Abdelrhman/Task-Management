@@ -40,7 +40,7 @@ const ProjectTasks = () => {
     data,
     searchTerm,
     (taskId, newStatus) => {
-      if (user?._id && taskId && !taskId.startsWith("temp-")) {
+      if (user?._id && taskId) {
         updateMutation.mutate({ taskId, taskData: { status: newStatus } });
       }
     }
@@ -66,6 +66,14 @@ const ProjectTasks = () => {
     setDetailsModal({ show: false, task: null });
     setEditTask(task);
     setShowModal(true);
+  };
+
+  const handleAddTaskSuccess = async (formData) => {
+    const success = await handleAddTask(formData);
+    if (success) {
+      setShowModal(false);
+      setEditTask(null);
+    }
   };
 
   if (!user)
@@ -120,7 +128,7 @@ const ProjectTasks = () => {
               setShowModal(false);
               setEditTask(null);
             }}
-            onAddTask={handleAddTask}
+            onAddTask={handleAddTaskSuccess}
             editTask={editTask}
           />
         )}
