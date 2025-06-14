@@ -91,7 +91,7 @@ const DeleteProjectModal = ({ projectId, projectData, onClose }) => {
           </Button>
           <Button
             onClick={handleDelete}
-            className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 hover:!text-white bg-red-600 hover:bg-red-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={
               deleteConfirmation.trim().toLowerCase() !==
               projectData.name.trim().toLowerCase()
@@ -105,4 +105,4 @@ const DeleteProjectModal = ({ projectId, projectData, onClose }) => {
   );
 };
 
-export default DeleteProjectModal; 
+export default DeleteProjectModal;

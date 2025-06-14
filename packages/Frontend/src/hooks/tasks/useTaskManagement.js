@@ -43,7 +43,7 @@ export const useTaskManagement = (userId, projectId) => {
   const handleDeleteTask = async (taskId) => {
     setIsDeleting(true);
     try {
-      await deleteMutation.mutateAsync(taskId);
+      await deleteMutation.mutateAsync({ taskId, status: "deleted" });
       setDeleteModal({ show: false, taskId: null });
     } finally {
       setIsDeleting(false);

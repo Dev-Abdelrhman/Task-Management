@@ -9,19 +9,12 @@ import {
 } from "@mui/material";
 import { Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getAllUserTasks } from "../../../api/user_tasks";
 import { useProjects } from "../../../hooks/projects/useProjects";
 
 const RightSidebar = () => {
   const [currentDate] = useState(new Date());
   const navigate = useNavigate();
   const { projects, isLoading: projectLoading } = useProjects();
-
-  const { data: tasksData } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getAllUserTasks,
-  });
 
   const formatMonth = (date) => {
     return date.toLocaleString("default", { month: "long", year: "numeric" });

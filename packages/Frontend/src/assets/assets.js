@@ -1,16 +1,7 @@
-import arrow_icon from './arrow_icon.svg'
-import lock_icon from './lock_icon.svg'
-import logo from './logo.svg'
-import mail_icon from './mail_icon.svg'
-import person_icon from './person_icon.svg'
-import hand_wave from './hand_wave.png'
-import header_img from './header_img.png'
 import eye_open_icon from './eye.png'
 import eye_closed_icon from './open-eye.png'
 import x from './x.png'
 import check_icon from './check.png'
-import left_Arrow from './left-arrow.png'
-import signIn from './sign_in.jpg'
 import google from './google.png'
 import bg from './bg_img.png'
 
@@ -18,21 +9,12 @@ export const cursors = {
     cursor: 'pointer',
 }
 
-export  {bg} ;
+export { bg };
 
 export const assets = {
-    arrow_icon,
-    lock_icon,
-    logo,
-    mail_icon,
-    person_icon,
-    hand_wave,
-    header_img,
     eye_open_icon,
     eye_closed_icon,
     x,
     check_icon,
-    left_Arrow,
-    signIn,
     google
 }

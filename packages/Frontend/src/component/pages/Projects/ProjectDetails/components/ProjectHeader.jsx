@@ -1,12 +1,14 @@
 import { Box, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 const ProjectHeader = ({ project, onJoinClick }) => {
   return (
     <>
       <Box
         component="img"
-        src={project?.image?.[0]?.url || "https://fakeimg.pl/1280x720?text=No+Image"}
+        src={
+          project?.image?.[0]?.url ||
+          "https://fakeimg.pl/1280x720?text=No+Image"
+        }
         alt="check your img project"
         sx={{
           width: "100%",
@@ -32,4 +34,4 @@ const ProjectHeader = ({ project, onJoinClick }) => {
   );
 };
 
-export default ProjectHeader; 
+export default ProjectHeader;

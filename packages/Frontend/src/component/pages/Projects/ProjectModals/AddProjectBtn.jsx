@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAuthStore } from "../../../../stores/authStore";
-import {
-  addProject,
-  updateProject,
-  deleteProjectImage,
-} from "../../../../api/project";
+import { addProject, updateProject } from "../../../../api/project";
 import { Button, CircularProgress } from "@mui/material";
-import { Plus, Upload, Trash } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { categories } from "../../../../constants/categories";
 import ProjectImageUpload from "./ProjectImageUpload";
@@ -65,8 +61,11 @@ function AddProjectBtn({
           ? "Project updated successfully"
           : "Project added successfully!"
       );
-      handleClose();
-      if (isEditMode) onClose();
+      if (isEditMode) {
+        onClose();
+      } else {
+        setLocalShowModal(false);
+      }
     },
     onError: () => {
       toast.error(
