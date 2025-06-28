@@ -7,8 +7,10 @@ import {
   updateUserPassword,
 } from "../../api/updateUserData";
 import { useAuthStore } from "../../stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 export const useUser = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, setUser } = useAuthStore();
 
@@ -69,6 +71,8 @@ export const useUser = () => {
     },
     onSuccess: () => {
       queryClient.clear();
+      setUser(null);
+      navigate("/login");
       toast.success("User deleted successfully");
     },
     onError: (err) => {
