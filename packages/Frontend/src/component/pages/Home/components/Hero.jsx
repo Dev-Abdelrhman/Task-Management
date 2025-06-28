@@ -34,8 +34,8 @@ export default function Hero() {
             <span className="text-[#3D53DB]">efficiency</span>
           </h1>
           <p className="text-lg text-blue-700/80">
-            Streamline your workflow, collaborate seamlessly, and accomplish more
-            with our intuitive task management platform.
+            Streamline your workflow, collaborate seamlessly, and accomplish
+            more with our intuitive task management platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button
@@ -56,7 +56,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 4, delay: 0.2 }}
           className="relative"
         >
           <div className="relative h-[400px] w-full overflow-hidden rounded-xl border border-blue-200 bg-white shadow-xl">
@@ -84,7 +84,9 @@ export default function Hero() {
                 className="absolute top-8 left-4 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="font-medium text-blue-900">Project Planning</h3>
+                  <h3 className="font-medium text-blue-900">
+                    Project Planning
+                  </h3>
                   <Clock className="h-4 w-4 text-[#3D53DB]" />
                 </div>
                 <div className="h-2 w-full rounded-full bg-blue-100">
@@ -100,7 +102,9 @@ export default function Hero() {
                 className="absolute top-40 left-12 w-64 rounded-lg border border-green-100 bg-white p-4 shadow-md"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="font-medium text-blue-900">Website Redesign</h3>
+                  <h3 className="font-medium text-blue-900">
+                    Website Redesign
+                  </h3>
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="h-2 w-full rounded-full bg-green-100">
@@ -116,7 +120,9 @@ export default function Hero() {
                 className="absolute top-72 left-6 w-64 rounded-lg border border-blue-100 bg-white p-4 shadow-md"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="font-medium text-blue-900">Content Creation</h3>
+                  <h3 className="font-medium text-blue-900">
+                    Content Creation
+                  </h3>
                   <PlusCircle className="h-4 w-4 text-[#3D53DB]" />
                 </div>
                 <div className="flex gap-2 mt-2">
@@ -134,4 +140,4 @@ export default function Hero() {
       </div>
     </section>
   );
-} 
+}

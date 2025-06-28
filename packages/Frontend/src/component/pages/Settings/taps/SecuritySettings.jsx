@@ -4,6 +4,7 @@ const SecuritySettings = ({
   passwordData,
   handleInputChange,
   handleUpdatePassword,
+  handleDeleteUser,
 }) => {
   return (
     <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6">
@@ -64,12 +65,18 @@ const SecuritySettings = ({
           />
         </div>
       </div>
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-4 gap-2">
         <Button
           onClick={handleUpdatePassword}
           className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
         >
           Save Changes
+        </Button>
+        <Button
+          onClick={handleDeleteUser}
+          className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+        >
+          Delete account
         </Button>
       </div>
     </div>

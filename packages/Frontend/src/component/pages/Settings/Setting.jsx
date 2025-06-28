@@ -6,6 +6,7 @@ import ImageUpdateModal from "./modals/ImageUpdateModal";
 import GeneralSettings from "./taps/GeneralSettings";
 import SecuritySettings from "./taps/SecuritySettings";
 import NotificationSettings from "./taps/NotificationSettings";
+import DeleteUserModal from "./modals/DeleteUserModal";
 
 export default function Setting() {
   const {
@@ -14,6 +15,8 @@ export default function Setting() {
     isRemovingImage,
     isUpdating: isUserUpdating,
     updatePassword: updateUserPassword,
+    deleteUser,
+    isDeleting,
   } = useUser();
   const { user, setUser } = useAuthStore();
 
@@ -32,6 +35,7 @@ export default function Setting() {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -150,6 +154,10 @@ export default function Setting() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    await deleteUser();
+  };
+
   return (
     <div className="bg-white dark:bg-[#080808]">
       <ImageUpdateModal
@@ -162,6 +170,14 @@ export default function Setting() {
         handleUpdateImage={handleUpdateImage}
         isRemovingImage={isRemovingImage}
         userData={userData}
+        handleDeleteUser={handleDeleteUser}
+      />
+      <DeleteUserModal
+        showModal={showDeleteUserModal}
+        onClose={() => setShowDeleteUserModal(false)}
+        onConfirm={handleDeleteUser}
+        isDeleting={isDeleting}
+        user={user}
       />
 
       <div className="flex border-b dark:border-0 ml-2 mb-6 bg-white dark:bg-[#080808]">
@@ -217,6 +233,7 @@ export default function Setting() {
           passwordData={passwordData}
           handleInputChange={handleInputChange}
           handleUpdatePassword={handleUpdatePassword}
+          handleDeleteUser={() => setShowDeleteUserModal(true)}
         />
       )}
     </div>
