@@ -3,15 +3,15 @@ import { Button } from "@mui/material";
 import ImageUpload from "../Projects/ProjectModals/ImageUpload";
 import PrioritySelect from "../Projects/ProjectModals/PrioritySelect";
 
-const AddTask = ({ closeModal, onAddTask, editTask }) => {
-  const [status, setStatus] = useState("Pending");
+const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
+  const [status, setStatus] = useState(statusFromColumn || "Pending");
   const [taskName, setTaskName] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [priority, setPriority] = useState("Normal");
   const [disablePriority, setDisablePriority] = useState(false);
-  
+
   // States for image handling
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(
@@ -27,6 +27,9 @@ const AddTask = ({ closeModal, onAddTask, editTask }) => {
       setPriority(editTask.priority || "Normal");
       setDisablePriority(!!editTask.priority);
       setImagePreview(editTask.image?.[0]?.url || editTask.image || null);
+    } else if (statusFromColumn) {
+      setStatus(statusFromColumn);
+      setDisablePriority(false);
     } else {
       setTaskName("");
       setDescription("");
@@ -37,7 +40,7 @@ const AddTask = ({ closeModal, onAddTask, editTask }) => {
       setImagePreview(null);
       setImageFile(null);
     }
-  }, [editTask]);
+  }, [editTask, statusFromColumn]);
 
   const handleImageChange = (preview, file) => {
     setImagePreview(preview);
@@ -140,6 +143,7 @@ const AddTask = ({ closeModal, onAddTask, editTask }) => {
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               className="w-full p-2 dark:bg-[#2D2D2D] border dark:text-gray-300 border-gray-300 rounded"
+              disabled={!!statusFromColumn && !editTask}
             >
               <option className="dark:text-gray-400" value="Pending">
                 Pending
@@ -196,4 +200,3 @@ const AddTask = ({ closeModal, onAddTask, editTask }) => {
 };
 
 export default AddTask;
-

@@ -56,7 +56,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 4, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="relative"
         >
           <div className="relative h-[400px] w-full overflow-hidden rounded-xl border border-blue-200 bg-white shadow-xl">
