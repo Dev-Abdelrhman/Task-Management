@@ -90,8 +90,7 @@ export const deleteTaskStatus = async (userId, projectId, taskId, status) => {
 
     const res = await API.delete(
       `${userId}/projects/${projectId}/tasks/${taskId}`,
-      { status },
-      { withCredentials: true }
+      { data: { status }, withCredentials: true }
     );
     console.log("Task deleted successfully:", res.data);
     return res.data;

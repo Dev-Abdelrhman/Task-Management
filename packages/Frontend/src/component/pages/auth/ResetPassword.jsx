@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/auth/useAuth";
 import { toast } from "react-toastify";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { Lock, ArrowLeft, ListTodo } from "lucide-react";
@@ -20,12 +20,9 @@ const ResetPassword = () => {
       return;
     }
 
-    try {
-      await resetPassword({ token, password, passwordConfirmation });
-      navigate("/login");
-    } catch (error) {
-      toast.error(error.message || "Password reset failed");
-    }
+    await resetPassword({ token, password, passwordConfirmation });
+
+    return true;
   };
 
   return (

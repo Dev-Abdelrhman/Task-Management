@@ -7,6 +7,7 @@ import {
   Settings,
   MessageSquareMore,
   Menu,
+  Send,
 } from "lucide-react";
 import logo from "../assets/logo.png";
 import { Button } from "@mui/material";
@@ -87,7 +88,7 @@ function Sidebar() {
               }
             >
               <ListChecks className="h-5 w-5 mr-3" />
-              <span className="text-lg">All Tasks</span>
+              <span className="text-lg">Owned Tasks</span>
             </NavLink>
 
             <NavLink
@@ -100,7 +101,7 @@ function Sidebar() {
                 }`
               }
             >
-              <ListChecks className="h-5 w-5 mr-3" />
+              <Send className="h-5 w-5 mr-3" />
               <span className="text-lg">Invites</span>
             </NavLink>
 

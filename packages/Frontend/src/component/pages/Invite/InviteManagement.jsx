@@ -11,9 +11,8 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useInvite } from "../../../hooks/useInvite";
-import { useAuth } from "../../../hooks/useAuth";
-import { toast } from "react-toastify";
+import { useInvite } from "../../../hooks/features/useInvite";
+import { useAuth } from "../../../hooks/auth/useAuth";
 import dayjs from "dayjs";
 
 const InviteManagement = () => {
@@ -76,13 +75,20 @@ const InviteManagement = () => {
               {type === "sent" ? "To:" : "From:"}
             </span>{" "}
             <span className="dark:text-gray-300">
-              {type === "sent" ? invite.receiver?.username : invite.sender?.username}
+              {type === "sent"
+                ? invite.receiver?.username
+                : invite.sender?.username}
             </span>
           </span>
         }
         secondary={
           <>
-            <Typography className="dark:text-white" component="span" variant="body2" color="text.primary">
+            <Typography
+              className="dark:text-white"
+              component="span"
+              variant="body2"
+              color="text.primary"
+            >
               {invite.project?.name} - {invite.role?.name}
             </Typography>
             <br />

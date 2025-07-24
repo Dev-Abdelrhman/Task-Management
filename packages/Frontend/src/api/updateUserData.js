@@ -1,33 +1,19 @@
 import API from "./auth";
 
-export const getUserInfoForAuth = async () => {
-  const response = await API.get("/google/user");
-  return response.data;
-};
-// Pending
-export const getUserInfoForProfile = async () => {
-  const response = await API.get("/me");
-  return response.data?.user || response.data || {};
-};
-
 export const updateUserInfo = async (userInfo) => {
-  const response = await API.patch("/updateMe", userInfo);
-  return response.data?.user || response.data;
+  await API.patch("/updateMe", userInfo);
 };
 
 export const removeUserImage = async (userID, public_id) => {
-  const response = await API.patch(`/${userID}/removeImage`, { public_id });
-  return response.data?.user || response.data;
+  await API.patch(`/${userID}/removeImage`, { public_id });
 };
-// DONE
+
 export const updateUserPassword = async (password) => {
-  const response = await API.patch("/updateMyPassword", password);
-  return response.data;
+  await API.patch("/updateMyPassword", password);
 };
 
 export const deleteUser = async () => {
-  const response = await API.delete("/deleteMe");
-  return response.data;
+  await API.delete("/deleteMe");
 };
 
 export default API;

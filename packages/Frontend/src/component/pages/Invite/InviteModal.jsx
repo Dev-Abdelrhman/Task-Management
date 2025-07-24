@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, Avatar, CircularProgress } from "@mui/material";
 import { Search, X } from "lucide-react";
-import { useInvite } from "../../../hooks/useInvite";
-import { useAuth } from "../../../hooks/useAuth";
+import { useInvite } from "../../../hooks/features/useInvite";
+import { useAuth } from "../../../hooks/auth/useAuth";
 import { toast } from "react-toastify";
 
 const InviteModal = ({ projectId, open, onClose, roles }) => {
@@ -54,7 +54,7 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
         projectId,
         inviteData: {
           username: selectedUser.username,
-          roleId: selectedRoleId, // Now using the role ID
+          roleId: selectedRoleId,
         },
       });
       onClose();
@@ -97,11 +97,11 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
           </label>
           <div className="flex items-center gap-3 mt-2">
             <input
-              type="text"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Enter username"
-              className="flex-1 pl-4 pr-4 py-2 border border-gray-200 dark:bg-[#2D2D2D] !rounded-[10px] text-lg !font-light focus:outline-none"
+              className="flex-1 pl-4 pr-4 dark:text-gray-200 py-2 border border-gray-200 dark:bg-[#2D2D2D] !rounded-[10px] text-lg !font-light focus:outline-none"
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <Button
@@ -127,14 +127,16 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
           </div>
         ) : searchResults.length > 0 ? (
           <div className="mb-4">
-            <h3 className="text-base font-medium mb-2">Search Results</h3>
+            <h3 className="text-base dark:text-gray-400 font-medium mb-2">
+              Search Results
+            </h3>
             <div className="space-y-2">
               {searchResults.map((user) => (
                 <div
                   key={user._id}
-                  className={`flex items-center gap-2 p-2 rounded-xl cursor-pointer ${
+                  className={`flex dark:text-gray-200 dark:bg-[#1D1D1D] dark:border-gray-700 items-center gap-2 p-2 rounded-xl cursor-pointer ${
                     selectedUser?._id === user._id
-                      ? "bg-gray-100 border border-gray-200"
+                      ? "!bg-[#2D2D2D] !text-white border border-gray-200"
                       : "hover:bg-gray-50"
                   }`}
                   onClick={() => setSelectedUser(user)}
@@ -155,7 +157,9 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
 
         {selectedUser && (
           <div className="mb-4">
-            <label className="block  font-medium mb-2">Select Role</label>
+            <label className="block dark:text-gray-400 font-medium mb-2">
+              Select Role
+            </label>
             <select
               value={selectedRoleId}
               onChange={(e) => setSelectedRoleId(e.target.value)}
@@ -178,7 +182,7 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
               resetForm();
             }}
             variant="outlined"
-            className="!text-sm dark:text-gray-400 !rounded-xl !capitalize !border-gray-300 !text-gray-700"
+            className="!text-sm dark:!text-gray-200 !rounded-xl !capitalize !border-gray-300 !text-gray-700"
           >
             Cancel
           </Button>

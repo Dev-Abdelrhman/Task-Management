@@ -25,8 +25,6 @@ const updateComment = FC.updateOne(Comment, "comments_images", "image");
 
 const deleteComment = FC.deleteOne(Comment);
 
-const deleteCommentWithProject = FC.deleteOne(Comment, "project");
-
 module.exports = {
   getComments,
   getCommentById,
@@ -34,7 +32,6 @@ module.exports = {
   isMine,
   updateComment,
   deleteComment,
-  deleteCommentWithProject,
   uploader,
   removeImages,
 };
