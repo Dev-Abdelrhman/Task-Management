@@ -16,6 +16,7 @@ const ProjectTasks = () => {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState(null);
+  const [addTaskStatus, setAddTaskStatus] = useState(null);
 
   const {
     data,
@@ -53,6 +54,12 @@ const ProjectTasks = () => {
   const openAddTaskModal = (columnId) => {
     setSelectedColumn(columnId);
     setEditTask(null);
+    let statusValue = null;
+    if (columnId === "todo") statusValue = "Todo";
+    else if (columnId === "in-progress") statusValue = "In Progress";
+    else if (columnId === "done") statusValue = "Completed";
+    else if (columnId === "backlog") statusValue = "Pending";
+    setAddTaskStatus(statusValue);
     setShowModal(true);
   };
 
@@ -73,6 +80,7 @@ const ProjectTasks = () => {
     if (success) {
       setShowModal(false);
       setEditTask(null);
+      setAddTaskStatus(null);
     }
   };
 
@@ -127,9 +135,11 @@ const ProjectTasks = () => {
             closeModal={() => {
               setShowModal(false);
               setEditTask(null);
+              setAddTaskStatus(null);
             }}
             onAddTask={handleAddTaskSuccess}
             editTask={editTask}
+            statusFromColumn={addTaskStatus}
           />
         )}
 

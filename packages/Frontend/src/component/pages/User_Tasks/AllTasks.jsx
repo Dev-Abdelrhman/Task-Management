@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {
-  Search,
-} from "lucide-react";
+import { Search } from "lucide-react";
 import AddTask from "./AddTask";
 import { Button } from "@mui/material";
 import TaskColumn from "../Projects/projectTasks/TaskColumn";
@@ -56,9 +54,17 @@ export default function AllTasks() {
     }
   );
 
+  const [addTaskStatus, setAddTaskStatus] = useState(null);
+
   const openAddTaskModal = (columnId) => {
     setSelectedColumn(columnId);
     setEditingTask(null);
+    let statusValue = null;
+    if (columnId === "todo") statusValue = "Todo";
+    else if (columnId === "in-progress") statusValue = "In Progress";
+    else if (columnId === "done") statusValue = "Completed";
+    else if (columnId === "backlog") statusValue = "Pending";
+    setAddTaskStatus(statusValue);
     setShowModal(true);
   };
 
@@ -122,7 +128,9 @@ export default function AllTasks() {
             task={taskDetailsModal.task}
             onClose={() => setTaskDetailsModal({ show: false, task: null })}
             onEdit={() => handleEditTaskFromDetails(taskDetailsModal.task)}
-            onDelete={() => handleDeleteTaskFromDetails(taskDetailsModal.task._id)}
+            onDelete={() =>
+              handleDeleteTaskFromDetails(taskDetailsModal.task._id)
+            }
           />
         )}
 
@@ -131,9 +139,11 @@ export default function AllTasks() {
             closeModal={() => {
               setShowModal(false);
               setEditingTask(null);
+              setAddTaskStatus(null);
             }}
             onAddTask={handleAddTask}
             editTask={editingTask}
+            statusFromColumn={addTaskStatus}
           />
         )}
 

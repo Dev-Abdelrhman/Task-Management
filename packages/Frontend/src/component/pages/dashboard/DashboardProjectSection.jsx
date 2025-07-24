@@ -5,6 +5,7 @@ import {
   Typography,
   LinearProgress,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -115,7 +116,7 @@ const DashboardProjectSection = () => {
                     component="img"
                     src={
                       project?.image?.[0]?.url ||
-                      "https://fakeimg.pl/1280x720?text=No+Image"
+                      "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
                     }
                     alt={project.title}
                     sx={{
@@ -192,13 +193,10 @@ const DashboardProjectSection = () => {
                         key={pro._id}
                         className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                       >
-                        <img
-                          src={
-                            pro.user?.image?.[0]?.url ||
-                            "https://fakeimg.pl/600x800?text=No+Image"
-                          }
+                        <Avatar
+                          src={pro.user?.image?.[0]?.url}
                           alt="Team member"
-                          className="object-cover select-none w-5 h-5"
+                          className="!w-full !h-full object-cover"
                         />
                       </div>
                     ))}

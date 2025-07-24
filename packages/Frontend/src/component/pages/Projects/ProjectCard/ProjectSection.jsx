@@ -1,4 +1,10 @@
-import { Box, IconButton, Typography, LinearProgress } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  LinearProgress,
+  Avatar,
+} from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
@@ -53,7 +59,7 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
                     component="img"
                     src={
                       project?.image?.[0]?.url ||
-                      "https://fakeimg.pl/1280x720?text=No+Image"
+                      "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
                     }
                     alt={project.title}
                     sx={{
@@ -128,18 +134,14 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
                           key={pro._id}
                           className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                         >
-                          <img
+                          <Avatar
                             src={
                               Array.isArray(pro.user.image) &&
                               pro.user.image.length > 0 &&
                               pro.user.image[0]?.url
-                                ? pro.user.image[0].url
-                                : "https://fakeimg.pl/600x800?text=No+Image"
                             }
                             alt="Team member"
-                            width={24}
-                            height={24}
-                            className="object-cover select-none"
+                            className="!w-full !h-full object-cover select-none"
                           />
                         </div>
                       ))}

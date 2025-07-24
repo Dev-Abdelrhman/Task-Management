@@ -65,7 +65,7 @@ function ProjectImageUpload({
             />
           ) : (
             <img
-              src="https://fakeimg.pl/1280x720?text=No+Image"
+              src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
               alt="Project preview"
               className="rounded-3xl h-40 w-full object-cover"
             />
@@ -111,4 +111,4 @@ function ProjectImageUpload({
   );
 }
 
-export default ProjectImageUpload; 
+export default ProjectImageUpload;

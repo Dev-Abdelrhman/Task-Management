@@ -6,6 +6,7 @@ import {
   Typography,
   LinearProgress,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import { Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -107,7 +108,7 @@ const RightSidebar = () => {
                   component="img"
                   src={
                     projects[0]?.image?.[0]?.url ||
-                    "https://fakeimg.pl/1280x720?text=No+Image"
+                    "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
                   }
                   alt="Project Image"
                   sx={{
@@ -165,13 +166,10 @@ const RightSidebar = () => {
                         key={pro._id}
                         className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
                       >
-                        <img
-                          src={
-                            pro.user?.image?.[0]?.url ||
-                            "https://fakeimg.pl/600x800?text=No+Image"
-                          }
+                        <Avatar
+                          src={pro.user?.image?.[0]?.url}
                           alt="Team member"
-                          className="object-cover select-none h-5 w-5"
+                          className="!w-full !h-full object-cover"
                         />
                       </div>
                     ))}

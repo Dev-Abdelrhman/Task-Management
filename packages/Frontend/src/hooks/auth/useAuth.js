@@ -25,7 +25,10 @@ export const useAuth = () => {
       return "Too many attempts. Please try again later.";
     }
     if (error?.response?.status === 401) {
-      return "Your session has expired. Please log in again.";
+      return (
+        error?.response?.data?.message ||
+        "Unauthorized access. Please log in again."
+      );
     }
     if (error?.response?.status === 403) {
       return "You don't have permission to perform this action.";
