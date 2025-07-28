@@ -11,6 +11,7 @@ const ImageUpdateModal = ({
   handleUpdateImage,
   isRemovingImage,
   userData,
+  isImageUploading,
 }) => {
   if (!showImageModal) return null;
 
@@ -69,21 +70,25 @@ const ImageUpdateModal = ({
           )}
         </div>
 
-        <div className="flex justify-end gap-2">
+        <div className="flex !flex-row !justify-end gap-4">
           <Button
             onClick={() => setShowImageModal(false)}
             variant="outlined"
-            className="dark:text-gray-200"
+            className="dark:text-gray-200 w-2/5 "
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpdateImage}
             variant="contained"
-            className="!bg-[#546FFF]"
-            disabled={isRemovingImage || !imagePreview}
+            className="!bg-[#546FFF] w-2/5"
+            disabled={isRemovingImage || !imagePreview || isImageUploading}
           >
-            Save Changes
+            {isImageUploading ? (
+              <CircularProgress size={24} sx={{ color: "white" }} />
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </div>
       </div>

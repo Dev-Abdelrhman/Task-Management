@@ -37,6 +37,7 @@ export default function Setting() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const fileInputRef = useRef(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -65,29 +66,41 @@ export default function Setting() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
+        setUserData((prev) => ({
+          ...prev,
+          image: [{ url: reader.result }], // update local state for instant UI
+        }));
+        setUser({
+          ...user,
+          image: [{ url: reader.result }], // update zustand and localStorage for instant update
+        });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveImage = async () => {
-    if (!userData.image?.[0]?.public_id) return;
-
-    try {
-      await removeImage({
-        userID: user?._id,
-        public_id: userData.image[0].public_id,
-      });
-      setImagePreview(null);
-      setUserData((prev) => ({ ...prev, image: [] }));
-      setUser({ ...user, image: [] });
-      setShowImageModal(false);
-    } catch (err) {
-      toast.error("Failed to remove image");
+    // If there is a public_id, call the backend to remove it
+    if (userData.image?.[0]?.public_id) {
+      try {
+        await removeImage({
+          userID: user?._id,
+          public_id: userData.image[0].public_id,
+        });
+      } catch (err) {
+        toast.error("Failed to remove image");
+        return;
+      }
     }
+    // Always clear the image locally
+    setImagePreview(null);
+    setUserData((prev) => ({ ...prev, image: [] }));
+    setUser({ ...user, image: [] });
+    setShowImageModal(false);
   };
 
   const handleUpdateImage = async () => {
+    setIsImageUploading(true);
     const formData = new FormData();
     formData.append("name", userData.name);
     formData.append("email", userData.email);
@@ -97,6 +110,7 @@ export default function Setting() {
       formData.append("image", fileInputRef.current.files[0]);
     } else if (!imagePreview) {
       toast.error("Please select an image first");
+      setIsImageUploading(false);
       return;
     }
 
@@ -107,6 +121,8 @@ export default function Setting() {
       toast.error(
         err?.response?.data?.message || "Failed to update profile image"
       );
+    } finally {
+      setIsImageUploading(false);
     }
   };
 
@@ -170,6 +186,7 @@ export default function Setting() {
         handleUpdateImage={handleUpdateImage}
         isRemovingImage={isRemovingImage}
         userData={userData}
+        isImageUploading={isImageUploading}
         handleDeleteUser={handleDeleteUser}
       />
       <DeleteUserModal
