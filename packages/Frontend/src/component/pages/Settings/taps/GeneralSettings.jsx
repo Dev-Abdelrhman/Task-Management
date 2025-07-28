@@ -58,7 +58,7 @@ const GeneralSettings = ({
               </label>
               <div className="flex items-center gap-4">
                 <div
-                  className="w-16 h-16 rounded-full overflow-hidden relative cursor-pointer border-2 border-gray-200 dark:border-gray-600"
+                  className="w-16 h-16 rounded-full overflow-hidden relative cursor-pointer border-2 border-gray-200 dark:!border-gray-600"
                   onClick={() => setShowImageModal(true)}
                 >
                   <Avatar
@@ -69,7 +69,8 @@ const GeneralSettings = ({
                 </div>
                 <Button
                   onClick={() => setShowImageModal(true)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:text-white"
+                  sx={{ border: 1 }}
+                  className="px-4 py-2 border !text-gray-900 !border-gray-300 dark:!border-gray-500 rounded-md text-sm dark:!text-white"
                 >
                   Change Photo
                 </Button>
