@@ -2,26 +2,28 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
-    from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    to: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    text: { type: String, required: false },
+    chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat", required: true },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    text: { type: String },
     image: [
       {
-        public_id: { type: String },
-        url: { type: String },
-        original_filename: { type: String },
-        format: { type: String },
+        public_id: String,
+        url: String,
+        original_filename: String,
+        format: String,
       },
     ],
+    seenBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     replyTo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
-      default: null,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Message = mongoose.model("Message", messageSchema);

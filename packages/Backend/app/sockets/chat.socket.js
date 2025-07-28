@@ -1,58 +1,35 @@
-const {
-  handlePrivateMessage,
-} = require("../controllers/message.Controller.js");
-const { userSocketMap, addSocket, removeSocket } = require("./userSocketMap");
-const mongoose = require("mongoose");
+const SF = require("../controllers/socket.Controller.js");
+const Chat = require("../models/chat.Model.js");
 
-const chatSocket = (io) => {
+module.exports = (io) => {
   io.on("connection", (socket) => {
-    console.log("🔌 New socket connected:", socket.id);
+    socket.on(
+      "chat:getAll",
+      SF.getAllSocket(Chat, "members", [
+        { path: "members", select: "name username image" },
+        { path: "groupAdmin", select: "name username image" },
+        {
+          path: "lastMessage",
+          populate: { path: "sender", select: "name" },
+        },
+      ])
+    );
 
-    socket.on("user:connected", (userId) => {
-      if (!mongoose.Types.ObjectId.isValid(userId)) {
-        socket.emit("error", "Invalid user ID format");
-        return;
-      }
-      addSocket(userId, socket.id);
-      io.emit("user:online", userId);
-    });
+    socket.on("chat:create", (data, callback) =>
+      SF.createOneSocket(
+        Chat,
+        "Chats_Icons",
+        "image",
+        "createdBy"
+      )({ data }, callback, io)
+    );
 
-    socket.on("private:message", (data) => {
-      handlePrivateMessage(io, userSocketMap, data);
-    });
+    socket.on("chat:update", (data, callback) =>
+      SF.updateOneSocket(Chat)({ id: data.id, updates: data }, callback, io)
+    );
 
-    socket.on("typing", ({ from, to }) => {
-      const receiverSockets = userSocketMap[to];
-      if (receiverSockets) {
-        receiverSockets.forEach((socketId) => {
-          io.to(socketId).emit("user:typing", { from });
-        });
-      }
-    });
-
-    socket.on("message:seen", ({ messageId, from, to }) => {
-      const senderSockets = userSocketMap[from];
-      if (senderSockets) {
-        senderSockets.forEach((socketId) => {
-          io.to(socketId).emit("message:seen", { messageId, seenBy: to });
-        });
-      }
-    });
-
-    socket.on("disconnect", () => {
-      const userId = Object.keys(userSocketMap).find((id) =>
-        userSocketMap[id].has(socket.id)
-      );
-
-      if (userId) {
-        removeSocket(userId, socket.id);
-        if (!userSocketMap[userId]?.size) {
-          io.emit("user:offline", userId);
-        }
-      }
-      console.log("❌ Socket disconnected:", socket.id);
-    });
+    socket.on("chat:delete", (data, callback) =>
+      SF.deleteOneSocket(Chat)({ id: data.id }, callback, io)
+    );
   });
 };
-
-module.exports = chatSocket;

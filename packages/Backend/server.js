@@ -4,9 +4,8 @@ const { Server } = require("socket.io");
 const app = require("./app.js");
 const pConfig = require("./app/strategies/passport_Config.js");
 const { emitEvent } = require("./app/utils/eventLogger.js");
-const chatSocket = require("./app/sockets/chat.socket.js");
-const groupSocket = require("./app/sockets/group.socket.js");
-const notificationSocket = require("./app/sockets/notification.socket.js");
+const ChatSockets = require("./app/sockets/chat.socket.js");
+const MessageSockets = require("./app/sockets/message.socket.js");
 
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
@@ -52,9 +51,8 @@ mongoose
   .then(() => {
     emitEvent(io, "server:db", { message: "Database connected" });
 
-    chatSocket(io);
-    groupSocket(io);
-    notificationSocket(io);
+    ChatSockets(io);
+    MessageSockets(io);
 
     io.on("connection", (socket) => {
       activeConnections.set(socket.id, {
