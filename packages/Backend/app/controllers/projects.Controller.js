@@ -1,26 +1,26 @@
 const { path } = require("../../app.js");
 const Project = require("../models/project.Model.js");
 const catchAsync = require("../utils/catchAsync.js");
-const FC = require("./Factory.Controller.js");
+const FS = require("../services/factory-services/Factory.services.js");
 
-const uploader = FC.uploader("image", 1);
-const removeImages = FC.removeFile(Project, "image");
+const uploader = FS.uploader("image", 1);
+const removeImages = FS.removeFile(Project, "image");
 
-const getProjects = FC.getAll(Project, "members.user", ["tasks"]);
+const getProjects = FS.getAll(Project, "members.user", ["tasks"]);
 
-const getProjectById = FC.getOne(Project, [
+const getProjectById = FS.getOne(Project, [
   { path: "members.role", select: "name" },
   "tasks",
 ]);
 
-const createProject = FC.createOne(
+const createProject = FS.createOne(
   Project,
   "projects_images",
   "image",
   "members.user"
 );
-const updateProject = FC.updateOne(Project, "projects_images", "image");
-const deleteProject = FC.deleteOne(Project);
+const updateProject = FS.updateOne(Project, "projects_images", "image");
+const deleteProject = FS.deleteOne(Project);
 
 const getProjectMembers = catchAsync(async (req, res, next) => {
   const project = await Project.findById(req.params.id)
