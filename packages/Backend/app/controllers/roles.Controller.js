@@ -1,17 +1,17 @@
 const Role = require("../models/role.Model.js");
-const FC = require("./Factory.Controller.js");
+const FS = require("../services/factory-services/factory.services.js");
 
-const isMine = FC.isOwner(Role, "theCreator");
+const isMine = FS.isOwner(Role, "theCreator");
 
-const getAllRoles = FC.getAll(Role, "project");
+const getAllRoles = FS.getAll(Role, "project");
 
-const getRoleById = FC.getOne(Role);
+const getRoleById = FS.getOne(Role);
 
-const createRole = FC.createOne(Role, "", "", "theCreator", "project");
+const createRole = FS.createOne(Role, "", "", "theCreator", "project");
 
-const updateRole = FC.updateOne(Role);
+const updateRole = FS.updateOne(Role);
 
-const deleteRole = FC.deleteOne(Role);
+const deleteRole = FS.deleteOne(Role);
 
 module.exports = {
   isMine,
