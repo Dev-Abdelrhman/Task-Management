@@ -1,7 +1,7 @@
 const { path } = require("../../app.js");
 const Project = require("../models/project.Model.js");
 const catchAsync = require("../utils/catchAsync.js");
-const FS = require("../services/factory-services/factory.services.js");
+const FS = require("../services/factory-services/Factory.services.js");
 
 const uploader = FS.uploader("image", 1);
 const removeImages = FS.removeFile(Project, "image");

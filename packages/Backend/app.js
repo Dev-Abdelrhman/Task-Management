@@ -11,7 +11,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 /*______________________________________________________*/
 const AppError = require("./app/utils/appError.js");
-const GlobalErrorHandler = require("./app/controllers/error.Controller.js");
+const GlobalErrorHandler = require("./app/services/error-services/error.services.js");
 const UserRoutes = require("./routes/user.Route.js");
 const InviteRoutes = require("./routes/invite.Route.js");
 const TaskRoutes = require("./routes/tasks.Route.js");
