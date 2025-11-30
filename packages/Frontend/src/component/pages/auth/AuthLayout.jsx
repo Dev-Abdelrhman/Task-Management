@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const AuthLayout = ({ children }) => {
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex w-full">
       {/* Left side - Decorative background */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-[#1A2793]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1A2793] via-[#2A3BB7] to-[#546FFF]"></div>
@@ -102,12 +102,12 @@ const AuthLayout = ({ children }) => {
       </div>
 
       {/* Right side - Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-gray-50">
+      <div className="w-full flex !items-center !justify-center md:w-1/2  p-6 bg-gray-50">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="w-full flex items-center justify-center"
+          className="w-full flex !items-center !justify-center"
         >
           <div className="w-full max-w-md">{children}</div>
         </motion.div>
