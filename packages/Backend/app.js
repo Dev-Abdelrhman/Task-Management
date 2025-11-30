@@ -70,6 +70,19 @@ app.use((req, res, next) => {
   }
   next();
 });
+/* ______________ Rate Limiting ______________ */
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 10 * 60 * 1000,
+  message: "Too many requests from this IP, please try again later!",
+});
+const longlimiter = rateLimit({
+  max: 1000,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP, please try again later!",
+});
+app.use("/depiV1/users/signin", limiter);
+app.use("/depiV1/users/:id", longlimiter);
 /* ______________ Request Timestamp Middleware ______________ */
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
