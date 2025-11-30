@@ -1,8 +1,8 @@
 const Invite = require("../models/invite.Model.js");
-const FS = require("../services/factory-services/Factory.services.js");
+const FS = require("../services/factory-services/Factory.service.js");
 const sendInviteService = require("../services/invite-services/sendInvite.service.js");
-const acceptAndDeclineService = require("../services/invite-services/acceptAndDeclineInviteService.js");
-const searchUsersService = require("../services/invite-services/searchForUsersService.js");
+const acceptAndDeclineService = require("../services/invite-services/acceptAndDeclineInvite.service.js");
+const searchUsersService = require("../services/invite-services/searchForUsers.service.js");
 
 const searchUsersForInvite = searchUsersService.searchUsersForInvite;
 
