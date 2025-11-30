@@ -1,9 +1,6 @@
-const jwt = require("jsonwebtoken");
 const User = require("../../models/user.Model.js");
 const catchAsync = require("../../utils/catchAsync.js");
 const AppError = require("../../utils/appError.js");
-const passport = require("../../strategies/google_Strategy.js");
-const generateTokens = require("../../utils/generateTokens.js");
 const sendTokens = require("./sendTokens.js");
 
 const createSendToken = sendTokens.createSendToken;
