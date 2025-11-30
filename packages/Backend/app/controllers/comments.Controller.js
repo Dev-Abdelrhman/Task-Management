@@ -1,15 +1,15 @@
 const Comment = require("../models/comment.Model.js");
-const FC = require("./Factory.Controller.js");
+const FS = require("../services/factory-services/Factory.services.js");
 
-const uploader = FC.uploader("image", 2);
+const uploader = FS.uploader("image", 2);
 
-const removeImages = FC.removeFile(Comment, "image");
+const removeImages = FS.removeFile(Comment, "image");
 
-const getComments = FC.getAll(Comment, "project", ["project", "user"]);
+const getComments = FS.getAll(Comment, "project", ["project", "user"]);
 
-const getCommentById = FC.getOne(Comment, "commentId", ["project", "user"]);
+const getCommentById = FS.getOne(Comment, "commentId", ["project", "user"]);
 
-const createComment = FC.createOne(
+const createComment = FS.createOne(
   Comment,
   "comments_images",
   "image",
@@ -18,12 +18,12 @@ const createComment = FC.createOne(
 );
 
 const isMine = (req, res, next) => {
-  return FC.isOwner(Comment, "user")(req, res, next);
+  return FS.isOwner(Comment, "user")(req, res, next);
 };
 
-const updateComment = FC.updateOne(Comment, "comments_images", "image");
+const updateComment = FS.updateOne(Comment, "comments_images", "image");
 
-const deleteComment = FC.deleteOne(Comment);
+const deleteComment = FS.deleteOne(Comment);
 
 module.exports = {
   getComments,

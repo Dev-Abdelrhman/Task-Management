@@ -1,11 +1,11 @@
 const cloudinary = require("../../utils/cloudinary.js");
 const User = require("../../models/user.Model.js");
-const FC = require("../../controllers/Factory.Controller.js");
+const FS = require("../factory-services/Factory.services.js");
 const AppError = require("../../utils/appError.js");
 const catchAsync = require("../../utils/catchAsync.js");
 
-const uploader = FC.uploader("image", 1);
-const removeImages = FC.removeFile(User, "image");
+const uploader = FS.uploader("image", 1);
+const removeImages = FS.removeFile(User, "image");
 
 const getMe = (req, res, next) => {
   req.params.id = req.user.id;

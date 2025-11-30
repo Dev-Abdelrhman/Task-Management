@@ -1,4 +1,4 @@
-const AppError = require("../utils/appError.js");
+const AppError = require("../../utils/appError.js");
 
 const handleCastErrorDB = (err) => {
   const value =

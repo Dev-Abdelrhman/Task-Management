@@ -1,10 +1,10 @@
-const cloudinary = require("../utils/cloudinary.js");
+const cloudinary = require("../../utils/cloudinary.js");
 const { set, get } = require("lodash");
-const catchAsync = require("../utils/catchAsync.js");
-const AppError = require("../utils/appError.js");
-const APIFeatures = require("../utils/apiFeatures.js");
-const upload = require("../utils/multer.js");
-const { emitEvent } = require("../utils/eventLogger.js");
+const catchAsync = require("../../utils/catchAsync.js");
+const AppError = require("../../utils/appError.js");
+const APIFeatures = require("../../utils/apiFeatures.js");
+const upload = require("../../utils/multer.js");
+const { emitEvent } = require("../../utils/eventLogger.js");
 
 const uploader = (fieldName, maxCount) => {
   return upload.array(fieldName, maxCount);
