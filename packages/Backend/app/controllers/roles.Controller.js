@@ -1,5 +1,5 @@
 const Role = require("../models/role.Model.js");
-const FS = require("../services/factory-services/Factory.services.js");
+const FS = require("../services/factory-services/Factory.service.js");
 
 const isMine = FS.isOwner(Role, "theCreator");
 
