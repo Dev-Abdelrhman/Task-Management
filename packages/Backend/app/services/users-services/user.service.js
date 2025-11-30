@@ -1,6 +1,6 @@
 const cloudinary = require("../../utils/cloudinary.js");
 const User = require("../../models/user.Model.js");
-const FS = require("../factory-services/Factory.services.js");
+const FS = require("../factory-services/Factory.service.js");
 const AppError = require("../../utils/appError.js");
 const catchAsync = require("../../utils/catchAsync.js");
 
