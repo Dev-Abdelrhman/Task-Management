@@ -1,4 +1,4 @@
-const US = require("../services/users-services/user.services.js");
+const US = require("../services/users-services/user.service.js");
 
 const uploader = US.uploader;
 const removeImages = US.removeImages;
