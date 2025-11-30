@@ -1,8 +1,8 @@
-const SignInAndUpService = require("../services/auth-services/SignInAndUp.services.js");
-const googleService = require("../services/auth-services/google.services.js");
-const resetPasswordService = require("../services/auth-services/reserPassword.services.js");
-const logoutService = require("../services//auth-services/logout.services.js");
-const JWTservice = require("../services/auth-services/jwt.services.js");
+const SignInAndUpService = require("../services/auth-services/SignInAndUp.service.js");
+const googleService = require("../services/auth-services/google.service.js");
+const resetPasswordService = require("../services/auth-services/reserPassword.service.js");
+const logoutService = require("../services/auth-services/logout.service.js");
+const JWTservice = require("../services/auth-services/jwt.service.js");
 
 const signin = SignInAndUpService.signin;
 
