@@ -4,9 +4,10 @@ const User = require("../models/user.Model.js");
 const catchAsync = require("../utils/catchAsync.js");
 const AppError = require("../utils/appError.js");
 const sendEmail = require("../utils/nodeMailer.js");
-const passport = require("../strategies/google_Strategy.js");
 const generateTokens = require("../utils/generateTokens.js");
 const SignInAndUpService = require("../services/auth-services/SignInAndUp.services.js");
+const googleService = require("../services/auth-services/google.services.js");
+const resetPasswordService = require("../services/auth-services/reserPassword.services.js");
 
 const generateAccessToken = generateTokens.generateAccessToken;
 
@@ -43,10 +44,7 @@ const signup = SignInAndUpService.signup;
 
 const verifyOTP = SignInAndUpService.verifyOTP;
 
-const googleAuth = passport.authenticate("google", {
-  scope: ["profile", "email"],
-});
-
+const googleAuth = googleService.googleAuth;
 const createSendToken_V2 = (user, statusCode, res) => {
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -67,117 +65,13 @@ const createSendToken_V2 = (user, statusCode, res) => {
   res.redirect("http://localhost:5174/google-signin");
 };
 
-const googleAuthCallback = (req, res, next) => {
-  passport.authenticate(
-    "google",
-    { failureRedirect: "/login" },
-    async (err, user) => {
-      if (err || !user) {
-        return res
-          .status(401)
-          .json({ status: "error", message: "Authentication failed" });
-      }
-      if (user.tempToken) {
-        return res.redirect(
-          `http://localhost:5174/google-signup?token=${user.tempToken}`
-        );
-      }
-      createSendToken_V2(user, 201, res);
-    }
-  )(req, res, next);
-};
+const googleAuthCallback = googleService.googleAuthCallback;
 
-const completeGoogleSignup = catchAsync(async (req, res, next) => {
-  const { token, username, password, passwordConfirmation } = req.body;
-  if (!token) {
-    return next(new AppError("Token is required", 400));
-  }
-  if (!username || !password || !passwordConfirmation) {
-    return next(new AppError("All fields are required", 400));
-  }
-  if (password !== passwordConfirmation) {
-    return next(new AppError("Passwords do not match", 400));
-  }
-  const decoded = jwt.verify(token, process.env.JWT_TEMP_SECRET);
-  const existingUser = await User.findOne({ email: decoded.email });
-  if (existingUser) {
-    return next(new AppError("User already exists. Please log in.", 400));
-  }
-  const newUser = await User.create({
-    googleID: decoded.googleID,
-    email: decoded.email,
-    name: decoded.name,
-    image: [
-      {
-        url: decoded.image,
-        public_id: username + decoded.googleID,
-        original_filename: decoded.name,
-        format: decoded.image.split(".").pop(),
-      },
-    ],
-    username,
-    password,
-    passwordConfirmation,
-    active: true,
-  });
+const completeGoogleSignup = googleService.completeGoogleSignup;
 
-  createSendToken(newUser, 201, res);
-});
+const forgotPassword = resetPasswordService.forgotPassword;
 
-const forgotPassword = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    return next(new AppError("There is no user with that email address", 404));
-  }
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
-  const resetURL = `http://localhost:5174/resetPassword/${resetToken}`;
-  const message = `Forgot your password? Reset it here: ${resetURL}\nIf you didn't forget your password, please ignore this email. `;
-  try {
-    await sendEmail({
-      to: user.email,
-      subject: "Your password reset token is valid for 15 minutes.",
-      text: message,
-    });
-    res.status(200).json({
-      status: "success",
-      message: "Token sent to email",
-    });
-  } catch (err) {
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-
-    return next(
-      new AppError("There was an error sending the email. Try again later!"),
-      500
-    );
-  }
-});
-
-const resetPassword = catchAsync(async (req, res, next) => {
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
-
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: { $gt: new Date() },
-  });
-
-  if (!user) {
-    return next(new AppError("Token is invalid or has expired", 400));
-  }
-
-  user.password = req.body.password;
-  user.passwordConfirmation = req.body.passwordConfirmation;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-  await user.save();
-
-  createSendToken("", 200, res);
-});
+const resetPassword = resetPasswordService.resetPassword;
 
 const blacklist = new Set();
 
