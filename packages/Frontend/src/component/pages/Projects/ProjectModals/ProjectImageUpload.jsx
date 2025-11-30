@@ -50,7 +50,7 @@ function ProjectImageUpload({
   return (
     <div className="flex flex-col justify-center items-center mb-4">
       {existingImage.length > 0 || imagePreview ? (
-        <div className="relative mb-3">
+        <div className="relative mb-3 w-4/6">
           {existingImage.length > 0 ? (
             <img
               src={existingImage?.[0]?.url || imagePreview}

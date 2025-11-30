@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import ImageUpload from "../Projects/ProjectModals/ImageUpload";
+import TaskImageUpload from "../Projects/ProjectModals/TaskImageUpload";
 import PrioritySelect from "../Projects/ProjectModals/PrioritySelect";
 
 const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
@@ -14,9 +14,8 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
 
   // States for image handling
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(
-    editTask?.image?.[0]?.url || editTask?.image || null
-  );
+  const [imagePreview, setImagePreview] = useState(null);
+  const [existingImage, setExistingImage] = useState([]);
 
   useEffect(() => {
     if (editTask) {
@@ -27,6 +26,7 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
       setPriority(editTask.priority || "Normal");
       setDisablePriority(!!editTask.priority);
       setImagePreview(editTask.image?.[0]?.url || editTask.image || null);
+      setExistingImage(editTask.image || []);
     } else if (statusFromColumn) {
       setStatus(statusFromColumn);
       setDisablePriority(false);
@@ -39,17 +39,26 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
       setDisablePriority(false);
       setImagePreview(null);
       setImageFile(null);
+      setExistingImage([]);
     }
   }, [editTask, statusFromColumn]);
 
-  const handleImageChange = (preview, file) => {
-    setImagePreview(preview);
-    setImageFile(file);
+  const handleFileChange = (file) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setImageFile(file);
+        setExistingImage([]);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleImageRemove = () => {
     setImagePreview(null);
     setImageFile(null);
+    setExistingImage([]);
   };
 
   const createFormData = () => {
@@ -101,11 +110,12 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
           </h2>
         </div>
         <form onSubmit={handleSubmit}>
-          <ImageUpload
+          <TaskImageUpload
             imagePreview={imagePreview}
-            onImageChange={handleImageChange}
+            existingImage={existingImage}
+            onFileChange={handleFileChange}
             onImageRemove={handleImageRemove}
-            loading={loading}
+            isLoading={loading}
           />
 
           <div className="mb-3">

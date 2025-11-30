@@ -77,7 +77,9 @@ function Navbar() {
                 className="!w-12 !h-12"
                 src={
                   user.image?.length
-                    ? hostGoogleImage(user.image[0].url)
+                    ? user.image[0].url.startsWith("data:")
+                      ? user.image[0].url // use DataURL directly for instant preview
+                      : hostGoogleImage(user.image[0].url) // use CDN for remote images
                     : undefined
                 }
               />
