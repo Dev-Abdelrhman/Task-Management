@@ -1,5 +1,5 @@
 const Comment = require("../models/comment.Model.js");
-const FS = require("../services/factory-services/Factory.services.js");
+const FS = require("../services/factory-services/Factory.service.js");
 
 const uploader = FS.uploader("image", 2);
 
