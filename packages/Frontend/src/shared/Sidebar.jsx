@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   Home,
   Folder,
@@ -23,7 +23,7 @@ function Sidebar() {
   return (
     <>
       <button
-        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded"
+        className="md:hidden fixed top-4 right-4 z-50 bg-gray-800 text-white p-2 rounded"
         onClick={toggleSidebar}
       >
         <Menu />
