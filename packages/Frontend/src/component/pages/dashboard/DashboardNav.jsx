@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useUserMenu } from "../../../hooks/ui/useUserMenu";
+import { useNavigate } from "react-router-dom";
 
 const DashboardNav = () => {
   const {
@@ -25,10 +26,12 @@ const DashboardNav = () => {
     )}&w=200&h=200`;
   };
 
+  const navigate = useNavigate();
+
   return (
-    <div className="flex justify-between items-center mb-8">
-      <div>
-        <h1 className="text-3xl dark:text-white">Hi, {user.name}</h1>
+    <div className="flex justify-end sm:justify-between  sm:items-center mb-8">
+      <div className="max-sm:hidden">
+        <h1 className="text-3xl dark:text-white truncate">Hi, {user.name}</h1>
         <p className="text-gray-600 dark:text-[#a0a0a0]">
           Let's finish your task today!
         </p>
@@ -40,7 +43,7 @@ const DashboardNav = () => {
           }}
           size="large"
           color="inherit"
-          className="w-12 h-12 !border !border-[#F5F5F7] dark:!border-0"
+          className="w-12 h-12 border !border-[#F5F5F7] dark:!border-0"
         >
           <Badge badgeContent={1} color="error">
             <Mail className="text-[#8E92BC]" />
@@ -87,6 +90,9 @@ const DashboardNav = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
+            <MenuItem key="logout" onClick={() => navigate("/settings")}>
+              <Typography sx={{ textAlign: "center" }}>Settings</Typography>
+            </MenuItem>
             <MenuItem key="logout" onClick={handleLogout}>
               <Typography sx={{ textAlign: "center" }}>Logout</Typography>
             </MenuItem>
