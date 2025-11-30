@@ -2,7 +2,7 @@ const User = require("../../models/user.Model.js");
 const catchAsync = require("../../utils/catchAsync.js");
 const AppError = require("../../utils/appError.js");
 const sendEmail = require("../../utils/nodeMailer.js");
-const sendTokens = require("./sendTokens.js");
+const sendTokens = require("./sendTokens.service.js");
 
 const createSendToken = sendTokens.createSendToken;
 
