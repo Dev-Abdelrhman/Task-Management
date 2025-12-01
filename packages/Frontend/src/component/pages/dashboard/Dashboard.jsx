@@ -11,10 +11,10 @@ export default function TaskordDashboard() {
   const { user } = useUserMenu();
   return (
     <>
-      <div className="flex min-h-screen bg-[#FAFAFA] dark:bg-[#080808]">
+      <div className="w-full grid grid-cols-1 2xl:grid-cols-[4fr_1fr] bg-[#FAFAFA] dark:bg-[#080808]">
         <Sidebar />
         {/* Main Content */}
-        <div className="md:ml-[16rem] flex-1 h-full w-full sm:p-8 p-7 2xl:pr-[490px]">
+        <div className="lg:ml-[16rem] flex-1 sm:p-8 p-7">
           <DashboardNav />
           <div className="sm:hidden mb-6 ml-2">
             <h1 className="text-3xl dark:text-white truncate">
@@ -28,7 +28,7 @@ export default function TaskordDashboard() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col gap-4 "
+            className="grid flex-col gap-4 "
           >
             <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6 mb-8">
               <RunningTask />

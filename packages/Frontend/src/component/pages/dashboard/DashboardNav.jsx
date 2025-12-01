@@ -29,7 +29,7 @@ const DashboardNav = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-end sm:justify-between  sm:items-center mb-8">
+    <div className="flex justify-end sm:justify-between sm:items-center mb-8">
       <div className="max-sm:hidden">
         <h1 className="text-3xl dark:text-white truncate">Hi, {user.name}</h1>
         <p className="text-gray-600 dark:text-[#a0a0a0]">

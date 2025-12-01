@@ -37,7 +37,7 @@ function Sidebar() {
       )}
 
       <div
-        className={`w-64 fixed max-sm:right-0 h-full bg-[#FFFFFF] dark:bg-[#080808] pt-4 z-40 transition-transform duration-300 ${
+        className={`w-64 fixed max-md:right-0 h-full bg-[#FFFFFF] dark:bg-[#080808] pt-4 z-40 transition-transform duration-300 ${
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         } md:translate-x-0 md:block`}
       >
