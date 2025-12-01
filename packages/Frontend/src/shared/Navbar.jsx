@@ -13,11 +13,12 @@ import {
 import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import { useAuth } from "../hooks/auth/useAuth";
+import { useNavigate } from "react-router-dom";
 function Navbar() {
   const { signOut, isLoading } = useAuth();
   const { user } = useAuthStore();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await signOut();
@@ -25,11 +26,6 @@ function Navbar() {
       toast.error(`Logout failed: ${error.message}`);
     }
   };
-  let title = "";
-
-  if (window.location.pathname === "/projects") {
-    title = "Explore Project";
-  }
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -45,9 +41,7 @@ function Navbar() {
   };
   return (
     <>
-      <nav className="flex justify-between items-center bg-white dark:bg-[#080808] dark:text-white px-6 py-4 fixed top-0 left-64 right-0 z-10">
-        <h4 className="text-3xl">{title}</h4>
-
+      <nav className="flex justify-end items-center bg-white dark:bg-[#080808] dark:text-white px-6 py-4 fixed w-full top-0 sm:first-line:left-64 right-0 z-10">
         <Box
           className="!flex gap-5"
           sx={{ display: { xs: "none", md: "flex" } }}
@@ -101,6 +95,13 @@ function Navbar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
+            <MenuItem
+              key="settings"
+              onClick={() => navigate("/Settings")}
+              disabled={isLoading}
+            >
+              <Typography sx={{ textAlign: "center" }}>Settings</Typography>
+            </MenuItem>
             <MenuItem key="logout" onClick={handleLogout} disabled={isLoading}>
               <Typography sx={{ textAlign: "center" }}>Logout</Typography>
             </MenuItem>

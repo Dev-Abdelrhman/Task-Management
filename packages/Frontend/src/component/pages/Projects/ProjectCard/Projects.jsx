@@ -17,9 +17,18 @@ function Projects() {
   const handleClick = (projectId) => {
     navigate(`/projects/ProjectDetails/${projectId}`);
   };
+  let title = "";
+
+  if (window.location.pathname === "/projects") {
+    title = "Explore Project";
+  }
 
   return (
     <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
+      <h4 className="text-3xl px-6 py-5 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
+
       <ProjectFilters
         categories={categories}
         AddProjectBtn={<AddProjectBtn />}
