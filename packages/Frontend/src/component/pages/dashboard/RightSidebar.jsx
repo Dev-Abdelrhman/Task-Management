@@ -44,15 +44,15 @@ const RightSidebar = () => {
   };
 
   return (
-    <div className="hidden 2xl:flex fixed right-0 top-0 h-full w-[420px] border-l border-gray-200 dark:bg-[#080808] dark:border-0 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+    <div className="2xl:flex sm:right-0 sm:top-0 h-full max-md:ml-0 max-2xl:ml-[16rem] border-l border-gray-200 dark:bg-[#080808] dark:border-0 bg-[#F5F5F7] p-5 flex-col gap-4 sm:overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.4 }}
-        className="flex flex-col gap-4"
+        className="flex flex-col lg:flex-row-reverse justify-end 2xl:flex-col gap-4"
       >
         {/* Calendar */}
-        <div className="bg-[#FFFFFF] p-4 rounded-xl dark:bg-[#1a1a1a] dark:text-gray-200">
+        <div className="bg-[#FFFFFF] p-4 max-2xl:h-[180px] rounded-xl dark:bg-[#1a1a1a] dark:text-gray-200">
           <div className="flex justify-center items-center mb-2">
             <h2 className="text-lg mb-2">{formatMonth(currentDate)}</h2>
           </div>

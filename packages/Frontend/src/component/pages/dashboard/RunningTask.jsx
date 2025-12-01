@@ -8,13 +8,19 @@ const RunningTask = () => {
   const animatedPercentage = useProgressAnimation(percentage);
 
   return (
-    <div className="h-[250px] relative flex flex-col gap-4 bg-[#111827] text-white p-6 rounded-xl">
+    <div className="sm:h-[250px] relative flex max-sm:justify-between sm:flex-col sm:gap-4 bg-[#141522] text-white p-6 max-sm:px-7 rounded-xl">
       <div>
-        <h2 className="text-lg">Running Task</h2>
+        <h2 className="text-lg mb-4">Running Task</h2>
+        <div className="sm:hidden text-4xl font-simi mb-4">
+          {remainingTasks}
+        </div>
       </div>
-      {/* Instantly show the number */}
-      <div className="text-4xl font-simi mb-4">{remainingTasks}</div>
-      <div className="flex items-center justify-between md:justify-start absolute bottom-6">
+
+      <div className="max-sm:hidden text-4xl font-simi mb-4">
+        {remainingTasks}
+      </div>
+
+      <div className="flex sm:items-center justify-between md:justify-start sm:absolute bottom-6">
         <div className="relative w-24 h-24">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
@@ -47,7 +53,7 @@ const RunningTask = () => {
             }}
           />
         </div>
-        <div className="text-center md:ml-2">
+        <div className="max-sm:flex max-sm:flex-col max-sm:justify-center text-center ml-3 md:ml-2">
           <div className="text-2xl font-normal">{totalTasks}</div>
           <div className="text-gray-400">Task</div>
         </div>
