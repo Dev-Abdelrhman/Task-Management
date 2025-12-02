@@ -23,7 +23,7 @@ function Sidebar() {
   return (
     <>
       <button
-        className="md:hidden fixed top-7 left-8 z-50 border-[1px] rounded-full text-[#8E92BC] p-3"
+        className="md:hidden fixed top-5 left-8 z-50 border-[1px] rounded-full text-[#8E92BC] p-3"
         onClick={toggleSidebar}
       >
         <Menu />

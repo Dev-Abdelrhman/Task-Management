@@ -15,8 +15,8 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
   if (projects.length === 0) return null;
 
   return (
-    <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
-      <div className="px-5 py-4">
+    <div className="bg-light dark:bg-[#080808] d-flex align-items-center ">
+      <div className="px-5 py-4 ">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-medium dark:text-[#E0E0E0]">{title}</h2>
           <div className="flex gap-2">
@@ -51,9 +51,9 @@ function ProjectSection({ title, projects, handleClick, swiperClass }) {
           {projects.map((project, index) => (
             <SwiperSlide
               key={index}
-              className="!w-full sm:!w-auto  !flex-shrink-0"
+              className="!w-full sm:!w-auto !flex-shrink-0 max-sm:justify-center"
             >
-              <div className="bg-white p-4  dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg mb-4">
+              <div className="bg-white max-w-[350px]  p-4 dark:bg-[#1a1a1a] dark:border-0 dark:text-white rounded-xl border border-gray-200 dark:border-gray-600 transition-shadow duration-300 hover:!shadow-lg sm:ml-2 mb-4">
                 <div className="my-1" onClick={() => handleClick(project._id)}>
                   <Box
                     component="img"

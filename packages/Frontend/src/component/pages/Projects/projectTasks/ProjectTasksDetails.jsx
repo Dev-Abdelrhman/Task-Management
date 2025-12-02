@@ -18,7 +18,6 @@ const ProjectTasksDetails = ({ task, onClose, onEdit, onDelete }) => {
             <X size={24} />
           </button>
         </div>
-        {console.log(task)}
         {task?.image && (
           <div className="mb-6">
             <img
