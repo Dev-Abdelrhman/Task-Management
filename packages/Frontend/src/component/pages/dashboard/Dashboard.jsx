@@ -11,10 +11,10 @@ export default function TaskordDashboard() {
   const { user } = useUserMenu();
   return (
     <>
-      <div className="w-full grid grid-cols-1 2xl:grid-cols-[4fr_1fr] bg-[#FAFAFA] dark:bg-[#080808]">
+      <div className="w-full h-screen grid grid-cols-1 2xl:grid-cols-[4fr_1fr] bg-[#FAFAFA] dark:!bg-[#080808]">
         <Sidebar />
         {/* Main Content */}
-        <div className="lg:ml-[16rem] flex-1 sm:p-8 p-7">
+        <div className="lg:ml-[16rem] dark:!bg-[#080808] flex-1 sm:p-8 p-7">
           <DashboardNav />
           <div className="sm:hidden mb-6 ml-2">
             <h1 className="text-3xl dark:text-white truncate">
