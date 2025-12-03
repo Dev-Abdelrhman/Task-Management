@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import { Search } from "lucide-react";
 import AddTask from "./AddTask";
 import { Button } from "@mui/material";
@@ -28,7 +28,6 @@ export default function AllTasks() {
     setShowModal,
     deleteModal,
     setDeleteModal,
-    selectedColumn,
     setSelectedColumn,
     isDeleting,
     editingTask,
@@ -101,14 +100,14 @@ export default function AllTasks() {
 
   return (
     <>
-      <div className="px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex justify-between items-center">
-        <div className="relative w-1/2">
+      <div className="px-3 sm:px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-stretch sm:items-center">
+        <div className="relative w-full sm:w-1/2">
           <span className="absolute inset-y-0 flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />
           </span>
           <input
             type="search"
-            className="w-full pl-10 dark:text-white pr-4 py-4 dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
+            className="w-full pl-10 dark:text-white pr-4 py-3 sm:py-4 dark:bg-[#3a3a3a] dark:border-[#3a3a3a] border border-gray-200 !rounded-[10px] focus:outline-none"
             placeholder="Search Tasks"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,13 +115,13 @@ export default function AllTasks() {
         </div>
         <Button
           onClick={() => openAddTaskModal()}
-          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl w-full sm:w-auto"
         >
           Add Task
         </Button>
       </div>
 
-      <div className="px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px]">
+      <div className="px-2 sm:px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px] overflow-x-hidden w-full max-w-full">
         {taskDetailsModal.show && (
           <ProjectTasksDetails
             task={taskDetailsModal.task}
@@ -148,7 +147,7 @@ export default function AllTasks() {
         )}
 
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex gap-8 overflow-x-auto pb-4 px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 pb-4 px-2 sm:px-4">
             {board.columns.map((column) => (
               <TaskColumn
                 key={column.id}
