@@ -141,14 +141,14 @@ const InviteManagement = () => {
           </div>
         ) : (
           <div className="flex max-sm:flex-col items-center gap-2">
-            <Typography variant="body2" className="italic text-green-500">
+            <Typography variant="body2" className="italic text-gray-400">
               {invite.status === "accepted" ? "Accepted" : "Declined"}
             </Typography>
             <Button
               color="error"
               onClick={() => handleDelete(invite._id)}
               disabled={isDeleting === invite._id}
-              className="!text-base !capitalize !bg-red-500 max-sm:!text-sm hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              className="!text-base !capitalize !bg-red-500 max-sm:!text-sm hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:!px-7 !rounded-xl"
             >
               {isDeleting === invite._id ? (
                 <CircularProgress size={20} />
