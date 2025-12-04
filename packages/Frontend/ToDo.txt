@@ -25,3 +25,8 @@ Messages
 respon design for all pages 
 skeleton screen for all pages
 look at project doc
+
+
+////////////////
+//TODO first is style 
+edit phone all modals style

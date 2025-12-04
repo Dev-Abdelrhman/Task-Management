@@ -6,3 +6,15 @@
 * {
   font-family: "Outfit", sans-serif !important;
 }
+
+/* html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+} */

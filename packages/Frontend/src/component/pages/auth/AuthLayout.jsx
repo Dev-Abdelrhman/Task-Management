@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const AuthLayout = ({ children }) => {
   return (
-    <div className="flex w-full">
+    <div className="flex sm:h-screen w-full">
       {/* Left side - Decorative background */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden bg-[#1A2793]">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1A2793] via-[#2A3BB7] to-[#546FFF]"></div>

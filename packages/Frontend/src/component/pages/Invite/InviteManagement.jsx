@@ -68,13 +68,12 @@ const InviteManagement = () => {
         />
       </ListItemAvatar>
       <ListItemText
-        className=""
         primary={
           <span>
-            <span className="dark:text-gray-400">
+            <span className="dark:text-gray-400 max-sm:!text-[14px]">
               {type === "sent" ? "To:" : "From:"}
             </span>{" "}
-            <span className="dark:text-gray-300">
+            <span className="dark:text-gray-300 max-sm:!text-[13px]">
               {type === "sent"
                 ? invite.receiver?.username
                 : invite.sender?.username}
@@ -82,9 +81,9 @@ const InviteManagement = () => {
           </span>
         }
         secondary={
-          <>
+          <div>
             <Typography
-              className="dark:text-white"
+              className="dark:text-white max-sm:!text-[13px]"
               component="span"
               variant="body2"
               color="text.primary"
@@ -92,9 +91,11 @@ const InviteManagement = () => {
               {invite.project?.name} - {invite.role?.name}
             </Typography>
             <br />
-            {dayjs(invite.createdAt).format("MMM D, YYYY h:mm A")}
-            {invite.status && ` • Status: ${invite.status}`}
-          </>
+            <div className="dark:text-gray-400 max-sm:my-1 max-sm:!text-[13px]">
+              {dayjs(invite.createdAt).format("MMM D, YYYY h:mm A")}
+              {invite.status && ` • Status: ${invite.status}`}
+            </div>
+          </div>
         }
       />
       <div className="flex !items-center !justify-center top-3">
@@ -103,7 +104,7 @@ const InviteManagement = () => {
             color="error"
             onClick={() => handleDelete(invite._id)}
             disabled={isDeleting === invite._id}
-            className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+            className="!text-base !capitalize max-sm:!text-sm !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:!px-7 !rounded-xl"
           >
             {isDeleting === invite._id ? (
               <CircularProgress size={24} />
@@ -112,12 +113,12 @@ const InviteManagement = () => {
             )}
           </Button>
         ) : invite.status === "pending" ? (
-          <div className="flex gap-2">
+          <div className="flex max-sm:flex-col gap-2">
             <Button
               color="success"
               onClick={() => handleAccept(invite._id)}
               disabled={isAccepting === invite._id}
-              className="!text-base !capitalize !bg-green-500 hover:shadow-lg hover:shadow-green-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              className="!text-base !capitalize max-sm:!text-sm !bg-green-500 hover:shadow-lg hover:shadow-green-500 !font-bold !text-white !py-3 sm:!px-7 !rounded-xl"
             >
               {isAccepting === invite._id ? (
                 <CircularProgress size={20} />
@@ -129,7 +130,7 @@ const InviteManagement = () => {
               color="error"
               onClick={() => handleDecline(invite._id)}
               disabled={isDeclining === invite._id}
-              className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              className="!text-base !capitalize max-sm:!text-sm !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:backdrop:!px-7 !rounded-xl"
             >
               {isDeclining === invite._id ? (
                 <CircularProgress size={20} />
@@ -139,15 +140,15 @@ const InviteManagement = () => {
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <Typography variant="body2" className="italic text-gray-500">
+          <div className="flex max-sm:flex-col items-center gap-2">
+            <Typography variant="body2" className="italic text-gray-400">
               {invite.status === "accepted" ? "Accepted" : "Declined"}
             </Typography>
             <Button
               color="error"
               onClick={() => handleDelete(invite._id)}
               disabled={isDeleting === invite._id}
-              className="!text-base !capitalize !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              className="!text-base !capitalize !bg-red-500 max-sm:!text-sm hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:!px-7 !rounded-xl"
             >
               {isDeleting === invite._id ? (
                 <CircularProgress size={20} />
