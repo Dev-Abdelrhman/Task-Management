@@ -17,7 +17,7 @@ const ImageUpdateModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-[#080808] rounded-lg shadow-md p-6 w-full max-w-md">
+      <div className="bg-white dark:bg-[#080808] !rounded-xl shadow-md p-6 sm:w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold dark:text-gray-200">
             Update Profile Picture
@@ -74,14 +74,14 @@ const ImageUpdateModal = ({
           <Button
             onClick={() => setShowImageModal(false)}
             variant="outlined"
-            className="dark:text-gray-200 w-2/5 "
+            className="dark:text-gray-200 sm:w-2/5 max-sm:!text-[15px] max-sm:!py-2"
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpdateImage}
             variant="contained"
-            className="!bg-[#546FFF] w-2/5"
+            className="!bg-[#546FFF] sm:w-2/5"
             disabled={isRemovingImage || !imagePreview || isImageUploading}
           >
             {isImageUploading ? (

@@ -109,10 +109,10 @@ const GeneralSettings = ({
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   Light
                 </span>
-                <label className="relative inline-block w-11 h-6">
+                <label className="relative inline-block w-11 h-6 !cursor-pointer">
                   <input
                     type="checkbox"
-                    className="sr-only peer"
+                    className="sr-only peer "
                     checked={theme === "dark"}
                     onChange={() => {
                       const newTheme = theme === "light" ? "dark" : "light";
