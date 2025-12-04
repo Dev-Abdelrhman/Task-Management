@@ -28,8 +28,8 @@ const DeleteUserModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 !rounded-xl">
-      <div className="bg-white dark:bg-[#080808] rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+      <div className="bg-white dark:bg-[#080808] !rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
         <div className="flex justify-center mb-4">
           <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
             <svg
@@ -90,7 +90,7 @@ const DeleteUserModal = ({
             variant="contained"
             color="error"
             disabled={isDeleting || confirmationText !== user?.username}
-            className="!text-base !capitalize !bg-red-500 hover:!shadow-lg hover:!shadow-red-500 !font-bold !text-white !py-2 !px-7 !rounded-xl disabled:!bg-red-300 disabled:!text-white"
+            className="!text-base !capitalize !bg-red-500 hover:!shadow-lg hover:!shadow-red-500 !font-bold !text-white !py-3 !px-7 !rounded-xl disabled:!bg-red-300 disabled:!text-white"
           >
             {isDeleting ? "Deleting..." : "Delete Account"}
           </Button>
@@ -100,4 +100,4 @@ const DeleteUserModal = ({
   );
 };
 
-export default DeleteUserModal; 
+export default DeleteUserModal;
