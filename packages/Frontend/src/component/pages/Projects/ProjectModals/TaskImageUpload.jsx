@@ -31,10 +31,12 @@ function TaskImageUpload({
 
   return (
     <div className="flex flex-col justify-center items-center mb-4">
-      {(existingImage?.length > 0 || imagePreview?.length > 0) ? (
+      {existingImage?.length > 0 || imagePreview?.length > 0 ? (
         <div className="relative mb-3 w-1/2">
           <img
-            src={existingImage?.length > 0 ? existingImage[0].url : imagePreview}
+            src={
+              existingImage?.length > 0 ? existingImage[0].url : imagePreview
+            }
             alt="Task preview"
             className="rounded-3xl h-40 w-full object-cover"
           />
@@ -51,13 +53,15 @@ function TaskImageUpload({
             )}
           </button>
         </div>
-      ) : (<div className="relative mb-3">
-        <img
-          src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
-          alt="Task preview"
-          className="rounded-3xl h-40 w-full object-cover"
-        />
-      </div>)}
+      ) : (
+        <div className="relative mb-3">
+          <img
+            src="https://placehold.co/612x612?text=No+Image&font=roboto"
+            alt="Task preview"
+            className="rounded-3xl h-40 w-full object-cover"
+          />
+        </div>
+      )}
 
       <label
         htmlFor="taskImage"
@@ -82,4 +86,4 @@ function TaskImageUpload({
   );
 }
 
-export default TaskImageUpload; 
+export default TaskImageUpload;
