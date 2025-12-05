@@ -5,12 +5,7 @@ import {
   SignalLow,
   SignalMedium,
 } from "lucide-react";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const PrioritySelect = ({ priority, onPriorityChange }) => {
   const iconMap = {
@@ -48,15 +43,13 @@ const PrioritySelect = ({ priority, onPriorityChange }) => {
 
   return (
     <FormControl fullWidth>
-      <label className="block dark:text-gray-400 text-gray-700 text-sm font-medium mb-1">
+      <label className="block dark:text-gray-400 text-sm font-medium mb-1">
         Priority
       </label>
-      <InputLabel id="status-label">Priority</InputLabel>
       <Select
         labelId="status-label"
         id="status-select"
         value={priority}
-        label="Priority"
         className="dark:!bg-[#2D2D2D] dark:border-0 dark:border-gray-500 dark:text-gray-300"
         onChange={(e) => onPriorityChange(e.target.value)}
         MenuProps={{
@@ -125,4 +118,4 @@ const PrioritySelect = ({ priority, onPriorityChange }) => {
   );
 };
 
-export default PrioritySelect; 
+export default PrioritySelect;

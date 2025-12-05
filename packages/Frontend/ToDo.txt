@@ -4,13 +4,14 @@ Home UI Complete Refactor - DONE
 Delete one of Shared Folders - DONE
 Deep Debug and test and improve the proformance to all project and UI - finished the auth entification and  
 hard test to refresh token and login - DONE
+edit phone all modals style make it responsive - DONE
+invite ui refactor - and swap send and rec DONE
+Project Tasks double task create - DONE
 ///
 Nav Text 
 invite notification
 DashBoard chart
-invite ui refactor - and swap send and rec 
 search why Project Details is slow render 
-Project Taskes double task create
 settings UI refactor
 Help Center 
 verify
@@ -22,11 +23,6 @@ Remove user from project aka kick
 color if task done and not assined
 Messages
 /// at the end 
-respon design for all pages 
+responsive design for all pages 
 skeleton screen for all pages
 look at project doc
-
-
-////////////////
-//TODO first is style 
-edit phone all modals style

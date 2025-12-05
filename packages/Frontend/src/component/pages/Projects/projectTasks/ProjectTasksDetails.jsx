@@ -23,7 +23,7 @@ const ProjectTasksDetails = ({ task, onClose, onEdit, onDelete }) => {
             <img
               src={
                 task?.image?.[0]?.url ||
-                "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                "https://placehold.co/612x612?text=No+Image&font=roboto"
               }
               alt="Task"
               className="w-full h-auto rounded-xl"
