@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 const DeleteTaskModal = ({ onClose, onDelete, isDeleting }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-white w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#080808]">
+      <div className="bg-white flex flex-col items-center justify-center w-[426px] rounded-[10px] shadow-lg p-6 dark:bg-[#080808]">
         <CircleAlert size={40} color="#f8bb86" />
         <h2 className="text-gray-500 text-4xl dark:text-gray-300 font-medium mt-4 mb-4">
           Delete Task
@@ -38,4 +38,4 @@ const DeleteTaskModal = ({ onClose, onDelete, isDeleting }) => {
   );
 };
 
-export default DeleteTaskModal; 
+export default DeleteTaskModal;
