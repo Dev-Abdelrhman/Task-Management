@@ -130,7 +130,7 @@ const InviteManagement = () => {
               color="error"
               onClick={() => handleDecline(invite._id)}
               disabled={isDeclining === invite._id}
-              className="!text-base !capitalize max-sm:!text-sm !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:backdrop:!px-7 !rounded-xl"
+              className="!text-base !capitalize max-sm:!text-sm !bg-red-500 hover:shadow-lg hover:shadow-red-500 !font-bold !text-white !py-3 sm:!px-7 !rounded-xl"
             >
               {isDeclining === invite._id ? (
                 <CircularProgress size={20} />
@@ -165,8 +165,8 @@ const InviteManagement = () => {
   return (
     <div className="p-4">
       <Tabs value={tabValue} onChange={handleTabChange} className="mb-4">
-        <Tab className="dark:text-gray-500" label="Sent Invites" />
         <Tab className="dark:text-gray-500" label="Received Invites" />
+        <Tab className="dark:text-gray-500" label="Sent Invites" />
       </Tabs>
 
       {isLoadingSent || isLoadingReceived ? (
@@ -177,20 +177,6 @@ const InviteManagement = () => {
         <>
           {tabValue === 0 && (
             <List className="bg-white dark:bg-[#2D2D2D] rounded-xl shadow-md hover:shadow-lg">
-              {sentInvitesList.length > 0 ? (
-                sentInvitesList.map((invite) =>
-                  renderInviteItem(invite, "sent")
-                )
-              ) : (
-                <Typography className="p-4 text-gray-500 dark:text-gray-400">
-                  No sent invitations
-                </Typography>
-              )}
-            </List>
-          )}
-
-          {tabValue === 1 && (
-            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl  shadow">
               {receivedInvitesList.length > 0 ? (
                 receivedInvitesList.map((invite) =>
                   renderInviteItem(invite, "received")
@@ -198,6 +184,20 @@ const InviteManagement = () => {
               ) : (
                 <Typography className="p-4 text-gray-500 dark:text-gray-400">
                   No received invitations
+                </Typography>
+              )}
+            </List>
+          )}
+
+          {tabValue === 1 && (
+            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl  shadow">
+              {sentInvitesList.length > 0 ? (
+                sentInvitesList.map((invite) =>
+                  renderInviteItem(invite, "sent")
+                )
+              ) : (
+                <Typography className="p-4 text-gray-500 dark:text-gray-400">
+                  No sent invitations
                 </Typography>
               )}
             </List>
