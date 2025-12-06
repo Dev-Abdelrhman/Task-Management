@@ -12,14 +12,14 @@ const RoleModal = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="dark:bg-[#080808] bg-white !rounded-xl p-6 w-[500px]">
-        <h2 className="text-2xl dark:text-gray-400 text-center font-medium mb-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="dark:bg-[#080808] bg-white !rounded-xl p-4 sm:p-6 w-full max-w-[500px] max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl sm:text-2xl dark:text-gray-400 text-center font-medium mb-6">
           {isEditing ? "Edit Role" : "Create Role"}
         </h2>
 
         <form onSubmit={onSubmit}>
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <label className="block dark:text-gray-400 text-sm font-medium mb-2 text-gray-700">
               ROLE NAME
             </label>
@@ -34,7 +34,7 @@ const RoleModal = ({
             />
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <label className="block dark:text-gray-400 text-sm font-medium mb-2 text-gray-700">
               ROLE COLOR
             </label>
@@ -44,14 +44,14 @@ const RoleModal = ({
                 name="color"
                 value={newRole.color}
                 onChange={onInputChange}
-                className="w-9 h-9 cursor-pointer dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300"
+                className="w-8 h-8 sm:w-9 sm:h-9 cursor-pointer dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300"
               />
               <input
                 type="text"
                 name="color"
                 value={newRole.color}
                 onChange={onInputChange}
-                className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 w-32 p-2 border rounded-xl text-sm"
+                className="dark:bg-[#2D2D2D] dark:border-gray-500 dark:text-gray-300 w-full sm:w-32 p-2 border rounded-xl text-sm"
                 placeholder="Hex color code"
               />
             </div>
@@ -73,8 +73,8 @@ const RoleModal = ({
               </button>
             </div>
 
-            <div className="space-y-4 max-h-64 overflow-y-auto">
-              <div className="bg-gray-50 dark:bg-[#2D2D2D] p-3 rounded-lg">
+            <div className="space-y-4 max-h-40 sm:max-h-64 overflow-y-auto">
+              <div className="bg-gray-50 dark:bg-[#2D2D2D] p-3 rounded-xl">
                 <h4 className="text-xs font-semibold text-gray-500 mb-2">
                   SERVER PERMISSIONS
                 </h4>
@@ -110,11 +110,11 @@ const RoleModal = ({
                     key={perm.value}
                     className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
                   >
-                    <div className="flex-1 mr-4">
-                      <div className="dark:text-gray-500 text-sm font-medium text-gray-900">
+                    <div className="flex-1 mr-4 min-w-0">
+                      <div className="dark:text-gray-500 text-sm font-medium text-gray-900 truncate">
                         {perm.label}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {perm.description}
                       </div>
                     </div>
@@ -141,16 +141,16 @@ const RoleModal = ({
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6 border-t pt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 mt-6 border-t pt-4">
             <Button
               onClick={onClose}
-              className="!text-base !py-2 !capitalize !bg-[#f83131] hover:shadow-lg hover:shadow-red-700 !font-medium !text-white !rounded-[10px]"
+              className="!text-sm sm:!text-base !py-2 !capitalize !bg-[#f83131] hover:shadow-lg hover:shadow-red-700 !font-medium !text-white !rounded-[10px] w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="!text-base !py-2 !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-medium !text-white !rounded-[10px]"
+              className="!text-sm sm:!text-base !py-2 !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-medium !text-white !rounded-[10px] w-full sm:w-auto"
             >
               {isEditing ? "Update Role" : "Create Role"}
             </Button>
