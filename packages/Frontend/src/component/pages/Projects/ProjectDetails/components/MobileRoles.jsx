@@ -63,7 +63,7 @@ const MobileRoles = ({
         </IconButton>
       </div>
 
-      <div className="bg-white dark:bg-[#1a1a1a] h-full p-4 flex-col gap-4 overflow-y-auto">
+      <div className="bg-white dark:rounded-xl dark:bg-[#1a1a1a] sm:h-full p-4 flex-col gap-4 overflow-y-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
           <div className="relative w-full sm:w-auto sm:flex-1">
             <span className="absolute inset-y-0 left-3 flex items-center">
@@ -89,7 +89,7 @@ const MobileRoles = ({
           {rolesData?.doc?.map((role) => (
             <div
               key={role._id}
-              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer w-full sm:w-auto"
+              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer sm:w-auto"
             >
               <div className="flex items-center gap-2 flex-1">
                 <div

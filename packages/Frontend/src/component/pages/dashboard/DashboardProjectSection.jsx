@@ -64,7 +64,7 @@ const DashboardProjectSection = () => {
   }
 
   return (
-    <div className="mb-8 dark:!bg-[#080808]">
+    <div className="sm:mb-8 dark:!bg-[#080808]">
       <div className="flex  justify-between items-center mb-6 ">
         <h2 className="text-xl font-medium dark:text-white">Latest Project</h2>
         <div className="flex gap-2">
