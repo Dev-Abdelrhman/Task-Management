@@ -89,7 +89,7 @@ const MobileRoles = ({
           {rolesData?.doc?.map((role) => (
             <div
               key={role._id}
-              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer w-full sm:w-auto"
+              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer sm:w-auto"
             >
               <div className="flex items-center gap-2 flex-1">
                 <div

@@ -107,7 +107,7 @@ function ProjectDetails() {
     <>
       <div className="flex min-h-screen dark:bg-[#080808] bg-[#FAFAFA]">
         {/* Mobile Roles Toggle Button - Only shows on mobile */}
-        <div className="lg:hidden fixed bottom-8 right-4 z-40">
+        <div className="lg:hidden fixed mt-2 top-30 right-4 z-10">
           <button
             onClick={() => setShowRolesSidebar(!showRolesSidebar)}
             className="bg-[#546FFF] text-sm text-white p-3 rounded-xl shadow-lg"

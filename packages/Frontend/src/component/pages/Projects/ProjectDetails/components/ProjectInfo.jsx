@@ -23,7 +23,7 @@ const ProjectInfo = ({ project, onAddMembersClick }) => {
         >
           {project.memberCount} Members Involved
         </p>
-        <div className="flex items-center gap-2 dark:text-white mt-2 sm:mt-0">
+        <div className="flex items-center gap-2 dark:text-white">
           <DueDateStatus
             dueDate={project?.dueDate}
             progress={project?.progress}
