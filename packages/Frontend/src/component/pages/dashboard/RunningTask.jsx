@@ -11,14 +11,10 @@ const RunningTask = () => {
     <div className="sm:h-[250px] relative flex max-sm:justify-between sm:flex-col sm:gap-4 bg-[#141522] text-white p-6 max-sm:px-7 rounded-xl">
       <div>
         <h2 className="text-lg mb-4">Running Task</h2>
-        <div className="sm:hidden text-4xl font-simi mb-4">
-          {remainingTasks}
-        </div>
+        <div className="sm:hidden text-4xl mb-4">{remainingTasks}</div>
       </div>
 
-      <div className="max-sm:hidden text-4xl font-simi mb-4">
-        {remainingTasks}
-      </div>
+      <div className="max-sm:hidden text-4xl mb-4">{remainingTasks}</div>
 
       <div className="flex sm:items-center justify-between md:justify-start sm:absolute bottom-6">
         <div className="relative w-24 h-24">
