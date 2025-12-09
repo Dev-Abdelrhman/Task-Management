@@ -63,7 +63,7 @@ const MobileRoles = ({
         </IconButton>
       </div>
 
-      <div className="bg-white dark:bg-[#1a1a1a] h-full p-4 flex-col gap-4 overflow-y-auto">
+      <div className="bg-white dark:rounded-xl dark:bg-[#1a1a1a] sm:h-full p-4 flex-col gap-4 overflow-y-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3">
           <div className="relative w-full sm:w-auto sm:flex-1">
             <span className="absolute inset-y-0 left-3 flex items-center">
