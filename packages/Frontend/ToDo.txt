@@ -26,3 +26,4 @@ Messages
 responsive design for all pages 
 skeleton screen for all pages
 look at project doc
+Comment Image
