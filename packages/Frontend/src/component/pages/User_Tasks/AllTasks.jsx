@@ -104,7 +104,7 @@ export default function AllTasks() {
 
   return (
     <>
-      <h4 className="sm:hidden text-3xl px-6 py-5 dark:bg-[#080808] dark:text-white bg-white">
+      <h4 className="sm:hidden text-3xl px-6 py-3 dark:bg-[#080808] dark:text-white bg-white">
         {title}
       </h4>
       <div className="px-3 sm:px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-stretch sm:items-center">
