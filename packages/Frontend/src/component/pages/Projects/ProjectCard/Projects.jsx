@@ -25,7 +25,7 @@ function Projects() {
 
   return (
     <div className="bg-light dark:bg-[#080808]">
-      <h4 className="text-3xl px-6 py-5 dark:bg-[#080808] dark:text-white bg-white">
+      <h4 className="sm:hidden text-3xl px-6 py-5 dark:bg-[#080808] dark:text-white bg-white">
         {title}
       </h4>
 
