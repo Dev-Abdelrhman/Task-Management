@@ -128,7 +128,7 @@ export default function AllTasks() {
         </Button>
       </div>
 
-      <div className="px-2 sm:px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px] overflow-x-hidden w-full max-w-full">
+      <div className="px-2 sm:px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen overflow-x-hidden w-full max-w-full">
         {taskDetailsModal.show && (
           <ProjectTasksDetails
             task={taskDetailsModal.task}

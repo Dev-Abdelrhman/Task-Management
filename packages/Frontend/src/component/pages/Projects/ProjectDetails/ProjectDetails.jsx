@@ -17,6 +17,7 @@ import DeleteRoleModal from "./components/DeleteRoleModal";
 import RoleDetailsModal from "./components/RoleDetailsModal";
 import PermissionWarningModal from "./components/PermissionWarningModal";
 import MobileRoles from "./components/MobileRoles";
+import { getNavTitle } from "../../../../lib/getNavTitle";
 
 function ProjectDetails() {
   const { user } = useAuth();
@@ -45,6 +46,9 @@ function ProjectDetails() {
     },
     enabled: !!user?._id && !!projectId,
   });
+
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   // Use useRoles hook
   const {
@@ -104,6 +108,9 @@ function ProjectDetails() {
 
   return (
     <>
+      <h4 className="sm:hidden text-3xl px-6 pb-4 pt-1 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
       <div className="flex min-h-screen dark:bg-[#080808] bg-[#FAFAFA]">
         {/* Mobile Roles Toggle Button - Only shows on mobile */}
         <div className="lg:hidden fixed mt-2 top-30 right-4 z-10">
