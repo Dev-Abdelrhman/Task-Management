@@ -14,6 +14,8 @@ import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import { useAuth } from "../hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
+import { getNavTitle } from "../lib/getNavTitle";
+
 function Navbar() {
   const { signOut, isLoading } = useAuth();
   const { user } = useAuthStore();
@@ -27,22 +29,7 @@ function Navbar() {
     }
   };
   const path = window.location.pathname;
-
-  let navTitle = "";
-
-  if (path === "/projects") {
-    navTitle = "Explore Project";
-  } else if (path.startsWith("/projects/ProjectDetails")) {
-    navTitle = "Project Details";
-  } else if (path === "/settings") {
-    navTitle = "Settings";
-  } else if (path === "/user-tasks") {
-    navTitle = "Your Tasks";
-  } else if (path === "/invites") {
-    navTitle = "Invites";
-  } else if (path.startsWith("/projects/users/") && path.endsWith("/tasks")) {
-    navTitle = "User's Tasks";
-  }
+  const navTitle = getNavTitle(path);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
