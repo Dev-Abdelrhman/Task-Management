@@ -14,6 +14,8 @@ import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import { useAuth } from "../hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
+import { getNavTitle } from "../lib/getNavTitle";
+
 function Navbar() {
   const { signOut, isLoading } = useAuth();
   const { user } = useAuthStore();
@@ -26,6 +28,8 @@ function Navbar() {
       toast.error(`Logout failed: ${error.message}`);
     }
   };
+  const path = window.location.pathname;
+  const navTitle = getNavTitle(path);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -41,7 +45,11 @@ function Navbar() {
   };
   return (
     <>
-      <nav className="flex justify-end items-center bg-white dark:bg-[#080808] dark:text-white px-6 py-4 fixed w-full top-0 sm:first-line:left-64 right-0 z-10">
+      <nav className="flex justify-end sm:justify-between items-center bg-white dark:bg-[#080808] dark:text-white px-6 py-4 fixed w-full top-0 sm:first-line:left-64 right-0 z-10">
+        <h4 className="hidden sm:flex ml-[15rem] text-3xl px-6 py-5 dark:bg-[#080808] dark:text-white bg-white">
+          {navTitle}
+        </h4>
+
         <Box
           className="!flex gap-5"
           sx={{ display: { xs: "none", md: "flex" } }}

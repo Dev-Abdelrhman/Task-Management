@@ -10,6 +10,7 @@ import TaskColumn from "./TaskColumn";
 import DeleteTaskModal from "../ProjectModals/DeleteTaskModal";
 import { useTaskManagement } from "../../../../hooks/tasks/useTaskManagement";
 import { useBoardManagement } from "../../../../hooks/boards/useBoardManagement";
+import { getNavTitle } from "../../../../lib/getNavTitle";
 
 const ProjectTasks = () => {
   const { projectId } = useParams();
@@ -17,6 +18,9 @@ const ProjectTasks = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState(null);
   const [addTaskStatus, setAddTaskStatus] = useState(null);
+
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   const {
     data,
@@ -100,6 +104,9 @@ const ProjectTasks = () => {
   return (
     <>
       <div className="px-3 sm:px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-stretch sm:items-center">
+        <h4 className="sm:hidden text-3xl px-6 py-1 dark:bg-[#080808] dark:text-white bg-white">
+          {title}
+        </h4>
         <div className="relative w-full sm:w-1/2">
           <span className="absolute inset-y-0 flex items-center pl-3">
             <Search className="h-5 w-5 text-[#8E92BC]" />

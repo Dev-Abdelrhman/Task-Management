@@ -14,6 +14,7 @@ import {
 import { useInvite } from "../../../hooks/features/useInvite";
 import { useAuth } from "../../../hooks/auth/useAuth";
 import dayjs from "dayjs";
+import { getNavTitle } from "../../../lib/getNavTitle";
 
 const InviteManagement = () => {
   const { user } = useAuth();
@@ -27,6 +28,9 @@ const InviteManagement = () => {
     isAccepting,
     isDeclining,
   } = useInvite();
+
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   const [tabValue, setTabValue] = useState(0);
 
@@ -163,48 +167,53 @@ const InviteManagement = () => {
   );
 
   return (
-    <div className="p-4">
-      <Tabs value={tabValue} onChange={handleTabChange} className="mb-4">
-        <Tab className="dark:text-gray-500" label="Received Invites" />
-        <Tab className="dark:text-gray-500" label="Sent Invites" />
-      </Tabs>
+    <>
+      <h4 className="sm:hidden text-3xl px-6 py-3 pt-1 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
+      <div className="p-4">
+        <Tabs value={tabValue} onChange={handleTabChange} className="mb-4">
+          <Tab className="dark:text-gray-500" label="Received Invites" />
+          <Tab className="dark:text-gray-500" label="Sent Invites" />
+        </Tabs>
 
-      {isLoadingSent || isLoadingReceived ? (
-        <div className="flex justify-center p-8">
-          <CircularProgress />
-        </div>
-      ) : (
-        <>
-          {tabValue === 0 && (
-            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl shadow-md hover:shadow-lg">
-              {receivedInvitesList.length > 0 ? (
-                receivedInvitesList.map((invite) =>
-                  renderInviteItem(invite, "received")
-                )
-              ) : (
-                <Typography className="p-4 text-gray-500 dark:text-gray-400">
-                  No received invitations
-                </Typography>
-              )}
-            </List>
-          )}
+        {isLoadingSent || isLoadingReceived ? (
+          <div className="flex justify-center p-8">
+            <CircularProgress />
+          </div>
+        ) : (
+          <>
+            {tabValue === 0 && (
+              <List className="bg-white dark:bg-[#2D2D2D] rounded-xl shadow-md hover:shadow-lg">
+                {receivedInvitesList.length > 0 ? (
+                  receivedInvitesList.map((invite) =>
+                    renderInviteItem(invite, "received")
+                  )
+                ) : (
+                  <Typography className="p-4 text-gray-500 dark:text-gray-400">
+                    No received invitations
+                  </Typography>
+                )}
+              </List>
+            )}
 
-          {tabValue === 1 && (
-            <List className="bg-white dark:bg-[#2D2D2D] rounded-xl  shadow">
-              {sentInvitesList.length > 0 ? (
-                sentInvitesList.map((invite) =>
-                  renderInviteItem(invite, "sent")
-                )
-              ) : (
-                <Typography className="p-4 text-gray-500 dark:text-gray-400">
-                  No sent invitations
-                </Typography>
-              )}
-            </List>
-          )}
-        </>
-      )}
-    </div>
+            {tabValue === 1 && (
+              <List className="bg-white dark:bg-[#2D2D2D] rounded-xl  shadow">
+                {sentInvitesList.length > 0 ? (
+                  sentInvitesList.map((invite) =>
+                    renderInviteItem(invite, "sent")
+                  )
+                ) : (
+                  <Typography className="p-4 text-gray-500 dark:text-gray-400">
+                    No sent invitations
+                  </Typography>
+                )}
+              </List>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

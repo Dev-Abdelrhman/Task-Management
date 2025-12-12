@@ -8,6 +8,7 @@ import DeleteTaskModal from "../Projects/ProjectModals/DeleteTaskModal";
 import ProjectTasksDetails from "../Projects/projectTasks/ProjectTasksDetails";
 import { useUserTaskManagement } from "../../../hooks/users/useUserTaskManagement";
 import { useUserBoardManagement } from "../../../hooks/boards/useUserBoardManagement";
+import { getNavTitle } from "../../../lib/getNavTitle";
 
 const statusMap = {
   backlog: "Pending",
@@ -55,6 +56,9 @@ export default function AllTasks() {
 
   const [addTaskStatus, setAddTaskStatus] = useState(null);
 
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
+
   const openAddTaskModal = (columnId) => {
     setSelectedColumn(columnId);
     setEditingTask(null);
@@ -100,6 +104,9 @@ export default function AllTasks() {
 
   return (
     <>
+      <h4 className="sm:hidden text-3xl px-6 py-3 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
       <div className="px-3 sm:px-5 pb-5 pt-0 bg-white dark:bg-[#080808] flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-stretch sm:items-center">
         <div className="relative w-full sm:w-1/2">
           <span className="absolute inset-y-0 flex items-center pl-3">
@@ -121,7 +128,7 @@ export default function AllTasks() {
         </Button>
       </div>
 
-      <div className="px-2 sm:px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen rounded-[30px] overflow-x-hidden w-full max-w-full">
+      <div className="px-2 sm:px-4 pb-4 pt-4 bg-gray-100 dark:bg-[#080808] min-h-screen overflow-x-hidden w-full max-w-full">
         {taskDetailsModal.show && (
           <ProjectTasksDetails
             task={taskDetailsModal.task}

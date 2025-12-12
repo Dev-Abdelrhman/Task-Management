@@ -7,6 +7,7 @@ import GeneralSettings from "./taps/GeneralSettings";
 import SecuritySettings from "./taps/SecuritySettings";
 import NotificationSettings from "./taps/NotificationSettings";
 import DeleteUserModal from "./modals/DeleteUserModal";
+import { getNavTitle } from "../../../lib/getNavTitle";
 
 export default function Setting() {
   const {
@@ -38,6 +39,8 @@ export default function Setting() {
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const fileInputRef = useRef(null);
   const [isImageUploading, setIsImageUploading] = useState(false);
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   useEffect(() => {
     if (user) {
@@ -175,84 +178,89 @@ export default function Setting() {
   };
 
   return (
-    <div className="bg-white dark:bg-[#080808]">
-      <ImageUpdateModal
-        showImageModal={showImageModal}
-        setShowImageModal={setShowImageModal}
-        imagePreview={imagePreview}
-        fileInputRef={fileInputRef}
-        handleFileChange={handleFileChange}
-        handleRemoveImage={handleRemoveImage}
-        handleUpdateImage={handleUpdateImage}
-        isRemovingImage={isRemovingImage}
-        userData={userData}
-        isImageUploading={isImageUploading}
-        handleDeleteUser={handleDeleteUser}
-      />
-      <DeleteUserModal
-        showModal={showDeleteUserModal}
-        onClose={() => setShowDeleteUserModal(false)}
-        onConfirm={handleDeleteUser}
-        isDeleting={isDeleting}
-        user={user}
-      />
-
-      <div className="flex border-b dark:border-0 ml-2 mb-6 bg-white dark:bg-[#080808]">
-        <button
-          className={`px-4 py-3 text-sm font-medium relative ${
-            activeTab === "general"
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
-              : "text-gray-500 dark:text-gray-400"
-          }`}
-          onClick={() => setActiveTab("general")}
-        >
-          General
-        </button>
-        <button
-          className={`px-4 py-3 text-sm font-medium relative ${
-            activeTab === "notifications"
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
-              : "text-gray-500 dark:text-gray-400"
-          }`}
-          onClick={() => setActiveTab("notifications")}
-        >
-          Notification
-        </button>
-        <button
-          className={`px-4 py-3 text-sm font-medium relative ${
-            activeTab === "security"
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
-              : "text-gray-500 dark:text-gray-400"
-          }`}
-          onClick={() => setActiveTab("security")}
-        >
-          Security & Privacy
-        </button>
-      </div>
-
-      {activeTab === "general" && (
-        <GeneralSettings
-          userData={userData}
-          setUserData={setUserData}
-          imagePreview={imagePreview}
+    <>
+      <h4 className="sm:hidden text-3xl px-6 pb-3 pt-2 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
+      <div className="bg-white dark:bg-[#080808]">
+        <ImageUpdateModal
+          showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}
-          handleUpdateUserInfo={handleUpdateUserInfo}
-          isUserUpdating={isUserUpdating}
-          theme={theme}
-          setTheme={setTheme}
+          imagePreview={imagePreview}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
+          handleRemoveImage={handleRemoveImage}
+          handleUpdateImage={handleUpdateImage}
+          isRemovingImage={isRemovingImage}
+          userData={userData}
+          isImageUploading={isImageUploading}
+          handleDeleteUser={handleDeleteUser}
         />
-      )}
-
-      {activeTab === "notifications" && <NotificationSettings />}
-
-      {activeTab === "security" && (
-        <SecuritySettings
-          passwordData={passwordData}
-          handleInputChange={handleInputChange}
-          handleUpdatePassword={handleUpdatePassword}
-          handleDeleteUser={() => setShowDeleteUserModal(true)}
+        <DeleteUserModal
+          showModal={showDeleteUserModal}
+          onClose={() => setShowDeleteUserModal(false)}
+          onConfirm={handleDeleteUser}
+          isDeleting={isDeleting}
+          user={user}
         />
-      )}
-    </div>
+
+        <div className="flex border-b dark:border-0 ml-2 mb-6 bg-white dark:bg-[#080808]">
+          <button
+            className={`px-4 py-3 text-sm font-medium relative ${
+              activeTab === "general"
+                ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            onClick={() => setActiveTab("general")}
+          >
+            General
+          </button>
+          <button
+            className={`px-4 py-3 text-sm font-medium relative ${
+              activeTab === "notifications"
+                ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            onClick={() => setActiveTab("notifications")}
+          >
+            Notification
+          </button>
+          <button
+            className={`px-4 py-3 text-sm font-medium relative ${
+              activeTab === "security"
+                ? "text-indigo-600 dark:text-indigo-400 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600 dark:after:bg-indigo-400"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+            onClick={() => setActiveTab("security")}
+          >
+            Security & Privacy
+          </button>
+        </div>
+
+        {activeTab === "general" && (
+          <GeneralSettings
+            userData={userData}
+            setUserData={setUserData}
+            imagePreview={imagePreview}
+            setShowImageModal={setShowImageModal}
+            handleUpdateUserInfo={handleUpdateUserInfo}
+            isUserUpdating={isUserUpdating}
+            theme={theme}
+            setTheme={setTheme}
+          />
+        )}
+
+        {activeTab === "notifications" && <NotificationSettings />}
+
+        {activeTab === "security" && (
+          <SecuritySettings
+            passwordData={passwordData}
+            handleInputChange={handleInputChange}
+            handleUpdatePassword={handleUpdatePassword}
+            handleDeleteUser={() => setShowDeleteUserModal(true)}
+          />
+        )}
+      </div>
+    </>
   );
 }

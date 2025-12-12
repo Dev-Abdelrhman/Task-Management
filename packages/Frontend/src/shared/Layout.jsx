@@ -16,7 +16,7 @@ function Layout() {
         <Navbar />
 
         {/* Page Content */}
-        <main className="pt-20 dark:bg-[#080808] overflow-x-hidden w-full max-w-full">
+        <main className="pt-20 sm:mt-7 dark:bg-[#080808] overflow-x-hidden w-full max-w-full">
           {/* <main className="pt-20 pr-4 sm:pr-6 lg:pr-8 dark:bg-[#080808] min-h-[calc(100vh-80px)]"> */}
 
           <Outlet />
