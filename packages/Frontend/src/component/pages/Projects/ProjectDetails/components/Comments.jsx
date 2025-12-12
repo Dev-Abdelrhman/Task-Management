@@ -6,9 +6,10 @@ import {
   Avatar,
   CircularProgress,
 } from "@mui/material";
-import { Send, MoreVertical, MessageCircle } from "lucide-react";
+import { Send, MoreVertical, MessageCircle, Check } from "lucide-react";
 import { DateTime } from "luxon";
 import { useComments } from "../../../../../hooks/features/useComments";
+import { useState } from "react";
 
 const hostGoogleImage = (url) => {
   return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`;
@@ -30,21 +31,45 @@ const Comments = ({ userId, projectId, user }) => {
     handleCommentSubmit,
     handleMenuOpen,
     handleMenuClose,
-    handleEditComment,
     handleDeleteComment,
+    editingCommentId,
+    setEditingCommentId,
   } = useComments(userId, projectId, user);
 
+  // Separate state for the inline edit input
+  const [editText, setEditText] = useState("");
+
+  const handleEditClick = (comment) => {
+    setEditingCommentId(comment._id);
+    setEditText(comment.comment); // set the inline edit value
+    handleMenuClose();
+  };
+
+  const handleEditSubmit = (e, commentId) => {
+    e.preventDefault();
+    if (!editText.trim()) return;
+
+    updateCommentMutation.mutate({
+      commentId,
+      commentData: { comment: editText },
+    });
+
+    setEditingCommentId(null);
+    setEditText("");
+  };
+
   return (
-    <div className="px-4 lg:px-0 lg:ml-16 pt-4">
+    <div className="px-4 lg:px-0 lg:ml-16 pt-2">
+      {/* Main input always visible */}
       <Button
         onClick={() => setShowComments(!showComments)}
-        className="!text-sm sm:!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !mt-2 !mb-6 sm:!mb-10 !px-4 sm:!px-6 !py-2 sm:!py-3 !w-full sm:!w-auto"
+        className="!text-sm sm:!text-base !capitalize !bg-[#546FFF] !text-white !rounded-xl !mt-2 !mb-6 sm:!mb-3 !px-4 sm:!px-6 !py-2 sm:!py-3 !w-full sm:!w-auto"
       >
         <MessageCircle />
       </Button>
 
       {showComments && (
-        <div className="mt-4 mb-10">
+        <div className="mt-4 mb-32">
           <form onSubmit={handleCommentSubmit} className="mb-4">
             <div className="flex items-center gap-2">
               <TextField
@@ -59,11 +84,9 @@ const Comments = ({ userId, projectId, user }) => {
               <Button
                 type="submit"
                 disabled={
-                  !commentText.trim() ||
-                  createCommentMutation.isLoading ||
-                  updateCommentMutation.isLoading
+                  !commentText.trim() || createCommentMutation.isLoading
                 }
-                className="!bg-[#546FFF] !p-3 sm:!p-4 !text-white !rounded-xl"
+                className="!bg-[#546FFF] disabled:!bg-[#b7c2fb] !p-4 sm:!p-3 !text-white !rounded-xl"
               >
                 <Send className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
@@ -101,7 +124,7 @@ const Comments = ({ userId, projectId, user }) => {
                         <div className="ml-auto">
                           <Button
                             onClick={(e) => handleMenuOpen(e, comment._id)}
-                            className="!text-black !text-sm !rounded-full !p-1 sm:!p-2 !hover:bg-gray-200"
+                            className="!text-black !text-sm !rounded-full !p-2 sm:!p-2 !hover:bg-gray-200"
                           >
                             <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
                           </Button>
@@ -113,15 +136,15 @@ const Comments = ({ userId, projectId, user }) => {
                               selectedCommentId === comment._id
                             }
                             onClose={handleMenuClose}
+                            className="!mt-2 !rounded-xl"
                           >
-                            <MenuItem
-                              onClick={() => handleEditComment(comment)}
-                            >
+                            <MenuItem onClick={() => handleEditClick(comment)}>
                               Edit
                             </MenuItem>
                             <MenuItem
                               onClick={handleDeleteComment}
                               disabled={deleteCommentMutation.isLoading}
+                              className="!text-red-500"
                             >
                               Delete
                             </MenuItem>
@@ -130,9 +153,32 @@ const Comments = ({ userId, projectId, user }) => {
                       )}
                     </div>
 
-                    <p className="text-gray-800 text-xs sm:text-sm mt-1 break-words">
-                      {comment.comment}
-                    </p>
+                    {/* Inline edit input appears only if this comment is being edited */}
+                    {editingCommentId === comment._id ? (
+                      <form
+                        onSubmit={(e) => handleEditSubmit(e, comment._id)}
+                        className="flex items-center gap-2 mt-1"
+                      >
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          className="rounded-xl"
+                        />
+                        <Button
+                          type="submit"
+                          className="!bg-[#546FFF] !p-2 !rounded-xl !text-white"
+                          disabled={updateCommentMutation.isLoading}
+                        >
+                          <Check className="w-5 h-5" />
+                        </Button>
+                      </form>
+                    ) : (
+                      <p className="text-gray-800 text-xs sm:text-sm mt-1 break-words">
+                        {comment.comment}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
