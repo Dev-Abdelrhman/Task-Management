@@ -16,7 +16,6 @@ import RoleModal from "./components/RoleModal";
 import DeleteRoleModal from "./components/DeleteRoleModal";
 import RoleDetailsModal from "./components/RoleDetailsModal";
 import PermissionWarningModal from "./components/PermissionWarningModal";
-import { Menu } from "lucide-react";
 import MobileRoles from "./components/MobileRoles";
 
 function ProjectDetails() {
@@ -116,7 +115,7 @@ function ProjectDetails() {
           </button>
         </div>
 
-        <div className="w-full lg:w-[calc(100%-420px)]">
+        <div className="w-full lg:w-[calc(97%-420px)]">
           <ProjectHeader project={project} onJoinClick={handleClick} />
           <ProjectInfo
             project={project}
@@ -136,7 +135,7 @@ function ProjectDetails() {
 
         {/* Desktop Roles Sidebar - Always shows on desktop */}
         {projectId && user?._id && (
-          <div className="hidden 2xl:flex dark:bg-[#080808] fixed right-0 top-0 dark:border-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7]">
+          <div className="hidden lg:flex dark:bg-[#080808] fixed right-0 top-0 dark:border-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7]">
             <Roles
               userId={user._id}
               projectId={projectId}

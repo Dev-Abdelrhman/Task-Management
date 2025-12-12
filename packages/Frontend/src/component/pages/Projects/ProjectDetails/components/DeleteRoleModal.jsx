@@ -5,7 +5,7 @@ const DeleteRoleModal = ({ open, onClose, onDelete, isDeleting }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white !rounded-xl p-6 w-[400px]">
+      <div className="bg-white !rounded-xl p-6 sm:w-[400px]">
         <h2 className="text-xl font-medium mb-4">Delete Role</h2>
         <p className="mb-6">Are you sure you want to delete this role?</p>
         <div className="flex justify-end gap-3">
@@ -33,4 +33,4 @@ const DeleteRoleModal = ({ open, onClose, onDelete, isDeleting }) => {
   );
 };
 
-export default DeleteRoleModal; 
+export default DeleteRoleModal;

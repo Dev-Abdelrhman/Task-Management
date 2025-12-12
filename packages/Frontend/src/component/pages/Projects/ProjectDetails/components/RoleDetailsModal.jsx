@@ -5,8 +5,10 @@ const RoleDetailsModal = ({ open, onClose, role, isLoading }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-[#080808] !rounded-xl p-6 w-[500px]">
-        <h2 className="text-xl font-medium mb-4 dark:text-gray-400">Role Details</h2>
+      <div className="bg-white dark:bg-[#080808] !rounded-xl p-6 w-[90%] sm:w-[500px]">
+        <h2 className="text-xl font-medium mb-4 dark:text-gray-400">
+          Role Details
+        </h2>
 
         {isLoading ? (
           <div className="flex justify-center py-8">
@@ -33,7 +35,9 @@ const RoleDetailsModal = ({ open, onClose, role, isLoading }) => {
                     className="w-6 h-6 rounded-full border dark:border-gray-500"
                     style={{ backgroundColor: role.doc.color }}
                   />
-                  <p className="text-gray-900 dark:text-gray-300">{role.doc.color}</p>
+                  <p className="text-gray-900 dark:text-gray-300">
+                    {role.doc.color}
+                  </p>
                 </div>
               </div>
 
@@ -75,4 +79,4 @@ const RoleDetailsModal = ({ open, onClose, role, isLoading }) => {
   );
 };
 
-export default RoleDetailsModal; 
+export default RoleDetailsModal;
