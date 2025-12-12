@@ -7,23 +7,20 @@ hard test to refresh token and login - DONE
 edit phone all modals style make it responsive - DONE
 invite ui refactor - and swap send and rec DONE
 Project Tasks double task create - DONE
+Nav Text - Done
+image in project task details - settings - All tasks - Done
+responsive design for all pages - Done
 ///
-Nav Text 
 invite notification
-DashBoard chart
 search why Project Details is slow render 
 settings UI refactor
 Help Center 
 verify
 +
-4 Rows of project 
-Due Date in DashBoard'
-image in project task details - settings - All tasks
+Due Date in DashBoard
 Remove user from project aka kick
 color if task done and not assined
 Messages
-/// at the end 
-responsive design for all pages 
 skeleton screen for all pages
 look at project doc
 Comment Image
