@@ -111,12 +111,13 @@ const Comments = ({ userId, projectId, user }) => {
                   />
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-gray-800 font-semibold text-xs sm:text-sm truncate">
-                        @{comment.user?.name.toLowerCase().replace(/\s+/g, "")}
+                    <div className="flex flex-wrap itms-center gap-2">
+                      <span className="text-gray-800 font-semibold text-xs sm:text-base truncate">
+                        <span className="text-lg">@</span>
+                        {comment.user?.name.toLowerCase().replace(/\s+/g, "")}
                       </span>
 
-                      <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                      <span className="text-xs sm:text-sm mt-1 text-gray-500 whitespace-nowrap">
                         {DateTime.fromISO(comment.createdAt).toRelative()}
                       </span>
 
@@ -124,7 +125,7 @@ const Comments = ({ userId, projectId, user }) => {
                         <div className="ml-auto">
                           <Button
                             onClick={(e) => handleMenuOpen(e, comment._id)}
-                            className="!text-black !text-sm !rounded-full !p-2 sm:!p-2 !hover:bg-gray-200"
+                            className="!text-black !text-sm !rounded-full !p-2 sm:!p-1 !hover:bg-gray-200"
                           >
                             <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
                           </Button>
@@ -175,7 +176,7 @@ const Comments = ({ userId, projectId, user }) => {
                         </Button>
                       </form>
                     ) : (
-                      <p className="text-gray-800 text-xs sm:text-sm mt-1 break-words">
+                      <p className="text-gray-800 text-xs sm:text-[15px] ml-2 mt-1 break-words">
                         {comment.comment}
                       </p>
                     )}
