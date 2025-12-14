@@ -14,7 +14,7 @@ const ProjectOptionsMenu = ({ projectId, projectData }) => {
     <div className="flex relative max-sm:z-40 max-sm:left-5">
       <Button
         onClick={() => setShowMenu(!showMenu)}
-        className="sm:!absolute sm:!right-0 max-sm:!z-40 !text-black dark:!text-white !text-lg !rounded-full !w-1 !p-0 !mx-1 !hover:bg-gray-200 dark:!hover:bg-gray-700"
+        className="sm:!absolute sm:!right-[-20px] max-sm:!z-40 !text-black dark:!text-white !text-lg !rounded-full !w-1 !p-0 !mx-1 !hover:bg-gray-200 dark:!hover:bg-gray-700"
       >
         <Ellipsis />
       </Button>
