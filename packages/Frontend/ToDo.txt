@@ -11,6 +11,7 @@ Nav Text - Done
 image in project task details - settings - All tasks - Done
 responsive design for all pages - Done
 Due Date in DashBoard - Done
+Role size fix - Done
 ///
 invite notification
 search why Project Details is slow render 
@@ -24,4 +25,3 @@ Messages
 skeleton screen for all pages
 look at project doc
 Comment Image
-Role size fix
