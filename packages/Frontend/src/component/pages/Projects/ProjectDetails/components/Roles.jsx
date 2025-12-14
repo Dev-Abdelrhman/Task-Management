@@ -42,7 +42,7 @@ const Roles = ({
   return (
     <div
       className="
-      hidden 2xl:flex dark:bg-[#080808] fixed right-0 top-0 dark:border-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto
+      hidden 2xl:flex dark:bg-[#080808] relative right-0 top-0 dark:border-0 mt-8 h-[97%] w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto
       lg:flex lg:w-[420px] lg:fixed lg:right-0 lg:top-0 lg:border-l lg:border-gray-200 lg:dark:bg-[#080808] lg:bg-[#F5F5F7] lg:p-5
     "
     >

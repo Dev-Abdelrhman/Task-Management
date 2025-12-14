@@ -11,6 +11,7 @@ import {
 import { Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useProjects } from "../../../hooks/projects/useProjects";
+import DueDateStatus from "../../../shared/DueDateStatus";
 
 const RightSidebar = () => {
   const [currentDate] = useState(new Date());
@@ -157,8 +158,17 @@ const RightSidebar = () => {
 
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-6 h-6 text-gray-500 dark:text-white" />
-                    <span className="text-sm">1 Hour</span>
+                    {projects[0].progress === 100 ? (
+                      <>
+                        <CircleCheck className="w-6 h-6 text-green-500" />
+                        <span className="text-green-500">Completed</span>
+                      </>
+                    ) : (
+                      <DueDateStatus
+                        dueDate={projects[0].dueDate}
+                        progress={projects[0].progress}
+                      />
+                    )}
                   </div>
                   <div className="flex -space-x-2">
                     {projects[0].members?.map((pro) => (
