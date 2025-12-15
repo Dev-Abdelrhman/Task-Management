@@ -20,6 +20,7 @@ router
   .delete(RPP(["Delete"]), PC.deleteProject);
 
 router.get("/:id/members", RPP(["Add"]), PC.getProjectMembers);
+router.patch("/:id/kick-member", RPP(["Admin"]), PC.kickProjectMember);
 router.patch("/:id/removeImage", RPP(["Edit"]), PC.removeImages);
 
 router.use("/:id/comments", CommentRouter);
