@@ -64,8 +64,8 @@ const DashboardProjectSection = () => {
   }
 
   return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-6">
+    <div className="sm:mb-8 dark:!bg-[#080808]">
+      <div className="flex  justify-between items-center mb-6 ">
         <h2 className="text-xl font-medium dark:text-white">Latest Project</h2>
         <div className="flex gap-2">
           <IconButton className="slider-prev !w-8 !h-8 !border !border-[#F5F5F7] !rounded-full">
@@ -116,7 +116,7 @@ const DashboardProjectSection = () => {
                     component="img"
                     src={
                       project?.image?.[0]?.url ||
-                      "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                      "https://placehold.co/612x612?text=No+Image&font=roboto"
                     }
                     alt={project.title}
                     sx={{

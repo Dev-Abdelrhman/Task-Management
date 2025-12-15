@@ -16,12 +16,15 @@ import RoleModal from "./components/RoleModal";
 import DeleteRoleModal from "./components/DeleteRoleModal";
 import RoleDetailsModal from "./components/RoleDetailsModal";
 import PermissionWarningModal from "./components/PermissionWarningModal";
+import MobileRoles from "./components/MobileRoles";
+import { getNavTitle } from "../../../../lib/getNavTitle";
 
 function ProjectDetails() {
   const { user } = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [showRolesSidebar, setShowRolesSidebar] = useState(false);
 
   // Querys
   const { data, isLoading, isError, error } = useQuery({
@@ -43,6 +46,9 @@ function ProjectDetails() {
     },
     enabled: !!user?._id && !!projectId,
   });
+
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   // Use useRoles hook
   const {
@@ -102,8 +108,21 @@ function ProjectDetails() {
 
   return (
     <>
+      <h4 className="sm:hidden text-3xl px-6 pb-4 pt-1 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
       <div className="flex min-h-screen dark:bg-[#080808] bg-[#FAFAFA]">
-        <div className="h-full w-[68%]">
+        {/* Mobile Roles Toggle Button - Only shows on mobile */}
+        <div className="lg:hidden fixed mt-2 top-30 right-4 z-10">
+          <button
+            onClick={() => setShowRolesSidebar(!showRolesSidebar)}
+            className="bg-[#546FFF] text-sm text-white p-3 rounded-xl shadow-lg"
+          >
+            Roles & <br /> Members
+          </button>
+        </div>
+
+        <div className="w-full lg:w-[calc(97%-420px)]">
           <ProjectHeader project={project} onJoinClick={handleClick} />
           <ProjectInfo
             project={project}
@@ -112,25 +131,70 @@ function ProjectDetails() {
           <ProjectDescription description={project?.description} />
           <Comments userId={user._id} projectId={projectId} user={user} />
         </div>
-        {projectId && user?._id && (
-          <Roles
-            userId={user._id}
-            projectId={projectId}
-            project={project}
-            setDeleteModalOpen={setDeleteModalOpen}
-            setEditingRoleId={setEditingRoleId}
-            setIsEditing={setIsEditing}
-            setRoleToDelete={setRoleToDelete}
-            setOpenModal={setRoleModalOpen}
-            setNewRole={setNewRole}
-            setDetailsModalOpen={setDetailsModalOpen}
-            setShowPermissionWarning={setShowPermissionWarning}
-            setPendingPermissionChange={setPendingPermissionChange}
-            handleRoleDetails={handleRoleDetails}
-            rolesData={rolesData}
+
+        {/* Mobile overlay for sidebar - Only shows on mobile */}
+        {showRolesSidebar && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            onClick={() => setShowRolesSidebar(false)}
           />
         )}
+
+        {/* Desktop Roles Sidebar - Always shows on desktop */}
+        {projectId && user?._id && (
+          <div className="hidden lg:flex dark:bg-[#080808] fixed right-0 top-0 dark:border-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7]">
+            <Roles
+              userId={user._id}
+              projectId={projectId}
+              project={project}
+              setDeleteModalOpen={setDeleteModalOpen}
+              setEditingRoleId={setEditingRoleId}
+              setIsEditing={setIsEditing}
+              setRoleToDelete={setRoleToDelete}
+              setOpenModal={setRoleModalOpen}
+              setNewRole={setNewRole}
+              setDetailsModalOpen={setDetailsModalOpen}
+              setShowPermissionWarning={setShowPermissionWarning}
+              setPendingPermissionChange={setPendingPermissionChange}
+              handleRoleDetails={handleRoleDetails}
+              rolesData={rolesData}
+            />
+          </div>
+        )}
+
+        {/* Mobile Roles Sidebar - Only shows when toggled */}
+        {projectId && user?._id && (
+          <div
+            className={`
+            ${showRolesSidebar ? "translate-x-0" : "translate-x-full"}
+            lg:hidden
+            fixed right-0 top-0 h-full w-full sm:w-[400px]
+            transition-transform duration-300 ease-in-out
+            z-40
+          `}
+          >
+            <MobileRoles
+              userId={user._id}
+              projectId={projectId}
+              project={project}
+              setDeleteModalOpen={setDeleteModalOpen}
+              setEditingRoleId={setEditingRoleId}
+              setIsEditing={setIsEditing}
+              setRoleToDelete={setRoleToDelete}
+              setOpenModal={setRoleModalOpen}
+              setNewRole={setNewRole}
+              setDetailsModalOpen={setDetailsModalOpen}
+              setShowPermissionWarning={setShowPermissionWarning}
+              setPendingPermissionChange={setPendingPermissionChange}
+              handleRoleDetails={handleRoleDetails}
+              rolesData={rolesData}
+              onCloseMobile={() => setShowRolesSidebar(false)}
+            />
+          </div>
+        )}
       </div>
+
+      {/* All modals remain the same */}
       <InviteModal
         projectId={projectId}
         open={inviteModalOpen}

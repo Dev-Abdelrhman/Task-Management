@@ -7,6 +7,7 @@ import { useProjects } from "../../../../hooks/projects/useProjects";
 import { useProjectFilters } from "../../../../hooks/projects/useProjectFilters";
 import "swiper/css";
 import "swiper/css/navigation";
+import { getNavTitle } from "../../../../lib/getNavTitle";
 
 function Projects() {
   const navigate = useNavigate();
@@ -17,9 +18,15 @@ function Projects() {
   const handleClick = (projectId) => {
     navigate(`/projects/ProjectDetails/${projectId}`);
   };
+  const path = window.location.pathname;
+  const title = getNavTitle(path);
 
   return (
-    <div className="bg-light dark:bg-[#080808] d-flex align-items-center">
+    <div className="bg-light dark:bg-[#080808]">
+      <h4 className="sm:hidden text-3xl px-6 py-3 dark:bg-[#080808] dark:text-white bg-white">
+        {title}
+      </h4>
+
       <ProjectFilters
         categories={categories}
         AddProjectBtn={<AddProjectBtn />}

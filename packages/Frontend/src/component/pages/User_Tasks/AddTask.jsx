@@ -96,20 +96,23 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white dark:bg-[#080808] shadow-lg p-6 w-[700px] relative !rounded-xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4 sm:p-0">
+      <div className="bg-white dark:bg-[#080808] shadow-lg p-6 w-full max-w-[700px] relative rounded-xl max-h-[95vh] max-sm:overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={closeModal}
-            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 mt-4 mr-4"
+            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-xl"
           >
             ✖
           </button>
-          <h2 className="text-xl dark:text-gray-400 font-semibold mb-4">
+
+          <h2 className="text-xl dark:text-gray-300 font-semibold">
             {editTask ? "Edit Task" : "Add New Task"}
           </h2>
         </div>
-        <form onSubmit={handleSubmit}>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* ===== IMAGE UPLOAD ===== */}
           <TaskImageUpload
             imagePreview={imagePreview}
             existingImage={existingImage}
@@ -118,8 +121,9 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
             isLoading={loading}
           />
 
-          <div className="mb-3">
-            <label className="block dark:text-gray-400 text-sm font-medium mb-1">
+          {/* ===== TASK NAME ===== */}
+          <div>
+            <label className="block dark:text-gray-300 text-sm font-medium mb-1">
               Task Name
             </label>
             <input
@@ -132,8 +136,9 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="block dark:text-gray-400 text-sm font-medium mb-1">
+          {/* ===== DESCRIPTION ===== */}
+          <div>
+            <label className="block dark:text-gray-300 text-sm font-medium mb-1">
               Description
             </label>
             <textarea
@@ -145,32 +150,26 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="block dark:text-gray-400 text-sm font-medium mb-1">
+          {/* ===== STATUS ===== */}
+          <div>
+            <label className="block dark:text-gray-300 text-sm font-medium mb-1">
               Status
             </label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-2 dark:bg-[#2D2D2D] border dark:text-gray-300 border-gray-300 rounded"
+              className="w-full p-2 dark:bg-[#2D2D2D] dark:text-gray-300 border border-gray-300 rounded"
               disabled={!!statusFromColumn && !editTask}
             >
-              <option className="dark:text-gray-400" value="Pending">
-                Pending
-              </option>
-              <option className="dark:text-gray-400" value="Todo">
-                Todo
-              </option>
-              <option className="dark:text-gray-400" value="In Progress">
-                In Progress
-              </option>
-              <option className="dark:text-gray-400" value="Completed">
-                Done
-              </option>
+              <option value="Pending">Pending</option>
+              <option value="Todo">Todo</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Done</option>
             </select>
           </div>
 
-          <div className="mb-6">
+          {/* ===== PRIORITY ===== */}
+          <div>
             <PrioritySelect
               priority={priority}
               onPriorityChange={setPriority}
@@ -178,24 +177,26 @@ const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="block dark:text-gray-400 text-sm font-medium mb-1">
+          {/* ===== DUE DATE ===== */}
+          <div>
+            <label className="block dark:text-gray-300 text-sm font-medium mb-1">
               Due Date
             </label>
             <input
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="w-full p-2 dark:text-gray-300 dark:bg-[#2D2D2D] border border-gray-300 rounded"
+              className="w-full p-2 dark:bg-[#2D2D2D] dark:text-gray-300 border border-gray-300 rounded"
               required
             />
           </div>
 
-          <div className="flex justify-end mt-4">
+          {/* ===== SUBMIT BUTTON ===== */}
+          <div className="flex justify-end">
             <Button
               type="submit"
               disabled={loading}
-              className="!flex items-center justify-center gap-2 !text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+              className="!flex items-center justify-center gap-2 !text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl w-full sm:w-auto"
             >
               {loading && (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent border-solid rounded-full animate-spin"></div>

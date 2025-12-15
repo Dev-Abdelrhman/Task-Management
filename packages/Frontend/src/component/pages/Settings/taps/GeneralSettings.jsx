@@ -11,7 +11,7 @@ const GeneralSettings = ({
   setTheme,
 }) => {
   return (
-    <div className="bg-white dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6 space-y-8">
+    <div className="bg-white h-screen dark:bg-[#080808] dark:text-[#e0e0e0] rounded-lg shadow p-6 space-y-8">
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
         <section className="w-full lg:w-1/2">
           <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">
@@ -109,10 +109,10 @@ const GeneralSettings = ({
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   Light
                 </span>
-                <label className="relative inline-block w-11 h-6">
+                <label className="relative inline-block w-11 h-6 !cursor-pointer">
                   <input
                     type="checkbox"
-                    className="sr-only peer"
+                    className="sr-only peer "
                     checked={theme === "dark"}
                     onChange={() => {
                       const newTheme = theme === "light" ? "dark" : "light";

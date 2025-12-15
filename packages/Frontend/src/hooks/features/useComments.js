@@ -17,18 +17,6 @@ export const useComments = (userId, projectId, user) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
-  const [replies, setReplies] = useState(() => {
-    const savedReplies = localStorage.getItem(`replies_${projectId}`);
-    if (!savedReplies) return {};
-    try {
-      return JSON.parse(savedReplies);
-    } catch (error) {
-      console.error("Error parsing replies from localStorage:", error);
-      return {};
-    }
-  });
-  const [replyText, setReplyText] = useState("");
-  const [replyingToCommentId, setReplyingToCommentId] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -45,7 +33,7 @@ export const useComments = (userId, projectId, user) => {
     return error?.response?.data?.message || "Something went wrong";
   };
 
-  // Create Comment Mutation with Optimistic Update
+  // Create Comment
   const createCommentMutation = useMutation({
     mutationFn: (commentData) => createComment(userId, projectId, commentData),
     onMutate: async (newCommentData) => {
@@ -63,7 +51,6 @@ export const useComments = (userId, projectId, user) => {
           image: user.image || [],
         },
         createdAt: new Date().toISOString(),
-        replies: [],
       };
 
       queryClient.setQueryData(["comments", projectId], (old) => ({
@@ -88,7 +75,7 @@ export const useComments = (userId, projectId, user) => {
     },
   });
 
-  // Update Comment Mutation with Optimistic Update
+  // Update Comment
   const updateCommentMutation = useMutation({
     mutationFn: ({ commentId, commentData }) =>
       updateComment(userId, projectId, commentId, commentData),
@@ -126,7 +113,7 @@ export const useComments = (userId, projectId, user) => {
     },
   });
 
-  // Delete Comment Mutation with Optimistic Update
+  // Delete Comment
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId) => deleteComment(userId, projectId, commentId),
     onMutate: async (commentId) => {
@@ -155,10 +142,7 @@ export const useComments = (userId, projectId, user) => {
     },
   });
 
-  useEffect(() => {
-    localStorage.setItem(`replies_${projectId}`, JSON.stringify(replies));
-  }, [replies, projectId]);
-
+  // Socket listeners
   useEffect(() => {
     if (!userId || !projectId) return;
 
@@ -183,32 +167,16 @@ export const useComments = (userId, projectId, user) => {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    if (!commentText.trim() && !replyText.trim()) return;
+    if (!commentText.trim()) return;
+
     if (editingCommentId) {
       updateCommentMutation.mutate({
         commentId: editingCommentId,
         commentData: { comment: commentText },
       });
-    } else if (replyingToCommentId) {
-      handleReplySubmit(replyingToCommentId);
     } else {
       createCommentMutation.mutate({ comment: commentText });
     }
-  };
-
-  const handleReplySubmit = (commentId) => {
-    if (!replyText.trim()) return;
-    const newReply = {
-      user: { name: user.name, image: user.image || [] },
-      comment: replyText,
-      createdAt: new Date().toISOString(),
-    };
-    setReplies((prevReplies) => ({
-      ...prevReplies,
-      [commentId]: [...(prevReplies[commentId] || []), newReply],
-    }));
-    setReplyText("");
-    setReplyingToCommentId(null);
   };
 
   const handleMenuOpen = (event, commentId) => {
@@ -240,22 +208,13 @@ export const useComments = (userId, projectId, user) => {
     editingCommentId,
     setEditingCommentId,
     anchorEl,
-    setAnchorEl,
     selectedCommentId,
-    setSelectedCommentId,
-    replies,
-    setReplies,
-    replyText,
-    setReplyText,
-    replyingToCommentId,
-    setReplyingToCommentId,
     commentsData,
     commentsLoading,
     createCommentMutation,
     updateCommentMutation,
     deleteCommentMutation,
     handleCommentSubmit,
-    handleReplySubmit,
     handleMenuOpen,
     handleMenuClose,
     handleEditComment,

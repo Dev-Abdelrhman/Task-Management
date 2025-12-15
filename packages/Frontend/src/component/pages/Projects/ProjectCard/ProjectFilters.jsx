@@ -3,19 +3,14 @@ import { Search, ChartBarStacked } from "lucide-react";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useState } from "react";
 
-function ProjectFilters({ 
-  categories, 
-  AddProjectBtn,
-  filters,
-  actions 
-}) {
+function ProjectFilters({ categories, AddProjectBtn, filters, actions }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { searchQuery, selectedCategory, sortOrder } = filters;
   const { setSearchQuery, setSelectedCategory, toggleSortOrder } = actions;
 
   return (
-    <div className="bg-white dark:bg-[#080808] flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 pt-2 pb-6 gap-4">
-      <div className="relative w-full sm:w-1/2">
+    <div className="bg-white dark:bg-[#080808] flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 sm:px-6 pt-2 pb-6 gap-4">
+      <div className="relative sm:w-1/2 flex items-center gap-4">
         <span className="absolute inset-y-0 left-[2px] flex items-center pl-3">
           <Search className="h-5 w-5 text-[#8E92BC]" />
         </span>
@@ -26,8 +21,11 @@ function ProjectFilters({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        {AddProjectBtn && (
+          <div className="ml-0 sm:ml-2 w-full sm:hidden">{AddProjectBtn}</div>
+        )}
       </div>
-      <div className="flex flex-wrap justify-end gap-2 sm:gap-4 items-center w-full sm:w-auto">
+      <div className="flex flex-wrap justify-end gap-2 sm:gap-4 items-center sm:w-auto">
         <Button
           variant="outlined"
           startIcon={<ChartBarStacked className="w-6 h-6 !text-[#8E92BC]" />}
@@ -76,7 +74,9 @@ function ProjectFilters({
             ? "Deadline (Desc)"
             : "Sort By : Deadline"}
         </Button>
-        {AddProjectBtn && <div className="ml-2">{AddProjectBtn}</div>}
+        {AddProjectBtn && (
+          <div className="ml-2 max-sm:hidden">{AddProjectBtn}</div>
+        )}
       </div>
     </div>
   );

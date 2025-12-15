@@ -22,8 +22,6 @@ export const useProjectQuery = () => {
     enabled: !!user?._id,
   });
 
-  console.log(projectData);
-
   useEffect(() => {
     if (!user) return;
 

@@ -11,7 +11,9 @@ export default function Header() {
         <div className="flex !items-center gap-5">
           <div className="flex !items-center gap-2">
             <ListTodo className="h-6 w-6 text-[#3D53DB]" />
-            <span className="!text-2xl !font-bold text-[#3D53DB]">TaskFlow</span>
+            <span className="!text-2xl !font-bold text-[#3D53DB]">
+              TaskFlow
+            </span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <a
@@ -33,12 +35,12 @@ export default function Header() {
           <Button
             onClick={() => navigate("/login")}
             variant="outline"
-            className="border-[#3D53DB] text-[#546FFF] hover:bg-blue-50 !px-5 !py-3 !rounded-full"
+            className="border-[#3D53DB] max-sm:!text-[13px] max-sm:!px-3 text-[#546FFF] hover:bg-blue-50 !px-5 !py-3 !rounded-full"
           >
             Sign In
           </Button>
           <Button
-            className="!bg-[#546FFF] !text-white hover:!shadow-lg hover:!shadow-[#98ABFF] !px-7 !py-3 !rounded-full"
+            className="!bg-[#546FFF] !text-white max-sm:!text-sm max-sm:!px-3  hover:!shadow-lg hover:!shadow-[#98ABFF] !px-7 !py-3 !rounded-full"
             onClick={() => navigate("/sign-up")}
           >
             Sign Up
@@ -47,4 +49,4 @@ export default function Header() {
       </div>
     </header>
   );
-} 
+}

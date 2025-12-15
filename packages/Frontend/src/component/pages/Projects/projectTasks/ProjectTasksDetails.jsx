@@ -12,19 +12,18 @@ import { Button } from "@mui/material";
 const ProjectTasksDetails = ({ task, onClose, onEdit, onDelete }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-end">
-      <div className="bg-white w-[480px] rounded-[10px] dark:!bg-[#1a1a1a] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
+      <div className="bg-white w-[480px] sm:rounded-[10px] dark:!bg-[#1a1a1a] h-screen shadow-lg px-6 pt-4 overflow-y-auto">
         <div className="flex justify-end items-center">
           <button className="mb-3 dark:text-red-50" onClick={onClose}>
             <X size={24} />
           </button>
         </div>
-        {console.log(task)}
         {task?.image && (
           <div className="mb-6">
             <img
               src={
                 task?.image?.[0]?.url ||
-                "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+                "https://placehold.co/612x322?text=No+Image&font=roboto"
               }
               alt="Task"
               className="w-full h-auto rounded-xl"

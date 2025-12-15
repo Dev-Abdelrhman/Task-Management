@@ -1,5 +1,5 @@
-import { Button, Avatar } from "@mui/material";
-import { Search, Pencil, X, ReceiptText } from "lucide-react";
+import { Button, Avatar, IconButton } from "@mui/material";
+import { Search, Pencil, X, ReceiptText, X as CloseIcon } from "lucide-react";
 import { useState } from "react";
 
 const hostGoogleImage = (url) => {
@@ -21,14 +21,18 @@ const Roles = ({
   setPendingPermissionChange,
   handleRoleDetails,
   rolesData,
+  onCloseMobile,
 }) => {
-  const [searchMemberQuery, setSearchMemberQuery] = useState('');
+  const [searchMemberQuery, setSearchMemberQuery] = useState("");
 
-  const filteredMembers = project.members.filter(mem => {
-    const userName = mem.user?.name?.toLowerCase() || '';
-    const userUsername = mem.user?.username?.toLowerCase() || '';
+  const filteredMembers = project.members.filter((mem) => {
+    const userName = mem.user?.name?.toLowerCase() || "";
+    const userUsername = mem.user?.username?.toLowerCase() || "";
     const lowerSearchQuery = searchMemberQuery.toLowerCase();
-    return userName.includes(lowerSearchQuery) || userUsername.includes(lowerSearchQuery);
+    return (
+      userName.includes(lowerSearchQuery) ||
+      userUsername.includes(lowerSearchQuery)
+    );
   });
 
   if (!userId || !projectId) {
@@ -36,7 +40,12 @@ const Roles = ({
   }
 
   return (
-    <div className="hidden 2xl:flex dark:bg-[#080808] fixed right-0 top-0 dark:border-0 h-full w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto">
+    <div
+      className="
+      hidden 2xl:flex dark:bg-[#080808] relative right-0 top-0 dark:border-0 mt-8 h-[97%] w-[420px] border-l border-gray-200 bg-[#F5F5F7] p-5 flex-col gap-4 overflow-y-auto
+      lg:flex lg:w-[420px] lg:fixed lg:right-0 lg:top-0 lg:border-l lg:border-gray-200 lg:dark:bg-[#080808] lg:bg-[#F5F5F7] lg:p-5
+    "
+    >
       <div className="bg-white w-[370px] rounded-xl dark:bg-[#1a1a1a] mt-[70px] h-full p-5 flex-col gap-4 overflow-y-auto bottom-0">
         <div className="flex justify-between items-center mb-4 gap-3">
           <div className="relative">
@@ -58,20 +67,19 @@ const Roles = ({
             Add Role
           </Button>
         </div>
+
         <div className="flex gap-1 flex-wrap">
           {rolesData?.doc?.map((role) => (
             <div
               key={role._id}
-              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500 cursor-pointer"
+              className="flex gap-2 px-2 py-2 hover:!border-[#546FFF] !items-center justify-between text-sm rounded-xl text-center !border-2 !border-gray-500"
             >
               <div className="flex items-center gap-2">
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: role.color }}
                 ></div>
-                <p className="text-gray-800 dark:text-white cursor-pointer">
-                  {role.name}
-                </p>
+                <p className="text-gray-800 dark:text-white">{role.name}</p>
               </div>
               <div className="flex items-center gap-1">
                 <Pencil
@@ -103,6 +111,7 @@ const Roles = ({
             </div>
           ))}
         </div>
+
         <div className="mt-5 font-semibold text-2xl">
           <h2 className="mb-4 dark:text-gray-300">
             Members - {project.memberCount}
@@ -133,4 +142,4 @@ const Roles = ({
   );
 };
 
-export default Roles; 
+export default Roles;

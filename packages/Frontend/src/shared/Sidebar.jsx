@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   Home,
   Folder,
@@ -23,7 +23,7 @@ function Sidebar() {
   return (
     <>
       <button
-        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded"
+        className="md:hidden fixed top-5 dark:!bg-black/70 backdrop-blur-sm left-8 z-50 border-[1px] rounded-full text-[#8E92BC] p-3"
         onClick={toggleSidebar}
       >
         <Menu />
@@ -37,8 +37,8 @@ function Sidebar() {
       )}
 
       <div
-        className={`w-64 fixed h-full bg-[#FFFFFF] dark:bg-[#080808] pt-4 z-40 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`w-64 fixed max-md:right-0 h-full bg-[#FFFFFF] dark:bg-[#080808] pt-4 z-40 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
         } md:translate-x-0 md:block`}
       >
         <div className="flex items-center justify-center gap-2 pt-4 mb-8">
@@ -135,7 +135,7 @@ function Sidebar() {
           </div>
 
           <div className="left-8 absolute bottom-8">
-            <div className="bg-[#141522] text-white p-6 rounded-xl !w-52 flex-col text-center relative !right-2">
+            <div className="bg-[#141522] text-white p-3 pt-8 sm:p-6 rounded-xl !w-52 flex-col text-center relative !right-2">
               <div className="flex justify-end absolute top-[-20px] right-[40%] shadow-sm shadow-white !rounded-full">
                 <div className="w-10 h-10 bg-white flex items-center justify-center !rounded-full">
                   <HelpRoundedIcon
@@ -144,14 +144,14 @@ function Sidebar() {
                   />
                 </div>
               </div>
-              <h2 className="text-xl font-medium mt-8 mb-2 text-center">
+              <h2 className="text-xl max-sm:hidden font-medium mt-8 mb-2 text-center">
                 Help Center
               </h2>
-              <p className="text-xs text-white mb-10">
+              <p className="text-xs max-sm:hidden text-white mb-5 sm:mb-10">
                 Having Trouble in Learning. Please contact us for more
                 questions.
               </p>
-              <Button className=" !capitalize !py-3 !px-4 !w-full !shadow-sm !shadow-white !bg-white !text-gray-900 !rounded-xl">
+              <Button className=" !capitalize !py-2 sm:!py-3 !px-4 !w-full !shadow-sm !shadow-white !bg-white !text-gray-900 !rounded-xl">
                 Go To Help Center
               </Button>
             </div>

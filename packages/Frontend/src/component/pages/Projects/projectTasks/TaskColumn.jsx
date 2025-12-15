@@ -10,8 +10,8 @@ const TaskColumn = ({
   onTaskEdit,
 }) => {
   return (
-    <div className="flex-shrink-0 w-[23%]">
-      <div className="rounded-[15px] dark:bg-[#1a1a1a] bg-white shadow-sm">
+    <div className="w-full">
+      <div className="rounded-[15px] dark:bg-[#1a1a1a] bg-white shadow-sm h-full">
         <div className="p-3 flex justify-between items-center border-b dark:border-0">
           <div className="flex items-center gap-2">
             <span className="font-medium dark:text-white text-sm">
@@ -39,7 +39,13 @@ const TaskColumn = ({
           </button>
         </div>
 
-        <Droppable droppableId={column.id} direction="vertical" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
+        <Droppable
+          droppableId={column.id}
+          direction="vertical"
+          isDropDisabled={false}
+          isCombineEnabled={false}
+          ignoreContainerClipping={false}
+        >
           {(provided) => (
             <div
               ref={provided.innerRef}
@@ -83,4 +89,4 @@ const TaskColumn = ({
   );
 };
 
-export default TaskColumn; 
+export default TaskColumn;

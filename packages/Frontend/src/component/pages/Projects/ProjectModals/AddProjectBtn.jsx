@@ -154,7 +154,7 @@ function AddProjectBtn({
         <Button
           endIcon={<Plus className="w-5 h-5" />}
           onClick={() => setLocalShowModal(true)}
-          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3 !px-7 !rounded-xl"
+          className="!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !py-3  sm:!px-7 !rounded-xl"
         >
           Add Project
         </Button>
@@ -162,29 +162,38 @@ function AddProjectBtn({
 
       {showModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 sm:p-0"
           onClick={handleClose}
         >
           <div
-            className="bg-white dark:bg-[#080808] !rounded-xl shadow-md p-6 w-full max-w-md"
+            className="
+        bg-white 
+        dark:bg-[#080808] 
+        rounded-xl 
+        shadow-md 
+        p-6 
+        w-full 
+        max-w-[500px] 
+        max-h-[90vh] 
+        overflow-y-auto
+      "
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between text-center items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-400">
-                {isEditMode ? "Updating Project" : "Create New Project"}
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-300">
+                {isEditMode ? "Update Project" : "Create New Project"}
               </h3>
-              <div>
-                <button
-                  onClick={handleClose}
-                  className="text-gray-400 hover:text-gray-900"
-                  disabled={isLoading || isDeletingImage}
-                >
-                  ✖
-                </button>
-              </div>
+
+              <button
+                onClick={handleClose}
+                disabled={isLoading || isDeletingImage}
+                className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 text-xl"
+              >
+                ✖
+              </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <ProjectImageUpload
                 imagePreview={imagePreview}
                 existingImage={newProject.existingImage}
@@ -212,7 +221,16 @@ function AddProjectBtn({
               <Button
                 type="submit"
                 disabled={isLoading || isDeletingImage}
-                className="w-full !text-base !font-normal !capitalize !bg-[#546FFF] !text-white !py-3 !rounded-xl"
+                className="
+            w-full 
+            !text-base 
+            !font-bold 
+            !capitalize 
+            !bg-[#546FFF] 
+            !text-white 
+            !py-3 
+            !rounded-xl
+          "
               >
                 {isLoading || isDeletingImage ? (
                   <CircularProgress size={24} sx={{ color: "white" }} />

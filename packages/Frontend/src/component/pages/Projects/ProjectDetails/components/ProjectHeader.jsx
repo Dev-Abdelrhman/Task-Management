@@ -7,25 +7,26 @@ const ProjectHeader = ({ project, onJoinClick }) => {
         component="img"
         src={
           project?.image?.[0]?.url ||
-          "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ="
+          "https://placehold.co/612x612?text=No+Image&font=roboto"
         }
         alt="check your img project"
         sx={{
           width: "100%",
-          height: 550,
+          height: { xs: 300, sm: 400, md: 500, lg: 550 },
           objectFit: "cover",
-          borderRadius: 5,
-          my: 4,
-          ml: 4,
+          borderRadius: { xs: 15, sm: 6, md: 6, lg: 5 },
+          my: { xs: 2, sm: 3, md: 4 },
+          mx: { xs: 0, sm: 0, md: 0, lg: 4 },
+          px: { xs: 2, sm: 3, md: 4, lg: 0 },
         }}
       />
-      <div className="flex justify-between ml-16">
-        <h1 className="font-medium text-4xl dark:text-[#e2e2e2]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 lg:px-0 lg:ml-16 mt-4 gap-4">
+        <h1 className="font-medium text-2xl sm:text-3xl lg:text-4xl dark:text-[#e2e2e2] break-words">
           {project?.name}
         </h1>
         <Button
           onClick={onJoinClick}
-          className="!text-base !ml-2 !min-w-[150px] !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-14 !w-48 !rounded-xl"
+          className="!text-sm sm:!text-base !capitalize !bg-[#546FFF] hover:shadow-lg hover:shadow-[#546FFF] !font-bold !text-white !h-10 sm:!h-12 lg:!h-14 !w-full sm:!w-[200px] lg:!w-48 !rounded-xl"
         >
           Join Tasks
         </Button>

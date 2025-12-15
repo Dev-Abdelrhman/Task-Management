@@ -1,28 +1,28 @@
 const Task = require("../models/task.Model.js");
-const FC = require("./Factory.Controller.js");
+const FS = require("../services/factory-services/Factory.service.js");
 
-const uploader = FC.uploader("image", 4);
+const uploader = FS.uploader("image", 4);
 
-const removeImages = FC.removeFile(Task, "image");
+const removeImages = FS.removeFile(Task, "image");
 
 const isMine = (req, res, next) => {
-  return FC.isOwner(Task, "assignedTo")(req, res, next);
+  return FS.isOwner(Task, "assignedTo")(req, res, next);
 };
-const GetUserTasks = FC.getAll(Task, "owner", [], {
+const GetUserTasks = FS.getAll(Task, "owner", [], {
   project: { $exists: false },
 });
 
-const GetTasks = FC.getAll(Task, "project");
-const GetOneTask = FC.getOne(Task, { path: "comments" });
-const CreateTask = FC.createOne(
+const GetTasks = FS.getAll(Task, "project");
+const GetOneTask = FS.getOne(Task, { path: "comments" });
+const CreateTask = FS.createOne(
   Task,
   "tasks_images",
   "image",
   "owner",
   "project"
 );
-const DeleteTask = FC.deleteOne(Task);
-const UpdateTask = FC.updateOne(Task, "tasks_images", "image");
+const DeleteTask = FS.deleteOne(Task);
+const UpdateTask = FS.updateOne(Task, "tasks_images", "image");
 
 module.exports = {
   isMine,
