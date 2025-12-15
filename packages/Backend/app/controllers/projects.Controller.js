@@ -2,6 +2,7 @@ const Project = require("../models/project.Model.js");
 const catchAsync = require("../utils/catchAsync.js");
 const FS = require("../services/factory-services/Factory.service.js");
 const projectMembersService = require("../services/projects-services/projectMembers.service.js");
+const projectKickMemberService = require("../services/projects-services/ProjectKickMember.service.js");
 
 const uploader = FS.uploader("image", 1);
 const removeImages = FS.removeFile(Project, "image");
@@ -23,6 +24,7 @@ const updateProject = FS.updateOne(Project, "projects_images", "image");
 const deleteProject = FS.deleteOne(Project);
 
 const getProjectMembers = projectMembersService.getProjectMembers;
+const kickProjectMember = projectKickMemberService.kickProjectMember;
 
 module.exports = {
   getProjects,
@@ -33,4 +35,5 @@ module.exports = {
   updateProject,
   deleteProject,
   getProjectMembers,
+  kickProjectMember,
 };

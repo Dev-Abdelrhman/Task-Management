@@ -12,12 +12,12 @@ image in project task details - settings - All tasks - Done
 responsive design for all pages - Done
 Due Date in DashBoard - Done
 Role size fix - Done
+verify - Done
 ///
 invite notification
 search why Project Details is slow render 
 settings UI refactor
 Help Center 
-verify
 +
 Remove user from project aka kick
 color if task done and not assined
