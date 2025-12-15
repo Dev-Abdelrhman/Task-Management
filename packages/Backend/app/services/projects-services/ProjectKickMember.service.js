@@ -12,23 +12,19 @@ const kickProjectMember = catchAsync(async (req, res, next) => {
       message: "Project not found",
     });
   }
-  const memberIndex = project.members.findIndex(
-    (member) => member.user.toString() === memberId
-  );
-  if (memberIndex === -1) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Member not found in the project",
-    });
-  }
 
-  project.members.splice(memberIndex, 1);
-  await project.save();
+  await Project.findByIdAndUpdate(
+    projectId,
+    {
+      $pull: { members: { user: memberId } },
+    },
+    { new: true }
+  );
+
   res.status(200).json({
     status: "success",
     message: "Member kicked from the project successfully",
   });
-  next();
 });
 
 module.exports = {
