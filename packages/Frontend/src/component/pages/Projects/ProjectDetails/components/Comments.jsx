@@ -100,32 +100,64 @@ const Comments = ({ userId, projectId, user }) => {
           ) : (
             <div className="space-y-4">
               {commentsData?.doc?.map((comment) => (
-                <div key={comment._id} className="flex gap-3 items-start">
-                  <Avatar
-                    className="!w-8 !h-8 sm:!w-10 sm:!h-10"
-                    src={
-                      comment.user?.image?.length
-                        ? hostGoogleImage(comment.user.image[0].url)
-                        : undefined
-                    }
-                  />
+                <div
+                  key={comment._id}
+                  className="flex gap-3 items-center justify-between rounded-xl !bg-gray-200 dark:!bg-[#1e1e1e] p-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar
+                      className="!size-full sm:!size-10"
+                      src={
+                        comment.user?.image?.length
+                          ? hostGoogleImage(comment.user.image[0].url)
+                          : undefined
+                      }
+                    />
+                    <div className="space-y-1">
+                      <div className="space-x-2">
+                        <span className="dark:!text-[#e2e2e2] font-semibold text-xs sm:text-base">
+                          <span className="text-lg">@</span>
+                          {comment.user?.name.toLowerCase().replace(/\s+/g, "")}
+                        </span>
+                        <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
+                          {DateTime.fromISO(comment.createdAt).toRelative()}
+                        </span>
+                      </div>
+                      {editingCommentId === comment._id ? (
+                        <form
+                          onSubmit={(e) => handleEditSubmit(e, comment._id)}
+                          className="flex items-center gap-2 mt-1"
+                        >
+                          <TextField
+                            fullWidth
+                            size="small"
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            className="rounded-xl"
+                          />
+                          <Button
+                            type="submit"
+                            className="!bg-[#546FFF] !p-2 !rounded-xl !text-white"
+                            disabled={updateCommentMutation.isLoading}
+                          >
+                            <Check className="w-5 h-5" />
+                          </Button>
+                        </form>
+                      ) : (
+                        <p className="dark:text-[#a0a0a0] text-xs sm:text-[15px] break-words">
+                          {comment.comment}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div>
                     <div className="flex flex-wrap itms-center gap-2">
-                      <span className="text-gray-800 font-semibold text-xs sm:text-base truncate">
-                        <span className="text-lg">@</span>
-                        {comment.user?.name.toLowerCase().replace(/\s+/g, "")}
-                      </span>
-
-                      <span className="text-xs sm:text-sm mt-1 text-gray-500 whitespace-nowrap">
-                        {DateTime.fromISO(comment.createdAt).toRelative()}
-                      </span>
-
                       {comment.user._id === user._id && (
-                        <div className="ml-auto">
+                        <div>
                           <Button
                             onClick={(e) => handleMenuOpen(e, comment._id)}
-                            className="!text-black !text-sm !rounded-full !p-2 sm:!p-1 !hover:bg-gray-200"
+                            className="dark:!text-[#a0a0a0] !text-sm !rounded-full !p-2 sm:!p-1 !hover:bg-gray-200 "
                           >
                             <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
                           </Button>
@@ -153,33 +185,6 @@ const Comments = ({ userId, projectId, user }) => {
                         </div>
                       )}
                     </div>
-
-                    {/* Inline edit input appears only if this comment is being edited */}
-                    {editingCommentId === comment._id ? (
-                      <form
-                        onSubmit={(e) => handleEditSubmit(e, comment._id)}
-                        className="flex items-center gap-2 mt-1"
-                      >
-                        <TextField
-                          fullWidth
-                          size="small"
-                          value={editText}
-                          onChange={(e) => setEditText(e.target.value)}
-                          className="rounded-xl"
-                        />
-                        <Button
-                          type="submit"
-                          className="!bg-[#546FFF] !p-2 !rounded-xl !text-white"
-                          disabled={updateCommentMutation.isLoading}
-                        >
-                          <Check className="w-5 h-5" />
-                        </Button>
-                      </form>
-                    ) : (
-                      <p className="text-gray-800 text-xs sm:text-[15px] ml-2 mt-1 break-words">
-                        {comment.comment}
-                      </p>
-                    )}
                   </div>
                 </div>
               ))}
