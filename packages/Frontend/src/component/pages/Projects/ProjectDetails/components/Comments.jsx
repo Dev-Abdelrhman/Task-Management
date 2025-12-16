@@ -106,7 +106,7 @@ const Comments = ({ userId, projectId, user }) => {
                 >
                   <div className="flex items-center gap-3">
                     <Avatar
-                      className="!size-10 sm:!size-10"
+                      className="!size-10"
                       src={
                         comment.user?.image?.length
                           ? hostGoogleImage(comment.user.image[0].url)
