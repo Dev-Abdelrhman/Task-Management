@@ -29,4 +29,10 @@ export const updateProject = async (projectId, updateproject) => {
   });
 };
 
+export const KickUserFromProject = async (user_id, projectId, memberId) => {
+  await API.patch(`${user_id}/projects/${projectId}/kick-member`, {
+    memberId,
+  });
+};
+
 export default API;

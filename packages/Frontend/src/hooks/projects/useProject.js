@@ -1,18 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
-import { daleteProjectImage } from "../../api/project";
+import { KickUserFromProject } from "../../api/project";
+import { toast } from "react-toastify";
+
 export const useProject = () => {
-  const deleteImageMutation = useMutation({
-    mutationFn: async () => {
-      daleteProjectImage();
+  const kickMemberMutation = useMutation({
+    mutationFn: async ({ userId, projectId, memberId }) => {
+      return await KickUserFromProject(userId, projectId, memberId);
+    },
+    onSuccess: () => {
+      toast.success("Member kicked successfully");
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to kick member. Please try again."
+      );
     },
   });
 
   return {
-    projects: getPorjectMutation.mutateAsync,
-    deleteImage: deleteImageMutation.mutateAsync,
-    deleteImageLoading: deleteImageMutation.isPending,
-    deleteImageError: deleteImageMutation.error,
-    isLoading: getPorjectMutation.isPending,
-    getProjectsError: getPorjectMutation.error,
+    kickMember: kickMemberMutation.mutate,
+    kickMemberAsync: kickMemberMutation.mutateAsync,
+    kickUserLoading: kickMemberMutation.isPending,
+    kickUserError: kickMemberMutation.error,
   };
 };
