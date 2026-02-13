@@ -1,6 +1,7 @@
 import { Button, Avatar, IconButton } from "@mui/material";
 import { Search, Pencil, X, ReceiptText, X as CloseIcon } from "lucide-react";
 import { useState } from "react";
+import MemberContextMenu from "../components/MemberContextMenu";
 
 const hostGoogleImage = (url) => {
   return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`;
@@ -118,22 +119,25 @@ const Roles = ({
           </h2>
           <div className="flex-col gap-3">
             {filteredMembers.map((mem) => (
-              <div
+              <MemberContextMenu
                 key={mem.id}
-                className="flex gap-2 mb-2 dark:bg-[#2a2a2a] dark:hover:bg-[#3a3a3a] select-none dark:text-white items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2 transition-all duration-300 hover:bg-gray-300 hover:translate-x-2"
+                memberId={mem.id}
+                userId={userId}
+                projectId={projectId}
               >
-                <Avatar
-                  className="!w-10 !h-10"
-                  src={
-                    mem.user.image.length
-                      ? hostGoogleImage(mem.user.image[0].url)
-                      : undefined
-                  }
-                />
-                <span key={mem.id} className="font-normal text-lg">
-                  {mem.user.name}
-                </span>
-              </div>
+                {" "}
+                <div className="flex gap-2 mb-2 dark:bg-[#2a2a2a] dark:hover:bg-[#3a3a3a] select-none dark:text-white items-center bg-gray-100 !rounded-xl !capitalize px-2 py-2 transition-all duration-300 hover:bg-gray-300 hover:translate-x-2">
+                  <Avatar
+                    className="!w-10 !h-10"
+                    src={
+                      mem.user.image.length
+                        ? hostGoogleImage(mem.user.image[0].url)
+                        : undefined
+                    }
+                  />
+                  <span className="font-normal text-lg">{mem.user.name}</span>
+                </div>
+              </MemberContextMenu>
             ))}
           </div>
         </div>
