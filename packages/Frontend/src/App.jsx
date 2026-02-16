@@ -1,23 +1,23 @@
-import PageNotFound from "./component/error404/PageNotFound";
+import PageNotFound from "./pages/error404/PageNotFound";
 import { Routes, Route } from "react-router-dom";
-import Home from "./component/pages/Home/Home";
-import Login from "./component/pages/auth/Login";
-import SignUp from "./component/pages/auth/SignUp";
+import Home from "./pages/Home/Home";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import Forgetpassword from "./component/pages/auth/ForgetPassword";
-import ResetPassword from "./component/pages/auth/ResetPassword";
-import Dashboard from "./component/pages/dashboard/Dashboard";
+import Forgetpassword from "./pages/auth/ForgetPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
+import Dashboard from "./pages/dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
-import Projects from "./component/pages/Projects/ProjectCard/Projects";
-import ProjectDetails from "./component/pages/Projects/ProjectDetails/ProjectDetails";
-import ProjectTasks from "./component/pages/Projects/projectTasks/ProjectTasks";
-import CompleteSigninGoogle from "./component/pages/auth/completeSigninGoogle";
-import GoogleCallback from "./component/pages/auth/GoogleCallback";
-import AllTasks from "./component/pages/User_Tasks/AllTasks";
-import Settings from "./component/pages/Settings/Setting";
-import InviteManagement from "./component/pages/Invite/InviteManagement";
-import VerifyEmail from "./component/pages/auth/verifyEmail";
+import Projects from "./pages/Projects/ProjectCard/Projects";
+import ProjectDetails from "./pages/Projects/ProjectDetails/ProjectDetails";
+import ProjectTasks from "./pages/Projects/projectTasks/ProjectTasks";
+import CompleteSigninGoogle from "./pages/auth/completeSigninGoogle";
+import GoogleCallback from "./pages/auth/GoogleCallback";
+import AllTasks from "./pages/User_Tasks/AllTasks";
+import Settings from "./pages/Settings/Setting";
+import InviteManagement from "./pages/Invite/InviteManagement";
+import VerifyEmail from "./pages/auth/verifyEmail";
 
 function App() {
   return (
