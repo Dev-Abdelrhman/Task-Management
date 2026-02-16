@@ -22,7 +22,14 @@ import VerifyEmail from "./component/pages/auth/verifyEmail";
 function App() {
   return (
     <>
-      <ToastContainer />
+      <ToastContainer
+        autoClose={2000}
+        newestOnTop
+        closeOnClick
+        draggable
+        pauseOnHover
+        toastClassName="mobile-toast"
+      />
       <Routes>
         {/* Public routes - only accessible when NOT authenticated */}
         <Route element={<ProtectedRoutes isProtected={false} />}>

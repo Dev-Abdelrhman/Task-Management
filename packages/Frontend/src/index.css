@@ -18,3 +18,15 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 } */
+
+@media (max-width: 480px) {
+  .mobile-toast {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    width: 90vw;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+}
