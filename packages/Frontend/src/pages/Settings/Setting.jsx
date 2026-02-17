@@ -2,11 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useUser } from "../../hooks/users/useUserInfo";
 import { useAuthStore } from "../../stores/authStore";
-import ImageUpdateModal from "./modals/ImageUpdateModal";
-import GeneralSettings from "./taps/GeneralSettings";
-import SecuritySettings from "./taps/SecuritySettings";
-import NotificationSettings from "./taps/NotificationSettings";
-import DeleteUserModal from "./modals/DeleteUserModal";
+import ImageUpdateModal from "./components/modals/ImageUpdateModal";
+import GeneralSettings from "./components/taps/GeneralSettings";
+import SecuritySettings from "./components/taps/SecuritySettings";
+import NotificationSettings from "./components/taps/NotificationSettings";
+import DeleteUserModal from "./components/modals/DeleteUserModal";
 import { getNavTitle } from "../../lib/getNavTitle";
 
 export default function Setting() {
@@ -90,7 +90,7 @@ export default function Setting() {
           userID: user?._id,
           public_id: userData.image[0].public_id,
         });
-      } catch (err) {
+      } catch {
         toast.error("Failed to remove image");
         return;
       }
