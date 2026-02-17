@@ -1,4 +1,4 @@
-import API from "./auth";
+import { API } from "./api";
 
 export const getAllSenderInvite = async (userId) => {
   const response = await API.get(`/${userId}/invite/sender`);
@@ -32,6 +32,6 @@ export const acceptInvite = async (userId, inviteId) => {
 export const sendInvite = async (userId, projectId, inviteData) => {
   await API.post(
     `/${userId}/projects/${projectId}/invite/sendInvite`,
-    inviteData
+    inviteData,
   );
 };

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Search } from "lucide-react";
-import AddTask from "./AddTask";
+import AddTask from "./components/AddTask";
 import { Button } from "@mui/material";
 import TaskColumn from "../Projects/projectTasks/TaskColumn";
 import DeleteTaskModal from "../Projects/ProjectModals/DeleteTaskModal";
 import ProjectTasksDetails from "../Projects/projectTasks/ProjectTasksDetails";
-import { useUserTaskManagement } from "../../hooks/users/useUserTaskManagement";
+import { useUserTaskManagement } from "./hooks/useUserTaskManagement";
 import { useUserBoardManagement } from "../../hooks/boards/useUserBoardManagement";
 import { getNavTitle } from "../../lib/getNavTitle";
 

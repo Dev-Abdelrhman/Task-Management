@@ -1,5 +1,4 @@
-import API from "./auth";
-const BASE_URL = "http://localhost:9999/depiV1";
+import { API } from "./api";
 
 // Get all project tasks for a specific user and project
 export const getAllProjectTasks = async (userId, projectId) => {
@@ -22,7 +21,7 @@ export const getOneTask = async (userId, projectId, taskId) => {
       `/${userId}/projects/${projectId}/tasks/${taskId}`,
       {
         withCredentials: true,
-      }
+      },
     );
     console.log("Task fetched successfully:", response.data);
     return response.data;
@@ -41,7 +40,7 @@ export const createProjectTask = async (userId, projectId, taskData) => {
       "project:",
       projectId,
       "data:",
-      taskData
+      taskData,
     );
 
     const res = await API.post(
@@ -49,14 +48,14 @@ export const createProjectTask = async (userId, projectId, taskData) => {
       taskData,
       {
         withCredentials: true,
-      }
+      },
     );
     console.log("Task created successfully:", res.data);
     return res.data;
   } catch (error) {
     console.error(
       "Error creating task:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     throw error;
   }
@@ -70,7 +69,7 @@ export const updateTaskStatus = async (userId, projectId, taskId, taskData) => {
     const res = await API.patch(
       `${userId}/projects/${projectId}/tasks/${taskId}`,
       taskData,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     console.log("Task status updated successfully:", res.data);
     return res.data;
@@ -90,7 +89,7 @@ export const deleteTaskStatus = async (userId, projectId, taskId, status) => {
 
     const res = await API.delete(
       `${userId}/projects/${projectId}/tasks/${taskId}`,
-      { data: { status }, withCredentials: true }
+      { data: { status }, withCredentials: true },
     );
     console.log("Task deleted successfully:", res.data);
     return res.data;

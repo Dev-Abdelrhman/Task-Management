@@ -1,4 +1,4 @@
-import API from "./auth";
+import { API } from "./api";
 export const getUserProjects = async (user_id) => {
   const res = await API.get(`${user_id}/projects`, { withCredentials: true });
   return res.data;

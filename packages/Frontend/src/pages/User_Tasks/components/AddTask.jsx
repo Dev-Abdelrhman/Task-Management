@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import TaskImageUpload from "../Projects/ProjectModals/TaskImageUpload";
-import PrioritySelect from "../Projects/ProjectModals/PrioritySelect";
+import TaskImageUpload from "../../Projects/ProjectModals/TaskImageUpload";
+import PrioritySelect from "../../Projects/ProjectModals/PrioritySelect";
 
 const AddTask = ({ closeModal, onAddTask, editTask, statusFromColumn }) => {
   const [status, setStatus] = useState(statusFromColumn || "Pending");
