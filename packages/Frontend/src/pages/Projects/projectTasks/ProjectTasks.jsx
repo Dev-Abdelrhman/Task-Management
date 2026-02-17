@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Search } from "lucide-react";
-import { useAuth } from "../../../hooks/auth/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { Button } from "@mui/material";
 import AddProjectTask from "../ProjectModals/AddProjectTask";
 import ProjectTasksDetails from "./ProjectTasksDetails";

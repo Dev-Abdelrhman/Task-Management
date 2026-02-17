@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useAuthStore } from "../../stores/authStore";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../pages/auth/hooks/useAuth";
 import { toast } from "react-toastify";
 
 export const useUserMenu = () => {

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { toast } from "react-toastify";
 import { Button, TextField, Card, CardContent } from "@mui/material";
 import { Lock, ArrowLeft, ListTodo } from "lucide-react";
-import PasswordStrengthMeter from "./PasswordMeter";
+import PasswordStrengthMeter from "./components/PasswordMeter";
 
 const ResetPassword = () => {
   const { token } = useParams();

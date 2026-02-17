@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { toast } from "react-toastify";
 import { User, Lock } from "lucide-react";
 import { Button, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
-import AuthLayout from "./AuthLayout";
-import AuthForm from "./AuthForm";
+import AuthLayout from "./components/AuthLayout";
+import AuthForm from "./components/AuthForm";
 
 const CompleteSigninGoogle = () => {
   const location = useLocation();

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Card, CardContent } from "@mui/material";

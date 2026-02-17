@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "./hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import PasswordStrengthMeter from "./PasswordMeter";
+import PasswordStrengthMeter from "./components/PasswordMeter";
 import { User, Mail, Lock } from "lucide-react";
 import TextField from "@mui/material/TextField";
-import AuthLayout from "./AuthLayout";
-import AuthForm from "./AuthForm";
+import AuthLayout from "./components/AuthLayout";
+import AuthForm from "./components/AuthForm";
 
 const SignUp = () => {
   const navigate = useNavigate();

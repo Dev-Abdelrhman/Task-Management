@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "./hooks/useAuth";
 
 const GoogleCallback = () => {
   const { handleGoogleCallback } = useAuth();

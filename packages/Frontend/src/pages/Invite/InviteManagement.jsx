@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useInvite } from "../../hooks/features/useInvite";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 import dayjs from "dayjs";
 import { getNavTitle } from "../../lib/getNavTitle";
 

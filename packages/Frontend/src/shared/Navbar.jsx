@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Bell, Mail } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
-import { useAuth } from "../hooks/auth/useAuth";
+import { useAuth } from "../pages/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { getNavTitle } from "../lib/getNavTitle";
 
@@ -40,7 +40,7 @@ function Navbar() {
   };
   const hostGoogleImage = (url) => {
     return `https://images.weserv.nl/?url=${encodeURIComponent(
-      url
+      url,
     )}&w=200&h=200`;
   };
   return (

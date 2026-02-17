@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "../../../api/project";
-import { useAuth } from "../../../hooks/auth/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { useRoles } from "../../../hooks/features/useRoles";
 import InviteModal from "../../Invite/InviteModal";
 import ProjectHeader from "./components/ProjectHeader";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Avatar, CircularProgress } from "@mui/material";
 import { Search, X } from "lucide-react";
 import { useInvite } from "../../hooks/features/useInvite";
-import { useAuth } from "../../hooks/auth/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 import { toast } from "react-toastify";
 
 const InviteModal = ({ projectId, open, onClose, roles }) => {

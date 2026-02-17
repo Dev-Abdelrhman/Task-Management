@@ -10,8 +10,8 @@ import {
   handleGoogleCallback,
   getUser,
   verifyEmail,
-} from "../../api/auth";
-import { useAuthStore } from "../../stores/authStore";
+} from "../api/auth.js";
+import { useAuthStore } from "../../../stores/authStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -109,7 +109,7 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       toast.success(
-        "Password reset instructions have been sent to your email."
+        "Password reset instructions have been sent to your email.",
       );
     },
     onError: (error) => {
@@ -163,7 +163,7 @@ export const useAuth = () => {
         token,
         username,
         password,
-        passwordConfirmation
+        passwordConfirmation,
       );
       return response.data;
     },
