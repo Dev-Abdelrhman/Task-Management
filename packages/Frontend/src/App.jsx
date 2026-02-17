@@ -9,7 +9,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import Dashboard from "./pages/dashboard/Dashboard";
 import { ToastContainer } from "react-toastify";
 import Layout from "./shared/Layout";
-import Projects from "./pages/Projects/ProjectCard/Projects";
+import Projects from "./pages/Projects/Projects";
 import ProjectDetails from "./pages/Projects/ProjectDetails/ProjectDetails";
 import ProjectTasks from "./pages/Projects/projectTasks/ProjectTasks";
 import CompleteSigninGoogle from "./pages/auth/completeSigninGoogle";

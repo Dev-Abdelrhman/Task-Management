@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllUserTasks } from "../../api/user_tasks";
+import { getAllUserTasks } from "../../pages/User_Tasks/api/user_tasks";
 import { useMemo } from "react";
 
 export const useTasks = () => {
@@ -18,11 +18,11 @@ export const useTasks = () => {
       return { totalTasks: 0, doneTasks: 0, remainingTasks: 0, percentage: 0 };
     const totalTasks = tasksData.results || 0;
     const doneTasks = tasksData.doc.filter(
-      (task) => task.status === "Completed"
+      (task) => task.status === "Completed",
     ).length;
     const remainingTasks = totalTasks - doneTasks;
     const percentage = Math.floor(
-      totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0
+      totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0,
     );
     return { totalTasks, doneTasks, remainingTasks, percentage };
   }, [tasksData]);
