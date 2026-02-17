@@ -8,7 +8,7 @@ import {
   Avatar,
   Tooltip,
 } from "@mui/material";
-import { useUserMenu } from "../../hooks/ui/useUserMenu";
+import { useUserMenu } from "@/hooks/ui/useUserMenu";
 import { useNavigate } from "react-router-dom";
 
 const DashboardNav = () => {

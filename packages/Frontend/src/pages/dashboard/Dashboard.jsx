@@ -1,11 +1,11 @@
-import Sidebar from "../../shared/Sidebar";
 import { motion } from "framer-motion";
-import RightSidebar from "./RightSidebar";
-import ActivityChart from "./ActivityChart";
-import DashboardProjectSection from "./DashboardProjectSection";
-import RunningTask from "./RunningTask";
-import DashboardNav from "./DashboardNav";
-import { useUserMenu } from "../../hooks/ui/useUserMenu";
+import Sidebar from "@/shared/Sidebar";
+import RightSidebar from "./components/RightSidebar";
+import ActivityChart from "./components/ActivityChart";
+import DashboardProjectSection from "./components/DashboardProjectSection";
+import RunningTask from "./components/RunningTask";
+import DashboardNav from "./components/DashboardNav";
+import { useUserMenu } from "@/hooks/ui/useUserMenu";
 
 export default function TaskordDashboard() {
   const { user } = useUserMenu();

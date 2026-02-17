@@ -7,7 +7,7 @@ export const CHART_COLORS = {
     line: "#111827",
     dotFill: "#fff",
     progress: "#4F46E5",
-    progressBg: "#1F2937"
+    progressBg: "#1F2937",
   },
   dark: {
     axis: "#ffffff",
@@ -15,8 +15,8 @@ export const CHART_COLORS = {
     line: "#a5b4fc",
     dotFill: "#1c2841",
     progress: "#4F46E5",
-    progressBg: "#1F2937"
-  }
+    progressBg: "#1F2937",
+  },
 };
 
 export const CHART_CONFIG = {
@@ -25,12 +25,12 @@ export const CHART_CONFIG = {
     r: 6,
     stroke: "#4F46E5",
     strokeWidth: 3,
-    filter: "drop-shadow(0 2px 6px #4F46E533)"
+    filter: "drop-shadow(0 2px 6px #4F46E533)",
   },
   activeDot: {
     r: 8,
     fill: "#4F46E5",
     strokeWidth: 3,
-    filter: "drop-shadow(0 2px 6px #4F46E533)"
-  }
-}; 
+    filter: "drop-shadow(0 2px 6px #4F46E533)",
+  },
+};

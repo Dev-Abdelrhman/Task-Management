@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
-import { useTasks } from "../../hooks/tasks/useTasks";
-import { useProgressAnimation } from "../../hooks/ui/useProgressAnimation";
+import { useTasks } from "@/hooks/tasks/useTasks";
+import { useProgressAnimation } from "@/hooks/ui/useProgressAnimation";
 
 const RunningTask = () => {
   const { taskStats } = useTasks();

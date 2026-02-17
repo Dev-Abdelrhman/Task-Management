@@ -6,13 +6,13 @@ import {
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useTheme } from "@mui/material";
-import { useTasks } from "../../hooks/tasks/useTasks";
-import { CHART_COLORS, CHART_CONFIG } from "../../constants/chart";
+import { useTasks } from "@/hooks/tasks/useTasks";
+import { useTheme } from "@/hooks/ui/useTheme";
+import { CHART_COLORS, CHART_CONFIG } from "../constants/chart";
 
 const ActivityChart = () => {
   const { activityData } = useTasks();
-  const { isDarkMode } = useTheme();
+  const isDarkMode = useTheme();
   const colors = isDarkMode ? CHART_COLORS.dark : CHART_COLORS.light;
 
   const CustomTooltip = ({ active, payload }) => {
@@ -30,7 +30,7 @@ const ActivityChart = () => {
     <div className="h-[250px] bg-white dark:border-[#222222] dark:bg-[#222222] p-6 rounded-xl border border-gray-200 shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium dark:text-white">Activity</h2>
-        <div className="flex items-center gap-2 text-sm bg-gray-50 px-3 py-1 rounded-xl select-none">
+        <div className="flex items-center gap-2 text-sm bg-gray-50 dark:bg-[#222222] dark:text-white px-3 py-1 rounded-xl select-none">
           <span>This Week</span>
         </div>
       </div>

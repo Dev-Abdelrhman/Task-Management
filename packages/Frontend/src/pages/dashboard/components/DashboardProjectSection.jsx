@@ -13,9 +13,9 @@ import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import { useNavigate } from "react-router-dom";
-import ProjectOptionsMenu from "../Projects/ProjectModals/ProjectOptionsMenu";
-import { useProjects } from "../../hooks/projects/useProjects";
-import DueDateStatus from "../../shared/DueDateStatus";
+import ProjectOptionsMenu from "../../Projects/ProjectModals/ProjectOptionsMenu";
+import { useProjects } from "@/hooks/projects/useProjects";
+import DueDateStatus from "@/shared/DueDateStatus";
 
 const DashboardProjectSection = () => {
   const navigate = useNavigate();

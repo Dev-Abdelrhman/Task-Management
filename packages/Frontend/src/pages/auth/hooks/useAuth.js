@@ -11,7 +11,7 @@ import {
   getUser,
   verifyEmail,
 } from "../api/auth.js";
-import { useAuthStore } from "../../../stores/authStore";
+import { useAuthStore } from "@/stores/authStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
