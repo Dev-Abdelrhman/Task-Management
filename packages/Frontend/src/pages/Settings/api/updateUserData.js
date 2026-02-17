@@ -1,4 +1,4 @@
-import API from "./auth";
+import { API } from "../../../api/api";
 
 export const updateUserInfo = async (userInfo) => {
   await API.patch("/updateMe", userInfo);

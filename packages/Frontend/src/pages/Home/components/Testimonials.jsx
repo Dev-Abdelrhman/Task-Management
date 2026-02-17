@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Testimonials() {
   return (

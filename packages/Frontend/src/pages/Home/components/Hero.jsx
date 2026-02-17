@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { CheckCircle, Clock, PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   const [scrollY, setScrollY] = useState(0);

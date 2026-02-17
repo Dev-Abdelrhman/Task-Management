@@ -1,4 +1,5 @@
 import { ListTodo, Clock, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Features() {
   return (

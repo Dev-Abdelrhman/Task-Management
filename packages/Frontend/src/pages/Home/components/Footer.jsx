@@ -1,4 +1,5 @@
 import { ListTodo } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   return (
@@ -71,4 +72,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-} 
+}

@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 export default function Stats() {
   return (
     <section className="bg-[#3D53DB] py-12 text-white">
