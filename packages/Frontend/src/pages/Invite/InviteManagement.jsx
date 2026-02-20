@@ -11,13 +11,14 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import { useInvite } from "../../hooks/features/useInvite";
-import { useAuth } from "../auth/hooks/useAuth";
+import { useInvite } from "@/hooks/features/useInvite";
 import dayjs from "dayjs";
-import { getNavTitle } from "../../lib/getNavTitle";
+import { getNavTitle } from "@/lib/getNavTitle";
+import { useAuthStore } from "@/stores/authStore";
 
 const InviteManagement = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
+
   const {
     useSenderInvites,
     useReceiverInvites,

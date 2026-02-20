@@ -2,28 +2,28 @@ import { CircularProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getProjectById } from "../../../api/project";
+import { getProjectById } from "@/api/project";
 import { useAuth } from "../../auth/hooks/useAuth";
-import { useRoles } from "../../../hooks/features/useRoles";
-import InviteModal from "../../Invite/InviteModal";
+import { useRoles } from "@/hooks/features/useRoles";
+import ProjectInviteModal from "./components/InviteModal";
 import ProjectHeader from "./components/ProjectHeader";
 import ProjectInfo from "./components/ProjectInfo";
 import ProjectDescription from "./components/ProjectDescription";
 import Comments from "./components/Comments";
 import Roles from "./components/Roles";
-import { getRoles } from "../../../api/roles";
+import { getRoles } from "@/api/roles";
 import RoleModal from "./components/RoleModal";
 import DeleteRoleModal from "./components/DeleteRoleModal";
 import RoleDetailsModal from "./components/RoleDetailsModal";
 import PermissionWarningModal from "./components/PermissionWarningModal";
 import MobileRoles from "./components/MobileRoles";
-import { getNavTitle } from "../../../lib/getNavTitle";
+import { getNavTitle } from "@/lib/getNavTitle";
 
 function ProjectDetails() {
   const { user } = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
-  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [ProjectInviteModalOpen, setProjectInviteModalOpen] = useState(false);
   const [showRolesSidebar, setShowRolesSidebar] = useState(false);
 
   // Querys
@@ -126,7 +126,7 @@ function ProjectDetails() {
           <ProjectHeader project={project} onJoinClick={handleClick} />
           <ProjectInfo
             project={project}
-            onAddMembersClick={() => setInviteModalOpen(true)}
+            onAddMembersClick={() => setProjectInviteModalOpen(true)}
           />
           <ProjectDescription description={project?.description} />
           <Comments userId={user._id} projectId={projectId} user={user} />
@@ -195,10 +195,10 @@ function ProjectDetails() {
       </div>
 
       {/* All modals remain the same */}
-      <InviteModal
+      <ProjectInviteModal
         projectId={projectId}
-        open={inviteModalOpen}
-        onClose={() => setInviteModalOpen(false)}
+        open={ProjectInviteModalOpen}
+        onClose={() => setProjectInviteModalOpen(false)}
         roles={rolesData}
         project={project}
       />

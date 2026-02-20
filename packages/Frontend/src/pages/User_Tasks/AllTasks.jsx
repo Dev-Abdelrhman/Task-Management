@@ -7,8 +7,8 @@ import TaskColumn from "../Projects/projectTasks/TaskColumn";
 import DeleteTaskModal from "../Projects/ProjectModals/DeleteTaskModal";
 import ProjectTasksDetails from "../Projects/projectTasks/ProjectTasksDetails";
 import { useUserTaskManagement } from "./hooks/useUserTaskManagement";
-import { useUserBoardManagement } from "../../hooks/boards/useUserBoardManagement";
-import { getNavTitle } from "../../lib/getNavTitle";
+import { useUserBoardManagement } from "@/hooks/boards/useUserBoardManagement";
+import { getNavTitle } from "@/lib/getNavTitle";
 
 const statusMap = {
   backlog: "Pending",

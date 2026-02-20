@@ -6,6 +6,7 @@ import DashboardProjectSection from "./components/DashboardProjectSection";
 import RunningTask from "./components/RunningTask";
 import DashboardNav from "./components/DashboardNav";
 import { useUserMenu } from "@/hooks/ui/useUserMenu";
+//TODO: use the auth store
 
 export default function TaskordDashboard() {
   const { user } = useUserMenu();

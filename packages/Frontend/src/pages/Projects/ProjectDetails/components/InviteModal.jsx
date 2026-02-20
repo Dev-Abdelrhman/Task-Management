@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button, Avatar, CircularProgress } from "@mui/material";
 import { Search, X } from "lucide-react";
-import { useInvite } from "../../hooks/features/useInvite";
-import { useAuth } from "../auth/hooks/useAuth";
+import { useInvite } from "../../../../hooks/features/useInvite";
 import { toast } from "react-toastify";
+import { useAuthStore } from "@/stores/authStore";
 
-const InviteModal = ({ projectId, open, onClose, roles }) => {
-  const { user } = useAuth();
+const ProjectInviteModal = ({ projectId, open, onClose, roles }) => {
+  const { user } = useAuthStore();
   const { searchUser, sendInvite, isSearching, isSending } = useInvite();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -203,4 +203,4 @@ const InviteModal = ({ projectId, open, onClose, roles }) => {
   );
 };
 
-export default InviteModal;
+export default ProjectInviteModal;

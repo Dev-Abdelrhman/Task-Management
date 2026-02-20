@@ -1,4 +1,4 @@
-import { API } from "../../../api/api";
+import { API } from "@/api/api";
 const BASE_URL = "http://localhost:9999/depiV1/tasks";
 
 // Get all user tasks

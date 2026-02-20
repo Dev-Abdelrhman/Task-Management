@@ -12,7 +12,8 @@ import { CHART_COLORS, CHART_CONFIG } from "../constants/chart";
 
 const ActivityChart = () => {
   const { activityData } = useTasks();
-  const isDarkMode = useTheme();
+  const { isDarkMode } = useTheme();
+
   const colors = isDarkMode ? CHART_COLORS.dark : CHART_COLORS.light;
 
   const CustomTooltip = ({ active, payload }) => {
