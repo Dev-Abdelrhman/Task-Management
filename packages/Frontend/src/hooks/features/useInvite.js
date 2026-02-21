@@ -7,7 +7,7 @@ import {
   declineInvite,
   acceptInvite,
   sendInvite,
-} from "../../api/invite";
+} from "@/api/invite";
 import { toast } from "react-toastify";
 
 export const useInvite = () => {

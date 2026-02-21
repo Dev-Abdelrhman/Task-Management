@@ -5,7 +5,7 @@ import {
   createComment,
   updateComment,
   deleteComment,
-} from "../../api/commentsApi";
+} from "../api/commentsApi";
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 
@@ -63,7 +63,7 @@ export const useComments = (userId, projectId, user) => {
     onError: (err, newCommentData, context) => {
       queryClient.setQueryData(
         ["comments", projectId],
-        context.previousComments
+        context.previousComments,
       );
       toast.error(handleError(err));
     },
@@ -91,7 +91,7 @@ export const useComments = (userId, projectId, user) => {
         doc: old.doc.map((comment) =>
           comment._id === commentId
             ? { ...comment, comment: commentData.comment }
-            : comment
+            : comment,
         ),
       }));
 
@@ -100,7 +100,7 @@ export const useComments = (userId, projectId, user) => {
     onError: (err, variables, context) => {
       queryClient.setQueryData(
         ["comments", projectId],
-        context.previousComments
+        context.previousComments,
       );
       toast.error(handleError(err));
     },
@@ -133,7 +133,7 @@ export const useComments = (userId, projectId, user) => {
     onError: (err, variables, context) => {
       queryClient.setQueryData(
         ["comments", projectId],
-        context.previousComments
+        context.previousComments,
       );
       toast.error(handleError(err));
     },

@@ -1,4 +1,4 @@
-import { API } from "./api";
+import { API } from "@/api/api";
 
 export const getRoles = async (user_id, projectId) => {
   const res = await API.get(`/${user_id}/projects/${projectId}/roles`);

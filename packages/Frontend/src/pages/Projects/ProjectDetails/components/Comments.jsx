@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Send, MoreVertical, MessageCircle, Check } from "lucide-react";
 import { DateTime } from "luxon";
-import { useComments } from "../../../../hooks/features/useComments";
+import { useComments } from "../hooks/useComments";
 import { useState } from "react";
 
 const hostGoogleImage = (url) => {

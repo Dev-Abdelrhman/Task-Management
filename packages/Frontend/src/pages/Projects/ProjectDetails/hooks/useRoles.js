@@ -6,11 +6,8 @@ import {
   getRoleById,
   deleteRole,
   updateRole,
-} from "../../api/roles";
+} from "../api/roles";
 import { toast } from "react-toastify";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:9999");
 
 export const useRoles = (userId, projectId) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -106,7 +103,7 @@ export const useRoles = (userId, projectId) => {
       queryClient.setQueryData(["roles", projectId], (old) => ({
         ...old,
         doc: old.doc.map((role) =>
-          role._id === roleId ? { ...role, ...roleData } : role
+          role._id === roleId ? { ...role, ...roleData } : role,
         ),
       }));
 
@@ -192,7 +189,7 @@ export const useRoles = (userId, projectId) => {
     if (!pendingPermissionChange) return;
 
     const perms = newRole.permissions.filter(
-      (p) => p !== pendingPermissionChange
+      (p) => p !== pendingPermissionChange,
     );
     setNewRole({ ...newRole, permissions: perms });
     setShowPermissionWarning(false);
@@ -209,7 +206,7 @@ export const useRoles = (userId, projectId) => {
       ) {
         toast.error("You don't have permission to modify this role");
         const currentRole = rolesData?.doc.find(
-          (role) => role._id === editingRoleId
+          (role) => role._id === editingRoleId,
         );
         if (currentRole) {
           setNewRole({

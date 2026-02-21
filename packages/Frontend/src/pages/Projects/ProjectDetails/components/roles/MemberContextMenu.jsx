@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useProject } from "../../../../hooks/projects/useProject";
-
+import { useProject } from "../../hooks/useProject";
 const MemberContextMenu = ({ children, memberId, userId, projectId }) => {
   const [menu, setMenu] = useState(null);
 

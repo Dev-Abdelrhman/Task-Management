@@ -1,5 +1,5 @@
 import { Users } from "lucide-react";
-import DueDateStatus from "../../../../shared/DueDateStatus";
+import DueDateStatus from "../../../../../shared/DueDateStatus";
 
 const ProjectInfo = ({ project, onAddMembersClick }) => {
   return (

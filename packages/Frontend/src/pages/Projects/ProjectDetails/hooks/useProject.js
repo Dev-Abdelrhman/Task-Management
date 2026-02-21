@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { KickUserFromProject } from "../../api/project";
+import { KickUserFromProject } from "@/api/project";
 import { toast } from "react-toastify";
 
 export const useProject = () => {
@@ -13,7 +13,7 @@ export const useProject = () => {
     onError: (error) => {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to kick member. Please try again."
+          "Failed to kick member. Please try again.",
       );
     },
   });

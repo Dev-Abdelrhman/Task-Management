@@ -1,7 +1,7 @@
 import { Button, Avatar } from "@mui/material";
 import { Search, Pencil, X, ReceiptText } from "lucide-react";
 import { useState } from "react";
-import MemberContextMenu from "../components/MemberContextMenu";
+import MemberContextMenu from "./MemberContextMenu";
 
 const hostGoogleImage = (url) => {
   return `https://images.weserv.nl/?url=${encodeURIComponent(url)}&w=200&h=200`;

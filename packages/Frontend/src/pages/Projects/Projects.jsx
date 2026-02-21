@@ -1,13 +1,13 @@
 import AddProjectBtn from "./ProjectModals/AddProjectBtn";
 import { useNavigate } from "react-router-dom";
-import { categories } from "../../constants/categories";
-import ProjectFilters from "./ProjectCard/ProjectFilters";
-import ProjectSection from "./ProjectCard/ProjectSection";
-import { useProjects } from "../../hooks/projects/useProjects";
-import { useProjectFilters } from "../../hooks/projects/useProjectFilters";
+import { categories } from "@/constants/categories";
+import ProjectFilters from "./components/ProjectFilters";
+import ProjectSection from "./components/ProjectSection";
+import { useProjects } from "@/hooks/projects/useProjects";
+import { useProjectFilters } from "./hooks/useProjectFilters";
 import "swiper/css";
 import "swiper/css/navigation";
-import { getNavTitle } from "../../lib/getNavTitle";
+import { getNavTitle } from "@/lib/getNavTitle";
 
 function Projects() {
   const navigate = useNavigate();

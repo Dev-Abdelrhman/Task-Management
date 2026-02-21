@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Avatar, CircularProgress } from "@mui/material";
 import { Search, X } from "lucide-react";
-import { useInvite } from "../../../../hooks/features/useInvite";
+import { useInvite } from "@/hooks/features/useInvite";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/stores/authStore";
 

@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import { ChevronLeft, ChevronRight, CircleCheck } from "lucide-react";
 import ProjectOptionsMenu from "../ProjectModals/ProjectOptionsMenu";
-import DueDateStatus from "../../../shared/DueDateStatus";
+import DueDateStatus from "@/shared/DueDateStatus";
 
 function ProjectSection({ title, projects, handleClick, swiperClass }) {
   if (projects.length === 0) return null;
